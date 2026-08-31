@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+
+# Private, Checkout & Admin Areas
+Disallow: /admin/
+Disallow: /api/
+Disallow: /cart.html
+Disallow: /checkout.html
+Disallow: /confirmation.html
+Disallow: /account.html
+Disallow: /account-*
+
+Sitemap: https://zeyad.store/sitemap.xml

@@ -1,0 +1,36 @@
+{
+  "name": "zeyad-for-business-backend",
+  "version": "1.0.0",
+  "description": "Backend for Zeyad For Business - E-commerce platform",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "import-products": "node utils/import-products.js",
+    "test": "node tests/run-tests.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cheerio": "^1.2.0",
+    "compression": "^1.8.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "fuse.js": "^7.5.0",
+    "helmet": "^8.0.0",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "pg": "^8.23.0",
+    "sharp": "^0.35.3",
+    "tinymce": "^7.9.3"
+  },
+  "keywords": [
+    "ecommerce",
+    "yemen",
+    "zeyad"
+  ],
+  "license": "UNLICENSED",
+  "private": true
+}

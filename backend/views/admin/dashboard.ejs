@@ -1,0 +1,480 @@
+<%- include('../partials/head', { title }) %>
+<%- include('../partials/sidebar', { active }) %>
+<main class="admin-main">
+  <%- include('../partials/topbar') %>
+  
+  <div class="admin-content">
+    
+    <!-- 1. Top KPI Stat Cards (Modern SaaS Standard - No Overlaps) -->
+    <div class="dashboard-stats-grid">
+      
+      <!-- Total Sales -->
+      <div class="kpi-card">
+        <div class="kpi-card-header">
+          <span class="kpi-card-title">إجمالي المبيعات</span>
+          <div class="kpi-icon-box kpi-icon-blue">
+            <span class="material-symbols-rounded">payments</span>
+          </div>
+        </div>
+        <div class="kpi-card-value" dir="ltr"><%= helpers.formatPrice(stats.totalSales) %></div>
+        <div class="kpi-card-footer">
+          <span class="kpi-growth-badge growth-up">
+            <span class="material-symbols-rounded" style="font-size: 14px;">trending_up</span>
+            +8.3%
+          </span>
+          <span class="growth-subtext">عن الشهر الماضي</span>
+        </div>
+      </div>
+
+      <!-- Total Orders -->
+      <div class="kpi-card">
+        <div class="kpi-card-header">
+          <span class="kpi-card-title">إجمالي الطلبات</span>
+          <div class="kpi-icon-box kpi-icon-green">
+            <span class="material-symbols-rounded">shopping_bag</span>
+          </div>
+        </div>
+        <div class="kpi-card-value"><%= stats.ordersCount %></div>
+        <div class="kpi-card-footer">
+          <span class="kpi-growth-badge growth-up">
+            <span class="material-symbols-rounded" style="font-size: 14px;">trending_up</span>
+            +12.5%
+          </span>
+          <span class="growth-subtext">عن الشهر الماضي</span>
+        </div>
+      </div>
+
+      <!-- Customers -->
+      <div class="kpi-card">
+        <div class="kpi-card-header">
+          <span class="kpi-card-title">العملاء المسجلين</span>
+          <div class="kpi-icon-box kpi-icon-purple">
+            <span class="material-symbols-rounded">group</span>
+          </div>
+        </div>
+        <div class="kpi-card-value"><%= stats.customersCount %></div>
+        <div class="kpi-card-footer">
+          <span class="kpi-growth-badge growth-up">
+            <span class="material-symbols-rounded" style="font-size: 14px;">trending_up</span>
+            +15.7%
+          </span>
+          <span class="growth-subtext">عن الشهر الماضي</span>
+        </div>
+      </div>
+
+      <!-- Products -->
+      <div class="kpi-card">
+        <div class="kpi-card-header">
+          <span class="kpi-card-title">إجمالي المنتجات</span>
+          <div class="kpi-icon-box kpi-icon-gold">
+            <span class="material-symbols-rounded">inventory_2</span>
+          </div>
+        </div>
+        <div class="kpi-card-value"><%= stats.productsCount %></div>
+        <div class="kpi-card-footer">
+          <span class="kpi-growth-badge growth-neutral">
+            <span class="material-symbols-rounded" style="font-size: 14px;">inventory</span>
+            <%= stats.productsCount %> صنف
+          </span>
+          <span class="growth-subtext">في الكتالوج</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 2. Charts Row (Sales Area & Status Distribution) -->
+    <div class="dashboard-charts-grid">
+      
+      <!-- Sales Chart -->
+      <div class="glass-card">
+        <div class="card-header" style="border: none; padding-bottom: 8px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+          <div>
+            <h2 style="font-size: 16px; font-weight: 700; color: var(--text-main);">المبيعات خلال آخر 30 يوم</h2>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">
+              العملة المعروضة: 
+              <span style="color: var(--primary-gold); font-weight: 600;">
+                <%= (typeof currentCurrency !== 'undefined' && currentCurrency === 'YER') ? 'ريال يمني (ر.ي)' : ((typeof currentCurrency !== 'undefined' && currentCurrency === 'USD') ? 'دولار أمريكي ($)' : 'ريال سعودي (ر.س)') %>
+              </span>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="badge" style="background: rgba(234, 179, 8, 0.12); color: var(--primary-gold); border: 1px solid rgba(234, 179, 8, 0.25); font-size: 12px; font-weight: 600;">
+              إجمالي الفترة: <%= helpers.formatPrice(stats.totalSales) %>
+            </span>
+          </div>
+        </div>
+        <div style="height: 290px; width: 100%;">
+          <canvas id="salesChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Status Doughnut Chart & Detailed Breakdown -->
+      <div class="glass-card">
+        <div class="card-header" style="border: none; padding-bottom: 8px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+          <h2 style="font-size: 16px; font-weight: 700; color: var(--text-main);">توزيع الطلبات حسب الحالة</h2>
+          <span class="badge badge-info" style="font-size: 11px;"><%= stats.ordersCount %> طلب</span>
+        </div>
+        
+        <!-- Doughnut Visual -->
+        <div style="position: relative; height: 180px; display: flex; justify-content: center; align-items: center; margin-bottom: 12px;">
+          <canvas id="statusChart"></canvas>
+          <div style="position: absolute; text-align: center; pointer-events: none;">
+            <div style="font-size: 24px; font-weight: 700; color: var(--text-main); font-family: sans-serif;"><%= stats.ordersCount %></div>
+            <div style="font-size: 11px; color: var(--text-muted);">إجمالي الطلبات</div>
+          </div>
+        </div>
+
+        <!-- Detailed Status Breakdown List -->
+        <div class="status-breakdown-list">
+          <% 
+            const statusMap = {
+              'delivered': { label: 'مكتمل', color: '#10b981' },
+              'pending': { label: 'قيد الانتظار', color: '#f59e0b' },
+              'processing': { label: 'قيد التجهيز', color: '#3b82f6' },
+              'shipped': { label: 'تم الشحن', color: '#8b5cf6' },
+              'cancelled': { label: 'ملغي', color: '#ef4444' }
+            };
+            const totalOrders = stats.ordersCount || 1;
+            const distItems = (typeof statusDist !== 'undefined' && statusDist && statusDist.length > 0) 
+              ? statusDist 
+              : [{ status: 'pending', count: stats.ordersCount }];
+          %>
+          <% distItems.forEach(item => { 
+               const info = statusMap[item.status] || { label: item.status, color: '#9ca3af' };
+               const pct = Math.round((item.count / totalOrders) * 100);
+          %>
+            <div class="status-breakdown-item">
+              <div class="status-item-label">
+                <span class="status-dot" style="background: <%= info.color %>; box-shadow: 0 0 8px <%= info.color %>80;"></span>
+                <span><%= info.label %></span>
+              </div>
+              <div class="status-item-stats">
+                <span class="status-item-count"><%= item.count %> طلب</span>
+                <span class="status-item-percent"><%= pct %>%</span>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 3. Bottom Row: Quick Stats, Recent Orders & Top Products -->
+    <div class="dashboard-bottom-grid">
+      
+      <!-- Quick Stats -->
+      <div class="glass-card">
+        <h2 style="font-size: 16px; font-weight: 700; margin-bottom: 20px; color: var(--text-main);">إحصائيات سريعة</h2>
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          
+          <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1px solid var(--border-color-subtle);">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="width: 36px; height: 36px; background: rgba(59, 130, 246, 0.12); color: #3b82f6; border-radius: 8px; display: flex; align-items: center; justify-content: center;"><span class="material-symbols-rounded" style="font-size: 18px;">inventory_2</span></div>
+              <span style="font-size: 13px; color: var(--text-main); font-weight: 500;">إجمالي المنتجات</span>
+            </div>
+            <span style="font-weight: 700; font-family: sans-serif; color: var(--text-main);"><%= stats.productsCount %></span>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1px solid var(--border-color-subtle);">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="width: 36px; height: 36px; background: rgba(139, 92, 246, 0.12); color: #8b5cf6; border-radius: 8px; display: flex; align-items: center; justify-content: center;"><span class="material-symbols-rounded" style="font-size: 18px;">group</span></div>
+              <span style="font-size: 13px; color: var(--text-main); font-weight: 500;">إجمالي العملاء</span>
+            </div>
+            <span style="font-weight: 700; font-family: sans-serif; color: var(--text-main);"><%= stats.customersCount %></span>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1px solid var(--border-color-subtle);">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="width: 36px; height: 36px; background: rgba(234, 179, 8, 0.12); color: #eab308; border-radius: 8px; display: flex; align-items: center; justify-content: center;"><span class="material-symbols-rounded" style="font-size: 18px;">shopping_cart</span></div>
+              <span style="font-size: 13px; color: var(--text-main); font-weight: 500;">إجمالي الطلبات</span>
+            </div>
+            <span style="font-weight: 700; font-family: sans-serif; color: var(--text-main);"><%= stats.ordersCount %></span>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1px solid var(--border-color-subtle);">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="width: 36px; height: 36px; background: rgba(16, 185, 129, 0.12); color: #10b981; border-radius: 8px; display: flex; align-items: center; justify-content: center;"><span class="material-symbols-rounded" style="font-size: 18px;">payments</span></div>
+              <span style="font-size: 13px; color: var(--text-main); font-weight: 500;">إجمالي المبيعات</span>
+            </div>
+            <span style="font-weight: 700; font-family: sans-serif; color: var(--success);" dir="ltr"><%= helpers.formatPrice(stats.totalSales) %></span>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="width: 36px; height: 36px; background: rgba(236, 72, 153, 0.12); color: #ec4899; border-radius: 8px; display: flex; align-items: center; justify-content: center;"><span class="material-symbols-rounded" style="font-size: 18px;">show_chart</span></div>
+              <span style="font-size: 13px; color: var(--text-main); font-weight: 500;">متوسط قيمة الطلب</span>
+            </div>
+            <span style="font-weight: 700; font-family: sans-serif; color: var(--text-main);" dir="ltr">
+              <%= stats.ordersCount > 0 ? helpers.formatPrice(stats.totalSales / stats.ordersCount) : helpers.formatPrice(0) %>
+            </span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Recent Orders Table -->
+      <div class="glass-card" style="padding: 0; display: flex; flex-direction: column;">
+        <div class="card-header" style="padding: 20px 24px; border-bottom: 1px solid var(--border-color); margin: 0;">
+          <h2 style="font-size: 16px; font-weight: 700; color: var(--text-main);">الطلبات الأخيرة</h2>
+        </div>
+        <div class="table-responsive" style="flex: 1;">
+          <table class="admin-table" style="font-size: 13px;">
+            <thead>
+              <tr>
+                <th>رقم الطلب</th>
+                <th>العميل</th>
+                <th>المبلغ</th>
+                <th>الحالة</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if(!recentOrders || recentOrders.length === 0) { %>
+                <tr><td colspan="4" class="text-center py-4 text-muted">لا توجد طلبات حديثة</td></tr>
+              <% } %>
+              <% if(recentOrders) recentOrders.slice(0, 5).forEach(o => { %>
+                <tr>
+                  <td dir="ltr" style="font-weight: 600;">
+                    <a href="/admin/orders/<%= o.id %>" style="color: var(--primary-gold); text-decoration: none;">
+                      <%= o.order_id || ('#' + o.id) %>
+                    </a>
+                  </td>
+                  <td>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--bg-tertiary); overflow: hidden; flex-shrink: 0;">
+                        <img src="https://ui-avatars.com/api/?name=<%= encodeURIComponent(o.first_name || 'عميل') %>&background=random" style="width: 100%; height: 100%; object-fit: cover;">
+                      </div>
+                      <span style="max-width: 110px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><%= o.first_name || 'عميل' %></span>
+                    </div>
+                  </td>
+                  <td dir="ltr" style="font-family: sans-serif; font-weight: 600;"><%= helpers.formatPrice(o.total) %></td>
+                  <td>
+                    <span style="color: <%= helpers.statusColor(o.status) %>; background: <%= helpers.statusTint(o.status, 0.15) %>; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; white-space: nowrap;">
+                      <%= helpers.statusLabel(o.status) %>
+                    </span>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+        <div style="padding: 14px; text-align: center; border-top: 1px solid var(--border-color);">
+          <a href="/admin/orders" style="color: var(--info); font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; text-decoration: none;">
+            عرض جميع الطلبات <span class="material-symbols-rounded" style="font-size: 16px; transform: scaleX(-1);">arrow_forward</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Top Selling Products -->
+      <div class="glass-card" style="padding: 0; display: flex; flex-direction: column;">
+        <div class="card-header" style="padding: 20px 24px; border-bottom: 1px solid var(--border-color); margin: 0;">
+          <h2 style="font-size: 16px; font-weight: 700; color: var(--text-main);">المنتجات الأكثر مبيعاً</h2>
+        </div>
+        <div class="table-responsive" style="flex: 1;">
+          <table class="admin-table" style="font-size: 13px;">
+            <thead>
+              <tr>
+                <th>المنتج</th>
+                <th style="text-align: left;">المبيعات</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if(!topProducts || topProducts.length === 0) { %>
+                <tr><td colspan="2" class="text-center py-4 text-muted">لا توجد مبيعات بعد</td></tr>
+              <% } %>
+              <% if(topProducts) topProducts.slice(0, 5).forEach(p => { 
+                   const pImg = p.product_image ? (p.product_image.startsWith('/') || p.product_image.startsWith('http') || p.product_image.startsWith('data:') ? p.product_image : '/' + p.product_image) : '/assets/placeholder.svg';
+              %>
+                <tr>
+                  <td>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <div style="width: 38px; height: 38px; background: #000; border-radius: 8px; overflow: hidden; border: 1px solid var(--border-color); flex-shrink: 0;">
+                        <img src="<%= pImg %>" alt="<%= p.product_title %>" onerror="this.onerror=null;this.src='/assets/placeholder.svg';" style="width: 100%; height: 100%; object-fit: cover;">
+                      </div>
+                      <div style="font-weight: 500; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-main);"><%= p.product_title %></div>
+                    </div>
+                  </td>
+                  <td style="text-align: left;">
+                    <span class="badge badge-info" style="font-family: sans-serif; font-weight: 700;"><%= p.qty %> قطعة</span>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+        <div style="padding: 14px; text-align: center; border-top: 1px solid var(--border-color);">
+          <a href="/admin/products" style="color: var(--primary-gold); font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; text-decoration: none;">
+            عرض جميع المنتجات <span class="material-symbols-rounded" style="font-size: 16px; transform: scaleX(-1);">arrow_forward</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const statusData = <%- typeof chartStatusData !== 'undefined' ? chartStatusData : '{}' %>;
+    const salesDataRaw = <%- typeof chartSalesData !== 'undefined' ? chartSalesData : '{}' %>;
+    const currentCurrency = '<%= (typeof currentCurrency !== 'undefined' && currentCurrency) ? currentCurrency : "SAR" %>';
+    const exchangeRate = <%= (typeof exchangeRate !== 'undefined' && exchangeRate) ? exchangeRate : 140 %>;
+    
+    // Convert sales chart numbers dynamically according to active currency
+    const salesData = {
+      labels: salesDataRaw.labels || [],
+      data: (salesDataRaw.data || []).map(val => {
+        const num = Number(val) || 0;
+        if (currentCurrency === 'YER') return Math.round(num * exchangeRate);
+        if (currentCurrency === 'USD') return parseFloat((num / 3.75).toFixed(2));
+        return num;
+      })
+    };
+
+    const getThemeColors = () => {
+      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+      return {
+        grid: isLight ? 'rgba(0, 0, 0, 0.06)' : 'rgba(255, 255, 255, 0.05)',
+        text: isLight ? '#64748b' : '#94a3b8',
+        goldLine: '#eab308',
+        goldFill: isLight ? 'rgba(234, 179, 8, 0.15)' : 'rgba(234, 179, 8, 0.08)'
+      };
+    };
+
+    let salesChartObj, statusChartObj;
+
+    function initCharts() {
+      const colors = getThemeColors();
+
+      // 1. Sales Line Chart (Smooth Curve Area)
+      const salesCanvas = document.getElementById('salesChart');
+      if (salesCanvas && salesData.labels.length > 0) {
+        const ctxSales = salesCanvas.getContext('2d');
+        if (salesChartObj) salesChartObj.destroy();
+        
+        const gradient = ctxSales.createLinearGradient(0, 0, 0, 280);
+        gradient.addColorStop(0, colors.goldFill);
+        gradient.addColorStop(1, 'rgba(234, 179, 8, 0)');
+
+        salesChartObj = new Chart(ctxSales, {
+          type: 'line',
+          data: {
+            labels: salesData.labels,
+            datasets: [{
+              label: 'المبيعات',
+              data: salesData.data,
+              borderColor: colors.goldLine,
+              backgroundColor: gradient,
+              borderWidth: 3,
+              pointBackgroundColor: colors.goldLine,
+              pointBorderColor: '#fff',
+              pointBorderWidth: 2,
+              pointRadius: 4,
+              pointHoverRadius: 6,
+              fill: true,
+              tension: 0.4
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                titleFont: { family: 'IBM Plex Sans Arabic', size: 12 },
+                bodyFont: { family: 'IBM Plex Sans Arabic', size: 13, weight: 'bold' },
+                padding: 12,
+                cornerRadius: 8,
+                callbacks: {
+                  label: function(context) {
+                    const symbol = currentCurrency === 'YER' ? 'ر.ي' : (currentCurrency === 'USD' ? '$' : 'ر.س');
+                    return ' المبيعات: ' + new Intl.NumberFormat('ar-SA').format(context.parsed.y) + ' ' + symbol;
+                  }
+                }
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                grid: { color: colors.grid, drawBorder: false },
+                ticks: { 
+                  color: colors.text, 
+                  font: { family: 'IBM Plex Sans Arabic', size: 11 },
+                  callback: function(value) {
+                    return new Intl.NumberFormat('ar-SA').format(value);
+                  }
+                }
+              },
+              x: {
+                grid: { display: false },
+                ticks: { color: colors.text, font: { family: 'IBM Plex Sans Arabic', size: 11 }, maxTicksLimit: 7 }
+              }
+            },
+            interaction: { mode: 'nearest', axis: 'x', intersect: false }
+          }
+        });
+      }
+
+      // 2. Status Doughnut Chart
+      const statusCanvas = document.getElementById('statusChart');
+      if (statusCanvas && statusData.labels && statusData.labels.length > 0) {
+        const ctxStatus = statusCanvas.getContext('2d');
+        if (statusChartObj) statusChartObj.destroy();
+
+        const statusLabelsAr = statusData.labels.map(l => {
+          const map = {
+            'pending': 'قيد الانتظار',
+            'confirmed': 'تم التأكيد',
+            'processing': 'قيد التجهيز',
+            'shipped': 'تم الشحن',
+            'delivered': 'مكتمل',
+            'cancelled': 'ملغي'
+          };
+          return map[l] || l;
+        });
+
+        statusChartObj = new Chart(ctxStatus, {
+          type: 'doughnut',
+          data: {
+            labels: statusLabelsAr,
+            datasets: [{
+              data: statusData.data,
+              backgroundColor: statusData.colors,
+              borderWidth: 0,
+              cutout: '76%'
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                titleFont: { family: 'IBM Plex Sans Arabic' },
+                bodyFont: { family: 'IBM Plex Sans Arabic' },
+                padding: 10,
+                cornerRadius: 8,
+                callbacks: {
+                  label: function(context) {
+                    return ' ' + context.label + ': ' + context.parsed + ' طلب';
+                  }
+                }
+              }
+            }
+          }
+        });
+      }
+    }
+
+    initCharts();
+
+    // Instant Chart update when Dark/Light theme toggles
+    window.addEventListener('themeChanged', () => {
+      initCharts();
+    });
+  });
+</script>
+<%- include('../partials/foot') %>

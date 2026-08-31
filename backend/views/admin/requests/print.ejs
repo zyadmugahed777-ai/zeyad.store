@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <title>طباعة طلب - <%= request.request_id %></title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'IBM Plex Sans Arabic', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    body {
+      margin: 0;
+      padding: 24px;
+      color: #1a1a1a;
+      background: #fff;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .print-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 16px;
+      border-bottom: 2px solid #000;
+      margin-bottom: 24px;
+    }
+    .print-logo h1 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 700;
+    }
+    .print-logo p {
+      margin: 2px 0 0;
+      font-size: 12px;
+      color: #555;
+    }
+    .print-meta {
+      text-align: left;
+    }
+    .print-meta strong {
+      font-size: 16px;
+      display: block;
+      color: #111;
+    }
+    .print-section {
+      margin-bottom: 20px;
+      page-break-inside: avoid;
+    }
+    .section-title {
+      font-size: 14px;
+      font-weight: 700;
+      background: #f3f4f6;
+      padding: 6px 12px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+    .grid-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 12px;
+    }
+    .grid-table th, .grid-table td {
+      border: 1px solid #e5e7eb;
+      padding: 8px 12px;
+      text-align: right;
+      font-size: 13px;
+    }
+    .grid-table th {
+      background: #fafafa;
+      width: 25%;
+      color: #4b5563;
+    }
+    .content-box {
+      border: 1px solid #e5e7eb;
+      padding: 12px;
+      border-radius: 4px;
+      background: #fafafa;
+      white-space: pre-wrap;
+    }
+    .footer-sign {
+      margin-top: 40px;
+      display: flex;
+      justify-content: space-between;
+      page-break-inside: avoid;
+    }
+    .sign-box {
+      width: 200px;
+      text-align: center;
+      border-top: 1px solid #000;
+      padding-top: 8px;
+    }
+    @media print {
+      body { padding: 0; }
+      @page { size: A4; margin: 15mm; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="print-header">
+    <div class="print-logo">
+      <h1>زياد ستور — Zeyad For Business</h1>
+      <p>منصة المنزل والطاقة المعتمدة | صنعاء، شارع الزبيري | هاتف: 775010726</p>
+    </div>
+    <div class="print-meta">
+      <strong>رقم الطلب: <%= request.request_id %></strong>
+      <span style="font-size: 12px; color: #666;">تاريخ الطباعة: <%= printDate %></span>
+    </div>
+  </div>
+
+  <div class="print-section">
+    <div class="section-title">بيانات الطلب والعميل</div>
+    <table class="grid-table">
+      <tr>
+        <th>اسم العميل</th>
+        <td><strong><%= request.customer_name %></strong></td>
+        <th>نوع الطلب</th>
+        <td><%= request.type_ar %></td>
+      </tr>
+      <tr>
+        <th>رقم الهاتف</th>
+        <td dir="ltr" style="text-align: right;"><%= request.phone %></td>
+        <th>البريد الإلكتروني</th>
+        <td><%= request.email || '—' %></td>
+      </tr>
+      <tr>
+        <th>المدينة / العنوان</th>
+        <td><%= request.city || '—' %></td>
+        <th>حالة الطلب</th>
+        <td><strong><%= request.status_ar %></strong></td>
+      </tr>
+      <tr>
+        <th>تاريخ الإنشاء</th>
+        <td><%= new Date(request.created_at).toLocaleString('ar-YE') %></td>
+        <th>الأولوية</th>
+        <td><%= request.priority_ar %></td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="print-section">
+    <div class="section-title">تفاصيل الطلب / الاستفسار</div>
+    <div class="content-box">
+      <strong>الموضوع: <%= request.subject || 'طلب عام' %></strong>
+      <p style="margin: 8px 0 0;"><%= request.message || 'لا توجد تفاصيل إضافية.' %></p>
+    </div>
+  </div>
+
+  <% if (request.linkedProduct) { %>
+    <div class="print-section">
+      <div class="section-title">المنتج المرتبط بالطلب</div>
+      <table class="grid-table">
+        <tr>
+          <th>اسم المنتج</th>
+          <td><%= request.linkedProduct.title %></td>
+          <th>السعر الرسمي</th>
+          <td><%= request.linkedProduct.price %> ر.س</td>
+        </tr>
+        <tr>
+          <th>الضمان</th>
+          <td><%= request.linkedProduct.warranty || 'معتمد' %></td>
+          <th>رمز المنتج</th>
+          <td><%= request.linkedProduct.product_id %></td>
+        </tr>
+      </table>
+    </div>
+  <% } %>
+
+  <% if (request.admin_notes) { %>
+    <div class="print-section">
+      <div class="section-title">ملاحظات الإدارة والمتابعة</div>
+      <div class="content-box">
+        <%= request.admin_notes %>
+      </div>
+    </div>
+  <% } %>
+
+  <div class="footer-sign">
+    <div class="sign-box">
+      <span>توقيع الموظف المسؤول</span>
+    </div>
+    <div class="sign-box">
+      <span>ختم الإدارة والمطابقة</span>
+    </div>
+  </div>
+
+  <script>
+    window.addEventListener('load', () => {
+      // Auto trigger print in browser
+      setTimeout(() => { window.print(); }, 400);
+    });
+  </script>
+</body>
+</html>

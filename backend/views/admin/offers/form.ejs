@@ -1,0 +1,363 @@
+<%- include('../../partials/head', { title }) %>
+<%- include('../../partials/sidebar', { active }) %>
+<main class="admin-main">
+  <%- include('../../partials/topbar') %>
+  
+  <div class="admin-content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h1 class="page-title"><%= title %></h1>
+      </div>
+      <div class="admin-header-actions">
+        <a href="/admin/offers" class="btn btn-outline">
+          <span class="material-symbols-rounded">arrow_forward</span>
+          العودة للقائمة
+        </a>
+      </div>
+    </div>
+
+    <form action="<%= offer ? '/admin/offers/' + offer.id + '/edit' : '/admin/offers/create' %>" method="POST" enctype="multipart/form-data">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      
+      <div class="row" style="display: flex; flex-wrap: wrap; margin: -12px;">
+        <!-- Left Column: Details & Targeting -->
+        <div style="flex: 0 0 66.66%; padding: 12px; box-sizing: border-box;">
+          
+          <div class="glass-card mb-4">
+            <h2 style="font-size: 1.1rem; margin-bottom: 20px; color: var(--primary-color);">تفاصيل العرض الأساسية</h2>
+            
+            <div class="form-group">
+              <label class="form-label">العنوان (عربي) <span class="text-danger">*</span></label>
+              <input type="text" name="title_ar" class="form-control" value="<%= offer ? offer.title_ar : '' %>" required>
+            </div>
+            
+            <div class="form-group mt-3">
+              <label class="form-label">العنوان (إنجليزي)</label>
+              <input type="text" name="title_en" class="form-control" value="<%= offer ? offer.title_en : '' %>" dir="ltr">
+            </div>
+
+            <div class="form-group mt-3">
+              <label class="form-label">الوصف الكامل</label>
+              <textarea name="description" class="form-control rich-editor" rows="4"><%= offer ? offer.description : '' %></textarea>
+            </div>
+            
+            <div class="row" style="display: flex; flex-wrap: wrap; margin: 0 -8px; margin-top: 16px;">
+              <div style="flex: 0 0 50%; padding: 0 8px; box-sizing: border-box;">
+                <label class="form-label">نص الزر (CTA)</label>
+                <input type="text" name="button_text" class="form-control" value="<%= offer ? offer.button_text : '' %>" placeholder="مثال: تسوق الآن">
+              </div>
+              <div style="flex: 0 0 50%; padding: 0 8px; box-sizing: border-box;">
+                <label class="form-label">رابط الزر (URL)</label>
+                <input type="text" name="link" class="form-control" value="<%= offer ? offer.link : '' %>" dir="ltr" placeholder="مثال: /products?category=1">
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-card mb-4">
+            <h2 style="font-size: 1.1rem; margin-bottom: 20px; color: var(--primary-color);">الخصم والتسعير</h2>
+            
+            <div class="row" style="display: flex; flex-wrap: wrap; margin: 0 -8px;">
+              <div style="flex: 0 0 33.33%; padding: 0 8px; box-sizing: border-box;">
+                <label class="form-label">نوع الخصم</label>
+                <select name="discount_type" class="form-control" id="discountType">
+                  <option value="percentage" <%= offer && offer.discount_type === 'percentage' ? 'selected' : '' %>>نسبة مئوية (%)</option>
+                  <option value="fixed" <%= offer && offer.discount_type === 'fixed' ? 'selected' : '' %>>مبلغ ثابت</option>
+                  <option value="coupon_only" <%= offer && offer.discount_type === 'coupon_only' ? 'selected' : '' %>>كود خصم فقط</option>
+                </select>
+              </div>
+              <div style="flex: 0 0 33.33%; padding: 0 8px; box-sizing: border-box;">
+                <label class="form-label">نسبة الخصم (%)</label>
+                <input type="number" step="0.01" name="discount_value" id="discountValue" class="form-control" value="<%= offer ? offer.discount_value : '0' %>" dir="ltr">
+              </div>
+              <div style="flex: 0 0 33.33%; padding: 0 8px; box-sizing: border-box;">
+                <label class="form-label">مبلغ الخصم الثابت</label>
+                <input type="number" step="0.01" name="discount_amount" id="discountAmount" class="form-control" value="<%= offer ? offer.discount_amount : '0' %>" dir="ltr">
+              </div>
+            </div>
+
+            <div class="row mt-3" style="display: flex; flex-wrap: wrap; margin: 0 -8px;">
+              <div style="flex: 0 0 50%; padding: 0 8px; box-sizing: border-box;">
+                <label class="form-label">كود الخصم (اختياري)</label>
+                <input type="text" name="coupon_code" class="form-control" value="<%= offer ? offer.coupon_code : '' %>" dir="ltr" placeholder="مثال: SUMMER24" style="text-transform: uppercase;">
+              </div>
+              <div style="flex: 0 0 50%; padding: 0 8px; box-sizing: border-box;">
+                <label class="form-label">الحد الأدنى للطلب</label>
+                <input type="number" step="0.01" name="min_order" class="form-control" value="<%= offer ? offer.min_order : '' %>" dir="ltr">
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-card mb-4">
+            <h2 style="font-size: 1.1rem; margin-bottom: 20px; color: var(--primary-color);">الاستهداف</h2>
+            <p class="text-muted mb-3" style="font-size: 13px;">اختر متى وكيف يطبق هذا العرض. اترك الحقول فارغة لتطبيق العرض بشكل عام.</p>
+            
+            <div class="form-group">
+              <label class="form-label">القسم الرئيسي المستهدف</label>
+              <select name="department_id" class="form-control">
+                <option value="">جميع الأقسام</option>
+                <% departments.forEach(dep => { %>
+                  <option value="<%= dep.id %>" <%= offer && offer.department_id === dep.id ? 'selected' : '' %>><%= dep.name_ar %></option>
+                <% }) %>
+              </select>
+            </div>
+            
+            <div class="form-group mt-3">
+              <label class="form-label">الفئة المستهدفة</label>
+              <select name="category_id" class="form-control">
+                <option value="">جميع الفئات</option>
+                <% categories.forEach(cat => { %>
+                  <option value="<%= cat.id %>" <%= offer && offer.category_id === cat.id ? 'selected' : '' %>><%= cat.name_ar %></option>
+                <% }) %>
+              </select>
+            </div>
+
+            <div class="form-group mt-3">
+              <label class="form-label">منتج محدد (اختياري)</label>
+              <select name="product_id_ref" class="form-control">
+                <option value="">لا يوجد (يسري على الأقسام/الفئات المحددة)</option>
+                <% products.forEach(prod => { %>
+                  <option value="<%= prod.id %>" <%= offer && offer.product_id_ref === prod.id ? 'selected' : '' %>><%= prod.title %></option>
+                <% }) %>
+              </select>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Column: Settings & Media -->
+        <div style="flex: 0 0 33.33%; padding: 12px; box-sizing: border-box;">
+
+          <%- include('../../partials/offer-preview', { offer: typeof offer !== 'undefined' ? offer : null }) %>
+
+          <div class="glass-card mb-4">
+            <h2 style="font-size: 1.1rem; margin-bottom: 20px; color: var(--primary-color);">الصورة والنشر</h2>
+            
+            <div class="form-group">
+              <label class="form-label">صورة العرض (البانر)</label>
+              <% if (offer && offer.image) { %>
+                <div class="mb-2">
+                  <img src="<%= offer.image %>" alt="Current Image" style="width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--border-color);">
+                </div>
+              <% } %>
+              <input type="file" name="image" class="form-control" accept="image/*">
+            </div>
+
+            <div class="form-group mt-4">
+              <label class="form-label">الحالة</label>
+              <select name="status" class="form-control">
+                <option value="active" <%= offer && offer.status === 'active' ? 'selected' : '' %>>نشط ومتاح للعملاء</option>
+                <option value="hidden" <%= offer && offer.status === 'hidden' ? 'selected' : '' %>>مخفي (لا يظهر كبانر)</option>
+                <option value="draft" <%= offer && offer.status === 'draft' ? 'selected' : '' %>>مسودة</option>
+              </select>
+            </div>
+
+            <div class="form-group mt-4">
+              <label class="form-label mb-3">مكان الظهور (Placement Visualizer)</label>
+              <% 
+                const placements = offer && offer.placement ? offer.placement.split(',') : ['home'];
+              %>
+              
+              <!-- Hidden inputs that will be submitted with the form -->
+              <input type="hidden" name="placement[]" value="home" id="input_placement_home" <%= placements.includes('home') ? '' : 'disabled' %>>
+              <input type="hidden" name="placement[]" value="category" id="input_placement_category" <%= placements.includes('category') ? '' : 'disabled' %>>
+              <input type="hidden" name="placement[]" value="checkout" id="input_placement_checkout" <%= placements.includes('checkout') ? '' : 'disabled' %>>
+              <input type="hidden" name="placement[]" value="popup" id="input_placement_popup" <%= placements.includes('popup') ? '' : 'disabled' %>>
+              <input type="hidden" name="placement[]" value="home_bottom" id="input_placement_home_bottom" <%= placements.includes('home_bottom') ? '' : 'disabled' %>>
+              <input type="hidden" name="placement[]" value="all_pages" id="input_placement_all_pages" <%= placements.includes('all_pages') ? '' : 'disabled' %>>
+              <input type="hidden" name="placement[]" value="all_pages_bottom" id="input_placement_all_pages_bottom" <%= placements.includes('all_pages_bottom') ? '' : 'disabled' %>>
+
+              <!-- Wireframe Visualizer -->
+              <div style="background: var(--bg-body); border-radius: 12px; padding: 20px; border: 1px solid var(--border-color); display: flex; gap: 20px;">
+                
+                <!-- Wireframe Graphic -->
+                <div style="flex: 1; border: 2px solid var(--border-color); border-radius: 8px; background: var(--bg-card); padding: 10px; position: relative; height: 280px; display: flex; flex-direction: column; gap: 8px;">
+                  
+                  <!-- Topbar Wireframe -->
+                  <div style="height: 20px; background: var(--bg-tertiary); border-radius: 4px; display: flex; justify-content: space-between; align-items: center; padding: 0 10px;">
+                    <div style="width: 40px; height: 6px; background: var(--text-muted); border-radius: 2px;"></div>
+                    <div style="width: 20px; height: 6px; background: var(--text-muted); border-radius: 2px;"></div>
+                  </div>
+
+                  <!-- Home Banner Area -->
+                  <div id="zone_home" class="placement-zone <%= placements.includes('home') ? 'active' : '' %>" onclick="togglePlacement('home')" style="height: 60px; border: 2px dashed var(--border-color); border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; position: relative;">
+                    <span style="font-size: 11px; font-weight: 600; color: var(--text-muted);">الصفحة الرئيسية (Hero)</span>
+                    <div class="active-badge"><span class="material-symbols-rounded" style="font-size: 14px;">check_circle</span></div>
+                  </div>
+
+                  <!-- Category Grid Area -->
+                  <div style="display: flex; gap: 8px; flex: 1;">
+                    <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
+                      <div id="zone_category" class="placement-zone <%= placements.includes('category') ? 'active' : '' %>" onclick="togglePlacement('category')" style="flex: 1; border: 2px dashed var(--border-color); border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; position: relative;">
+                        <span style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-align: center;">صفحات الأقسام<br>(بين المنتجات)</span>
+                        <div class="active-badge"><span class="material-symbols-rounded" style="font-size: 14px;">check_circle</span></div>
+                      </div>
+                    </div>
+                    <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
+                      <div style="flex: 1; background: var(--bg-tertiary); border-radius: 4px; opacity: 0.3;"></div>
+                      <div style="flex: 1; background: var(--bg-tertiary); border-radius: 4px; opacity: 0.3;"></div>
+                    </div>
+                  </div>
+
+                  <!-- Bottom of the home page -->
+                  <div id="zone_home_bottom" class="placement-zone <%= placements.includes('home_bottom') ? 'active' : '' %>" onclick="togglePlacement('home_bottom')" style="height: 34px; border: 2px dashed var(--border-color); border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; position: relative;">
+                    <span style="font-size: 11px; font-weight: 600; color: var(--text-muted);">أسفل الصفحة الرئيسية</span>
+                    <div class="active-badge"><span class="material-symbols-rounded" style="font-size: 14px;">check_circle</span></div>
+                  </div>
+
+                  <!-- Checkout Area -->
+                  <div id="zone_checkout" class="placement-zone <%= placements.includes('checkout') ? 'active' : '' %>" onclick="togglePlacement('checkout')" style="height: 40px; border: 2px dashed var(--border-color); border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; position: relative;">
+                    <span style="font-size: 11px; font-weight: 600; color: var(--text-muted);">صفحة الدفع (Checkout)</span>
+                    <div class="active-badge"><span class="material-symbols-rounded" style="font-size: 14px;">check_circle</span></div>
+                  </div>
+
+                  <!-- Popup Overlay representation -->
+                  <div id="zone_popup" class="placement-zone <%= placements.includes('popup') ? 'active' : '' %>" onclick="togglePlacement('popup')" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 120px; height: 80px; background: rgba(0,0,0,0.8); border: 2px dashed var(--primary-gold); border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; backdrop-filter: blur(4px);">
+                    <span style="font-size: 11px; font-weight: 600; color: #fff; text-align: center;">نافذة منبثقة<br>(Popup)</span>
+                    <div class="active-badge"><span class="material-symbols-rounded" style="font-size: 14px;">check_circle</span></div>
+                  </div>
+                </div>
+                
+                <!-- Instructions & site-wide options -->
+                <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 14px;">
+                  <div>
+                    <h4 style="font-size: 14px; margin-bottom: 8px; color: var(--text-main);">انقر على المخطط للتحديد</h4>
+                    <p style="font-size: 12px; color: var(--text-muted); line-height: 1.6; margin: 0;">
+                      يمكنك اختيار أكثر من مكان في نفس الوقت لتوسيع نطاق حملتك الإعلانية.
+                    </p>
+                  </div>
+
+                  <div style="border-top: 1px solid var(--border-color); padding-top: 12px;">
+                    <h4 style="font-size: 13px; margin-bottom: 8px; color: var(--text-main);">ظهور على مستوى الموقع</h4>
+
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; margin-bottom: 6px; font-size: 12px;">
+                      <input type="checkbox" id="chk_all_pages" onchange="togglePlacement('all_pages')" <%= placements.includes('all_pages') ? 'checked' : '' %> style="width: 16px; height: 16px;">
+                      <span>أعلى جميع صفحات الموقع</span>
+                    </label>
+
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 12px;">
+                      <input type="checkbox" id="chk_all_pages_bottom" onchange="togglePlacement('all_pages_bottom')" <%= placements.includes('all_pages_bottom') ? 'checked' : '' %> style="width: 16px; height: 16px;">
+                      <span>أسفل جميع صفحات الموقع</span>
+                    </label>
+                  </div>
+
+                  <div style="border-top: 1px solid var(--border-color); padding-top: 12px;">
+                    <h4 style="font-size: 13px; margin-bottom: 8px; color: var(--text-main);">صفحة محددة</h4>
+                    <%
+                      // The chosen page rides inside the same comma-separated
+                      // placement value as "page:<slug>", so targeting one page
+                      // needs no new column on the offers table.
+                      const pagePlacement = placements.find(p => p.indexOf('page:') === 0) || '';
+                      const chosenPage = pagePlacement ? pagePlacement.slice(5) : '';
+                    %>
+                    <select id="select_specific_page" class="form-control" style="font-size: 12px;" onchange="syncSpecificPage()">
+                      <option value="">— بدون صفحة محددة —</option>
+                      <% (typeof sitePages !== 'undefined' ? sitePages : []).forEach(p => { %>
+                        <option value="<%= p.slug %>" <%= chosenPage === p.slug ? 'selected' : '' %>><%= p.title_ar %></option>
+                      <% }) %>
+                    </select>
+                    <input type="hidden" name="placement[]" id="input_placement_page" value="<%= pagePlacement %>" <%= pagePlacement ? '' : 'disabled' %>>
+                    <small style="display: block; margin-top: 6px; font-size: 11px; color: var(--text-muted);">
+                      يظهر العرض أعلى محتوى الصفحة المختارة.
+                    </small>
+                  </div>
+                </div>
+              </div>
+              
+              <style>
+                .placement-zone:hover { border-color: var(--primary-gold) !important; background: rgba(234, 179, 8, 0.05); }
+                .placement-zone.active { border-color: var(--primary-gold) !important; background: rgba(234, 179, 8, 0.1) !important; }
+                .placement-zone.active span { color: var(--primary-gold) !important; }
+                .placement-zone .active-badge { position: absolute; top: 4px; right: 4px; color: var(--primary-gold); display: none; }
+                .placement-zone.active .active-badge { display: block; }
+              </style>
+
+              <script>
+                function togglePlacement(zone) {
+                  const input = document.getElementById('input_placement_' + zone);
+                  if (!input) return;
+
+                  const nowActive = input.disabled;
+                  input.disabled = !nowActive;
+
+                  // A zone may be drawn on the wireframe, offered as a
+                  // checkbox, or both. Keep whichever exist in agreement, so a
+                  // placement can never look on in one control and off in the
+                  // other.
+                  const box = document.getElementById('zone_' + zone);
+                  if (box) box.classList.toggle('active', nowActive);
+
+                  const chk = document.getElementById('chk_' + zone);
+                  if (chk) chk.checked = nowActive;
+                }
+
+                function syncSpecificPage() {
+                  const sel = document.getElementById('select_specific_page');
+                  const input = document.getElementById('input_placement_page');
+                  if (!sel || !input) return;
+                  if (sel.value) {
+                    input.value = 'page:' + sel.value;
+                    input.disabled = false;
+                  } else {
+                    input.value = '';
+                    input.disabled = true;
+                  }
+                }
+              </script>
+            </div>
+
+            <div class="form-group mt-4">
+              <label class="form-label">تاريخ البداية (اختياري)</label>
+              <input type="datetime-local" name="start_date" class="form-control" value="<%= helpers.toDateTimeInput(offer && offer.start_date) %>" dir="ltr">
+            </div>
+
+            <div class="form-group mt-4">
+              <label class="form-label">تاريخ النهاية (اختياري)</label>
+              <input type="datetime-local" name="end_date" class="form-control" value="<%= helpers.toDateTimeInput(offer && offer.end_date) %>" dir="ltr">
+            </div>
+
+            <div class="form-group mt-4">
+              <label class="form-label">الترتيب (الأولوية)</label>
+              <input type="number" name="sort_order" class="form-control" value="<%= offer ? offer.sort_order : '0' %>" dir="ltr">
+            </div>
+            
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-end gap-3 mb-5">
+        <a href="/admin/offers" class="btn btn-outline">إلغاء</a>
+        <button type="submit" class="btn btn-primary" style="padding: 12px 32px; font-size: 16px;">
+          <span class="material-symbols-rounded">save</span>
+          حفظ التغييرات
+        </button>
+      </div>
+
+    </form>
+  </div>
+</main>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const discountType = document.getElementById('discountType');
+    const discountValue = document.getElementById('discountValue');
+    const discountAmount = document.getElementById('discountAmount');
+
+    function updateFields() {
+      if (discountType.value === 'percentage') {
+        discountValue.disabled = false;
+        discountAmount.disabled = true;
+        discountAmount.value = 0;
+      } else if (discountType.value === 'fixed') {
+        discountValue.disabled = true;
+        discountValue.value = 0;
+        discountAmount.disabled = false;
+      } else {
+        discountValue.disabled = true;
+        discountAmount.disabled = true;
+      }
+    }
+
+    discountType.addEventListener('change', updateFields);
+    updateFields();
+  });
+</script>
+<%- include('../../partials/foot') %>

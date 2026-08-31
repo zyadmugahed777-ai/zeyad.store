@@ -1,0 +1,181 @@
+<%
+/**
+ * Live preview for the offer form.
+ *
+ * The offer screen had no preview, so the only way to see what an offer looked
+ * like was to publish it and go hunting for it on the site. This mirrors the
+ * markup in services/offer-render-service.js -- the same card the storefront
+ * actually renders -- so what is shown here is what a customer sees.
+ *
+ * The phone view is the default width rather than an afterthought: most of
+ * this shop's visits are on a phone, and an offer that only reads well on a
+ * desktop is an offer that mostly does not read well.
+ */
+const _o = (typeof offer !== 'undefined' && offer) ? offer : null;
+%>
+<div class="glass-card mb-4">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+    <h2 style="font-size:1rem; margin:0; color:var(--primary-color);">معاينة مباشرة</h2>
+    <div style="display:flex; gap:4px;">
+      <button type="button" class="btn btn-outline offer-preview-device is-active" data-width="380"
+              style="font-size:11px; padding:4px 10px;">جوال</button>
+      <button type="button" class="btn btn-outline offer-preview-device" data-width="520"
+              style="font-size:11px; padding:4px 10px;">تابلت</button>
+      <button type="button" class="btn btn-outline offer-preview-device" data-width="100%"
+              style="font-size:11px; padding:4px 10px;">كمبيوتر</button>
+    </div>
+  </div>
+  <p class="text-muted" style="font-size:12px; margin-bottom:14px;">
+    تتحدث فوراً أثناء الكتابة، وتعرض العرض بنفس شكله على الموقع.
+  </p>
+
+  <div id="offerPreviewFrame"
+       style="max-width:380px; margin:0 auto; transition:max-width .2s ease;">
+    <article id="offerPreviewCard"
+             style="border:1px solid var(--border-color,#e3d5c3); border-radius:14px; overflow:hidden;
+                    background:var(--bg-card,#fff); color:var(--text-primary,#1c1813);
+                    box-shadow:0 2px 10px rgba(0,0,0,.08);">
+      <div id="offerPreviewMedia" style="display:none;">
+        <img id="offerPreviewImage" src="" alt=""
+             style="width:100%; height:160px; object-fit:cover; display:block;">
+      </div>
+      <div style="padding:14px 16px 16px;">
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:6px;">
+          <span id="offerPreviewDiscount"
+                style="display:none; background:var(--primary-gold,#c79a52); color:#1c1813;
+                       font-weight:700; font-size:.78rem; padding:3px 10px; border-radius:999px;"></span>
+          <span id="offerPreviewCoupon"
+                style="display:none; padding:4px 10px; border:1px dashed var(--primary-gold,#c79a52);
+                       border-radius:6px; font-family:monospace; font-size:.85rem;
+                       letter-spacing:.05em; color:var(--primary-gold,#c79a52);"></span>
+        </div>
+        <h3 id="offerPreviewTitle" style="margin:0 0 6px; font-size:1.05rem; line-height:1.4;">
+          عنوان العرض
+        </h3>
+        <p id="offerPreviewDesc" style="margin:0 0 12px; font-size:.86rem; line-height:1.7;
+                                        color:var(--text-muted,#756b5f);"></p>
+        <small id="offerPreviewMinOrder"
+               style="display:none; color:var(--text-muted,#756b5f); font-size:.78rem;"></small>
+        <div style="margin-top:12px;">
+          <span id="offerPreviewCta"
+                style="display:inline-block; background:var(--primary-gold,#c79a52); color:#1c1813;
+                       font-weight:600; font-size:.86rem; padding:8px 18px; border-radius:8px;">
+            تسوق الآن
+          </span>
+        </div>
+      </div>
+    </article>
+
+    <p id="offerPreviewPlacement" class="text-muted"
+       style="font-size:11px; margin-top:10px; text-align:center; line-height:1.7;"></p>
+  </div>
+</div>
+
+<script>
+(function () {
+  const form = document.querySelector('form');
+  if (!form) return;
+
+  const frame = document.getElementById('offerPreviewFrame');
+  const $ = (id) => document.getElementById(id);
+  const val = (name) => {
+    const el = form.querySelector('[name="' + name + '"]');
+    return el ? String(el.value || '').trim() : '';
+  };
+
+  // Where the offer will appear, read back from the placement checkboxes so
+  // the operator can confirm the targeting without saving first.
+  const PLACEMENT_LABELS = {
+    home: 'أعلى الصفحة الرئيسية',
+    home_bottom: 'أسفل الصفحة الرئيسية',
+    category: 'صفحات الأقسام',
+    all_categories: 'جميع الأقسام',
+    checkout: 'صفحة الدفع',
+    popup: 'نافذة منبثقة',
+    all_pages: 'جميع صفحات الموقع',
+    all_pages_bottom: 'أسفل جميع الصفحات',
+    specific_page: 'صفحة محددة'
+  };
+
+  function render() {
+    const title = val('title_ar') || 'عنوان العرض';
+    $('offerPreviewTitle').textContent = title;
+
+    // The description field is a rich editor; take its text, not its markup.
+    let desc = val('description');
+    if (window.tinymce && tinymce.get && tinymce.activeEditor) {
+      try { desc = tinymce.activeEditor.getContent({ format: 'text' }) || desc; } catch (e) {}
+    }
+    const descEl = $('offerPreviewDesc');
+    descEl.textContent = String(desc).replace(/<[^>]*>/g, '').trim();
+    descEl.style.display = descEl.textContent ? '' : 'none';
+
+    const type = val('discount_type');
+    const pct = parseFloat(val('discount_value'));
+    const amt = parseFloat(val('discount_amount'));
+    const badge = $('offerPreviewDiscount');
+    let label = '';
+    if (type === 'percentage' && pct > 0) label = 'خصم ' + pct + '%';
+    else if (amt > 0) label = 'خصم ' + amt.toLocaleString('ar-SA') + ' ر.س';
+    else if (pct > 0) label = 'خصم ' + pct.toLocaleString('ar-SA');
+    badge.textContent = label;
+    badge.style.display = label ? '' : 'none';
+
+    const code = val('coupon_code');
+    const couponEl = $('offerPreviewCoupon');
+    couponEl.textContent = code;
+    couponEl.style.display = code ? '' : 'none';
+
+    const min = parseFloat(val('min_order'));
+    const minEl = $('offerPreviewMinOrder');
+    if (min > 0) {
+      minEl.textContent = 'الحد الأدنى للطلب: ' + min.toLocaleString('ar-SA') + ' ر.س';
+      minEl.style.display = '';
+    } else {
+      minEl.style.display = 'none';
+    }
+
+    $('offerPreviewCta').textContent = val('button_text') || 'تسوق الآن';
+
+    const chosen = [...form.querySelectorAll('input[name="placement[]"]:checked')]
+      .map((c) => PLACEMENT_LABELS[c.value] || c.value);
+    $('offerPreviewPlacement').textContent = chosen.length
+      ? 'سيظهر في: ' + chosen.join('، ')
+      : 'لم تختر مكان ظهور بعد — لن يظهر العرض في أي صفحة.';
+  }
+
+  form.addEventListener('input', render);
+  form.addEventListener('change', render);
+
+  // The image is only on disk after saving, so preview the local file instead.
+  const fileInput = form.querySelector('input[type="file"]');
+  if (fileInput) {
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        $('offerPreviewImage').src = reader.result;
+        $('offerPreviewMedia').style.display = '';
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  document.querySelectorAll('.offer-preview-device').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.offer-preview-device').forEach((b) => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      const w = btn.dataset.width;
+      frame.style.maxWidth = w === '100%' ? '100%' : w + 'px';
+    });
+  });
+
+  <% if (_o && _o.image) { %>
+    $('offerPreviewImage').src = '<%= _o.image %>';
+    $('offerPreviewMedia').style.display = '';
+  <% } %>
+
+  render();
+})();
+</script>

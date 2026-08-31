@@ -1,0 +1,255 @@
+<%- include('../../partials/head', { title }) %>
+<%- include('../../partials/sidebar', { active }) %>
+
+<style>
+  @media print {
+    .admin-sidebar, .admin-topbar, .admin-header-actions, .btn {
+      display: none !important;
+    }
+    .admin-main {
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+    .admin-content {
+      padding: 0 !important;
+    }
+    .print-only-header {
+      display: block !important;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid #000;
+    }
+    .glass-card {
+      border: 1px solid #ddd !important;
+      background: #fff !important;
+      color: #000 !important;
+      box-shadow: none !important;
+      page-break-inside: avoid;
+      margin-bottom: 16px;
+    }
+    table {
+      width: 100% !important;
+      border-collapse: collapse !important;
+    }
+    th, td {
+      border: 1px solid #ccc !important;
+      color: #000 !important;
+      padding: 6px 10px !important;
+    }
+    @page {
+      size: A4;
+      margin: 12mm;
+    }
+  }
+  .print-only-header {
+    display: none;
+  }
+</style>
+
+<main class="admin-main">
+  <%- include('../../partials/topbar') %>
+
+  <div class="admin-content">
+    
+    <!-- Print Only Header -->
+    <div class="print-only-header">
+      <h1 style="margin: 0; font-size: 20px;">زياد ستور — تقرير العمليات التشغيلية والمبيعات الشامل</h1>
+      <p style="margin: 4px 0 0; font-size: 12px; color: #555;">تاريخ استخراج التقرير: <%= new Date().toLocaleString('ar-YE') %></p>
+    </div>
+
+    <!-- Screen Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h1 class="page-title"><%= title %></h1>
+        <p class="text-muted mt-2" style="font-size: 13px;">تتبع أداء المبيعات، طلبات العملاء التشغيلية، وبلاغات المشاكل من قاعدة البيانات مباشرة.</p>
+      </div>
+      <div class="admin-header-actions">
+        <button class="btn btn-outline" onclick="window.print()" style="display: inline-flex; align-items: center; gap: 6px;">
+          <span class="material-symbols-rounded">print</span>
+          طباعة التقرير A4
+        </button>
+      </div>
+    </div>
+
+    <!-- Quick Stats for Reports -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px;">
+      <% 
+        let totalOrdersReport = 0;
+        let totalRevenueReport = 0;
+        statusCounts.forEach(s => totalOrdersReport += s.count);
+        topProducts.forEach(p => totalRevenueReport += p.revenue);
+      %>
+      <div class="glass-card" style="padding: 20px;">
+        <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">إجمالي المبيعات (أفضل المنتجات)</div>
+        <div style="font-size: 24px; font-weight: 700; color: var(--primary-gold);" dir="ltr"><%= helpers.formatPrice(totalRevenueReport) %></div>
+      </div>
+
+      <div class="glass-card" style="padding: 20px;">
+        <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">إجمالي الطلبات المستلمة</div>
+        <div style="font-size: 24px; font-weight: 700; color: var(--text-main);"><%= totalOrdersCount %></div>
+      </div>
+
+      <div class="glass-card" style="padding: 20px;">
+        <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">قاعدة العملاء المسجلين</div>
+        <div style="font-size: 24px; font-weight: 700; color: #3b82f6;"><%= totalCustomersCount %></div>
+      </div>
+
+      <div class="glass-card" style="padding: 20px;">
+        <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">إجمالي بلاغات المشاكل</div>
+        <div style="font-size: 24px; font-weight: 700; color: #f59e0b;"><%= reportStats.total %></div>
+      </div>
+    </div>
+
+    <!-- Grid 1: Orders & Top Products -->
+    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 24px; margin-bottom: 24px;">
+      
+      <!-- Orders By Status -->
+      <div class="glass-card p-0">
+        <div class="card-header" style="padding: 16px 20px; border-bottom: 1px solid var(--border-color); margin: 0;">
+          <h2 style="font-size: 15px; margin: 0;">حالات الطلبات الشرائية</h2>
+        </div>
+        <div class="table-responsive">
+          <table class="admin-table" style="font-size: 13px;">
+            <thead>
+              <tr>
+                <th>الحالة</th>
+                <th class="text-center">العدد</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (statusCounts.length === 0) { %>
+                <tr><td colspan="2" class="text-center py-4 text-muted">لا توجد طلبات حتى الآن</td></tr>
+              <% } %>
+              <% statusCounts.forEach(s => { %>
+                <tr>
+                  <td>
+                    <span style="color: <%= helpers.statusColor(s.status) %>; background: <%= helpers.statusTint(s.status, 0.1) %>; padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: 600;">
+                      <%= helpers.statusLabel(s.status) %>
+                    </span>
+                  </td>
+                  <td class="text-center"><strong style="font-size: 15px;"><%= s.count %></strong></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <!-- Top Products -->
+      <div class="glass-card p-0">
+        <div class="card-header" style="padding: 16px 20px; border-bottom: 1px solid var(--border-color); margin: 0;">
+          <h2 style="font-size: 15px; margin: 0;">المنتجات الأكثر طلباً ومبيعاً (Top 10)</h2>
+        </div>
+        <div class="table-responsive">
+          <table class="admin-table" style="font-size: 13px;">
+            <thead>
+              <tr>
+                <th>المنتج</th>
+                <th class="text-center">الكمية المباعة</th>
+                <th class="text-center">الإيرادات</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (topProducts.length === 0) { %>
+                <tr><td colspan="3" class="text-center py-4 text-muted">لا توجد بيانات مبيعات بعد</td></tr>
+              <% } %>
+              <% topProducts.forEach((p, index) => { %>
+                <tr>
+                  <td>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <div style="width: 24px; height: 24px; background: <%= index < 3 ? 'rgba(234, 179, 8, 0.15)' : 'var(--bg-tertiary)' %>; color: <%= index < 3 ? 'var(--primary-gold)' : 'var(--text-muted)' %>; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 11px;">
+                        <%= index + 1 %>
+                      </div>
+                      <strong style="color: var(--text-main); font-weight: 500;"><%= p.product_title %></strong>
+                    </div>
+                  </td>
+                  <td class="text-center">
+                    <span style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; padding: 2px 8px; border-radius: 12px; font-weight: 600;"><%= p.qty %></span>
+                  </td>
+                  <td class="text-center">
+                    <strong style="color: var(--success);" dir="ltr"><%= helpers.formatPrice(p.revenue) %></strong>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Grid 2: Customer Operations (Requests & Issue Reports) -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+      
+      <!-- Customer Requests by Type -->
+      <div class="glass-card p-0">
+        <div class="card-header" style="padding: 16px 20px; border-bottom: 1px solid var(--border-color); margin: 0;">
+          <h2 style="font-size: 15px; margin: 0;">طلبات العملاء التشغيلية حسب النوع</h2>
+        </div>
+        <div class="table-responsive">
+          <table class="admin-table" style="font-size: 13px;">
+            <thead>
+              <tr>
+                <th>نوع الطلب</th>
+                <th class="text-center">العدد</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (requestTypeCounts.length === 0) { %>
+                <tr><td colspan="2" class="text-center py-4 text-muted">لا توجد طلبات مسجلة</td></tr>
+              <% } %>
+              <% requestTypeCounts.forEach(t => { %>
+                <tr>
+                  <td><%= requestTypeMap[t.request_type] || t.request_type %></td>
+                  <td class="text-center"><strong style="font-size: 15px;"><%= t.count %></strong></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Customer Issue Reports & Rewards -->
+      <div class="glass-card p-0">
+        <div class="card-header" style="padding: 16px 20px; border-bottom: 1px solid var(--border-color); margin: 0;">
+          <h2 style="font-size: 15px; margin: 0;">بلاغات المشاكل ونظام المكافآت</h2>
+        </div>
+        <div class="table-responsive">
+          <table class="admin-table" style="font-size: 13px;">
+            <thead>
+              <tr>
+                <th>المؤشر الفني</th>
+                <th class="text-center">العدد</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>إجمالي البلاغات المسجلة</td>
+                <td class="text-center"><strong><%= reportStats.total %></strong></td>
+              </tr>
+              <tr>
+                <td>بلاغات جديدة تحتاج فحص</td>
+                <td class="text-center"><strong style="color: #ef4444;"><%= reportStats.new %></strong></td>
+              </tr>
+              <tr>
+                <td>بلاغات تم التحقق منها واعتمادها</td>
+                <td class="text-center"><strong style="color: #10b981;"><%= reportStats.verified %></strong></td>
+              </tr>
+              <tr>
+                <td>مكافآت وكوبونات تم منحها للعملاء 🎁</td>
+                <td class="text-center"><strong style="color: var(--primary-gold);"><%= reportStats.rewarded %></strong></td>
+              </tr>
+              <tr>
+                <td>بلاغات تم حلها برمجياً بنجاح</td>
+                <td class="text-center"><strong style="color: #3b82f6;"><%= reportStats.completed %></strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</main>
+<%- include('../../partials/foot') %>

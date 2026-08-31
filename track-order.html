@@ -1,0 +1,153 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>تتبع الطلب | زياد ستور</title>
+    <meta name="description" content="تتبع حالة طلبك وموعد التوصيل من خلال إدخال رقم الطلب ورقم الهاتف.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+    <script src="assets/js/core/theme-engine.js?v=20260830-v2327"></script>
+    <style>
+      .page-layout { padding: 80px 24px; max-width: 540px; margin: 0 auto; min-height: 70vh; display: flex; flex-direction: column; justify-content: center; }
+      .page-header { text-align: center; margin-bottom: 40px; }
+      .page-header svg { width: 64px; height: 64px; stroke: var(--accent, #c79a52); fill: none; stroke-width: 1.5; margin-bottom: 24px; }
+      .page-header h1 { font-size: clamp(1.8rem, 4vw, 2.5rem); color: var(--ink); margin-bottom: 12px; }
+      .page-header p { color: var(--muted); font-size: 1.1rem; line-height: 1.6; }
+
+      .track-form { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: 0 12px 32px rgba(0,0,0,0.04); }
+      
+      .form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+      .form-label { font-weight: 600; font-size: 0.95rem; color: var(--ink); }
+      .form-input { padding: 14px 16px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 1rem; color: var(--ink); background: var(--surface); transition: border-color 0.2s ease; width: 100%; box-sizing: border-box; }
+      .form-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(184, 148, 79, 0.1); }
+      
+      .btn-submit { background: var(--olive-deep, #1a3826); color: #fff; border: none; padding: 16px; border-radius: 8px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: background 0.2s ease, transform 0.1s ease; font-family: inherit; width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; }
+      .btn-submit:hover { background: #234d34; transform: translateY(-2px); }
+      .btn-submit:active { transform: translateY(0); }
+      .btn-submit svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; }
+    </style>
+  
+    <link rel="stylesheet" href="styles.css?v=20260830-v2327">
+    <link rel="stylesheet" href="production-polish.css?v=20260830-v2327">
+    <link rel="stylesheet" href="responsive-pro.css?v=20260830-v2327">
+  <link rel="stylesheet" href="mobile-first.css?v=20260830-v2327">
+  <link rel="stylesheet" href="assets/css/storefront-2026.css?v=a6bef9ab1d2b033c">
+
+    <!-- ZFB Core UX Systems -->
+    <script src="assets/js/core/translations.js?v=20260830-v2327"></script>
+    <script src="assets/js/core/i18n.js?v=20260830-v2327"></script>
+    <script src="assets/js/core/theme.js?v=48c1790c"></script>
+    <script src="assets/js/core/currency.js?v=1a885696"></script>
+    <script src="assets/js/core/global-ux.js?v=20260830-v2327"></script>
+  
+    <link rel="canonical" href="https://zeyad.store/track-order.html">
+    <meta property="og:title" content="تتبع الطلب | زياد ستور | زياد ستور">
+    <meta property="og:description" content="تتبع حالة طلبك وموعد التوصيل من خلال إدخال رقم الطلب ورقم الهاتف.">
+    <meta property="og:url" content="https://zeyad.store/track-order.html">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://zeyad.store/assets/placeholder-logo.webp">
+  </head>
+  <body id="top">
+    <div class="shop-shell">
+      <nav class="main-nav" aria-label="التنقل الرئيسي" data-vid="v-a96ecdb5">
+        <a class="brand" href="index.html" data-vid="v-784ac018">
+          <span class="brand-content" data-vid="v-659a1e6a-new">
+            <span class="brand-mark" data-vid="v-54a144c5">ز</span>
+            <span data-vid="v-e8dbe112"><strong data-vid="v-4a979435">زياد ستور</strong><small data-vid="v-cfe60768">منصة المنزل والطاقة</small></span>
+          </span>
+        </a>
+        <div class="nav-actions">
+          <a class="nav-account-btn" href="account.html" aria-label="حسابي" data-vid="v-de48f9e4">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <span data-vid="v-3b93499a">حسابي</span>
+          </a>
+          <a class="cart" href="cart.html" aria-label="السلة" data-vid="v-c0c4ca0b"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8h14l-1.6 8.1a2 2 0 0 1-2 1.6H9.2a2 2 0 0 1-2-1.7L5.7 4H3"></path><path d="M9 21h.1M18 21h.1"></path></svg><b>0</b></a>
+        </div>
+      </nav>
+
+      <main class="page-layout">
+        <div class="page-header">
+          <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+          <h1 data-vid="v-248cc038">تتبع طلبك</h1>
+          <p data-vid="v-8a463a1f">أدخل رقم الطلب ورقم الهاتف المستخدم فيه لمعرفة حالة الشحن والتوصيل.</p>
+          <p style="font-size: 0.85rem; opacity: 0.75; margin-top: 6px;">نطلب الرقمين معاً لحماية بيانات الطلبات من الاطلاع غير المصرّح به. <a href="account.html">سجّل الدخول</a> لعرض جميع طلباتك دون إدخال أي بيانات.</p>
+        </div>
+
+        <form class="track-form backend-form" action="/api/track-order" method="POST" id="trackForm" name="track-order">
+          
+          <div class="form-group">
+            <label for="orderNumber" class="form-label" data-vid="v-75cb8a4d">رقم الطلب</label>
+            <input type="text" id="orderNumber" name="orderNumber" class="form-input" placeholder="مثال: ZFB-2026-000036" dir="ltr" style="text-align: right;" autocomplete="on" maxlength="160" required>
+          </div>
+
+          <div class="form-group">
+            <label for="phone" class="form-label" data-vid="v-55219855">رقم الهاتف المستخدم في الطلب</label>
+            <input type="tel" id="phone" name="phone" class="form-input" placeholder="أدخل رقم الهاتف (مثال: 770420928)" dir="ltr" style="text-align: right;" autocomplete="tel" maxlength="20" required>
+          </div>
+
+          <button type="submit" class="btn-submit" data-vid="v-568f021a">
+            <span data-vid="v-32aa8237">تتبع الآن</span>
+            <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </button>
+        </form>
+
+        <script>
+          document.addEventListener("DOMContentLoaded", function() {
+            const params = new URLSearchParams(window.location.search);
+            const orderParam = params.get('order') || params.get('orderNumber') || params.get('order_id') || '';
+            const phoneParam = params.get('phone') || localStorage.getItem('zfb_customer_phone') || '';
+
+            const orderInput = document.getElementById('orderNumber');
+            const phoneInput = document.getElementById('phone');
+            const form = document.getElementById('trackForm');
+
+            if (orderParam && orderInput) orderInput.value = orderParam;
+            if (phoneParam && phoneInput) phoneInput.value = phoneParam;
+
+            // Auto-submit only when the URL carries both halves; with one of
+            // them the request is refused, and firing it anyway greets the
+            // visitor with an error they did not cause.
+            if (orderParam && phoneInput && phoneInput.value.trim() && form) {
+              setTimeout(() => {
+                form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+              }, 200);
+            }
+          });
+        </script>
+      </main>
+
+      <footer class="site-footer" data-vid="v-fce33282">
+        <div class="footer-top">
+          <div class="container">
+            <div class="footer-grid">
+              <div class="footer-col brand-col">
+                <h3 data-vid="store_name">زياد ستور</h3>
+                <p data-vid="footer_about">وجهتك الأولى للتسوق الإلكتروني بمنتجات أصلية وتجربة تسوق لا تُنسى.</p>
+              </div>
+              <div class="footer-col">
+                <h4 data-vid="v-36d0d813">خدمة العملاء</h4>
+                <ul>
+                  <li data-vid="v-9f4a8774"><a href="track-order.html" data-vid="v-17c06993">تتبع الطلب</a></li>
+                  <li data-vid="v-24034d14"><a href="faq.html" data-vid="v-6c197c3b">الأسئلة الشائعة</a></li>
+                  <li data-vid="v-8f983cbb"><a href="terms.html" data-vid="v-a076c52f">الشروط والأحكام</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <div class="container">
+            <p class="copyright" data-vid="v-e747629f">© 2026 جميع الحقوق محفوظة - زياد ستور</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script src="site.js?v=714c6eb3" defer=""></script>
+    <script src="zfb-config.js"></script>
+    <script src="products_db.js"></script>
+    <script src="zfb-core.js?v=cd21c70c" defer=""></script>
+  
+
+  <script src="assets/js/core/storefront-2026.js?v=a6bef9ab1d2b033c"></script>
+</body></html>

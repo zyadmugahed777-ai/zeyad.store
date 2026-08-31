@@ -1,0 +1,129 @@
+<header class="admin-topbar">
+  <div class="topbar-left" style="display: flex; align-items: center; gap: 16px;">
+    <button id="sidebar-toggle" class="btn-icon" style="color: var(--text-main); display: none;">
+      <span class="material-symbols-rounded">menu</span>
+    </button>
+    <div style="font-weight: 500; color: var(--text-muted); font-size: 15px;">
+      <span style="color: var(--text-main); font-weight: 700;">لوحة التحكم</span>
+      <% if (typeof title !== 'undefined' && title !== 'لوحة التحكم') { %>
+        <span style="margin: 0 8px;">/</span>
+        <%= title %>
+      <% } %>
+    </div>
+  </div>
+  
+  <div class="topbar-right" style="display: flex; align-items: center; gap: 16px;">
+    
+    <!-- Currency Switcher -->
+    <div class="admin-currency-switcher" style="position: relative;">
+      <% const cur = (typeof currentCurrency !== 'undefined' && currentCurrency) ? currentCurrency : 'SAR'; %>
+      <button type="button" id="adminCurrencyBtn" class="btn-currency-switch" style="background: var(--bg-card, rgba(255,255,255,0.06)); border: 1px solid var(--border-color, rgba(255,255,255,0.12)); border-radius: 8px; padding: 6px 12px; color: var(--text-main); font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s;" title="تغيير عملة عرض المنتجات">
+        <span style="font-size: 14px;"><%= cur === 'SAR' ? '🇸🇦' : (cur === 'YER' ? '🇾🇪' : '🇺🇸') %></span>
+        <span><%= cur === 'SAR' ? 'ر.س (سعودي)' : (cur === 'YER' ? 'ر.ي (يمني)' : '$ (دولار)') %></span>
+        <span class="material-symbols-rounded" style="font-size: 16px; opacity: 0.7;">expand_more</span>
+      </button>
+
+      <div id="adminCurrencyDropdown" style="display: none; position: absolute; top: calc(100% + 6px); left: 0; min-width: 175px; background: var(--bg-card, #1a1a1a); border: 1px solid var(--border-color, rgba(255,255,255,0.12)); border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 1000; overflow: hidden; padding: 4px;">
+        <a href="/admin/currency/switch?code=SAR" style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; font-size: 13px; color: var(--text-main); text-decoration: none; border-radius: 6px; <%= cur === 'SAR' ? 'background: var(--primary-gold, #eab308); color: #000; font-weight: 700;' : '' %>">
+          <span>🇸🇦 ريال سعودي (ر.س)</span>
+          <% if (cur === 'SAR') { %><span class="material-symbols-rounded" style="font-size: 16px;">check</span><% } %>
+        </a>
+        <a href="/admin/currency/switch?code=YER" style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; font-size: 13px; color: var(--text-main); text-decoration: none; border-radius: 6px; <%= cur === 'YER' ? 'background: var(--primary-gold, #eab308); color: #000; font-weight: 700;' : '' %>">
+          <span>🇾🇪 ريال يمني (ر.ي)</span>
+          <% if (cur === 'YER') { %><span class="material-symbols-rounded" style="font-size: 16px;">check</span><% } %>
+        </a>
+        <a href="/admin/currency/switch?code=USD" style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; font-size: 13px; color: var(--text-main); text-decoration: none; border-radius: 6px; <%= cur === 'USD' ? 'background: var(--primary-gold, #eab308); color: #000; font-weight: 700;' : '' %>">
+          <span>🇺🇸 دولار أمريكي ($)</span>
+          <% if (cur === 'USD') { %><span class="material-symbols-rounded" style="font-size: 16px;">check</span><% } %>
+        </a>
+      </div>
+    </div>
+
+    <!-- Theme Toggle -->
+    <button id="theme-toggle" class="btn-icon" style="color: var(--text-muted);" title="تبديل المظهر">
+      <span class="material-symbols-rounded">dark_mode</span>
+    </button>
+    
+    <!-- Search -->
+    <a href="/admin/products" class="btn-icon" style="color: var(--text-muted);" title="بحث عن المنتجات">
+      <span class="material-symbols-rounded">search</span>
+    </a>
+    
+    <!-- Mail -->
+    <a href="/admin/notifications" class="btn-icon" style="color: var(--text-muted);" title="الرسائل">
+      <span class="material-symbols-rounded">mail</span>
+    </a>
+
+    <!-- Notifications -->
+    <a href="/admin/notifications" class="btn-icon" style="color: var(--text-muted); position: relative;" title="الإشعارات">
+      <span class="material-symbols-rounded">notifications</span>
+      <span style="position: absolute; top: 0; right: 0; width: 10px; height: 10px; background: var(--danger); border-radius: 50%; border: 2px solid var(--bg-topbar);"></span>
+    </a>
+    
+    <!-- Profile Mini -->
+    <div style="width: 36px; height: 36px; border-radius: 50%; overflow: hidden; margin-right: 8px; border: 2px solid var(--primary-gold); cursor: pointer;">
+      <img src="https://ui-avatars.com/api/?name=<%= (typeof admin !== 'undefined' && admin && admin.full_name) ? encodeURIComponent(admin.full_name) : 'Admin' %>&background=eab308&color=000" style="width: 100%; height: 100%;" alt="Admin">
+    </div>
+
+  </div>
+</header>
+
+<a href="/admin/ai-employee" class="ai-global-launcher" title="فتح الموظف الذكي">
+  <span class="material-symbols-rounded">neurology</span>
+  <strong>AI</strong>
+</a>
+
+<% if (typeof flash !== 'undefined' && flash && flash.message) { %>
+  <div class="flash-message flash-<%= flash.type %>" style="margin: 24px auto 0; max-width: 1400px; width: calc(100% - 64px);">
+    <span class="material-symbols-rounded">info</span>
+    <%= flash.message %>
+  </div>
+<% } %>
+
+<script>
+  // Simple Theme Toggle Script
+  document.addEventListener('DOMContentLoaded', () => {
+    // Currency Dropdown Toggle
+    const curBtn = document.getElementById('adminCurrencyBtn');
+    const curDropdown = document.getElementById('adminCurrencyDropdown');
+    if (curBtn && curDropdown) {
+      curBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        curDropdown.style.display = curDropdown.style.display === 'none' ? 'block' : 'none';
+      });
+      document.addEventListener('click', () => {
+        curDropdown.style.display = 'none';
+      });
+    }
+
+    const toggle = document.getElementById('theme-toggle');
+    const icon = toggle ? toggle.querySelector('.material-symbols-rounded') : null;
+    
+    // Check and set saved theme
+    const savedTheme = localStorage.getItem('admin_theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    if (icon) icon.textContent = savedTheme === 'light' ? 'light_mode' : 'dark_mode';
+    
+    if (toggle && icon) {
+      toggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('admin_theme', newTheme);
+        icon.textContent = newTheme === 'light' ? 'light_mode' : 'dark_mode';
+        
+        // Dispatch custom event for Chart.js and dynamic widgets
+        window.dispatchEvent(new CustomEvent('themeChanged', { detail: { theme: newTheme } }));
+      });
+    }
+
+    // Mobile Sidebar Toggle
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    const sidebar = document.getElementById('adminSidebar');
+    if (sidebarToggle && sidebar) {
+      sidebarToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+      });
+    }
+  });
+</script>

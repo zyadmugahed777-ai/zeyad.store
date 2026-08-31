@@ -1,0 +1,176 @@
+<%- include('../../partials/head', { title }) %>
+<%- include('../../partials/sidebar', { active }) %>
+<main class="admin-main">
+  <%- include('../../partials/topbar') %>
+  <div class="admin-content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h1 class="page-title"><%= title %></h1>
+        <p class="text-muted" style="margin: 4px 0 0;">استقبال وإدارة بلاغات العملاء عن الأخطاء والمشاكل ومنح المكافآت المعتمدة</p>
+      </div>
+    </div>
+
+    <!-- Quick Stats Grid -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-bottom: 22px;">
+      <div class="glass-card" style="padding: 16px; text-align: center; border-right: 4px solid var(--primary-gold);">
+        <div style="font-size: 11px; color: var(--text-muted);">إجمالي البلاغات</div>
+        <div style="font-size: 22px; font-weight: 800; color: #fff; margin-top: 4px;"><%= stats.total %></div>
+      </div>
+      <div class="glass-card" style="padding: 16px; text-align: center; border-right: 4px solid #3b82f6;">
+        <div style="font-size: 11px; color: #93c5fd;">جديدة</div>
+        <div style="font-size: 22px; font-weight: 800; color: #60a5fa; margin-top: 4px;"><%= stats.new %></div>
+      </div>
+      <div class="glass-card" style="padding: 16px; text-align: center; border-right: 4px solid #f59e0b;">
+        <div style="font-size: 11px; color: #fcd34d;">قيد المراجعة</div>
+        <div style="font-size: 22px; font-weight: 800; color: #fbbf24; margin-top: 4px;"><%= stats.in_review %></div>
+      </div>
+      <div class="glass-card" style="padding: 16px; text-align: center; border-right: 4px solid #10b981;">
+        <div style="font-size: 11px; color: #6ee7b7;">تم التحقق</div>
+        <div style="font-size: 22px; font-weight: 800; color: #34d399; margin-top: 4px;"><%= stats.verified %></div>
+      </div>
+      <div class="glass-card" style="padding: 16px; text-align: center; border-right: 4px solid #eab308; background: rgba(234, 179, 8, 0.08);">
+        <div style="font-size: 11px; color: #fef08a;">🎁 تمت المكافأة</div>
+        <div style="font-size: 22px; font-weight: 800; color: #facc15; margin-top: 4px;"><%= stats.rewarded %></div>
+      </div>
+      <div class="glass-card" style="padding: 16px; text-align: center; border-right: 4px solid #ef4444;">
+        <div style="font-size: 11px; color: #fca5a5;">غير معتمدة</div>
+        <div style="font-size: 22px; font-weight: 800; color: #f87171; margin-top: 4px;"><%= stats.rejected %></div>
+      </div>
+    </div>
+
+    <!-- Search & Filter Filter Form -->
+    <div class="glass-card mb-4">
+      <form action="/admin/customer-reports" method="GET" class="d-flex gap-3 align-items-center flex-wrap">
+        <div style="flex: 1; min-width: 220px;">
+          <input type="text" name="q" class="form-control" placeholder="البحث برقم البلاغ، الهاتف، الاسم، أو الكلمات..." value="<%= search %>">
+        </div>
+        <div style="width: 180px;">
+          <select name="status" class="form-control">
+            <option value="">كل الحالات</option>
+            <option value="new" <%= status === 'new' ? 'selected' : '' %>>جديد</option>
+            <option value="in_review" <%= status === 'in_review' ? 'selected' : '' %>>قيد المراجعة</option>
+            <option value="verified" <%= status === 'verified' ? 'selected' : '' %>>تم التحقق</option>
+            <option value="rewarded" <%= status === 'rewarded' ? 'selected' : '' %>>تمت المكافأة</option>
+            <option value="completed" <%= status === 'completed' ? 'selected' : '' %>>تم الحل</option>
+            <option value="rejected" <%= status === 'rejected' ? 'selected' : '' %>>غير معتمد</option>
+            <option value="closed" <%= status === 'closed' ? 'selected' : '' %>>مغلق</option>
+          </select>
+        </div>
+        <div style="width: 150px;">
+          <select name="priority" class="form-control">
+            <option value="">كل الأولويات</option>
+            <option value="low" <%= priority === 'low' ? 'selected' : '' %>>منخفضة</option>
+            <option value="medium" <%= priority === 'medium' ? 'selected' : '' %>>متوسطة</option>
+            <option value="high" <%= priority === 'high' ? 'selected' : '' %>>عالية</option>
+            <option value="critical" <%= priority === 'critical' ? 'selected' : '' %>>حرجة ⚠️</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-accent">
+          <span class="material-symbols-rounded">search</span> بحث
+        </button>
+        <% if (search || status || priority) { %>
+          <a href="/admin/customer-reports" class="btn btn-outline">إلغاء التصفية</a>
+        <% } %>
+      </form>
+    </div>
+
+    <!-- Reports Table -->
+    <div class="glass-card">
+      <div class="table-responsive">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>رقم البلاغ</th>
+              <th>العميل</th>
+              <th>نوع المشكلة</th>
+              <th>الأولوية</th>
+              <th>التاريخ</th>
+              <th class="text-center">الحالة</th>
+              <th class="text-center">المكافأة</th>
+              <th class="text-center">إجراءات</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (reports.length === 0) { %>
+              <tr>
+                <td colspan="8" class="text-center py-5 text-muted">
+                  <div style="font-size: 32px; margin-bottom: 8px;">🛡️</div>
+                  لا توجد بلاغات مطابقة لمعايير البحث الحالية
+                </td>
+              </tr>
+            <% } else { %>
+              <% reports.forEach(r => { %>
+                <tr>
+                  <td>
+                    <strong style="color: var(--primary-gold); font-family: monospace; font-size: 13px;"><%= r.report_number %></strong>
+                    <% if (r.image_path) { %>
+                      <span title="مرفق صورة" style="font-size: 12px; margin-right: 4px;">📷</span>
+                    <% } %>
+                  </td>
+                  <td>
+                    <div style="font-weight: 600;"><%= r.customer_name || 'عميل المتجر' %></div>
+                    <small style="color: var(--text-muted);" dir="ltr"><%= r.customer_phone %></small>
+                  </td>
+                  <td>
+                    <span class="badge" style="background: rgba(255,255,255,0.06); color: #e2e8f0; font-size: 11.5px;">
+                      <%= r.issue_type_ar || r.issue_type %>
+                    </span>
+                  </td>
+                  <td>
+                    <% if (r.priority === 'critical') { %>
+                      <span class="badge badge-danger">حرجة ⚠️</span>
+                    <% } else if (r.priority === 'high') { %>
+                      <span class="badge" style="background: rgba(249, 115, 22, 0.2); color: #fb923c;">عالية</span>
+                    <% } else if (r.priority === 'low') { %>
+                      <span class="badge" style="background: rgba(148, 163, 184, 0.2); color: #94a3b8;">منخفضة</span>
+                    <% } else { %>
+                      <span class="badge badge-info">متوسطة</span>
+                    <% } %>
+                  </td>
+                  <td>
+                    <small style="color: var(--text-muted);"><%= new Date(r.created_at).toLocaleDateString('ar-YE') %></small>
+                  </td>
+                  <td class="text-center">
+                    <% if (r.status === 'new') { %>
+                      <span class="badge" style="background: rgba(59, 130, 246, 0.2); color: #60a5fa;">جديد</span>
+                    <% } else if (r.status === 'in_review') { %>
+                      <span class="badge" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24;">قيد المراجعة</span>
+                    <% } else if (r.status === 'verified') { %>
+                      <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">تم التحقق</span>
+                    <% } else if (r.status === 'rewarded') { %>
+                      <span class="badge" style="background: rgba(234, 179, 8, 0.25); color: #facc15;">🎁 تمت المكافأة</span>
+                    <% } else if (r.status === 'completed') { %>
+                      <span class="badge badge-success">تم الحل</span>
+                    <% } else if (r.status === 'rejected') { %>
+                      <span class="badge badge-danger">غير معتمد</span>
+                    <% } else { %>
+                      <span class="badge badge-secondary">مغلق</span>
+                    <% } %>
+                  </td>
+                  <td class="text-center">
+                    <% if (r.reward_status === 'approved') { %>
+                      <span style="display: inline-block; font-size: 11px; font-weight: 700; color: #facc15; background: rgba(234,179,8,0.12); border: 1px solid rgba(234,179,8,0.3); padding: 2px 8px; border-radius: 6px;">
+                        <%= r.reward_type === 'percentage' ? (r.reward_value + '%') : (r.reward_value + ' ر.ي') %>
+                      </span>
+                    <% } else { %>
+                      <span style="color: var(--text-muted); font-size: 11px;">—</span>
+                    <% } %>
+                  </td>
+                  <td class="text-center">
+                    <a href="/admin/customer-reports/<%= r.id %>" class="btn btn-sm btn-outline" style="padding: 4px 10px; font-size: 12px;">
+                      <span class="material-symbols-rounded" style="font-size: 16px;">visibility</span> مراجعة
+                    </a>
+                  </td>
+                </tr>
+              <% }) %>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination Partial -->
+      <%- include('../../partials/pagination', { page, totalPages, baseUrl: '/admin/customer-reports' }) %>
+    </div>
+  </div>
+</main>
+<%- include('../../partials/foot') %>

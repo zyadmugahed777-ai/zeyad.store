@@ -1,0 +1,204 @@
+<%- include('../../partials/head', { title }) %>
+<%- include('../../partials/sidebar', { active }) %>
+
+<main class="admin-main">
+  <%- include('../../partials/topbar') %>
+
+  <div class="admin-content">
+    
+    <!-- Header -->
+    <div class="page-header d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+      <div>
+        <h1 class="page-title">إدارة الكوبونات وقسائم الخصم</h1>
+        <p class="text-muted">إنشاء وتتبع كوبونات الخصم بالنسبة المئوية والتوصيل المجاني ومكافآت العملاء.</p>
+      </div>
+      <div class="admin-header-actions">
+        <a href="/admin/coupons/create" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 6px;">
+          <span class="material-symbols-rounded">add_circle</span>
+          إنشاء كوبون جديد
+        </a>
+      </div>
+    </div>
+
+    <!-- Quick Stats Cards -->
+    <div class="row g-3 mb-4" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px;">
+      <div class="card p-3" style="border-right: 4px solid var(--primary-gold, #eab308);">
+        <span class="text-muted" style="font-size: 13px;">إجمالي الكوبونات</span>
+        <h3 style="margin: 4px 0 0; font-weight: 700;"><%= stats.total %></h3>
+      </div>
+      <div class="card p-3" style="border-right: 4px solid var(--success, #16a34a);">
+        <span class="text-muted" style="font-size: 13px;">الكوبونات الفعالة</span>
+        <h3 style="margin: 4px 0 0; font-weight: 700; color: var(--success, #16a34a);"><%= stats.active %></h3>
+      </div>
+      <div class="card p-3" style="border-right: 4px solid #3b82f6;">
+        <span class="text-muted" style="font-size: 13px;">إجمالي مرات الاستخدام</span>
+        <h3 style="margin: 4px 0 0; font-weight: 700; color: #3b82f6;"><%= stats.totalRedemptions %></h3>
+      </div>
+      <div class="card p-3" style="border-right: 4px solid #f59e0b;">
+        <span class="text-muted" style="font-size: 13px;">كوبونات النسبة المئوية</span>
+        <h3 style="margin: 4px 0 0; font-weight: 700; color: #f59e0b;"><%= stats.percentageCount %></h3>
+      </div>
+      <div class="card p-3" style="border-right: 4px solid #8b5cf6;">
+        <span class="text-muted" style="font-size: 13px;">عروض التوصيل المجاني</span>
+        <h3 style="margin: 4px 0 0; font-weight: 700; color: #8b5cf6;"><%= stats.freeShippingCount %></h3>
+      </div>
+    </div>
+
+    <!-- Filters & Search -->
+    <div class="card p-3 mb-4">
+      <form action="/admin/coupons" method="GET" class="d-flex gap-3 align-items-center flex-wrap" style="display: flex; gap: 12px; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 220px;">
+          <input type="text" name="q" value="<%= typeof search !== 'undefined' ? search : '' %>" placeholder="بحث بالكود، هاتف العميل، الملاحظات..." class="form-control" style="width: 100%;">
+        </div>
+        <div style="min-width: 150px;">
+          <select name="status" class="form-control">
+            <option value="">جميع الحالات</option>
+            <option value="active" <%= (typeof status !== 'undefined' && status === 'active') ? 'selected' : '' %>>نشط وصالح</option>
+            <option value="inactive" <%= (typeof status !== 'undefined' && status === 'inactive') ? 'selected' : '' %>>معطّل</option>
+            <option value="expired" <%= (typeof status !== 'undefined' && status === 'expired') ? 'selected' : '' %>>منتهي الصلاحية</option>
+            <option value="exhausted" <%= (typeof status !== 'undefined' && status === 'exhausted') ? 'selected' : '' %>>مستنفد الاستخدام</option>
+          </select>
+        </div>
+        <div style="min-width: 150px;">
+          <select name="type" class="form-control">
+            <option value="">جميع الأنواع</option>
+            <% if (typeof typeMap !== 'undefined' && typeMap) { %>
+              <% Object.entries(typeMap).forEach(([k, v]) => { %>
+                <option value="<%= k %>" <%= (typeof type !== 'undefined' && type === k) ? 'selected' : '' %>><%= v %></option>
+              <% }) %>
+            <% } %>
+          </select>
+        </div>
+        <div style="min-width: 140px;">
+          <select name="scope" class="form-control">
+            <option value="">النطاق</option>
+            <% if (typeof scopeMap !== 'undefined' && scopeMap) { %>
+              <% Object.entries(scopeMap).forEach(([k, v]) => { %>
+                <option value="<%= k %>" <%= (typeof scope !== 'undefined' && scope === k) ? 'selected' : '' %>><%= v %></option>
+              <% }) %>
+            <% } %>
+          </select>
+        </div>
+        <div>
+          <button type="submit" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 6px;">
+            <span class="material-symbols-rounded" style="font-size: 18px;">filter_list</span>
+            تصفية
+          </button>
+          <% if ((typeof search !== 'undefined' && search) || (typeof status !== 'undefined' && status) || (typeof type !== 'undefined' && type) || (typeof scope !== 'undefined' && scope)) { %>
+            <a href="/admin/coupons" class="btn btn-outline" style="margin-right: 6px;">إلغاء</a>
+          <% } %>
+        </div>
+      </form>
+    </div>
+
+    <!-- Data Table -->
+    <div class="card overflow-hidden">
+      <div class="table-responsive">
+        <table class="table" style="width: 100%; text-align: right; border-collapse: collapse;">
+          <thead>
+            <tr style="border-bottom: 1px solid var(--border-color, rgba(255,255,255,0.1));">
+              <th style="padding: 12px 16px;">كود الكوبون</th>
+              <th style="padding: 12px 16px;">النوع والقيمة</th>
+              <th style="padding: 12px 16px;">نطاق الاستخدام</th>
+              <th style="padding: 12px 16px;">مرات الاستخدام</th>
+              <th style="padding: 12px 16px;">الحد الأدنى</th>
+              <th style="padding: 12px 16px;">الحالة</th>
+              <th style="padding: 12px 16px;">تاريخ الصلاحية</th>
+              <th style="padding: 12px 16px; text-align: left;">الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (coupons && coupons.length > 0) { %>
+              <% coupons.forEach(c => { %>
+                <tr style="border-bottom: 1px solid var(--border-color, rgba(255,255,255,0.05));">
+                  <td style="padding: 12px 16px;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <strong style="font-family: monospace; font-size: 15px; color: var(--primary-gold, #eab308); letter-spacing: 0.5px;">
+                        <%= c.code %>
+                      </strong>
+                      <button type="button" class="btn-icon text-muted" onclick="navigator.clipboard.writeText('<%= c.code %>'); alert('تم نسخ كود الكوبون!');" title="نسخ الكود">
+                        <span class="material-symbols-rounded" style="font-size: 16px;">content_copy</span>
+                      </button>
+                    </div>
+                    <% if (c.notes) { %><small class="text-muted" style="font-size: 11px;"><%= c.notes %></small><% } %>
+                  </td>
+                  <td style="padding: 12px 16px;">
+                    <% if (c.discount_type === 'percentage') { %>
+                      <span class="badge" style="background: rgba(234, 179, 8, 0.15); color: #facc15; font-weight: 700; font-size: 13px;">
+                        خصم <%= c.discount_value %>%
+                      </span>
+                    <% } else if (c.discount_type === 'free_shipping') { %>
+                      <span class="badge" style="background: rgba(139, 92, 246, 0.15); color: #a78bfa; font-weight: 700; font-size: 13px;">
+                        توصيل مجاني
+                      </span>
+                    <% } %>
+                  </td>
+                  <td style="padding: 12px 16px; font-size: 13px;">
+                    <div><%= c.scope_ar %></div>
+                    <% if (c.customer_phone) { %>
+                      <small style="color: var(--text-muted); direction: ltr; display: block;"><%= c.customer_phone %></small>
+                    <% } %>
+                  </td>
+                  <td style="padding: 12px 16px; font-size: 13px;">
+                    <strong><%= c.used_count %></strong> / <%= c.max_uses > 0 ? c.max_uses : 'بلا حد' %>
+                  </td>
+                  <td style="padding: 12px 16px; font-size: 13px;">
+                    <%= c.min_order > 0 ? `${c.min_order} ر.س` : 'لا يوجد حد' %>
+                  </td>
+                  <td style="padding: 12px 16px;">
+                    <% if (c.statusKey === 'active') { %>
+                      <span class="badge badge-success" style="padding: 4px 8px; font-size: 12px;">نشط وصالح</span>
+                    <% } else if (c.statusKey === 'expired') { %>
+                      <span class="badge badge-warning" style="padding: 4px 8px; font-size: 12px;">منتهي</span>
+                    <% } else if (c.statusKey === 'exhausted') { %>
+                      <span class="badge badge-danger" style="padding: 4px 8px; font-size: 12px;">مستنفد</span>
+                    <% } else { %>
+                      <span class="badge badge-secondary" style="padding: 4px 8px; font-size: 12px;">معطّل</span>
+                    <% } %>
+                  </td>
+                  <td style="padding: 12px 16px; font-size: 12px; color: var(--text-muted);">
+                    <% if (c.end_date) { %>
+                      <%= new Date(c.end_date).toLocaleDateString('ar-YE') %>
+                    <% } else { %>
+                      دائم (بلا تاريخ انتهاء)
+                    <% } %>
+                  </td>
+                  <td style="padding: 12px 16px; text-align: left;">
+                    <div style="display: flex; gap: 6px; justify-content: flex-end;">
+                      <a href="/admin/coupons/<%= c.id %>/edit" class="btn btn-sm btn-outline" style="padding: 4px 8px;" title="تعديل">
+                        <span class="material-symbols-rounded" style="font-size: 16px;">edit</span>
+                      </a>
+                      <form action="/admin/coupons/<%= c.id %>/toggle" method="POST" style="display: inline;">
+                        <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+                        <button type="submit" class="btn btn-sm btn-outline <%= c.is_active ? 'text-warning' : 'text-success' %>" style="padding: 4px 8px;" title="<%= c.is_active ? 'تعطيل' : 'تفعيل' %>">
+                          <span class="material-symbols-rounded" style="font-size: 16px;"><%= c.is_active ? 'toggle_on' : 'toggle_off' %></span>
+                        </button>
+                      </form>
+                      <form action="/admin/coupons/<%= c.id %>/delete" method="POST" style="display: inline;" onsubmit="return confirm('تأكيد حذف هذا الكوبون نهائياً؟');">
+                        <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+                        <button type="submit" class="btn btn-sm btn-outline text-danger" style="padding: 4px 8px;" title="حذف">
+                          <span class="material-symbols-rounded" style="font-size: 16px;">delete</span>
+                        </button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+              <% }) %>
+            <% } else { %>
+              <tr>
+                <td colspan="8" style="text-align: center; padding: 48px; color: var(--text-muted);">
+                  <span class="material-symbols-rounded" style="font-size: 48px; opacity: 0.5;">sell</span>
+                  <p style="margin: 8px 0 0;">لا توجد كوبونات مسجلة حالياً.</p>
+                </td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+
+      <%- include('../../partials/pagination', { page, totalPages, baseUrl: '/admin/coupons' }) %>
+    </div>
+
+  </div>
+</main>
+<%- include('../../partials/foot') %>

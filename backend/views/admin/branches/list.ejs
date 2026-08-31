@@ -1,0 +1,73 @@
+<%- include('../../partials/head', { title }) %>
+<%- include('../../partials/sidebar', { active }) %>
+<main class="admin-main">
+  <%- include('../../partials/topbar') %>
+  <div class="admin-content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="page-title"><%= title %></h1>
+      <a href="/admin/branches/create" class="btn btn-primary">
+        <span class="material-symbols-rounded">add</span> إضافة فرع
+      </a>
+    </div>
+    <div class="glass-card">
+      <div class="table-responsive">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th width="60">صورة</th>
+              <th>الاسم</th>
+              <th>المدينة</th>
+              <th>الهاتف</th>
+              <th>واتساب</th>
+              <th class="text-center">الحالة</th>
+              <th class="text-center" width="150">إجراءات</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (!branches || branches.length === 0) { %>
+              <tr><td colspan="7" class="text-center py-5">لا توجد فروع مسجلة.</td></tr>
+            <% } %>
+            <% if (branches) branches.forEach(b => { %>
+              <tr>
+                <td>
+                  <% if (b.image) { %>
+                    <img src="<%= b.image %>" style="width:40px;height:40px;object-fit:cover;border-radius:8px;">
+                  <% } else { %>
+                    <div style="width:40px;height:40px;border-radius:8px;background:var(--bg-tertiary);display:flex;align-items:center;justify-content:center;">
+                      <span class="material-symbols-rounded" style="font-size:18px;">storefront</span>
+                    </div>
+                  <% } %>
+                </td>
+                <td><strong><%= b.name_ar %></strong></td>
+                <td><%= b.city || '-' %></td>
+                <td dir="ltr"><%= b.phone || '-' %></td>
+                <td dir="ltr"><%= b.whatsapp || '-' %></td>
+                <td class="text-center">
+                  <% if (b.is_active) { %>
+                    <span class="badge badge-success">نشط</span>
+                  <% } else { %>
+                    <span class="badge badge-danger">غير نشط</span>
+                  <% } %>
+                </td>
+                <td class="text-center">
+                  <div class="d-flex justify-content-center gap-2">
+                    <a href="/admin/branches/<%= b.id %>/edit" class="btn-icon" title="تعديل">
+                      <span class="material-symbols-rounded">edit</span>
+                    </a>
+                    <form action="/admin/branches/<%= b.id %>/delete" method="POST" style="display:inline;" onsubmit="return confirm('تأكيد حذف هذا الفرع؟');">
+                      <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+                      <button type="submit" class="btn-icon text-danger" title="حذف">
+                        <span class="material-symbols-rounded">delete</span>
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+<%- include('../../partials/foot') %>

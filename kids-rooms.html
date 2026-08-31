@@ -1,0 +1,1179 @@
+<html lang="ar" dir="rtl"><head></head><body id="top">﻿
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>غرف أطفال | زياد ستور</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+    <script src="assets/js/core/theme-engine.js?v=20260830-v2327"></script>
+    <style>
+      .bedrooms-page {
+        max-width: var(--container);
+        margin: 0 auto;
+        padding: 18px 24px 64px;
+      }
+
+      .bedrooms-header-nav {
+        position: static;
+        display: grid;
+        grid-template-columns: auto minmax(280px, 1fr) auto;
+        gap: 18px;
+      }
+
+      .bedrooms-top-cats {
+        display: flex;
+        justify-content: center;
+        gap: 0;
+        padding: 0 24px 18px;
+        margin: 0 auto;
+        max-width: var(--container);
+        overflow-x: auto;
+        scrollbar-width: none;
+        border-bottom: 1px solid rgba(227, 213, 195, 0.72);
+      }
+
+      .bedrooms-top-cats::-webkit-scrollbar { display: none; }
+
+      .bedrooms-top-cats a {
+        flex: 0 0 auto;
+        padding: 14px 18px;
+        color: var(--ink-soft);
+        font-size: 0.95rem;
+        font-weight: 700;
+        border-bottom: 2px solid transparent;
+      }
+
+      .bedrooms-top-cats a.active {
+        color: var(--gold);
+        border-bottom-color: var(--gold);
+      }
+
+      .bedrooms-hero-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 22px;
+      }
+
+      .bedroom-hero-card {
+        position: relative;
+        min-height: 430px;
+        overflow: hidden;
+        border-radius: 18px;
+        color: #fff;
+        box-shadow: var(--shadow-lift);
+      }
+
+      .bedroom-hero-media,
+      .bedroom-hero-overlay {
+        position: absolute;
+        inset: 0;
+      }
+
+      .bedroom-hero-media {
+        background-size: cover;
+        background-position: center;
+        transform: scale(1.01);
+      }
+
+      .bedroom-hero-master .bedroom-hero-media {
+        background-image: linear-gradient(180deg, rgba(28,24,19,0.18), rgba(28,24,19,0.18)), url('assets/zeyad-hero-showroom.png');
+        background-position: center 22%;
+      }
+
+      .bedroom-hero-kids .bedroom-hero-media {
+        background-image: linear-gradient(180deg, rgba(231,188,200,0.15), rgba(231,188,200,0.15)), url('assets/zeyad-hero-showroom.png');
+        background-position: right 18%;
+        filter: saturate(0.9) hue-rotate(-18deg) brightness(1.04);
+      }
+
+      .bedroom-hero-master .bedroom-hero-overlay {
+        background: linear-gradient(180deg, rgba(38,27,19,0.58) 0%, rgba(38,27,19,0.42) 38%, rgba(22,16,11,0.86) 100%);
+      }
+
+      .bedroom-hero-kids .bedroom-hero-overlay {
+        background: linear-gradient(180deg, rgba(138,92,103,0.26) 0%, rgba(138,92,103,0.18) 42%, rgba(104,70,80,0.72) 100%);
+      }
+
+      .bedroom-hero-body {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+        padding: 30px 28px 22px;
+      }
+
+      .bedroom-hero-copy h1 {
+        margin-bottom: 10px;
+        font-size: clamp(2rem, 3.5vw, 3rem);
+        line-height: 1.2;
+        color: #fff;
+      }
+
+      .bedroom-hero-copy p {
+        max-width: 310px;
+        margin-bottom: 18px;
+        color: rgba(255,248,237,0.92);
+        font-size: 1.02rem;
+        line-height: 1.65;
+      }
+
+      .bedroom-hero-cta {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        padding: 0 18px;
+        color: var(--ink);
+        background: #e7c17f;
+        border-radius: 10px;
+        font-weight: 700;
+      }
+
+      .bedroom-hero-kids .bedroom-hero-cta {
+        background: #e7a8ba;
+        color: #fff;
+      }
+
+      .bedroom-hero-features {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px 18px;
+        padding-top: 14px;
+        border-top: 1px solid rgba(255,255,255,0.18);
+      }
+
+      .bedroom-hero-features span {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        color: rgba(255,248,237,0.85);
+        font-size: 0.8rem;
+      }
+
+      .bedroom-hero-features svg {
+        width: 15px;
+        height: 15px;
+        color: var(--gold);
+      }
+
+      .bedroom-hero-kids .bedroom-hero-features svg { color: #f3c7d4; }
+
+      .bedrooms-dual-section {
+        display: grid;
+        grid-template-columns: 1.15fr 1fr;
+        gap: 18px;
+        margin-bottom: 24px;
+      }
+
+      .bedrooms-style-strip,
+      .bedrooms-category-strip {
+        background: rgba(255,253,248,0.88);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 14px;
+      }
+
+      .bedrooms-strip-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+      }
+
+      .bedrooms-strip-head h2 {
+        font-size: 1.65rem;
+      }
+
+      .bedrooms-strip-head a {
+        color: var(--gold);
+        font-weight: 700;
+        font-size: 0.88rem;
+      }
+
+      .bedrooms-scroll-row {
+        display: grid;
+        gap: 12px;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+
+      .bedrooms-scroll-row::-webkit-scrollbar { display: none; }
+
+      .style-scroll-row { grid-template-columns: repeat(5, minmax(154px, 1fr)); }
+      .cat-scroll-row { grid-template-columns: repeat(5, minmax(132px, 1fr)); }
+
+      .bedroom-image-card {
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+        min-width: 0;
+      }
+
+      .bedroom-image-thumb {
+        aspect-ratio: 1.04 / 1;
+        border-radius: 14px;
+        background: var(--surface-2);
+        background-image: url('assets/zeyad-hero-showroom.png');
+        background-size: cover;
+        background-repeat: no-repeat;
+        box-shadow: 0 8px 20px rgba(55,43,31,0.06);
+      }
+
+      .thumb-classic { background-position: center 16%; filter: brightness(0.78); }
+      .thumb-modern { background-position: center 40%; filter: brightness(0.92); }
+      .thumb-hotel { background-position: left 24%; filter: saturate(0.82); }
+      .thumb-wood { background-position: center 62%; filter: sepia(0.15); }
+      .thumb-luxury { background-position: right 22%; filter: brightness(0.82) saturate(1.05); }
+      .thumb-boys { background-position: right 32%; filter: hue-rotate(24deg) saturate(0.9); }
+      .thumb-girls { background-position: right 18%; filter: hue-rotate(-20deg) brightness(1.02); }
+      .thumb-shared { background-position: center 48%; filter: brightness(0.9); }
+      .thumb-beds { background-position: left 36%; filter: saturate(0.72); }
+      .thumb-wardrobes { background-position: left 16%; filter: brightness(0.88); }
+
+      .bedroom-image-card strong {
+        font-size: 0.9rem;
+      }
+
+      .bedroom-image-card small {
+        color: var(--muted);
+        font-size: 0.76rem;
+      }
+
+      .bedrooms-offers {
+        margin-bottom: 24px;
+      }
+
+      .bedrooms-offers-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+      }
+
+      .bedrooms-offers-head h2 {
+        font-size: 2rem;
+      }
+
+      .bedrooms-offers-meta {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .bedrooms-offers-meta span,
+      .bedrooms-offers-meta a {
+        font-size: 0.85rem;
+      }
+
+      .bedrooms-offers-meta a { color: var(--gold); font-weight: 700; }
+
+      .bedrooms-offers-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .offer-product-card {
+        position: relative;
+        overflow: hidden;
+        background: rgba(255,253,248,0.92);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        box-shadow: var(--shadow-soft);
+      }
+
+      .offer-badge {
+        position: absolute;
+        z-index: 2;
+        top: 12px;
+        right: 12px;
+        padding: 5px 10px;
+        color: #fff;
+        background: #cc4a3c;
+        border-radius: 10px;
+        font-size: 0.82rem;
+        font-weight: 700;
+      }
+
+      .offer-product-media {
+        height: 210px;
+        background-image: url('assets/zeyad-hero-showroom.png');
+        background-size: cover;
+      }
+
+      .offer-media-1 { background-position: center 20%; filter: brightness(0.78); }
+      .offer-media-2 { background-position: center 42%; filter: saturate(0.72); }
+      .offer-media-3 { background-position: right 18%; filter: hue-rotate(-22deg) brightness(1.02); }
+      .offer-media-4 { background-position: right 34%; filter: hue-rotate(26deg) brightness(0.96); }
+
+      .offer-product-body {
+        padding: 14px;
+      }
+
+      .offer-product-body h3 {
+        margin-bottom: 8px;
+        font-size: 1rem;
+        line-height: 1.5;
+      }
+
+      .offer-product-body p {
+        margin-bottom: 10px;
+        color: var(--muted);
+        font-size: 0.8rem;
+      }
+
+      .offer-price-row {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+
+      .offer-price-row strong {
+        color: #c9872f;
+        font-size: 1.55rem;
+      }
+
+      .offer-price-row del {
+        color: var(--muted);
+        font-size: 0.8rem;
+      }
+
+      .offer-card-cta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .offer-card-cta .bundle-cta {
+        min-height: 40px;
+        padding-inline: 16px;
+        font-size: 0.85rem;
+      }
+
+      .offer-icon-btn {
+        display: grid;
+        place-items: center;
+        width: 40px;
+        height: 40px;
+        color: var(--gold);
+        background: #11170f;
+        border-radius: 10px;
+      }
+
+      .bedrooms-products-section {
+        margin-bottom: 22px;
+      }
+
+      .bedrooms-trust-bar {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 1px;
+        overflow: hidden;
+        margin: 18px 0 24px;
+        background: var(--line);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+      }
+
+      .bedrooms-trust-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-height: 76px;
+        padding: 14px 16px;
+        background: rgba(255,253,248,0.94);
+      }
+
+      .bedrooms-trust-item svg {
+        width: 22px;
+        height: 22px;
+        color: var(--gold);
+        flex-shrink: 0;
+      }
+
+      .bedrooms-trust-item strong,
+      .bedrooms-trust-item span {
+        display: block;
+      }
+
+      .bedrooms-trust-item strong { font-size: 0.88rem; }
+      .bedrooms-trust-item span { color: var(--muted); font-size: 0.76rem; }
+
+      .bedrooms-guide-card {
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        gap: 0;
+        overflow: hidden;
+        margin-bottom: 24px;
+        background: rgba(255,253,248,0.92);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+      }
+
+      .bedrooms-guide-media {
+        background: linear-gradient(180deg, rgba(29,21,15,0.12), rgba(29,21,15,0.32)), url('assets/zeyad-hero-showroom.png') center 28%/cover no-repeat;
+        min-height: 220px;
+      }
+
+      .bedrooms-guide-content {
+        padding: 24px;
+      }
+
+      .bedrooms-guide-content h2 {
+        margin-bottom: 12px;
+        font-size: 1.7rem;
+      }
+
+      .bedrooms-guide-links {
+        display: grid;
+        gap: 12px;
+      }
+
+      .bedrooms-guide-links a {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 14px 16px;
+        background-color: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        font-weight: 600;
+      }
+
+      .bedrooms-guide-links a small {
+        color: var(--muted);
+        font-size: 0.8rem;
+        font-weight: 500;
+      }
+
+      .bedrooms-faq {
+        margin-bottom: 10px;
+      }
+
+      @media (max-width: 1279px) {
+        .bedrooms-offers-grid,
+        .product-grid.bedrooms-dense-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .bedrooms-trust-bar {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      @media (max-width: 1023px) {
+        .bedrooms-header-nav {
+          grid-template-columns: 1fr auto;
+        }
+
+        .bedrooms-header-nav .search {
+          grid-column: 1 / -1;
+        }
+
+        .bedrooms-hero-grid,
+        .bedrooms-dual-section,
+        .bedrooms-guide-card {
+          grid-template-columns: 1fr;
+        }
+
+        .bedrooms-offers-grid,
+        .product-grid.bedrooms-dense-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .bedrooms-trust-bar {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 767px) {
+        .bedrooms-page {
+          padding: 14px 16px 48px;
+        }
+
+        .bedrooms-header-nav {
+          padding: 12px 16px;
+        }
+
+        .bedrooms-top-cats {
+          padding: 0 16px 12px;
+          justify-content: flex-start;
+        }
+
+        .bedrooms-hero-grid {
+          gap: 10px;
+        }
+
+        .bedroom-hero-card {
+          min-height: 320px;
+        }
+
+        .bedroom-hero-body {
+          padding: 20px 18px 18px;
+        }
+
+        .bedroom-hero-copy p {
+          max-width: 250px;
+          font-size: 0.94rem;
+        }
+
+        .style-scroll-row,
+        .cat-scroll-row {
+          display: flex;
+        }
+
+        .bedroom-image-card {
+          flex: 0 0 142px;
+        }
+
+        .bedrooms-offers-head {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 10px;
+        }
+
+        .bedrooms-offers-meta {
+          width: 100%;
+          justify-content: space-between;
+        }
+
+        .bedrooms-offers-grid,
+        .product-grid.bedrooms-dense-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 12px;
+        }
+
+        .offer-product-media {
+          height: 170px;
+        }
+
+        .bedrooms-trust-bar {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  
+      <link rel="stylesheet" href="styles.css?v=20260830-v2327">
+  <link rel="stylesheet" href="production-polish.css?v=20260830-v2327">
+  <link rel="stylesheet" href="responsive-pro.css?v=20260830-v2327">
+  <link rel="stylesheet" href="mobile-first.css?v=20260830-v2327">
+  <link rel="stylesheet" href="assets/css/storefront-2026.css?v=a6bef9ab1d2b033c">
+
+  <!-- ZFB Core UX Systems -->
+    <script src="assets/js/core/translations.js?v=20260830-v2327"></script>
+    <script src="assets/js/core/i18n.js?v=20260830-v2327"></script>
+    <script src="assets/js/core/theme.js?v=48c1790c"></script>
+    <script src="assets/js/core/currency.js?v=1a885696"></script>
+    <script src="assets/js/core/global-ux.js?v=20260830-v2327"></script>
+  <meta name="description" content="بيئة آمنة ومرحة مع غرف نوم الأطفال المبتكرة.">
+
+    <link rel="canonical" href="https://zeyad.store/kids-rooms.html">
+    <meta property="og:title" content="غرف أطفال | زياد ستور | زياد ستور">
+    <meta property="og:description" content="بيئة آمنة ومرحة مع غرف نوم الأطفال المبتكرة.">
+    <meta property="og:url" content="https://zeyad.store/kids-rooms.html">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://zeyad.store/assets/placeholder-logo.webp">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="غرف أطفال | زياد ستور | زياد ستور">
+    <meta name="twitter:description" content="بيئة آمنة ومرحة مع غرف نوم الأطفال المبتكرة.">
+    
+  
+    <div class="shop-shell">
+      <header class="top-note" data-vid="v-78f03d18">
+        <span data-vid="v-d41ad998">توصيل بأسعار رمزية داخل المدن الرئيسية</span>
+        <span data-vid="v-aabb14de">ضمان 10 سنوات على الأخشاب والهياكل</span>
+        <span data-vid="v-cefb2c92">تصميم حسب ذوقك ومساحتك</span>
+      </header>
+
+      <nav class="main-nav bedrooms-header-nav" aria-label="التنقل الرئيسي" data-vid="v-f3f9e698">
+        <a class="brand" href="index.html" data-vid="v-9cbfb3d6">
+          <span class="brand-content" data-vid="v-b3f6b866-new">
+            <span class="brand-mark" data-vid="v-59cf0f34">Z</span>
+          <span data-vid="v-a735445f">
+            <strong data-vid="v-d5c1a301">زياد ستور</strong>
+            <small data-vid="v-751e11cc">للأثاث والمفروشات</small>
+          </span>
+          </span>
+        </a>
+
+        <form class="search" role="search" aria-label="البحث في المتجر" name="site-search" action="search.html" method="get">
+          <button type="submit" aria-label="بحث" data-vid="v-3e05934a">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.3-4.3M10.8 18a7.2 7.2 0 1 1 0-14.4 7.2 7.2 0 0 1 0 14.4Z"></path></svg>
+          </button>
+          <input name="q" type="search" aria-label="ابحث في المتجر" placeholder="ابحث عن منتجات الغرف..." id="q-1" autocomplete="off" maxlength="120">
+          <button class="search-filter" type="button" onclick="window.location.href='search.html'" data-vid="v-123d2b2a">بحث ذكي</button>
+        </form>
+
+        <div class="nav-actions">
+          <a class="nav-icon-btn" href="cart.html" aria-label="السلة" data-vid="v-f4184016"><svg viewBox="0 0 24 24"><path d="M7 8h14l-1.6 8.1a2 2 0 0 1-2 1.6H9.2a2 2 0 0 1-2-1.7L5.7 4H3"></path><path d="M9 21h.1M18 21h.1"></path></svg></a>
+          <a class="nav-icon-btn" href="wishlist.html" aria-label="المفضلة" data-vid="v-8a6c3713"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></a>
+                    <a class="nav-icon-btn" href="compare.html" aria-label="المقارنة" title="المقارنة" data-vid="v-f6ff5c2b">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16 3h5v5M4 21v-7M20 8l-7 7M4 14l7-7M4 3h5v5M20 21v-7"></path></svg>
+          </a>
+          <div class="dropdown-wrapper">
+            <button class="nav-icon-btn more-menu-btn" aria-expanded="false" aria-label="المزيد" data-vid="v-9ec141c2">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1.5"></circle><circle cx="12" cy="5" r="1.5"></circle><circle cx="12" cy="19" r="1.5"></circle></svg>
+            </button>
+            <div class="more-dropdown">
+              <a href="compare.html" data-vid="v-3d7e7cf3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16 3h5v5M4 21v-7M20 8l-7 7M4 14l7-7M4 3h5v5M20 21v-7"></path></svg> المقارنة</a>
+              <a href="search.html?q=%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF" data-vid="v-eb960432"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg> الجديد</a>
+              <a href="track-order.html" data-vid="v-0a96c9cf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> تتبع الطلب</a>
+              <a href="contact.html" data-vid="v-184a24d1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg> تواصل معنا</a>
+              <a href="privacy.html" data-vid="v-04196390"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg> سياسة الخصوصية</a>
+              <a href="terms.html" data-vid="v-d1309abd"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg> الشروط والأحكام</a>
+              <a href="/returns.html" data-vid="v-4b4dcd1c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg> سياسة الإرجاع</a>
+              <a href="faq.html" data-vid="v-368bf20e"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg> الأسئلة الشائعة</a>
+              <a href="about.html" data-vid="v-9ac77c51"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg> من نحن</a>
+            </div>
+          </div>
+          <a class="nav-account-btn" href="account.html" aria-label="حسابي" data-vid="v-25ba3283">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <span data-vid="v-e1ffc43e">حسابي</span>
+          </a>
+        </div>
+      </nav>
+
+      <div class="bedrooms-top-cats" aria-label="تنقل أقسام غرف النوم">
+        <a href="index.html" data-vid="v-884cf282">الرئيسية</a>
+        <a href="majalis.html" data-vid="v-af757529">المجالس</a>
+        <a href="kitchens.html" data-vid="v-33775419">المطابخ</a>
+        <a class="active" href="bedrooms.html" data-vid="v-0890758c">غرف النوم</a>
+        <a href="appliances.html" data-vid="v-2fbdb65e">الأجهزة المنزلية</a>
+        <a href="furniture.html" data-vid="v-3d85c24a">الديكور والإكسسوارات</a>
+        <a href="furniture.html" data-vid="v-a216c4a8">الأجهزة المنزلية</a>
+        <a href="offers.html" data-vid="v-216272bb">العروض</a>
+      </div>
+
+      <main class="bedrooms-page">
+        <section class="bedrooms-hero-grid" aria-labelledby="bedrooms-main-title" data-vid="v-aa802a76">
+          <article class="bedroom-hero-card bedroom-hero-master" data-vid="v-9ca32c60">
+            <div class="bedroom-hero-media" aria-hidden="true"></div>
+            <div class="bedroom-hero-overlay" aria-hidden="true"></div>
+            <div class="bedroom-hero-body">
+              <div class="bedroom-hero-copy">
+                <h1 id="bedrooms-main-title" data-vid="v-0571ff95">غرف أطفال</h1>
+                <p data-vid="v-96958e18">بيئة آمنة ومرحة مع غرف نوم الأطفال المبتكرة.</p>
+                <a class="bedroom-hero-cta" href="search.html?q=%D8%AA%D8%B3%D9%88%D9%82%20%D8%BA%D8%B1%D9%81%20%D8%A7%D9%84%D9%86%D9%88%D9%85" onclick="window.scrollTo(0,0)" data-vid="v-e18dcdd0">تسوق غرف النوم</a>
+              </div>
+              <div class="bedroom-hero-features">
+                <span data-vid="v-545d86d8"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg> خامات عالية الجودة</span>
+                <span data-vid="v-2510ef3f"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9"></path><path d="M3 3v5h5"></path></svg> ضمان طويل الأمد</span>
+                <span data-vid="v-e90d71e1"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"></path></svg> تركيب احترافي</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="bedroom-hero-card bedroom-hero-kids" data-vid="v-30d00ec4">
+            <div class="bedroom-hero-media" aria-hidden="true"></div>
+            <div class="bedroom-hero-overlay" aria-hidden="true"></div>
+            <div class="bedroom-hero-body">
+              <div class="bedroom-hero-copy">
+                <h1 data-vid="v-b1f01f90">غرف أطفال<br>مساحات تنمو معهم</h1>
+                <p data-vid="v-dd490d21">تصاميم آمنة وعملية<br>ألوان مبهجة وجودة عالية</p>
+                <a class="bedroom-hero-cta" href="search.html?q=%D8%AA%D8%B3%D9%88%D9%82%20%D8%BA%D8%B1%D9%81%20%D8%A7%D9%84%D8%A3%D8%B7%D9%81%D8%A7%D9%84" onclick="window.scrollTo(0,0)" data-vid="v-65e396af">تسوق غرف الأطفال</a>
+              </div>
+              <div class="bedroom-hero-features">
+                <span data-vid="v-3b3f00ee"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg> آمنة للأطفال</span>
+                <span data-vid="v-e2def87c"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg> تصاميم ذكية</span>
+                <span data-vid="v-072002bd"><svg viewBox="0 0 24 24"><path d="M12 1v22"></path><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14.5a3.5 3.5 0 0 1 0 7H6"></path></svg> سهولة التنظيف</span>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section class="bedrooms-dual-section" aria-label="التسوق حسب النمط والفئة" data-vid="v-d99bd7b3">
+          <div class="bedrooms-style-strip">
+            <div class="bedrooms-strip-head">
+              <h2 data-vid="v-a26added">تسوق حسب النمط</h2>
+              <a href="search.html?q=%D8%B9%D8%B1%D8%B6%20%D8%A7%D9%84%D9%83%D9%84" onclick="window.scrollTo(0,0)" data-vid="v-79f167ab">عرض الكل</a>
+            </div>
+            <div class="bedrooms-scroll-row style-scroll-row">
+              <a class="bedroom-image-card" href="search.html?q=%D8%BA%D8%B1%D9%81%20%D9%86%D9%88%D9%85%20%D9%83%D9%84%D8%A7%D8%B3%D9%8A%D9%83%20%D8%AA%D9%81%D8%A7%D8%B5%D9%8A%D9%84%20%D9%84%D8%A7%20%D8%AA%D9%8F%D9%86%D8%B3%D9%89" onclick="window.scrollTo(0,0)" data-vid="v-a3d834e2"><span class="bedroom-image-thumb thumb-classic" data-vid="v-8daee7ea"></span><strong data-vid="v-c67aaf43">غرف نوم كلاسيك</strong><small data-vid="v-d9e12632">تفاصيل لا تُنسى</small></a>
+              <a class="bedroom-image-card" href="search.html?q=%D8%BA%D8%B1%D9%81%20%D9%86%D9%88%D9%85%20%D9%85%D9%88%D8%AF%D8%B1%D9%86%20%D8%AA%D8%B5%D9%85%D9%8A%D9%85%20%D8%B9%D8%B5%D8%B1%D9%8A%20%D8%A8%D8%B3%D9%8A%D8%B7" onclick="window.scrollTo(0,0)" data-vid="v-f85dd1fb"><span class="bedroom-image-thumb thumb-modern" data-vid="v-869892d0"></span><strong data-vid="v-726bbf6f">غرف نوم مودرن</strong><small data-vid="v-53cdcf13">تصميم عصري بسيط</small></a>
+              <a class="bedroom-image-card" href="search.html?q=%D8%BA%D8%B1%D9%81%20%D9%86%D9%88%D9%85%20%D9%81%D9%86%D8%AF%D9%82%D9%8A%D8%A9%20%D8%B1%D8%A7%D8%AD%D8%A9%20%D8%B1%D8%A7%D9%82%D9%8A%D8%A9" onclick="window.scrollTo(0,0)" data-vid="v-77aa1510"><span class="bedroom-image-thumb thumb-hotel" data-vid="v-71bedf91"></span><strong data-vid="v-083f3e2a">غرف نوم فندقية</strong><small data-vid="v-18e05efb">راحة راقية</small></a>
+              <a class="bedroom-image-card" href="search.html?q=%D8%BA%D8%B1%D9%81%20%D9%86%D9%88%D9%85%20%D8%AE%D8%B4%D8%A8%D9%8A%D8%A9%20%D8%AF%D9%81%D8%A1%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%B9%D8%A9" onclick="window.scrollTo(0,0)" data-vid="v-5176bf3c"><span class="bedroom-image-thumb thumb-wood" data-vid="v-f873c1b1"></span><strong data-vid="v-e3f9a72f">غرف نوم خشبية</strong><small data-vid="v-0e5c005f">دفء الطبيعة</small></a>
+              <a class="bedroom-image-card" href="search.html?q=%D8%BA%D8%B1%D9%81%20%D9%86%D9%88%D9%85%20%D9%81%D8%A7%D8%AE%D8%B1%D8%A9%20%D8%AA%D9%81%D8%A7%D8%B5%D9%8A%D9%84%20%D8%B1%D8%A7%D9%82%D9%8A%D8%A9" onclick="window.scrollTo(0,0)" data-vid="v-07972998"><span class="bedroom-image-thumb thumb-luxury" data-vid="v-b9eef6c1"></span><strong data-vid="v-03f3b73d">غرف نوم فاخرة</strong><small data-vid="v-353e2db4">تفاصيل راقية</small></a>
+            </div>
+          </div>
+
+          <div class="bedrooms-category-strip" id="kids-categories">
+            <div class="bedrooms-strip-head">
+              <h2 data-vid="v-94c68f5a">تسوق حسب الفئة</h2>
+              <a href="search.html?q=%D8%B9%D8%B1%D8%B6%20%D8%A7%D9%84%D9%83%D9%84" onclick="window.scrollTo(0,0)" data-vid="v-af9dd42f">عرض الكل</a>
+            </div>
+            <div class="bedrooms-scroll-row cat-scroll-row">
+              <a class="bedroom-image-card" href="search.html?q=%D8%BA%D8%B1%D9%81%20%D8%A3%D8%B7%D9%81%D8%A7%D9%84%20%D8%A3%D9%88%D9%84%D8%A7%D8%AF%20%D8%AA%D8%B5%D8%A7%D9%85%D9%8A%D9%85%20%D9%85%D9%81%D8%B9%D9%85%D8%A9" onclick="window.scrollTo(0,0)" data-vid="v-f307d49a"><span class="bedroom-image-thumb thumb-boys" data-vid="v-c7adbd3f"></span><strong data-vid="v-2a2647fd">غرف أطفال أولاد</strong><small data-vid="v-c2ac7c66">تصاميم مفعمة</small></a>
+              <a class="bedroom-image-card" href="search.html?q=%D8%BA%D8%B1%D9%81%20%D8%A3%D8%B7%D9%81%D8%A7%D9%84%20%D8%A8%D9%86%D8%A7%D8%AA%20%D8%A3%D9%84%D9%88%D8%A7%D9%86%20%D8%B3%D8%A7%D8%AD%D8%B1%D8%A9" onclick="window.scrollTo(0,0)" data-vid="v-3ce887e0"><span class="bedroom-image-thumb thumb-girls" data-vid="v-5a2349d0"></span><strong data-vid="v-faff37dd">غرف أطفال بنات</strong><small data-vid="v-9c01ce95">ألوان ساحرة</small></a>
+              <a class="bedroom-image-card" href="search.html?q=%D8%BA%D8%B1%D9%81%20%D9%85%D8%B4%D8%AA%D8%B1%D9%83%D8%A9%20%D9%85%D8%B3%D8%A7%D8%AD%D8%A7%D8%AA%20%D8%B9%D9%85%D9%84%D9%8A%D8%A9" onclick="window.scrollTo(0,0)" data-vid="v-5d9d7016"><span class="bedroom-image-thumb thumb-shared" data-vid="v-07d28543"></span><strong data-vid="v-bb8d2896">غرف مشتركة</strong><small data-vid="v-d384936c">مساحات عملية</small></a>
+              <a class="bedroom-image-card" href="search.html?q=%D8%A3%D8%B3%D8%B1%D8%A9%20%D8%A3%D8%B7%D9%81%D8%A7%D9%84%20%D8%A2%D9%85%D9%86%D8%A9%20%D9%88%D9%85%D8%B1%D9%8A%D8%AD%D8%A9" onclick="window.scrollTo(0,0)" data-vid="v-35e06b63"><span class="bedroom-image-thumb thumb-beds" data-vid="v-56ee0cb5"></span><strong data-vid="v-7bd34a71">أسرة أطفال</strong><small data-vid="v-77e509ca">آمنة ومريحة</small></a>
+              <a class="bedroom-image-card" href="search.html?q=%D8%AF%D9%88%D8%A7%D9%84%D9%8A%D8%A8%20%D8%A3%D8%B7%D9%81%D8%A7%D9%84%20%D8%AA%D9%86%D8%B8%D9%8A%D9%85%20%D9%8A%D9%88%D9%85%D9%8A" onclick="window.scrollTo(0,0)" data-vid="v-06a6b9b4"><span class="bedroom-image-thumb thumb-wardrobes" data-vid="v-373296b9"></span><strong data-vid="v-2682d349">دواليب أطفال</strong><small data-vid="v-65f8a29c">تنظيم يومي</small></a>
+            </div>
+          </div>
+        </section>
+
+        <section class="bedrooms-offers" aria-labelledby="exclusive-offers-title" data-vid="v-04e8c672">
+          <div class="bedrooms-offers-head">
+            <h2 id="exclusive-offers-title" data-vid="v-f9d1468c">عروض حصرية</h2>
+            <div class="bedrooms-offers-meta">
+              <a href="offers.html" data-vid="v-cd34a153">عرض الكل</a>
+              <span data-vid="v-fde5214d">تنتهي العروض خلال</span>
+              <div class="countdown-box">
+                <div class="countdown-unit"><span class="num" data-vid="v-9e035cd7">12</span><span class="label" data-vid="v-ba3daa47">ساعة</span></div>
+                <div class="countdown-unit"><span class="num" data-vid="v-2eca108a">45</span><span class="label" data-vid="v-6b4fd986">دقيقة</span></div>
+                <div class="countdown-unit"><span class="num" data-vid="v-1941fe22">38</span><span class="label" data-vid="v-cd59c495">ثانية</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bedrooms-offers-grid">
+            <article class="product-card" data-product-id="kid-0001" data-category="kid" data-stock="in-stock" data-price="461" data-brand="ديلونجي" data-subcategory="general" data-sku="ZFB-KID-0001-2715" data-vid="v-485c7722">
+  <a href="product.html?id=kid-0001" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-34c4f071" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="غرفة نوم ماستر فاخرة" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-3a70cc18">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-3dfa6328">غرفة نوم ماستر فاخرة</h3>
+    
+    <div class="price">
+      <strong data-vid="v-8cf997a7">3,999</strong>
+      <del>6,260</del>
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-389649c3">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-b3c7e455"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-b88c9010"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" onclick="window.location.href='cart.html'" data-vid="v-ab89775c">أضف</button>
+      </div>
+    </div>
+  </div>
+</article>
+            <article class="product-card" data-product-id="kid-0002" data-category="kid" data-stock="in-stock" data-price="597" data-brand="ديلونجي" data-subcategory="general" data-sku="ZFB-KID-0002-9311" data-vid="v-9c3261c1">
+  <a href="product.html?id=kid-0002" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-275e66e9" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="غرفة نوم مودرن" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-a5b00de0">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-2c321f55">غرفة نوم مودرن</h3>
+    
+    <div class="price">
+      <strong data-vid="v-70f7c67a">2,799</strong>
+      <del>3,999</del>
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-24330b8a">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-7af0f2b9"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-1f4fcb40"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" onclick="window.location.href='cart.html'" data-vid="v-472b8463">أضف</button>
+      </div>
+    </div>
+  </div>
+</article>
+            <article class="product-card" data-product-id="kid-0003" data-category="kid" data-stock="in-stock" data-price="594" data-brand="زياد هوم" data-subcategory="general" data-sku="ZFB-KID-0003-1776" data-vid="v-4c485fab">
+  <a href="product.html?id=kid-0003" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-0120fbee" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="غرفة أطفال بنات متكاملة" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-e7da653b">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-a74569bc">غرفة أطفال بنات متكاملة</h3>
+    
+    <div class="price">
+      <strong data-vid="v-5ecbb497">2,199</strong>
+      <del>2,999</del>
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-e7ad0791">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-eb661775"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-f427d70f"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" onclick="window.location.href='cart.html'" data-vid="v-782fb2e0">أضف</button>
+      </div>
+    </div>
+  </div>
+</article>
+            <article class="product-card" data-product-id="kid-0004" data-category="kid" data-stock="in-stock" data-price="506" data-brand="كليكون" data-subcategory="general" data-sku="ZFB-KID-0004-1168" data-vid="v-7719faf0">
+  <a href="product.html?id=kid-0004" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-2bfe02a3" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="غرفة أطفال أولاد" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-c6ce074b">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-300f89ae">غرفة أطفال أولاد</h3>
+    
+    <div class="price">
+      <strong data-vid="v-649c5745">2,399</strong>
+      <del>3,999</del>
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-597c5266">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-0a3b88d9"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-3929445d"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" onclick="window.location.href='cart.html'" data-vid="v-167a45ec">أضف</button>
+      </div>
+    </div>
+  </div>
+</article>
+          </div>
+        </section>
+
+        <section class="product-section bedrooms-products-section" id="featured-products" aria-labelledby="featured-products-title" data-vid="v-dfa573b8">
+          <div class="section-head compact">
+            <div>
+              <p class="overline" data-vid="v-d718c1bb">منتجات مختارة</p>
+              <h2 id="featured-products-title" data-vid="v-f9049a46">وصل حديثًا</h2>
+            </div>
+            <a href="collections.html" data-vid="v-27ef847f">عرض الكل</a>
+          </div>
+          <div class="product-grid bedrooms-dense-grid">
+            <article class="product-card" data-product-id="kid-0005" data-category="kid" data-stock="in-stock" data-price="7500" data-brand="كليكون" data-subcategory="general" data-sku="ZFB-KID-0005-5811" data-vid="v-70bbce8b">
+  <a href="product.html?id=kid-0005" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-e916800e" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="غرفة نوم خشب بلوط صلد" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-dd1a2a56">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-379f2c62">غرفة نوم خشب بلوط صلد</h3>
+    
+    <div class="price">
+      <strong data-vid="v-fd76755e">7,500 ر.س</strong>
+      
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-603ef724">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-fe8e3c9f"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-6556c236"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" onclick="window.location.href='cart.html'" data-vid="v-686eadf4">إضافة</button>
+      </div>
+    </div>
+  </div>
+</article>
+            <article class="product-card" data-product-id="kid-0006" data-category="kid" data-stock="in-stock" data-price="3200" data-brand="كليكون" data-subcategory="general" data-sku="ZFB-KID-0006-4018" data-vid="v-513dd240">
+  <a href="product.html?id=kid-0006" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-72f265ba" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="غرفة أطفال بألوان الباستيل" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-1d1c18d7">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-4bfeacb6">غرفة أطفال بألوان الباستيل</h3>
+    
+    <div class="price">
+      <strong data-vid="v-bedcbfbc">3,200 ر.س</strong>
+      
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-3179797b">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-645f7791"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-7b32a16b"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" onclick="window.location.href='cart.html'" data-vid="v-03be3555">إضافة</button>
+      </div>
+    </div>
+  </div>
+</article>
+            <article class="product-card" data-product-id="kid-0007" data-category="kid" data-stock="in-stock" data-price="2800" data-brand="كليكون" data-subcategory="general" data-sku="ZFB-KID-0007-9177" data-vid="v-b836fbfc">
+  <a href="product.html?id=kid-0007" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-0c453e70" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="دولاب ملابس زجاجي مودرن" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-68350c34">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-5d87a147">دولاب ملابس زجاجي مودرن</h3>
+    
+    <div class="price">
+      <strong data-vid="v-2c0187f8">2,800 ر.س</strong>
+      
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-dfc8c684">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-b40b0634"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-dae88bcb"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" onclick="window.location.href='cart.html'" data-vid="v-37248a14">إضافة</button>
+      </div>
+    </div>
+  </div>
+</article>
+            <article class="product-card" data-product-id="kid-0008" data-category="kid" data-stock="in-stock" data-price="1400" data-brand="شارپ" data-subcategory="general" data-sku="ZFB-KID-0008-9864" data-vid="v-178b9ad2">
+  <a href="product.html?id=kid-0008" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-97f00600" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="سرير شبابي مع مساحة تخزين" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-acb8b0f1">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-70a7847e">سرير شبابي مع مساحة تخزين</h3>
+    
+    <div class="price">
+      <strong data-vid="v-0d5087a0">1,400 ر.س</strong>
+      
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-e6b6a5d9">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-d5876093"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-c0193ed8"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" onclick="window.location.href='cart.html'" data-vid="v-5f1d824d">إضافة</button>
+      </div>
+    </div>
+  </div>
+</article>
+            <article class="product-card" data-product-id="kid-0009" data-category="kid" data-stock="in-stock" data-price="1200" data-brand="باناسونيك" data-subcategory="general" data-sku="ZFB-KID-0009-1955" data-vid="v-a1c226f9">
+  <a href="product.html?id=kid-0009" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-2503c647" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="مرتبة طبية ميموري فوم" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-cf7d4ba5">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-6654a757">مرتبة طبية ميموري فوم</h3>
+    
+    <div class="price">
+      <strong data-vid="v-530fd00c">1,200 ر.س</strong>
+      
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-e13b0ac5">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-273a69ec"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-e1d180cf"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" onclick="window.location.href='cart.html'" data-vid="v-771da143">إضافة</button>
+      </div>
+    </div>
+  </div>
+</article>
+            <article class="product-card" data-product-id="kid-0010" data-category="kid" data-stock="in-stock" data-price="450" data-brand="كليكون" data-subcategory="general" data-sku="ZFB-KID-0010-1640" data-vid="v-55d97080">
+  <a href="product.html?id=kid-0010" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-8469fc56" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="طقم غطاء سرير قطن مصري" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-7ad982a7">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-383e0a08">طقم غطاء سرير قطن مصري</h3>
+    
+    <div class="price">
+      <strong data-vid="v-fc068be2">450 ر.س</strong>
+      
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-143f9bdd">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-180df125"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-91c86341"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" onclick="window.location.href='cart.html'" data-vid="v-6a4a75cf">إضافة</button>
+      </div>
+    </div>
+  </div>
+</article>
+            <article class="product-card" data-product-id="kid-0011" data-category="kid" data-stock="in-stock" data-price="120" data-brand="ديلونجي" data-subcategory="general" data-sku="ZFB-KID-0011-4129" data-vid="v-625b4467">
+  <a href="product.html?id=kid-0011" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-0a38cda6" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="إضاءة جانبية للقراءة" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-ea2fc44c">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-3816b139">إضاءة جانبية للقراءة</h3>
+    
+    <div class="price">
+      <strong data-vid="v-9349be03">120 ر.س</strong>
+      
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-126dcee1">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-1b3cd112"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-4de745b0"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" onclick="window.location.href='cart.html'" data-vid="v-7565ea89">إضافة</button>
+      </div>
+    </div>
+  </div>
+</article>
+            <article class="product-card" data-product-id="kid-0012" data-category="kid" data-stock="in-stock" data-price="2390" data-brand="زياد هوم" data-subcategory="general" data-sku="ZFB-KID-0012-1056" data-vid="v-ddbdf895">
+  <a href="product.html?id=kid-0012" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-f654d410" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="تسريحة مع مرآة وإضاءة" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-88e87f78">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-08a54b78">تسريحة مع مرآة وإضاءة</h3>
+    
+    <div class="price">
+      <strong data-vid="v-29f9e2ab">2,390 ر.س</strong>
+      
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-2818f05a">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-fa9c45fb"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-54b5fe26"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" onclick="window.location.href='cart.html'" data-vid="v-3647e03f">إضافة</button>
+      </div>
+    </div>
+  </div>
+</article>
+            <article class="product-card" data-product-id="kid-0013" data-category="kid" data-stock="in-stock" data-price="690" data-brand="هاير" data-subcategory="general" data-sku="ZFB-KID-0013-7887" data-vid="v-35487ebe">
+  <a href="product.html?id=kid-0013" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-8ed35077" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="كومودينو مزدوج درجين" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-73d17124">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-ddc50717">كومودينو مزدوج درجين</h3>
+    
+    <div class="price">
+      <strong data-vid="v-1023c596">690 ر.س</strong>
+      
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-2cfb8fc0">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-81691eff"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-57426159"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" onclick="window.location.href='cart.html'" data-vid="v-46bb296f">إضافة</button>
+      </div>
+    </div>
+  </div>
+</article>
+            <article class="product-card" data-product-id="kid-0014" data-category="kid" data-stock="in-stock" data-price="890" data-brand="زياد هوم" data-subcategory="general" data-sku="ZFB-KID-0014-5097" data-vid="v-28ee7e5e">
+  <a href="product.html?id=kid-0014" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-0a0f315d" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="كرسي استرخاء لغرفة النوم" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-684ee83e">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-c3868910">كرسي استرخاء لغرفة النوم</h3>
+    
+    <div class="price">
+      <strong data-vid="v-c68f4848">890 ر.س</strong>
+      
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-e2f65b6b">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-5f2eadd7"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-04543f1a"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" onclick="window.location.href='cart.html'" data-vid="v-1af06cc4">إضافة</button>
+      </div>
+    </div>
+  </div>
+</article>
+            <article class="product-card" data-product-id="kid-0015" data-category="kid" data-stock="in-stock" data-price="1850" data-brand="زياد هوم" data-subcategory="general" data-sku="ZFB-KID-0015-5252" data-vid="v-119c66c0">
+  <a href="product.html?id=kid-0015" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-7965a625" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="دولاب أطفال 4 أبواب" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-92166e34">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-16874cf5">دولاب أطفال 4 أبواب</h3>
+    
+    <div class="price">
+      <strong data-vid="v-2395bf2f">1,850 ر.س</strong>
+      
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-b577fa2a">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-9ead7adb"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-59850cf1"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" onclick="window.location.href='cart.html'" data-vid="v-a1a36136">إضافة</button>
+      </div>
+    </div>
+  </div>
+</article>
+          </div>
+        </section>
+
+        <section class="bedrooms-trust-bar" aria-label="مزايا الخدمة" data-vid="v-e4767583">
+          <div class="bedrooms-trust-item"><svg viewBox="0 0 24 24"><path d="M3 7h10v10H3z"></path><path d="M13 10h4l4 4v3h-8z"></path><circle cx="7.5" cy="18.5" r="1.5"></circle><circle cx="17.5" cy="18.5" r="1.5"></circle></svg><div><strong data-vid="v-e0f7ec39">توصيل رمزي</strong><span data-vid="v-5df1a1fe">في جميع المدن الرئيسية</span></div></div>
+          <div class="bedrooms-trust-item"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg><div><strong data-vid="v-317422e8">ضمان 10 سنوات</strong><span data-vid="v-f6c5c578">على جميع منتجات الغرف</span></div></div>
+          <div class="bedrooms-trust-item"><svg viewBox="0 0 24 24"><path d="M4 20h16"></path><path d="M6 16V8l6-4 6 4v8"></path></svg><div><strong data-vid="v-a05ae0ff">تصميم حسب الطلب</strong><span data-vid="v-92655092">تخصيص المقاسات والألوان</span></div></div>
+          <div class="bedrooms-trust-item"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg><div><strong data-vid="v-2acdec7a">حجز آمن ومتعدد</strong><span data-vid="v-0375347b">مدى - فيزا - تحويل بنكي</span></div></div>
+          <div class="bedrooms-trust-item"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg><div><strong data-vid="v-48893015">خدمة عملاء 24/7</strong><span data-vid="v-c4d41862">نحن هنا لمساعدتك</span></div></div>
+        </section>
+
+        <section class="bedrooms-guide-card" aria-labelledby="buying-guide-title" data-vid="v-27d1b2cc">
+          <div class="bedrooms-guide-media" aria-hidden="true"></div>
+          <div class="bedrooms-guide-content">
+            <h2 id="buying-guide-title" data-vid="v-afd73405">دليل شراء غرف النوم</h2>
+            <div class="bedrooms-guide-links">
+              <a href="room-ideas.html" data-vid="v-66e7c9b4"><span data-vid="v-e60d576d">كيف تختار أثاث غرفة النوم؟<br><small data-vid="v-8714334d">قياس المساحة وتحديد الأسلوب المناسب</small></span><strong data-vid="v-d1b0ff28">اقرأ</strong></a>
+              <a href="room-ideas.html" data-vid="v-79a51d93"><span data-vid="v-9a2dba90">كيف تختار المرتبة المناسبة؟<br><small data-vid="v-e4cecaec">أنواع المراتب ودعم النوم الصحي</small></span><strong data-vid="v-814b762a">اقرأ</strong></a>
+              <a href="room-ideas.html" data-vid="v-5ae6a743"><span data-vid="v-1a2414da">كيف تختار غرف الأطفال؟<br><small data-vid="v-7e8af348">الأمان والتنظيم والمرونة مع النمو</small></span><strong data-vid="v-cee4c1c6">اقرأ</strong></a>
+            </div>
+          </div>
+        </section>
+
+        <section class="bedrooms-faq" aria-labelledby="faq-title" data-vid="v-23f62cf1">
+          <div class="section-head compact">
+            <div><h2 id="faq-title" data-vid="v-1d7d8528">الأسئلة الشائعة</h2></div>
+          </div>
+          <div class="faq-list">
+            <details class="faq-item"><summary class="faq-summary">ما هي أنواع الأخشاب المستخدمة في غرف النوم؟ <span class="faq-icon" data-vid="v-c81f878d"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></span></summary><div class="faq-content" data-vid="v-deb80091">نستخدم أنواعًا مختارة من الأخشاب الطبيعية والمصنعة عالية الكثافة مع تشطيبات مقاومة للاستخدام اليومي.</div></details>
+            <details class="faq-item"><summary class="faq-summary">هل المراتب مشمولة في أسعار الغرف؟ <span class="faq-icon" data-vid="v-31bd47c1"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></span></summary><div class="faq-content" data-vid="v-e2b4a1b5">بعض الباقات تشمل المرتبة، بينما تُعرض في مجموعات أخرى بشكل منفصل لتناسب تفضيلات العميل.</div></details>
+            <details class="faq-item"><summary class="faq-summary">هل توفرون خدمة تفصيل غرف النوم؟ <span class="faq-icon" data-vid="v-9d8b6100"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></span></summary><div class="faq-content" data-vid="v-6a574b6c">نعم، نوفر حلول تفصيل واختيار مقاسات وخامات مناسبة للمساحات الخاصة عبر استشارة مسبقة.</div></details>
+          </div>
+        </section>
+      </main>
+
+      
+
+<footer class="site-footer" data-vid="v-3705c361">
+    <div class="footer-top">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col brand-col">
+                    <h3 data-vid="store_name">زياد ستور</h3>
+                    <p data-vid="footer_about">وجهتك الأولى للتسوق الإلكتروني بمنتجات أصلية وتجربة تسوق لا تُنسى.</p>
+                    <div class="social-links">
+                        <a href="https://facebook.com" data-vid="social_facebook" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a>
+                        <a href="https://instagram.com" data-vid="social_instagram" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
+                        <a href="https://twitter.com" data-vid="social_twitter" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path></svg></a>
+                        <a href="https://tiktok.com" data-vid="social_tiktok" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 0h1.98c.144 2.58 1.97 4.776 4.54 5.24v3.132c-1.354-.044-2.612-.52-3.69-1.31v7.62a5.41 5.41 0 1 1-5.41-5.41c.42 0 .82.048 1.2.14v3.23a2.18 2.18 0 1 0 1.38 2.03V0z"></path></svg></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4 data-vid="v-ca37db54">روابط سريعة</h4>
+                    <ul>
+                        <li data-vid="v-eee76205"><a href="offers.html" data-vid="v-05e342ce">العروض الخاصة</a></li>
+                        <li data-vid="v-6cc3dab7"><a href="search.html?q=الجديد" data-vid="v-8a584ef3">أحدث المنتجات</a></li>
+                        <li data-vid="v-795fbd95"><a href="search.html?q=الأكثر مبيعا" data-vid="v-b60227d8">الأكثر مبيعاً</a></li>
+                        <li data-vid="v-99d026ec"><a href="/#categories" data-vid="v-41d13a54">تصفح الأقسام</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-vid="v-4318d2bb">خدمة العملاء</h4>
+                    <ul>
+                        <li data-vid="v-32772dd4"><a href="track-order.html" data-vid="v-4ae0f6b2">تتبع الطلب</a></li>
+                        <li data-vid="v-a650cbc9"><a href="faq.html" data-vid="v-a7edb6a3">الأسئلة الشائعة</a></li>
+                        <li data-vid="v-7cffab73"><a href="/terms.html" data-vid="v-572d06bb">سياسة الاسترجاع</a></li>
+                        <li data-vid="v-67c47d07"><a href="/shipping.html" data-vid="v-48b66199">معلومات الشحن</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col contact-col">
+                    <h4 data-vid="v-fa6ce502">تواصل معنا</h4>
+                    <ul>
+                        <li data-vid="v-4e35f10c">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                            <span data-vid="footer_phone">+967775010726</span>
+                        </li>
+                        <li data-vid="v-9676f005">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                            <span data-vid="footer_email">zeyad775010@gmail.com</span>
+                        </li>
+                        <li data-vid="v-88725b87">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                            <span data-vid="footer_address">صنعاء، شارع الزبيري</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <div class="container">
+            <div class="footer-bottom-flex">
+                <p class="copyright" data-vid="v-fa9cac64">© 2026 جميع الحقوق محفوظة - <span data-vid="store_name">زياد ستور</span></p>
+                <div class="payment-methods">
+                    <svg viewBox="0 0 38 24" fill="none"><rect width="38" height="24" rx="4" fill="var(--surface-2)"></rect><path d="M12 7L14.5 16H17L19.5 7H17L15.75 12.5L14.5 7H12Z" fill="var(--ink)"></path></svg>
+                    <svg viewBox="0 0 38 24" fill="none"><rect width="38" height="24" rx="4" fill="var(--surface-2)"></rect><circle cx="15" cy="12" r="6" fill="#eb001b"></circle><circle cx="23" cy="12" r="6" fill="#f79e1b"></circle></svg>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+      <a href="contact.html" class="whatsapp-float" aria-label="تواصل عبر الواتساب" style="position: fixed; bottom: 24px; right: 24px; background: #25D366; color: white; width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; z-index: 100; box-shadow: var(--shadow-lift); transition: transform var(--ease);" data-vid="v-e55198b9">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor" stroke="none"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a5.8 5.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.81 11.81 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.88 11.88 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 0 0-3.48-8.413Z"></path></svg>
+      </a>
+    </div>
+  <script src="site.js?v=714c6eb3" defer=""></script>
+
+  <script src="zfb-config.js"></script>
+<script src="products_db.js"></script>
+<script src="zfb-core.js?v=cd21c70c" defer=""></script>
+  <script src="assets/js/core/premium-cards.js?v=f2491789"></script>
+  <script src="/search-manager.js?v=20260830-v2327"></script>\n  <script src="/wishlist-manager.js?v=20260830-v2327"></script>\n
+
+
+  <script src="assets/js/core/storefront-2026.js?v=a6bef9ab1d2b033c"></script>
+</body></html>

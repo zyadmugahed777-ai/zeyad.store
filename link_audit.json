@@ -1,0 +1,1532 @@
+[
+  {
+    "file": "account-profile.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الأقسام"
+  },
+  {
+    "file": "account-profile.html",
+    "type": "button",
+    "target": "category.html",
+    "text": "تعديل"
+  },
+  {
+    "file": "account-profile.html",
+    "type": "button",
+    "target": "category.html",
+    "text": "تعديل"
+  },
+  {
+    "file": "account-profile.html",
+    "type": "button",
+    "target": "category.html",
+    "text": "حذف"
+  },
+  {
+    "file": "account-reservation-detail.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الأقسام"
+  },
+  {
+    "file": "account-reservations.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "عرض التفاصيل"
+  },
+  {
+    "file": "account-reservations.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الأقسام"
+  },
+  {
+    "file": "account-support.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الأقسام"
+  },
+  {
+    "file": "account-support.html",
+    "type": "button",
+    "target": "category.html",
+    "text": "حجز موعد زيارة"
+  },
+  {
+    "file": "account.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الأقسام"
+  },
+  {
+    "file": "appliances.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "ثلاجات"
+  },
+  {
+    "file": "appliances.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "غسالات"
+  },
+  {
+    "file": "appliances.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "شاشات"
+  },
+  {
+    "file": "appliances.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "مكيفات"
+  },
+  {
+    "file": "appliances.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "أفران"
+  },
+  {
+    "file": "appliances.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "ميكرويف"
+  },
+  {
+    "file": "appliances.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "بوتاجازات"
+  },
+  {
+    "file": "appliances.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "خلاطات"
+  },
+  {
+    "file": "appliances.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "ماكينات قهوة"
+  },
+  {
+    "file": "appliances.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "مايكروويف"
+  },
+  {
+    "file": "appliances.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "برادات مياه"
+  },
+  {
+    "file": "appliances.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "مكانس"
+  },
+  {
+    "file": "appliances.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "مراوح"
+  },
+  {
+    "file": "appliances.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "سخانات"
+  },
+  {
+    "file": "appliances.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "مكاوي"
+  },
+  {
+    "file": "appliances.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "قلايات هوائية"
+  },
+  {
+    "file": "appliances.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "غلايات"
+  },
+  {
+    "file": "appliances.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "سماعات"
+  },
+  {
+    "file": "appliances.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "عصارات"
+  },
+  {
+    "file": "appliances.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "جميع الفئات"
+  },
+  {
+    "file": "appliances.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الأكثر طلباً"
+  },
+  {
+    "file": "appliances.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "عرض الكل"
+  },
+  {
+    "file": "appliances.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "عرض الكل"
+  },
+  {
+    "file": "appliances.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "عرض الكل"
+  },
+  {
+    "file": "appliances.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "عرض الكل"
+  },
+  {
+    "file": "bedrooms.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "عرض الكل"
+  },
+  {
+    "file": "best-sellers.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الأثاث والمجالس"
+  },
+  {
+    "file": "best-sellers.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "غرف النوم"
+  },
+  {
+    "file": "best-sellers.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "المجالس والكنب"
+  },
+  {
+    "file": "best-sellers.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "طاولات الطعام"
+  },
+  {
+    "file": "best-sellers.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "المطابخ والأواني"
+  },
+  {
+    "file": "best-sellers.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الأجهزة المنزلية"
+  },
+  {
+    "file": "best-sellers.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الطاقة الشمسية"
+  },
+  {
+    "file": "best-sellers.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الإضاءة والديكور"
+  },
+  {
+    "file": "best-sellers.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "باقة غرفة نوم متكاملة ٦ قطع متناسقة • توفير ١٥٪"
+  },
+  {
+    "file": "best-sellers.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "باقة نوم الأطفال سريرين، خزانة، وتصميم مريح"
+  },
+  {
+    "file": "best-sellers.html",
+    "type": "button",
+    "target": "category.html",
+    "text": "مسح جميع الفلاتر"
+  },
+  {
+    "file": "best-sellers.html",
+    "type": "button",
+    "target": "category.html",
+    "text": "مسح الكل"
+  },
+  {
+    "file": "cart.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الأقسام"
+  },
+  {
+    "file": "checkout.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الأقسام"
+  },
+  {
+    "file": "collections.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الأثاث والمجالس"
+  },
+  {
+    "file": "collections.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "غرف النوم"
+  },
+  {
+    "file": "collections.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "المجالس والكنب"
+  },
+  {
+    "file": "collections.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "طاولات الطعام"
+  },
+  {
+    "file": "collections.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "المطابخ والأواني"
+  },
+  {
+    "file": "collections.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الأجهزة المنزلية"
+  },
+  {
+    "file": "collections.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الطاقة الشمسية"
+  },
+  {
+    "file": "collections.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الإضاءة والديكور"
+  },
+  {
+    "file": "collections.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "باقة غرفة نوم متكاملة ٦ قطع متناسقة • توفير ١٥٪"
+  },
+  {
+    "file": "collections.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "باقة نوم الأطفال سريرين، خزانة، وتصميم مريح"
+  },
+  {
+    "file": "collections.html",
+    "type": "button",
+    "target": "category.html",
+    "text": "مسح جميع الفلاتر"
+  },
+  {
+    "file": "collections.html",
+    "type": "button",
+    "target": "category.html",
+    "text": "مسح الكل"
+  },
+  {
+    "file": "confirmation.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الأقسام"
+  },
+  {
+    "file": "index.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "عرض كل الأقسام"
+  },
+  {
+    "file": "index.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "فتح المتجر"
+  },
+  {
+    "file": "index.html",
+    "type": "button",
+    "target": "category.html",
+    "text": "الكل"
+  },
+  {
+    "file": "kitchens.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "عرض الكل"
+  },
+  {
+    "file": "kitchens.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "مطابخ حديثةتصاميم عصرية"
+  },
+  {
+    "file": "kitchens.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "مطابخ كلاسيكيةفخامة لا تنتهي"
+  },
+  {
+    "file": "kitchens.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "مطابخ مودرنعملية ومرتبة"
+  },
+  {
+    "file": "kitchens.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "مطبخ حسب الطلبتفصيل كامل"
+  },
+  {
+    "file": "kitchens.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "باقات متكاملةأجهزة وتشطيبات"
+  },
+  {
+    "file": "kitchens.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "إكسسوارات المطابختنظيم وراحة"
+  },
+  {
+    "file": "kitchens.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "ابدأ الآن"
+  },
+  {
+    "file": "kitchens.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "اطلب التصميم"
+  },
+  {
+    "file": "kitchens.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "استكشف الباقات"
+  },
+  {
+    "file": "kitchens.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "عرض الكل"
+  },
+  {
+    "file": "kitchens.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "عرض الكل"
+  },
+  {
+    "file": "kitchens.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "عرض الكل"
+  },
+  {
+    "file": "kitchens.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "عرض الكل"
+  },
+  {
+    "file": "kitchens.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "احجز الآن"
+  },
+  {
+    "file": "kitchens.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "اعرف أكثر"
+  },
+  {
+    "file": "majalis-accessories.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الأثاث والمجالس"
+  },
+  {
+    "file": "majalis-accessories.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "غرف النوم"
+  },
+  {
+    "file": "majalis-accessories.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "المجالس والكنب"
+  },
+  {
+    "file": "majalis-accessories.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "طاولات الطعام"
+  },
+  {
+    "file": "majalis-accessories.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "المطابخ والأواني"
+  },
+  {
+    "file": "majalis-accessories.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الأجهزة المنزلية"
+  },
+  {
+    "file": "majalis-accessories.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الطاقة الشمسية"
+  },
+  {
+    "file": "majalis-accessories.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الإضاءة والديكور"
+  },
+  {
+    "file": "majalis-accessories.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "باقة غرفة نوم متكاملة ٦ قطع متناسقة • توفير ١٥٪"
+  },
+  {
+    "file": "majalis-accessories.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "باقة نوم الأطفال سريرين، خزانة، وتصميم مريح"
+  },
+  {
+    "file": "majalis-accessories.html",
+    "type": "button",
+    "target": "category.html",
+    "text": "مسح جميع الفلاتر"
+  },
+  {
+    "file": "majalis-accessories.html",
+    "type": "button",
+    "target": "category.html",
+    "text": "مسح الكل"
+  },
+  {
+    "file": "majalis-corner.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الأثاث والمجالس"
+  },
+  {
+    "file": "majalis-corner.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "غرف النوم"
+  },
+  {
+    "file": "majalis-corner.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "المجالس والكنب"
+  },
+  {
+    "file": "majalis-corner.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "طاولات الطعام"
+  },
+  {
+    "file": "majalis-corner.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "المطابخ والأواني"
+  },
+  {
+    "file": "majalis-corner.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الأجهزة المنزلية"
+  },
+  {
+    "file": "majalis-corner.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الطاقة الشمسية"
+  },
+  {
+    "file": "majalis-corner.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الإضاءة والديكور"
+  },
+  {
+    "file": "majalis-corner.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "باقة غرفة نوم متكاملة ٦ قطع متناسقة • توفير ١٥٪"
+  },
+  {
+    "file": "majalis-corner.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "باقة نوم الأطفال سريرين، خزانة، وتصميم مريح"
+  },
+  {
+    "file": "majalis-corner.html",
+    "type": "button",
+    "target": "category.html",
+    "text": "مسح جميع الفلاتر"
+  },
+  {
+    "file": "majalis-corner.html",
+    "type": "button",
+    "target": "category.html",
+    "text": "مسح الكل"
+  },
+  {
+    "file": "majalis-floor.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الأثاث والمجالس"
+  },
+  {
+    "file": "majalis-floor.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "غرف النوم"
+  },
+  {
+    "file": "majalis-floor.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "المجالس والكنب"
+  },
+  {
+    "file": "majalis-floor.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "طاولات الطعام"
+  },
+  {
+    "file": "majalis-floor.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "المطابخ والأواني"
+  },
+  {
+    "file": "majalis-floor.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الأجهزة المنزلية"
+  },
+  {
+    "file": "majalis-floor.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الطاقة الشمسية"
+  },
+  {
+    "file": "majalis-floor.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الإضاءة والديكور"
+  },
+  {
+    "file": "majalis-floor.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "باقة غرفة نوم متكاملة ٦ قطع متناسقة • توفير ١٥٪"
+  },
+  {
+    "file": "majalis-floor.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "باقة نوم الأطفال سريرين، خزانة، وتصميم مريح"
+  },
+  {
+    "file": "majalis-floor.html",
+    "type": "button",
+    "target": "category.html",
+    "text": "مسح جميع الفلاتر"
+  },
+  {
+    "file": "majalis-floor.html",
+    "type": "button",
+    "target": "category.html",
+    "text": "مسح الكل"
+  },
+  {
+    "file": "majalis-qutaibah.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الأثاث والمجالس"
+  },
+  {
+    "file": "majalis-qutaibah.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "غرف النوم"
+  },
+  {
+    "file": "majalis-qutaibah.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "المجالس والكنب"
+  },
+  {
+    "file": "majalis-qutaibah.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "طاولات الطعام"
+  },
+  {
+    "file": "majalis-qutaibah.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "المطابخ والأواني"
+  },
+  {
+    "file": "majalis-qutaibah.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الأجهزة المنزلية"
+  },
+  {
+    "file": "majalis-qutaibah.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الطاقة الشمسية"
+  },
+  {
+    "file": "majalis-qutaibah.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الإضاءة والديكور"
+  },
+  {
+    "file": "majalis-qutaibah.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "باقة غرفة نوم متكاملة ٦ قطع متناسقة • توفير ١٥٪"
+  },
+  {
+    "file": "majalis-qutaibah.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "باقة نوم الأطفال سريرين، خزانة، وتصميم مريح"
+  },
+  {
+    "file": "majalis-qutaibah.html",
+    "type": "button",
+    "target": "category.html",
+    "text": "مسح جميع الفلاتر"
+  },
+  {
+    "file": "majalis-qutaibah.html",
+    "type": "button",
+    "target": "category.html",
+    "text": "مسح الكل"
+  },
+  {
+    "file": "majalis-wosabi.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الأثاث والمجالس"
+  },
+  {
+    "file": "majalis-wosabi.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "غرف النوم"
+  },
+  {
+    "file": "majalis-wosabi.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "المجالس والكنب"
+  },
+  {
+    "file": "majalis-wosabi.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "طاولات الطعام"
+  },
+  {
+    "file": "majalis-wosabi.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "المطابخ والأواني"
+  },
+  {
+    "file": "majalis-wosabi.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الأجهزة المنزلية"
+  },
+  {
+    "file": "majalis-wosabi.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الطاقة الشمسية"
+  },
+  {
+    "file": "majalis-wosabi.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الإضاءة والديكور"
+  },
+  {
+    "file": "majalis-wosabi.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "باقة غرفة نوم متكاملة ٦ قطع متناسقة • توفير ١٥٪"
+  },
+  {
+    "file": "majalis-wosabi.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "باقة نوم الأطفال سريرين، خزانة، وتصميم مريح"
+  },
+  {
+    "file": "majalis-wosabi.html",
+    "type": "button",
+    "target": "category.html",
+    "text": "مسح جميع الفلاتر"
+  },
+  {
+    "file": "majalis-wosabi.html",
+    "type": "button",
+    "target": "category.html",
+    "text": "مسح الكل"
+  },
+  {
+    "file": "majalis.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "رويال ملكي"
+  },
+  {
+    "file": "majalis.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "رويال اقتصادي"
+  },
+  {
+    "file": "majalis.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "قطيفة مطرز"
+  },
+  {
+    "file": "majalis.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "قطيفة كلاسيك"
+  },
+  {
+    "file": "majalis.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "عربي"
+  },
+  {
+    "file": "majalis.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "خليجي"
+  },
+  {
+    "file": "majalis.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "ابدأ الحساب"
+  },
+  {
+    "file": "majalis.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "رويال ملكي فخامة رسمية"
+  },
+  {
+    "file": "majalis.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "رويال اقتصادي جودة وسعر مناسب"
+  },
+  {
+    "file": "majalis.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "قطيفة مطرز فخامة مطرزة"
+  },
+  {
+    "file": "majalis.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "قطيفة كشمير لمسة ناعمة"
+  },
+  {
+    "file": "majalis.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "قطيفة مودرن راحة وأناقة"
+  },
+  {
+    "file": "majalis.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "خليجي تصميم راقٍ"
+  },
+  {
+    "file": "majalis.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "أرضي جلسة مريحة"
+  },
+  {
+    "file": "majalis.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "عرض الكل"
+  },
+  {
+    "file": "majalis.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "عرض الكل"
+  },
+  {
+    "file": "majalis.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "عرض الكل"
+  },
+  {
+    "file": "majalis.html",
+    "type": "button",
+    "target": "category.html",
+    "text": "قطيفة"
+  },
+  {
+    "file": "majalis.html",
+    "type": "button",
+    "target": "category.html",
+    "text": "قشماوة"
+  },
+  {
+    "file": "majalis.html",
+    "type": "button",
+    "target": "category.html",
+    "text": "مخمل"
+  },
+  {
+    "file": "majalis.html",
+    "type": "button",
+    "target": "category.html",
+    "text": "قطن"
+  },
+  {
+    "file": "majalis.html",
+    "type": "button",
+    "target": "category.html",
+    "text": "جاكار"
+  },
+  {
+    "file": "majalis.html",
+    "type": "button",
+    "target": "category.html",
+    "text": "جلد صناعي"
+  },
+  {
+    "file": "majalis.html",
+    "type": "button",
+    "target": "category.html",
+    "text": "زان"
+  },
+  {
+    "file": "majalis.html",
+    "type": "button",
+    "target": "category.html",
+    "text": "سويدي"
+  },
+  {
+    "file": "majalis.html",
+    "type": "button",
+    "target": "category.html",
+    "text": "مهجن"
+  },
+  {
+    "file": "majalis.html",
+    "type": "button",
+    "target": "category.html",
+    "text": "MDF"
+  },
+  {
+    "file": "majalis.html",
+    "type": "button",
+    "target": "category.html",
+    "text": "كونتر"
+  },
+  {
+    "file": "new-arrivals.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الأثاث والمجالس"
+  },
+  {
+    "file": "new-arrivals.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "غرف النوم"
+  },
+  {
+    "file": "new-arrivals.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "المجالس والكنب"
+  },
+  {
+    "file": "new-arrivals.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "طاولات الطعام"
+  },
+  {
+    "file": "new-arrivals.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "المطابخ والأواني"
+  },
+  {
+    "file": "new-arrivals.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الأجهزة المنزلية"
+  },
+  {
+    "file": "new-arrivals.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الطاقة الشمسية"
+  },
+  {
+    "file": "new-arrivals.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الإضاءة والديكور"
+  },
+  {
+    "file": "new-arrivals.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "باقة غرفة نوم متكاملة ٦ قطع متناسقة • توفير ١٥٪"
+  },
+  {
+    "file": "new-arrivals.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "باقة نوم الأطفال سريرين، خزانة، وتصميم مريح"
+  },
+  {
+    "file": "new-arrivals.html",
+    "type": "button",
+    "target": "category.html",
+    "text": "مسح جميع الفلاتر"
+  },
+  {
+    "file": "new-arrivals.html",
+    "type": "button",
+    "target": "category.html",
+    "text": "مسح الكل"
+  },
+  {
+    "file": "offers.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "عروض الطاقة الشمسية"
+  },
+  {
+    "file": "offers.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "عروض المفروشات"
+  },
+  {
+    "file": "offers.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "عروض طاولات الطعام"
+  },
+  {
+    "file": "offers.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "عروض المعيشة"
+  },
+  {
+    "file": "offers.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "عروض غرف الأطفال"
+  },
+  {
+    "file": "offers.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "عروض غرف النوم"
+  },
+  {
+    "file": "offers.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "عروض المطابخ"
+  },
+  {
+    "file": "offers.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "عروض المجالس"
+  },
+  {
+    "file": "offers.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "مهرجان العروضخصومات حصرية"
+  },
+  {
+    "file": "offers.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "عرض الكل"
+  },
+  {
+    "file": "offers.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "باقة تجهيز العرسانكل ما تحتاجونه لمنزل أحلامكم أثاث فاخرأجهزة منزليةتوصيل مجانياكتشف الباقة"
+  },
+  {
+    "file": "offers.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الشحن والتركيبمجانيفي جميع المدن الرئيسية خدمة موثقةتنسيق مسبقتركيب احترافيشاهد العروض"
+  },
+  {
+    "file": "offers.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "عروض الموسمخصومات كبيرة ومفاجآت أكثر تسوق الآن"
+  },
+  {
+    "file": "offers.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "اشترِ أكثر ووفر أكثر خصومات إضافية على الباقات 10%عند شراء أكثر 20%عند شراء 3 قطع 30%عند شراء 4 قطع تسوق الباقات"
+  },
+  {
+    "file": "offers.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "أفضلسعرمضمون أفضل الأسعارنضمن لك أقل الأسعار تسوق بثقة"
+  },
+  {
+    "file": "product.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الأثاث والمجالس"
+  },
+  {
+    "file": "product.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "أطقم الكنب"
+  },
+  {
+    "file": "search.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "كنب"
+  },
+  {
+    "file": "search.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "غرف نوم"
+  },
+  {
+    "file": "search.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "ثلاجات"
+  },
+  {
+    "file": "search.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "غسالات"
+  },
+  {
+    "file": "search.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "طاقة شمسية"
+  },
+  {
+    "file": "search.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "مكيفات موفرة"
+  },
+  {
+    "file": "search.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "كنب مقاوم للبقع"
+  },
+  {
+    "file": "search.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "منظومة شمسية ٥ كيلو"
+  },
+  {
+    "file": "search.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "مرتبة طبية"
+  },
+  {
+    "file": "search.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "غرف النوم"
+  },
+  {
+    "file": "search.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "المجالس والكنب"
+  },
+  {
+    "file": "search.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "المطابخ والأواني"
+  },
+  {
+    "file": "search.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الأجهزة المنزلية"
+  },
+  {
+    "file": "search.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الطاقة الشمسية"
+  },
+  {
+    "file": "search.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "طقم كنب لغرفة المعيشة"
+  },
+  {
+    "file": "search.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "كنب استرخاء مفرد"
+  },
+  {
+    "file": "search.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "كنب زاوية موفر للمساحة"
+  },
+  {
+    "file": "search.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "غرف النوم"
+  },
+  {
+    "file": "search.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "المجالس"
+  },
+  {
+    "file": "search.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الأجهزة"
+  },
+  {
+    "file": "search.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الطاقة الشمسية"
+  },
+  {
+    "file": "search.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الأقسام"
+  },
+  {
+    "file": "solar-solutions.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "عرض الكل"
+  },
+  {
+    "file": "solar-solutions.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "ألواح شمسية"
+  },
+  {
+    "file": "solar-solutions.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "بطاريات تخزين الطاقة"
+  },
+  {
+    "file": "solar-solutions.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الإنفرترات (محولات)"
+  },
+  {
+    "file": "solar-solutions.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "منظمات الشحن"
+  },
+  {
+    "file": "solar-solutions.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "تركيبات وهياكل"
+  },
+  {
+    "file": "solar-solutions.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "كابلات وملحقات"
+  },
+  {
+    "file": "solar-solutions.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "مضخات المياه الشمسية"
+  },
+  {
+    "file": "solar-solutions.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "حلول الري"
+  },
+  {
+    "file": "solar-solutions.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "عرض الكل"
+  },
+  {
+    "file": "solar-solutions.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "تسوق الآن"
+  },
+  {
+    "file": "solar-solutions.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "عرض الكل"
+  },
+  {
+    "file": "solar.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "عرض الكل"
+  },
+  {
+    "file": "solar.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "أنظمة الطاقة الشمسيةالمتكاملة"
+  },
+  {
+    "file": "solar.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "ألواح شمسيةعالية الكفاءة"
+  },
+  {
+    "file": "solar.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "بطاريات تخزين الطاقةليثيوم - جل"
+  },
+  {
+    "file": "solar.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الإنفرترات (محولات)هجين - منفصل"
+  },
+  {
+    "file": "solar.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "منظمات الشحنMPPT - PWM"
+  },
+  {
+    "file": "solar.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "تركيبات وهياكلمختلفة"
+  },
+  {
+    "file": "solar.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "كابلات وملحقاتجميع المقاسات"
+  },
+  {
+    "file": "solar.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "مضخات المياه الشمسيةحلول الري"
+  },
+  {
+    "file": "solar.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "عرض الكل"
+  },
+  {
+    "file": "solar.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "تسوق الآن"
+  },
+  {
+    "file": "solar.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "عرض الكل"
+  },
+  {
+    "file": "solar.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "[No text / Image]"
+  },
+  {
+    "file": "solar.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "تسوق الآن"
+  },
+  {
+    "file": "solar.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "عرض الكل"
+  },
+  {
+    "file": "solar.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "عرض الكل"
+  },
+  {
+    "file": "solar.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "تسوق الملحقات"
+  },
+  {
+    "file": "solar.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "[No text / Image]"
+  },
+  {
+    "file": "solar.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "عرض الكل"
+  },
+  {
+    "file": "solar.html",
+    "type": "button",
+    "target": "category.html",
+    "text": "ابدأ الآن"
+  },
+  {
+    "file": "wishlist.html",
+    "type": "link",
+    "target": "category.html",
+    "text": "الأقسام"
+  },
+  {
+    "file": "wishlist.html",
+    "type": "button",
+    "target": "category.html",
+    "text": "الكل ٦"
+  }
+]

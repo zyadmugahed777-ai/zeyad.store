@@ -1,0 +1,554 @@
+<!DOCTYPE html><html lang="ar" dir="rtl" data-theme="light"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>جميع الأقسام | منصة المنزل والطاقة | زياد ستور</title>
+  <meta name="description" content="تصفح صالات العرض المصغرة لمتجر زياد ستور — مجالس، غرف نوم، مطابخ، أجهزة، أثاث، وحلول طاقة شمسية بضمان موثق.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=20260830-v2327">
+  <link rel="stylesheet" href="production-polish.css?v=20260830-v2327">
+  <link rel="stylesheet" href="responsive-pro.css?v=20260830-v2327">
+  <link rel="stylesheet" href="mobile-first.css?v=20260830-v2327">
+  <link rel="stylesheet" href="assets/css/storefront-2026.css?v=a6bef9ab1d2b033c">
+
+  <!-- ZFB Core UX Systems -->
+  <script src="assets/js/core/translations.js?v=20260830-v2327"></script>
+  <script src="assets/js/core/i18n.js?v=20260830-v2327"></script>
+  <script src="assets/js/core/theme.js?v=48c1790c"></script>
+  <script src="assets/js/core/currency.js?v=1a885696"></script>
+  <script src="assets/js/core/global-ux.js?v=20260830-v2327"></script>
+
+  <style>
+    .categories-page {
+      padding: 24px 16px 100px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .categories-page-header {
+      text-align: center;
+      margin-bottom: 24px;
+      padding-top: 10px;
+    }
+    .categories-page-header .overline {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--gold, #c79a52);
+      background: rgba(199, 154, 82, 0.1);
+      padding: 4px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(199, 154, 82, 0.2);
+      margin-bottom: 8px;
+    }
+    .categories-page-header h1 {
+      font-size: clamp(1.4rem, 4vw, 2.2rem);
+      font-weight: 800;
+      color: var(--ink, #1c1813);
+      line-height: 1.35;
+      margin: 0 0 6px;
+    }
+    .categories-page-header p {
+      font-size: 0.88rem;
+      color: var(--muted, #6b7280);
+      max-width: 580px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+
+    /* Main Showroom Categories Grid (2 in a row on Mobile, 3 on Desktop) */
+    .main-categories-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+    .main-cat-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      background: var(--surface, #ffffff);
+      border: 1.5px solid rgba(198, 143, 49, 0.22);
+      border-radius: 20px;
+      padding: 20px 14px;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
+      position: relative;
+      overflow: hidden;
+    }
+    .main-cat-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--gold, #c79a52);
+      box-shadow: 0 12px 28px rgba(199, 154, 82, 0.12);
+    }
+    .main-cat-card:active {
+      transform: scale(0.98);
+    }
+    .main-cat-card .cat-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(199, 154, 82, 0.16), rgba(36, 54, 44, 0.08));
+      border: 1px solid rgba(199, 154, 82, 0.26);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 12px rgba(199, 154, 82, 0.1);
+      flex-shrink: 0;
+    }
+    .main-cat-card .cat-icon svg {
+      width: 28px;
+      height: 28px;
+      stroke: var(--gold, #c79a52);
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .main-cat-card h2 {
+      font-size: 1.02rem;
+      font-weight: 800;
+      margin: 0 0 4px;
+      color: var(--ink, #1c1813);
+      line-height: 1.3;
+    }
+    .main-cat-card p {
+      font-size: 0.73rem;
+      color: var(--muted, #6b7280);
+      line-height: 1.35;
+      margin: 0 0 12px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .main-cat-card .cat-link-text {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--gold, #c79a52);
+      background: rgba(199, 154, 82, 0.08);
+      padding: 4px 12px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: auto;
+      border: 1px solid rgba(199, 154, 82, 0.16);
+    }
+    .main-cat-card .cat-link-text svg {
+      width: 12px;
+      height: 12px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.2;
+      transform: scaleX(-1);
+    }
+
+    /* Quick Sections Grid (3 in a row on Mobile, 6 on Desktop) */
+    .quick-sections {
+      margin-bottom: 36px;
+    }
+    .quick-sections-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .quick-sections h2 {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--ink, #1c1813);
+      margin: 0;
+    }
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+    }
+    .quick-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 6px;
+      background: var(--surface, #ffffff);
+      border: 1px solid var(--line, rgba(0, 0, 0, 0.08));
+      border-radius: 16px;
+      padding: 12px 6px;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
+    }
+    .quick-card:hover {
+      border-color: var(--gold, #c79a52);
+      box-shadow: 0 6px 16px rgba(199, 154, 82, 0.12);
+      transform: translateY(-2px);
+    }
+    .quick-card:active {
+      transform: scale(0.97);
+    }
+    .quick-card .q-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: var(--surface-alt, #f7f5f0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .quick-card .q-icon svg {
+      width: 20px;
+      height: 20px;
+      stroke: var(--gold, #c79a52);
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .quick-card strong {
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--ink, #1c1813);
+      display: block;
+      line-height: 1.2;
+    }
+    .quick-card span {
+      font-size: 0.64rem;
+      color: var(--muted, #6b7280);
+      line-height: 1.2;
+    }
+
+    /* Platforms Card Highlight */
+    .quick-card.platforms-card {
+      border-color: rgba(199, 154, 82, 0.4);
+      background: linear-gradient(180deg, var(--surface, #ffffff), rgba(199, 154, 82, 0.06));
+    }
+
+    /* Service Trust Grid */
+    .service-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .service-grid > div {
+      background: var(--surface-alt, #f8fafc);
+      border: 1px solid var(--line, rgba(0, 0, 0, 0.06));
+      border-radius: 14px;
+      padding: 10px 8px;
+      text-align: center;
+    }
+    .service-grid strong {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--ink, #1c1813);
+      margin-bottom: 2px;
+    }
+    .service-grid span {
+      font-size: 0.66rem;
+      color: var(--muted, #6b7280);
+      line-height: 1.25;
+    }
+
+    /* Responsive Mobile Overrides (2 or 3 in a row) */
+    @media (max-width: 1023px) {
+      .main-categories-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+      }
+      .quick-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 8px !important;
+      }
+      .service-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px !important;
+      }
+    }
+
+    @media (min-width: 600px) and (max-width: 1023px) {
+      .main-categories-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .main-categories-grid {
+        gap: 8px !important;
+      }
+      .main-cat-card {
+        padding: 12px 6px !important;
+      }
+      .main-cat-card .cat-icon {
+        width: 46px !important;
+        height: 46px !important;
+      }
+      .quick-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+      }
+    }
+
+  </style>
+</head>
+<body id="top">
+  <div class="shop-shell">
+    <header class="top-note" data-vid="v-f44d66ec">
+      <span data-vid="v-819fa8cb">توصيل وتركيب داخل المدن الرئيسية</span>
+      <span data-vid="v-f720a07e">ضمان موثق على الأجهزة والطاقة الشمسية</span>
+      <a href="report-issue.html" style="color: #ffd700; text-decoration: underline; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;" data-vid="v-f7d89796">🛡️ الإبلاغ عن مشكلة ومكافأة</a>
+    </header>
+
+    <nav class="main-nav" aria-label="التنقل الرئيسي" data-vid="v-0646b5be">
+      <a class="brand" href="index.html" data-vid="v-17ff830e">
+        <span class="brand-content" data-vid="v-1414a421">
+          <span class="brand-mark" data-vid="v-dd7b8d8f">ز</span>
+          <span data-vid="v-742b4e59"><strong data-vid="v-d3e229ec">زياد ستور</strong><small data-vid="v-7f11b51c">منصة المنزل والطاقة</small></span>
+        </span>
+      </a>
+      <form class="search" role="search" aria-label="البحث في المتجر" name="site-search" action="search.html" method="get">
+        <button type="submit" aria-label="بحث" data-vid="v-3ee161d9"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.3-4.3M10.8 18a7.2 7.2 0 1 1 0-14.4 7.2 7.2 0 0 1 0 14.4Z"></path></svg></button>
+        <input name="q" type="search" aria-label="ابحث في المتجر" placeholder="جرّب: كنب مقاوم للبقع، غسالة ٩ كيلو، نظام شمسي للمنزل..." id="q-1" autocomplete="off" maxlength="120">
+        <button class="search-filter" type="button" onclick="window.location.href='search.html'" data-vid="v-1c7e7aa9">بحث ذكي</button>
+      </form>
+      <div class="nav-actions">
+        <a href="offers.html" data-vid="v-15dc5505">العروض</a>
+        <a href="index.html#best" data-vid="v-06ea4ff2">الأكثر مبيعا</a>
+        <a class="nav-account-btn" href="account.html" aria-label="حسابي" data-vid="v-19885497">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          <span data-vid="v-6a031e40">حسابي</span>
+        </a>
+        <a class="nav-icon-btn" href="wishlist.html" aria-label="المفضلة" data-vid="v-370c3397"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></a>
+        <a class="nav-icon-btn" href="compare.html" aria-label="المقارنة" title="المقارنة" data-vid="v-41ad47da">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16 3h5v5M4 21v-7M20 8l-7 7M4 14l7-7M4 3h5v5M20 21v-7"></path></svg>
+        </a>
+        <div class="dropdown-wrapper">
+          <button class="nav-icon-btn more-menu-btn" aria-expanded="false" aria-label="المزيد" data-vid="v-542a3555">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1.5"></circle><circle cx="12" cy="5" r="1.5"></circle><circle cx="12" cy="19" r="1.5"></circle></svg>
+          </button>
+          <div class="more-dropdown">
+            <a href="compare.html" data-vid="v-7c6d0d8d"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16 3h5v5M4 21v-7M20 8l-7 7M4 14l7-7M4 3h5v5M20 21v-7"></path></svg> المقارنة</a>
+            <a href="search.html?q=الجديد" data-vid="v-a8b907ba"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg> الجديد</a>
+            <a href="track-order.html" data-vid="v-586c023a"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> تتبع الطلب</a>
+            <a href="contact.html" data-vid="v-8d8dc6db"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg> تواصل معنا</a>
+            <a href="privacy.html" data-vid="v-27f9b27a"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg> سياسة الخصوصية</a>
+            <a href="terms.html" data-vid="v-ee9e4369"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg> الشروط والأحكام</a>
+            <a href="returns.html" data-vid="v-e9acf716"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg> سياسة الإرجاع</a>
+            <a href="faq.html" data-vid="v-49a767ca"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg> الأسئلة الشائعة</a>
+            <a href="report-issue.html" style="color: var(--gold, #c79a52); font-weight: 700;" data-vid="v-c5f44167"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z"></path></svg> الإبلاغ عن مشكلة ومكافأة</a>
+            <a href="about.html" data-vid="v-36cac89f"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg> من نحن</a>
+          </div>
+        </div>
+        <a class="cart" href="cart.html" aria-label="السلة" data-vid="v-ae63774f"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8h14l-1.6 8.1a2 2 0 0 1-2 1.6H9.2a2 2 0 0 1-2-1.7L5.7 4H3"></path><path d="M9 21h.1M18 21h.1"></path></svg><b>0</b></a>
+      </div>
+    </nav>
+
+    <main class="categories-page">
+      <header class="categories-page-header" data-vid="v-adea06fc">
+        <div class="overline" data-vid="v-c6f103b1">🏛️ صالات عرض زياد الرسمية</div>
+        <h1 data-vid="v-01b97820">أقسام متجر زياد</h1>
+        <p data-vid="v-ffa54018">ادخل الصالة المناسبة لحاجتك لتجهيز بيتك بأفضل المنتجات وبضمان موثق وتوصيل فوري لكافة المدن.</p>
+      </header>
+
+      <!-- 6 Main Store Showrooms (2 in a row on Mobile, 3 on Tablet/Desktop) -->
+      <div class="main-categories-grid">
+        <!-- 1. المجالس -->
+        <a class="main-cat-card" href="majalis.html" data-vid="v-db416acf">
+          <div class="cat-icon">
+            <svg viewBox="0 0 24 24"><path d="M3 11v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6M3 11h18M3 11a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2M6 19v2M18 19v2M7 9V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3"></path></svg>
+          </div>
+          <h2 data-vid="v-1c831993">المجالس</h2>
+          <p data-vid="v-da7f1ab6">كنب ملكي، أطقم زاوية، وطاولات ضيافة</p>
+          <span class="cat-link-text" data-vid="v-1644b8c3">دخول الصالة <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"></path></svg></span>
+        </a>
+
+        <!-- 2. غرف النوم -->
+        <a class="main-cat-card" href="bedrooms.html" data-vid="v-139c009b">
+          <div class="cat-icon">
+            <svg viewBox="0 0 24 24"><path d="M2 4v16M2 8h18a2 2 0 0 1 2 2v10M2 17h20M6 8v9"></path></svg>
+          </div>
+          <h2 data-vid="v-b86cf90a">غرف النوم</h2>
+          <p data-vid="v-e242ac7d">أسرّة، دواليب، مراتب، وغرف متكاملة</p>
+          <span class="cat-link-text" data-vid="v-4cb73db5">دخول الصالة <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"></path></svg></span>
+        </a>
+
+        <!-- 3. المطابخ -->
+        <a class="main-cat-card" href="kitchens.html" data-vid="v-02791b91">
+          <div class="cat-icon">
+            <svg viewBox="0 0 24 24"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"></path></svg>
+          </div>
+          <h2 data-vid="v-d44342d9">المطابخ</h2>
+          <p data-vid="v-d5ab7623">مطابخ ألمنيوم وخشب، أواني وتنظيم</p>
+          <span class="cat-link-text" data-vid="v-1a15c175">دخول الصالة <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"></path></svg></span>
+        </a>
+
+        <!-- 4. الأجهزة المنزلية -->
+        <a class="main-cat-card" href="appliances.html" data-vid="v-bbf6cb01">
+          <div class="cat-icon">
+            <svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"></rect><line x1="4" y1="10" x2="20" y2="10"></line><circle cx="8" cy="6" r="1"></circle><circle cx="8" cy="15" r="1"></circle></svg>
+          </div>
+          <h2 data-vid="v-ff1399a3">الأجهزة المنزلية</h2>
+          <p data-vid="v-28bbf1b3">ثلاجات، غسالات، شاشات ومكيفات</p>
+          <span class="cat-link-text" data-vid="v-b799046b">دخول الصالة <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"></path></svg></span>
+        </a>
+
+        <!-- 5. الأثاث -->
+        <a class="main-cat-card" href="furniture.html" data-vid="v-21dde55d">
+          <div class="cat-icon">
+            <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="5" rx="2"></rect><path d="M4 12v6M20 12v6M6 7V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2"></path></svg>
+          </div>
+          <h2 data-vid="v-cabb5a42">الأثاث</h2>
+          <p data-vid="v-1d098abe">طاولات طعام، مكاتب، وكراسي استرخاء</p>
+          <span class="cat-link-text" data-vid="v-d7de1633">دخول الصالة <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"></path></svg></span>
+        </a>
+
+        <!-- 6. الطاقة الشمسية -->
+        <a class="main-cat-card" href="solar.html" data-vid="v-8b7b0110">
+          <div class="cat-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+          </div>
+          <h2 data-vid="v-d6a00823">الطاقة الشمسية</h2>
+          <p data-vid="v-92ae20eb">ألواح، عواكس، بطاريات جل وليثيوم</p>
+          <span class="cat-link-text" data-vid="v-abbd66cf">دخول الصالة <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"></path></svg></span>
+        </a>
+      </div>
+
+      <!-- Quick Discovery Grid (3 in a row on Mobile, 6 on Desktop) -->
+      <section class="quick-sections" data-vid="v-c2591708">
+        <div class="quick-sections-head">
+          <h2 data-vid="v-86472009">استكشف المزيد من الوجهات</h2>
+        </div>
+        <div class="quick-grid">
+          <!-- 1. العروض الخاصة -->
+          <a class="quick-card" href="offers.html" data-vid="v-a0f31e45">
+            <div class="q-icon">
+              <svg viewBox="0 0 24 24"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+            </div>
+            <strong data-vid="v-32409f6c">العروض</strong>
+            <span data-vid="v-13cc876a">خصومات 50%</span>
+          </a>
+
+          <!-- 2. الأكثر مبيعاً -->
+          <a class="quick-card" href="best-sellers.html" data-vid="v-a584edd2">
+            <div class="q-icon">
+              <svg viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5C7 4 9 7 12 7s5-3 7.5-3a2.5 2.5 0 0 1 0 5H18"></path><path d="m18 9-2 11H8L6 9"></path></svg>
+            </div>
+            <strong data-vid="v-7e256ba7">الأكثر طلباً</strong>
+            <span data-vid="v-edae471c">توصيات العملاء</span>
+          </a>
+
+          <!-- 3. وصل حديثاً -->
+          <a class="quick-card" href="new-arrivals.html" data-vid="v-d0c4c295">
+            <div class="q-icon">
+              <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+            </div>
+            <strong data-vid="v-293a234a">وصل حديثاً</strong>
+            <span data-vid="v-63b59230">موديلات 2026</span>
+          </a>
+
+          <!-- 4. مجموعات منسقة -->
+          <a class="quick-card" href="collections.html" data-vid="v-06e92fd9">
+            <div class="q-icon">
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            </div>
+            <strong data-vid="v-eb459f04">المجموعات</strong>
+            <span data-vid="v-1cb7170d">باقات متناسقة</span>
+          </a>
+
+          <!-- 5. منصاتنا الرسمية (High-Priority Link) -->
+          <a class="quick-card platforms-card" href="platforms.html" data-vid="v-3ab03a33">
+            <div class="q-icon">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20M12 2a15.3 15.3 0 0 1 0 20M12 2a15.3 15.3 0 0 0 0 20"></path></svg>
+            </div>
+            <strong style="color: var(--gold, #c79a52);" data-vid="v-deef8ed1">منصاتنا 🌐</strong>
+            <span data-vid="v-5d3e36ae">قنواتنا الرسمية</span>
+          </a>
+
+          <!-- 6. غرف الأطفال -->
+          <a class="quick-card" href="kids-rooms.html" data-vid="v-ed360ecd">
+            <div class="q-icon">
+              <svg viewBox="0 0 24 24"><path d="M12 2a4 4 0 0 1 4 4c0 1.5-.8 2.8-2 3.5V14h3a3 3 0 0 1 3 3v4H4v-4a3 3 0 0 1 3-3h3V9.5C8.8 8.8 8 7.5 8 6a4 4 0 0 1 4-4z"></path></svg>
+            </div>
+            <strong data-vid="v-b1f9689b">غرف الأطفال</strong>
+            <span data-vid="v-025dffd0">أسرّة ومكاتب</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- Trust Services Strip -->
+      <section class="service-grid" aria-label="الثقة والخدمات" data-vid="v-6f1c64be">
+        <div><strong data-vid="v-ed67d3ed">🛡️ دفع آمن</strong><span data-vid="v-cd581548">حماية كاملة للطلب</span></div>
+        <div><strong data-vid="v-835e122d">📜 ضمان موثق</strong><span data-vid="v-64318cfb">فواتير وضمان رسمي</span></div>
+        <div><strong data-vid="v-8b94202a">🚚 توصيل وتركيب</strong><span data-vid="v-f097cc08">فريق فني متخصص</span></div>
+        <div><strong data-vid="v-2e4fe3eb">💬 استشارة مجانية</strong><span data-vid="v-c1d32a55">مساعدة قبل الشراء</span></div>
+      </section>
+    </main>
+
+    <footer class="site-footer" data-vid="v-ba5fa850">
+      <div class="footer-top">
+        <div class="container">
+          <div class="footer-grid">
+            <div class="footer-col brand-col">
+              <h3 data-vid="v-05e79b1a">زياد ستور</h3>
+              <p data-vid="v-5d190e74">وجهتك الأولى للتسوق الإلكتروني بمنتجات أصلية وتجربة تسوق لا تُنسى.</p>
+              <div class="social-links">
+                <a href="https://wa.me/967775010726" aria-label="WhatsApp" target="_blank" rel="noopener noreferrer" data-vid="v-76aa0ce3"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.698c.97.54 1.961.83 3.029.83h.005c3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.768-5.771z"></path></svg></a>
+                <a href="platforms.html" aria-label="منصاتنا" data-vid="v-b349fb83"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20M12 2a15.3 15.3 0 0 1 0 20M12 2a15.3 15.3 0 0 0 0 20"></path></svg></a>
+              </div>
+            </div>
+            <div class="footer-col">
+              <h4 data-vid="v-8ed41003">روابط سريعة</h4>
+              <ul>
+                <li data-vid="v-ad675673"><a href="offers.html" data-vid="v-bc7caa81">العروض الخاصة</a></li>
+                <li data-vid="v-536d39fd"><a href="search.html?q=الجديد" data-vid="v-caa874cb">أحدث المنتجات</a></li>
+                <li data-vid="v-e5fb300b"><a href="best-sellers.html" data-vid="v-f50261bd">الأكثر مبيعاً</a></li>
+                <li data-vid="v-710fd6e1"><a href="category.html" data-vid="v-8331c3f6">تصفح الأقسام</a></li>
+              </ul>
+            </div>
+            <div class="footer-col">
+              <h4 data-vid="v-06a1f145">خدمة العملاء</h4>
+              <ul>
+                <li data-vid="v-3d8b95f9"><a href="track-order.html" data-vid="v-81dea41d">تتبع الطلب</a></li>
+                <li data-vid="v-06dc5c81"><a href="faq.html" data-vid="v-8fc2c6c9">الأسئلة الشائعة</a></li>
+                <li data-vid="v-6345602b"><a href="returns.html" data-vid="v-a3c5c0f6">سياسة الاسترجاع</a></li>
+                <li data-vid="v-f99ff606"><a href="shipping.html" data-vid="v-a6b0ea5b">معلومات الشحن</a></li>
+                <li data-vid="v-d7188e8b"><a href="report-issue.html" style="color: var(--gold, #c79a52); font-weight: 700;" data-vid="v-709fc24e">🛡️ الإبلاغ عن مشكلة</a></li>
+              </ul>
+            </div>
+            <div class="footer-col contact-col">
+              <h4 data-vid="v-7851fabd">تواصل معنا</h4>
+              <ul>
+                <li data-vid="v-00c1e16e">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                  <span data-vid="v-a4c970be">+967775010726</span>
+                </li>
+                <li data-vid="v-c3a3c02a">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                  <span data-vid="v-8e004621">zeyad775010@gmail.com</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="container">
+          <div class="footer-bottom-flex">
+            <p class="copyright" data-vid="v-19f49866">© 2026 جميع الحقوق محفوظة - <span data-vid="v-205398ca">زياد ستور</span></p>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+
+  <script src="assets/js/core/storefront-2026.js?v=a6bef9ab1d2b033c"></script>
+</body></html>

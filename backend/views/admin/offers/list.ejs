@@ -1,0 +1,187 @@
+<%- include('../../partials/head', { title }) %>
+<%- include('../../partials/sidebar', { active }) %>
+<main class="admin-main">
+  <%- include('../../partials/topbar') %>
+  
+  <div class="admin-content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h1 class="page-title"><%= title %></h1>
+        <p class="page-description">إدارة العروض والخصومات المتقدمة.</p>
+      </div>
+      <div class="admin-header-actions">
+        <a href="/admin/offers/create" class="btn btn-primary">
+          <span class="material-symbols-rounded">add</span>
+          إضافة عرض جديد
+        </a>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="glass-card mb-4">
+      <form action="/admin/offers" method="GET" class="d-flex gap-3 align-items-center">
+        <div style="flex: 1;">
+          <input type="text" name="q" class="form-control" placeholder="البحث بالعنوان أو كود الخصم..." value="<%= search %>">
+        </div>
+        <div style="width: 200px;">
+          <select name="status" class="form-control">
+            <option value="">جميع الحالات</option>
+            <option value="active" <%= status === 'active' ? 'selected' : '' %>>نشط</option>
+            <option value="hidden" <%= status === 'hidden' ? 'selected' : '' %>>مخفي</option>
+            <option value="draft" <%= status === 'draft' ? 'selected' : '' %>>مسودة</option>
+          </select>
+        </div>
+        <div style="width: 200px;">
+          <select name="placement" class="form-control">
+            <option value="">مكان الظهور</option>
+            <option value="home" <%= placement === 'home' ? 'selected' : '' %>>الصفحة الرئيسية</option>
+            <option value="category" <%= placement === 'category' ? 'selected' : '' %>>صفحات الأقسام</option>
+            <option value="checkout" <%= placement === 'checkout' ? 'selected' : '' %>>صفحة الدفع</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-accent">
+          <span class="material-symbols-rounded">search</span> بحث
+        </button>
+        <% if(search || status || placement) { %>
+          <a href="/admin/offers" class="btn btn-outline">إلغاء الفلترة</a>
+        <% } %>
+      </form>
+    </div>
+
+    <!-- Table -->
+    <div class="glass-card">
+      <form action="/admin/offers/bulk" method="POST" id="bulkForm">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <div class="d-flex gap-2 mb-3">
+          <select name="action" class="form-control" style="width: 200px;" required>
+            <option value="">إجراءات جماعية...</option>
+            <option value="activate">تفعيل المحدد</option>
+            <option value="hide">إخفاء المحدد</option>
+            <option value="delete">حذف المحدد</option>
+          </select>
+          <button type="submit" class="btn btn-outline" onclick="return confirm('تأكيد تنفيذ الإجراء الجماعي؟')">تطبيق</button>
+        </div>
+
+        <div class="table-responsive">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th width="40"><input type="checkbox" id="selectAll"></th>
+                <th width="60">صورة</th>
+                <th>العنوان</th>
+                <th>قيمة الخصم</th>
+                <th>كود الخصم</th>
+                <th>مكان الظهور</th>
+                <th>تاريخ النهاية</th>
+                <th class="text-center">الحالة</th>
+                <th class="text-center" width="150">إجراءات</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (offers.length === 0) { %>
+                <tr>
+                  <td colspan="9" class="text-center py-5">لا توجد عروض مسجلة.</td>
+                </tr>
+              <% } %>
+              <% offers.forEach(offer => { %>
+                <tr>
+                  <td><input type="checkbox" name="ids[]" value="<%= offer.id %>" class="row-checkbox"></td>
+                  <td>
+                    <% if (offer.image) { %>
+                      <img src="<%= offer.image %>" alt="<%= offer.title_ar %>" style="width: 40px; height: 40px; object-fit: cover; border-radius: 8px;">
+                    <% } else { %>
+                      <div style="width: 40px; height: 40px; border-radius: 8px; background: var(--bg-tertiary);"></div>
+                    <% } %>
+                  </td>
+                  <td>
+                    <strong><%= offer.title_ar %></strong><br>
+                    <small class="text-muted"><%= offer.department_name ? offer.department_name + ' / ' : '' %><%= offer.category_name || '' %></small>
+                  </td>
+                  <td dir="ltr">
+                    <% if (offer.discount_type === 'percentage') { %>
+                      <span class="badge badge-info"><%= offer.discount_value %>%</span>
+                    <% } else { %>
+                      <span class="badge badge-success"><%= helpers.formatPrice(offer.discount_amount) %></span>
+                    <% } %>
+                  </td>
+                  <td>
+                    <% if(offer.coupon_code) { %>
+                      <code dir="ltr"><%= offer.coupon_code %></code>
+                    <% } else { %>
+                      -
+                    <% } %>
+                  </td>
+                  <td>
+                    <% 
+                      let placements = offer.placement ? offer.placement.split(',') : [];
+                      let placementMap = { home: 'الرئيسية', category: 'الأقسام', checkout: 'الدفع', popup: 'نافذة منبثقة' };
+                    %>
+                    <div class="d-flex gap-1" style="flex-wrap: wrap;">
+                      <% placements.forEach(p => { %>
+                        <span class="badge badge-warning" style="font-size: 10px;"><%= placementMap[p.trim()] || p %></span>
+                      <% }) %>
+                    </div>
+                  </td>
+                  <td dir="ltr">
+                    <%= offer.end_date ? helpers.formatDate(offer.end_date) : 'لا ينتهي' %>
+                  </td>
+                  <td class="text-center">
+                    <% if (offer.status === 'active') { %>
+                      <span class="badge badge-success">نشط</span>
+                    <% } else if (offer.status === 'hidden') { %>
+                      <span class="badge badge-warning">مخفي</span>
+                    <% } else { %>
+                      <span class="badge badge-info">مسودة</span>
+                    <% } %>
+                  </td>
+                  <td class="text-center">
+                    <div class="d-flex justify-content-center gap-2">
+                      <a href="/admin/offers/<%= offer.id %>/edit" class="btn-icon" title="تعديل">
+                        <span class="material-symbols-rounded">edit</span>
+                      </a>
+                      <button type="button" class="btn-icon text-danger" title="حذف" onclick="if(confirm('حذف هذا العرض؟')) { document.getElementById('delete-offer-<%= offer.id %>').submit(); }">
+                        <span class="material-symbols-rounded">delete</span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </form>
+      
+      <% offers.forEach(offer => { %>
+        <form action="/admin/offers/<%= offer.id %>/delete" method="POST" id="delete-offer-<%= offer.id %>" style="display:none;">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        </form>
+      <% }) %>
+
+      <!-- Pagination -->
+      <% if (totalPages > 1) { %>
+        <div class="d-flex justify-content-between align-items-center mt-4">
+          <div class="text-muted" style="font-size: 13px;">
+            إجمالي العروض: <%= totalItems %>
+          </div>
+          <div class="d-flex gap-2">
+            <% if (page > 1) { %>
+              <a href="?page=<%= page - 1 %>&q=<%= search %>&status=<%= status %>&placement=<%= placement %>" class="btn btn-outline">السابق</a>
+            <% } %>
+            <% for(let i = 1; i <= totalPages; i++) { %>
+              <a href="?page=<%= i %>&q=<%= search %>&status=<%= status %>&placement=<%= placement %>" class="btn <%= page === i ? 'btn-primary' : 'btn-outline' %>"><%= i %></a>
+            <% } %>
+            <% if (page < totalPages) { %>
+              <a href="?page=<%= page + 1 %>&q=<%= search %>&status=<%= status %>&placement=<%= placement %>" class="btn btn-outline">التالي</a>
+            <% } %>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</main>
+<script>
+document.getElementById('selectAll').addEventListener('change', function(e) {
+  document.querySelectorAll('.row-checkbox').forEach(cb => cb.checked = e.target.checked);
+});
+</script>
+<%- include('../../partials/foot') %>

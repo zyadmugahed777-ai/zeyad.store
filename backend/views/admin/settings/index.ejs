@@ -1,0 +1,167 @@
+<%- include('../../partials/head', { title }) %>
+<%- include('../../partials/sidebar', { active }) %>
+<main class="admin-main">
+  <%- include('../../partials/topbar') %>
+  <div class="admin-content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="page-title"><%= title %></h1>
+    </div>
+
+    <form action="/admin/settings" method="POST" enctype="multipart/form-data">
+      <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+      
+      <div class="row" style="display: flex; flex-wrap: wrap; margin: -12px;">
+        
+        <div style="flex: 0 0 66.66%; padding: 12px; box-sizing: border-box;">
+          
+          <div class="glass-card mb-4">
+            <h2 style="font-size: 1.1rem; margin-bottom: 20px; color: var(--primary-color);">المعلومات العامة</h2>
+            <div class="row" style="display: flex; flex-wrap: wrap; margin: 0 -8px;">
+              <div style="flex: 0 0 100%; padding: 0 8px; box-sizing: border-box;" class="mb-3">
+                <label class="form-label">اسم الموقع</label>
+                <input class="form-control" name="site_name" value="<%= settings.site_name || '' %>">
+              </div>
+              <div style="flex: 0 0 50%; padding: 0 8px; box-sizing: border-box;" class="mb-3">
+                <label class="form-label">العملة الافتراضية</label>
+                <input class="form-control" name="default_currency" value="<%= settings.default_currency || 'YER' %>" dir="ltr">
+              </div>
+              <div style="flex: 0 0 50%; padding: 0 8px; box-sizing: border-box;" class="mb-3">
+                <label class="form-label">اللغات المتاحة</label>
+                <input class="form-control" name="enabled_languages" value="<%= settings.enabled_languages || 'ar,en' %>" dir="ltr">
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-card mb-4">
+            <h2 style="font-size: 1.1rem; margin-bottom: 20px; color: var(--primary-color);">بيانات التواصل والروابط</h2>
+            <div class="row" style="display: flex; flex-wrap: wrap; margin: 0 -8px;">
+              <div style="flex: 0 0 50%; padding: 0 8px; box-sizing: border-box;" class="mb-3">
+                <label class="form-label">رقم الهاتف</label>
+                <input class="form-control" name="contact_phone" value="<%= settings.contact_phone || '' %>" dir="ltr">
+              </div>
+              <div style="flex: 0 0 50%; padding: 0 8px; box-sizing: border-box;" class="mb-3">
+                <label class="form-label">رقم الواتساب</label>
+                <input class="form-control" name="contact_whatsapp" value="<%= settings.contact_whatsapp || '' %>" dir="ltr">
+              </div>
+              <div style="flex: 0 0 50%; padding: 0 8px; box-sizing: border-box;" class="mb-3">
+                <label class="form-label">البريد الإلكتروني</label>
+                <input class="form-control" name="contact_email" value="<%= settings.contact_email || '' %>" dir="ltr">
+              </div>
+              <div style="flex: 0 0 50%; padding: 0 8px; box-sizing: border-box;" class="mb-3">
+                <label class="form-label">رابط خرائط قوقل</label>
+                <input class="form-control" name="google_maps_url" value="<%= settings.google_maps_url || '' %>" dir="ltr">
+              </div>
+              <div style="flex: 0 0 100%; padding: 0 8px; box-sizing: border-box;" class="mb-3">
+                <label class="form-label">العنوان التفصيلي</label>
+                <textarea class="form-control" name="contact_address" rows="2"><%= settings.contact_address || '' %></textarea>
+              </div>
+            </div>
+            
+            <h3 style="font-size: 1rem; margin: 15px 0; color: var(--text-main);">حسابات التواصل الاجتماعي</h3>
+            <div class="row" style="display: flex; flex-wrap: wrap; margin: 0 -8px;">
+              <div style="flex: 0 0 33.33%; padding: 0 8px; box-sizing: border-box;" class="mb-3">
+                <label class="form-label">Facebook</label>
+                <input class="form-control" name="social_facebook" value="<%= settings.social_facebook || '' %>" dir="ltr">
+              </div>
+              <div style="flex: 0 0 33.33%; padding: 0 8px; box-sizing: border-box;" class="mb-3">
+                <label class="form-label">Instagram</label>
+                <input class="form-control" name="social_instagram" value="<%= settings.social_instagram || '' %>" dir="ltr">
+              </div>
+              <div style="flex: 0 0 33.33%; padding: 0 8px; box-sizing: border-box;" class="mb-3">
+                <label class="form-label">TikTok</label>
+                <input class="form-control" name="social_tiktok" value="<%= settings.social_tiktok || '' %>" dir="ltr">
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-card mb-4">
+            <h2 style="font-size: 1.1rem; margin-bottom: 20px; color: var(--primary-color);">تحسين محركات البحث (SEO)</h2>
+            <div class="form-group mb-3">
+              <label class="form-label">عنوان الموقع (SEO Title)</label>
+              <input class="form-control" name="seo_title" value="<%= settings.seo_title || '' %>">
+            </div>
+            <div class="form-group mb-3">
+              <label class="form-label">وصف الموقع (SEO Description)</label>
+              <textarea class="form-control" name="seo_description" rows="3"><%= settings.seo_description || '' %></textarea>
+            </div>
+          </div>
+          
+        </div>
+
+        <div style="flex: 0 0 33.33%; padding: 12px; box-sizing: border-box;">
+          
+          <div class="glass-card mb-4">
+            <h2 style="font-size: 1.1rem; margin-bottom: 20px; color: var(--primary-color);">العلامة التجارية</h2>
+            <div class="form-group mb-4">
+              <label class="form-label">الشعار (Logo)</label>
+              <% if (settings.site_logo) { %>
+                <div class="mb-2" style="background: var(--bg-tertiary); padding: 10px; border-radius: 8px; text-align: center;">
+                  <img src="<%= settings.site_logo %>" style="max-height: 60px; max-width: 100%;">
+                </div>
+              <% } %>
+              <input type="file" class="form-control" name="site_logo" accept="image/*">
+            </div>
+            <div class="form-group mb-3">
+              <label class="form-label">أيقونة الموقع (Favicon)</label>
+              <% if (settings.site_favicon) { %>
+                <div class="mb-2" style="background: var(--bg-tertiary); padding: 10px; border-radius: 8px; text-align: center;">
+                  <img src="<%= settings.site_favicon %>" style="max-height: 32px; max-width: 32px;">
+                </div>
+              <% } %>
+              <input type="file" class="form-control" name="site_favicon" accept="image/*">
+            </div>
+          </div>
+
+          <div class="glass-card mb-4">
+            <h2 style="font-size: 1.1rem; margin-bottom: 20px; color: var(--primary-color);">الدفع والشحن</h2>
+            <div class="form-group mb-3">
+              <label class="form-label">طرق الدفع المتاحة</label>
+              <textarea class="form-control" name="payment_methods" rows="3"><%= settings.payment_methods || '' %></textarea>
+              <small class="text-muted">افصل بين الطرق بفاصلة</small>
+            </div>
+            <div class="form-group mb-3">
+              <label class="form-label">طرق الشحن المتاحة</label>
+              <textarea class="form-control" name="shipping_methods" rows="3"><%= settings.shipping_methods || '' %></textarea>
+              <small class="text-muted">افصل بين الطرق بفاصلة</small>
+            </div>
+          </div>
+
+          <div class="glass-card mb-4">
+            <h2 style="font-size: 1.1rem; margin-bottom: 20px; color: var(--primary-color);">قالب رسالة واتساب للعميل</h2>
+            <div class="form-group mb-3">
+              <label class="form-label">نص الرسالة الرسمية المرسلة من صفحة الطلب</label>
+              <textarea class="form-control" name="whatsapp_order_template" rows="16" style="font-family: inherit; line-height: 1.9;" placeholder="<%= defaultWhatsappTemplate %>"><%= settings.whatsapp_order_template || '' %></textarea>
+              <small class="text-muted" style="display: block; margin-top: 8px; line-height: 1.9;">
+                اتركه فارغاً لاستخدام القالب الرسمي الافتراضي. المتغيرات المتاحة:
+                <code>{{customer_name}}</code>
+                <code>{{store_name}}</code>
+                <code>{{order_id}}</code>
+                <code>{{order_date}}</code>
+                <code>{{items}}</code>
+                <code>{{total}}</code>
+                <code>{{payment_method}}</code>
+                <code>{{delivery_line}}</code>
+                <code>{{status_label}}</code>
+                <code>{{status_message}}</code>
+                <br>
+                <strong>{{status_message}}</strong> يكتب تلقائياً جملة مناسبة لحالة الطلب (قيد المراجعة / قيد التجهيز / مع المندوب / تم التوصيل / ملغي).
+              </small>
+            </div>
+          </div>
+
+          <div class="glass-card mb-4 text-center">
+            <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 12px 0; font-size: 16px;">
+              <span class="material-symbols-rounded">save</span>
+              حفظ الإعدادات
+            </button>
+          </div>
+          
+        </div>
+      </div>
+    </form>
+  </div>
+</main>
+<!-- Answers 'where does this show up?' beneath each field. See the file for
+     how each note was checked against the code that consumes the setting. -->
+<script src="/admin-assets/js/settings-where.js"></script>
+<%- include('../../partials/foot') %>

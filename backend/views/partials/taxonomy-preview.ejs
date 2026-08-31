@@ -1,0 +1,160 @@
+<%
+/**
+ * Live preview for a department or a category form.
+ *
+ * The department and category screens had no preview at all, so the only way
+ * to see what a change looked like was to save it and go hunting on the site.
+ * This mirrors the storefront's own "category circle" treatment -- round
+ * avatar, label, sub-line -- so what is shown here is what the shop shows.
+ *
+ * Expects: `kind` ('department' | 'category'), and the record or null.
+ */
+const _rec = (typeof record !== 'undefined' && record) ? record : null;
+const _kind = (typeof kind !== 'undefined' && kind) ? kind : 'department';
+const _label = _kind === 'department' ? 'القسم' : 'التصنيف';
+%>
+<div class="glass-card mb-4">
+  <h2 style="font-size: 1rem; margin-bottom: 4px; color: var(--primary-color);">معاينة مباشرة</h2>
+  <p class="text-muted" style="font-size: 12px; margin-bottom: 16px;">
+    تتحدث فوراً أثناء الكتابة، وتعرض شكل <%= _label %> كما يظهر للزائر.
+  </p>
+
+  <div id="taxPreview" style="display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap;">
+    <!-- Circle treatment, as used on the storefront home page -->
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; width: 128px; text-align: center;">
+      <div id="taxPreviewAvatar"
+           style="width: 92px; height: 92px; border-radius: 50%; overflow: hidden;
+                  background: var(--bg-tertiary); border: 2px solid var(--border-color);
+                  display: flex; align-items: center; justify-content: center;">
+        <img id="taxPreviewImage"
+             src="<%= _rec && _rec.image ? _rec.image : '' %>"
+             alt=""
+             style="width: 100%; height: 100%; object-fit: cover; <%= _rec && _rec.image ? '' : 'display:none;' %>">
+        <span id="taxPreviewIcon" class="material-symbols-rounded"
+              style="font-size: 40px; color: var(--text-muted); <%= _rec && _rec.image ? 'display:none;' : '' %>">
+          <%= (_rec && _rec.icon) ? _rec.icon : 'category' %>
+        </span>
+      </div>
+      <strong id="taxPreviewLabel" style="font-size: 14px; line-height: 1.4;">
+        <%= _rec && _rec.name_ar ? _rec.name_ar : ('اسم ' + _label) %>
+      </strong>
+      <small id="taxPreviewSub" class="text-muted" style="font-size: 11px; line-height: 1.5;"></small>
+    </div>
+
+    <!-- Card treatment, as used on listing pages -->
+    <div style="flex: 1; min-width: 240px; max-width: 340px; border: 1px solid var(--border-color);
+                border-radius: 14px; overflow: hidden; background: var(--bg-card);">
+      <div id="taxPreviewCardMedia"
+           style="height: 120px; background: var(--bg-tertiary); display: flex;
+                  align-items: center; justify-content: center;">
+        <img id="taxPreviewCardImage"
+             src="<%= _rec && _rec.image ? _rec.image : '' %>"
+             alt=""
+             style="width: 100%; height: 100%; object-fit: cover; <%= _rec && _rec.image ? '' : 'display:none;' %>">
+        <span id="taxPreviewCardIcon" class="material-symbols-rounded"
+              style="font-size: 46px; color: var(--text-muted); <%= _rec && _rec.image ? 'display:none;' : '' %>">
+          <%= (_rec && _rec.icon) ? _rec.icon : 'image' %>
+        </span>
+      </div>
+      <div style="padding: 14px;">
+        <strong id="taxPreviewCardTitle" style="display: block; font-size: 15px; margin-bottom: 6px;">
+          <%= _rec && _rec.name_ar ? _rec.name_ar : ('اسم ' + _label) %>
+        </strong>
+        <p id="taxPreviewCardDesc" class="text-muted"
+           style="font-size: 12px; line-height: 1.8; margin: 0; min-height: 20px;"></p>
+        <code id="taxPreviewSlug" class="text-muted"
+              style="display: block; margin-top: 10px; font-size: 11px;" dir="ltr">
+          /<%= _rec && _rec.slug ? _rec.slug : 'slug' %>
+        </code>
+      </div>
+    </div>
+  </div>
+
+  <div id="taxPreviewInactive"
+       style="display: none; margin-top: 14px; padding: 10px 12px; border-radius: 8px;
+              background: rgba(239, 68, 68, .12); color: #ef4444; font-size: 12px; font-weight: 600;">
+    غير نشط — لن يظهر للزوار على الموقع.
+  </div>
+</div>
+
+<script>
+  (function () {
+    // Bound by name rather than id: both forms use the same field names, so
+    // one preview script serves the department and the category screen.
+    const byName = (n) => document.querySelector('[name="' + n + '"]');
+
+    const els = {
+      name: byName('name_ar'),
+      slug: byName('slug'),
+      desc: byName('description_ar'),
+      icon: byName('icon'),
+      active: byName('is_active'),
+      file: byName('image')
+    };
+
+    const out = {
+      label: document.getElementById('taxPreviewLabel'),
+      sub: document.getElementById('taxPreviewSub'),
+      title: document.getElementById('taxPreviewCardTitle'),
+      desc: document.getElementById('taxPreviewCardDesc'),
+      slug: document.getElementById('taxPreviewSlug'),
+      icon: document.getElementById('taxPreviewIcon'),
+      cardIcon: document.getElementById('taxPreviewCardIcon'),
+      image: document.getElementById('taxPreviewImage'),
+      cardImage: document.getElementById('taxPreviewCardImage'),
+      inactive: document.getElementById('taxPreviewInactive')
+    };
+
+    // The description may be a rich-text field, in which case the tags belong
+    // in the source and not on the preview card.
+    const plain = (html) => {
+      const d = document.createElement('div');
+      d.innerHTML = html || '';
+      return (d.textContent || '').replace(/\s+/g, ' ').trim();
+    };
+
+    function render() {
+      const name = (els.name && els.name.value.trim()) || '';
+      if (out.label) out.label.textContent = name || 'بدون اسم';
+      if (out.title) out.title.textContent = name || 'بدون اسم';
+
+      const desc = plain(els.desc && els.desc.value);
+      if (out.desc) out.desc.textContent = desc || 'لا يوجد وصف بعد.';
+      if (out.sub) out.sub.textContent = desc ? desc.slice(0, 28) : '';
+
+      if (out.slug) out.slug.textContent = '/' + ((els.slug && els.slug.value.trim()) || 'slug');
+
+      const icon = (els.icon && els.icon.value.trim()) || '';
+      if (icon) {
+        if (out.icon) out.icon.textContent = icon;
+        if (out.cardIcon) out.cardIcon.textContent = icon;
+      }
+
+      if (out.inactive) {
+        out.inactive.style.display = (els.active && !els.active.checked) ? 'block' : 'none';
+      }
+    }
+
+    ['input', 'change'].forEach((evt) => {
+      Object.values(els).forEach((el) => el && el.addEventListener(evt, render));
+    });
+
+    // Show a newly chosen file before it is uploaded, so the operator can see
+    // the image is the one they meant without a save-and-check round trip.
+    if (els.file) {
+      els.file.addEventListener('change', (e) => {
+        const f = e.target.files && e.target.files[0];
+        if (!f) return;
+        const url = URL.createObjectURL(f);
+        [out.image, out.cardImage].forEach((img) => {
+          if (!img) return;
+          img.src = url;
+          img.style.display = '';
+        });
+        [out.icon, out.cardIcon].forEach((i) => { if (i) i.style.display = 'none'; });
+      });
+    }
+
+    render();
+  })();
+</script>

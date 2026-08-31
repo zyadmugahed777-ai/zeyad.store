@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>تسجيل الدخول | زياد ستور</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-gold: #eab308;
+      --bg-body: #111827;
+      --bg-card: #1f2937;
+      --text-main: #f9fafb;
+      --border-color: #374151;
+    }
+    body {
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      background: var(--bg-body);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .login-card {
+      background: var(--bg-card);
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      width: 100%;
+      max-width: 400px;
+      border: 1px solid var(--border-color);
+      text-align: center;
+    }
+    .login-card h2 {
+      margin-top: 0;
+      color: var(--primary-gold);
+      margin-bottom: 30px;
+      font-size: 24px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+      text-align: right;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #9ca3af;
+      font-size: 14px;
+    }
+    .form-control {
+      width: 100%;
+      padding: 12px;
+      background: var(--bg-body);
+      border: 1px solid var(--border-color);
+      color: white;
+      border-radius: 8px;
+      box-sizing: border-box;
+      font-family: inherit;
+    }
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary-gold);
+    }
+    .btn-primary {
+      width: 100%;
+      padding: 14px;
+      background: var(--primary-gold);
+      color: black;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .btn-primary:hover {
+      background: #ca8a04;
+    }
+    .alert {
+      padding: 12px;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-card">
+    <div style="font-size: 48px; color: var(--primary-gold); margin-bottom: 10px;">👑</div>
+    <h2>زياد ستور</h2>
+    <p style="color: #9ca3af; margin-bottom: 30px; margin-top: -20px; font-size: 14px;">نظام إدارة المحتوى V2</p>
+
+    <% if (typeof error !== 'undefined' && error) { %>
+      <div class="alert"><%= error %></div>
+    <% } %>
+    
+    <form action="/admin/login" method="POST">
+      <div class="form-group">
+        <label>اسم المستخدم</label>
+        <input type="text" name="username" class="form-control" required autofocus dir="ltr">
+      </div>
+      <div class="form-group">
+        <label>كلمة المرور</label>
+        <input type="password" name="password" class="form-control" required dir="ltr">
+      </div>
+      <button type="submit" class="btn-primary">دخول</button>
+    </form>
+  </div>
+</body>
+</html>

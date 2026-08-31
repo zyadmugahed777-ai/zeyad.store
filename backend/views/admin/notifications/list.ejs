@@ -1,0 +1,137 @@
+<%- include('../../partials/head', { title }) %>
+<%- include('../../partials/sidebar', { active }) %>
+<main class="admin-main">
+  <%- include('../../partials/topbar') %>
+  <div class="admin-content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="page-title"><%= title %></h1>
+      <form action="/admin/notifications/read-all" method="POST" style="display:inline;">
+        <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+        <button type="submit" class="btn btn-outline" onclick="return confirm('تأكيد تعليم كافة الإشعارات كمقروءة؟');">
+          <span class="material-symbols-rounded">done_all</span> تحديد الكل كمقروء
+        </button>
+      </form>
+    </div>
+
+    <div class="glass-card mb-4">
+      <form method="GET" action="/admin/notifications" class="d-flex gap-3 align-items-center flex-wrap">
+        <div style="flex: 1; min-width: 200px;">
+          <input type="text" name="q" class="form-control" placeholder="البحث في الإشعارات..." value="<%= typeof search !== 'undefined' ? search : '' %>">
+        </div>
+        <div style="width: 200px;">
+          <select class="form-control" name="read">
+            <option value="">كل الحالات</option>
+            <option value="0" <%= typeof read !== 'undefined' && read === '0' ? 'selected' : '' %>>غير مقروء</option>
+            <option value="1" <%= typeof read !== 'undefined' && read === '1' ? 'selected' : '' %>>مقروء</option>
+          </select>
+        </div>
+        <div style="width: 200px;">
+          <input type="text" class="form-control" name="type" placeholder="نوع الإشعار..." value="<%= typeof type !== 'undefined' ? type : '' %>">
+        </div>
+        <button type="submit" class="btn btn-accent">
+          <span class="material-symbols-rounded">search</span> تصفية
+        </button>
+        <% if((typeof search !== 'undefined' && search) || (typeof read !== 'undefined' && read) || (typeof type !== 'undefined' && type)) { %>
+          <a href="/admin/notifications" class="btn btn-outline">إلغاء</a>
+        <% } %>
+      </form>
+    </div>
+
+    <div class="glass-card">
+      
+      <form method="POST" action="/admin/notifications/bulk" id="bulkForm" class="d-flex align-items-center gap-3 mb-4 p-3" style="background: var(--bg-tertiary); border-radius: 8px;">
+        <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+        <select name="action" class="form-control" style="width: 200px;">
+          <option value="">إجراء جماعي</option>
+          <option value="read">تعليم كمقروء</option>
+          <option value="unread">تعليم كغير مقروء</option>
+          <option value="delete">حذف المحدد</option>
+        </select>
+        <button class="btn btn-outline" type="submit">تنفيذ الإجراء</button>
+      </form>
+
+      <div class="table-responsive">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th width="40" class="text-center">
+                <input type="checkbox" onchange="document.querySelectorAll('.notification-check').forEach(cb => cb.checked = this.checked)" style="width: 18px; height: 18px;">
+              </th>
+              <th>الإشعار</th>
+              <th class="text-center">النوع</th>
+              <th class="text-center">الحالة</th>
+              <th>التاريخ</th>
+              <th class="text-center" width="120">إجراءات</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (!notifications || notifications.length === 0) { %>
+              <tr><td colspan="6" class="text-center py-5">لا توجد إشعارات.</td></tr>
+            <% } %>
+            <% if (notifications) notifications.forEach(item => { %>
+              <tr style="<%= !item.is_read ? 'background: rgba(var(--primary-color-rgb), 0.05); font-weight: 600;' : '' %>">
+                <td class="text-center">
+                  <input class="notification-check" type="checkbox" form="bulkForm" name="ids" value="<%= item.id %>" style="width: 18px; height: 18px;">
+                </td>
+                <td>
+                  <a href="/admin/notifications/<%= item.id %>/open" style="color: inherit; text-decoration: none; display: block;">
+                    <strong style="display: block; margin-bottom: 4px; color: var(--primary-gold, #eab308);"><%= item.title %></strong>
+                    <div style="font-size: 13px; color: var(--text-muted);"><%= item.message || '' %></div>
+                  </a>
+                </td>
+                <td class="text-center"><span class="badge badge-info"><%= item.type %></span></td>
+                <td class="text-center">
+                  <% if (item.is_read) { %>
+                    <span class="badge badge-success">مقروء</span>
+                  <% } else { %>
+                    <span class="badge badge-warning">غير مقروء</span>
+                  <% } %>
+                </td>
+                <td dir="ltr"><%= helpers.formatDateTime(item.created_at) %></td>
+                <td class="text-center">
+                  <div class="d-flex justify-content-center gap-2">
+                    <a href="/admin/notifications/<%= item.id %>/open" class="btn-icon text-primary" title="فتح الكيان المرتبط">
+                      <span class="material-symbols-rounded">open_in_new</span>
+                    </a>
+                    <% if (!item.is_read) { %>
+                      <form action="/admin/notifications/<%= item.id %>/read" method="POST" style="display:inline;">
+                        <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+                        <button type="submit" class="btn-icon text-success" title="تعليم كمقروء">
+                          <span class="material-symbols-rounded">mark_email_read</span>
+                        </button>
+                      </form>
+                    <% } %>
+                    <form action="/admin/notifications/<%= item.id %>/delete" method="POST" style="display:inline;" onsubmit="return confirm('تأكيد حذف الإشعار؟');">
+                      <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+                      <button type="submit" class="btn-icon text-danger" title="حذف">
+                        <span class="material-symbols-rounded">delete</span>
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+
+      <% if (typeof totalPages !== 'undefined' && totalPages > 1) { %>
+        <div class="d-flex justify-content-between align-items-center mt-4">
+          <div class="text-muted" style="font-size: 13px;">إجمالي الإشعارات: <%= typeof totalItems !== 'undefined' ? totalItems : notifications.length %></div>
+          <div class="d-flex gap-2">
+            <% if (page > 1) { %>
+              <a href="?page=<%= page - 1 %>&q=<%= search %>&read=<%= typeof read !== 'undefined' ? read : '' %>&type=<%= typeof type !== 'undefined' ? type : '' %>" class="btn btn-outline">السابق</a>
+            <% } %>
+            <% for(let i = 1; i <= totalPages; i++) { %>
+              <a href="?page=<%= i %>&q=<%= search %>&read=<%= typeof read !== 'undefined' ? read : '' %>&type=<%= typeof type !== 'undefined' ? type : '' %>" class="btn <%= page === i ? 'btn-primary' : 'btn-outline' %>"><%= i %></a>
+            <% } %>
+            <% if (page < totalPages) { %>
+              <a href="?page=<%= page + 1 %>&q=<%= search %>&read=<%= typeof read !== 'undefined' ? read : '' %>&type=<%= typeof type !== 'undefined' ? type : '' %>" class="btn btn-outline">التالي</a>
+            <% } %>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</main>
+<%- include('../../partials/foot') %>

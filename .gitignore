@@ -1,0 +1,72 @@
+node_modules/
+.env
+backend/db/backups/
+backend/db/pg_shadow_data/
+*.log
+.DS_Store
+
+# SQLite sidecars. These are transient files SQLite regenerates from the
+# database itself; committing them means a checkout can restore a WAL that no
+# longer matches the untracked zeyad.db beside it, and SQLite then reports the
+# database as malformed. That is exactly what happened on 2026-08-30.
+backend/db/*.db-wal
+backend/db/*.db-shm
+
+# ---------------------------------------------------------------------------
+# Published repository: the code needed to run the site, and nothing else.
+# ---------------------------------------------------------------------------
+
+# Local agent/editor tooling. 5,137 of the 5,726 tracked files were these --
+# they are how this machine is set up, not how the site runs.
+.claude/
+.agents/
+.agent/
+.vscode/
+.cursor/
+
+# Working files kept on this machine: scratch scripts, page backups, one-off
+# migration helpers. None of them are loaded by the site.
+/scratch/
+/backups/
+/ai/
+
+# Uploaded media lives on the server, not in git.
+#
+# This is the important one for deployment. Product, category and banner images
+# are uploaded by the operator into uploads/ on the VPS. If git tracked that
+# directory, a `git pull` could overwrite or delete images customers are
+# currently being shown -- production data destroyed by a code update, which is
+# exactly what must never happen.
+uploads/
+
+# Local database artefacts. PostgreSQL is the only database; these are leftovers.
+*.db
+*.sqlite
+backend/db/*.db
+backend/database.sqlite
+
+# Archives and stray local files
+*.zip
+ecc.zip
+
+# One-off scripts from past migration phases. None is loaded by any page and
+# none is part of running the site; several hardcode this machine's paths.
+# The supported build step is scripts/inject-storefront-2026.js.
+/bump-cache.js
+/execute-phase-*.js
+/final-fix.js
+/fix-*.js
+/fix_*.js
+/fix_*.ps1
+/install-skills.js
+/process_*.js
+/replace_*.ps1
+/replace_*.py
+/update_cache_buster.ps1
+/upgrade_*.ps1
+/validate-css.js
+/Untitled-1.py
+
+# Superseded pages kept locally for reference.
+archive/
+/appliances_test.html

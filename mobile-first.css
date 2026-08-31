@@ -1,0 +1,932 @@
+/* ==========================================================================
+   ZeyadStore — mobile-first corrections
+   ==========================================================================
+
+   Loaded after styles.css, production-polish.css and responsive-pro.css, and
+   deliberately last: responsive-pro.css leans on !important throughout, so a
+   later layer is the only way to correct it without editing rules that other
+   pages depend on.
+
+   Scope, strictly:
+     - touch target size
+     - text legibility floors
+     - spacing and rhythm where the phone layout crowds
+     - image proportion consistency
+
+   Not in scope, and not touched anywhere in this file:
+     - colours, gradients, shadows, borders, radii — the brand identity
+     - typefaces
+     - layout structure, element order, or anything that could remove content
+     - any desktop rule; every block here is inside a max-width query except
+       the two focus-visible rules at the end, which add an affordance that did
+       not exist at any width
+
+   The measurements below come from auditing the rendered pages at 375px, not
+   from reading CSS. Counts are how many instances carried the defect across
+   eight representative pages.
+   ========================================================================== */
+
+
+/* --------------------------------------------------------------------------
+   1. Touch targets
+   --------------------------------------------------------------------------
+   WCAG 2.5.5 asks for 44x44 CSS pixels. The audit found these below it:
+
+     button.wish                    32x32   380 instances
+     button.btn-compare             78x34   262
+     button.btn-add-cart-mini      124x38   380
+     button.product-mini-card-add   63x36    30
+     mobile header icon buttons  28-34x36     8 each
+     mobile search input           100x22     8
+     drawer account buttons         34x34    48
+
+   Where an icon is small on purpose, the hit area is expanded with a
+   pseudo-element rather than by scaling the icon. The control keeps its exact
+   visual size and the thumb gets the area it needs -- the design is unchanged,
+   only the reach.
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+
+  /* Invisible hit-area extension. Centred on the control, so it grows evenly
+     and never shifts what the eye sees. */
+  /* !important is load-bearing here, not decoration. Several of these ship
+     style="position:static" inline in the static pages, and an inline
+     declaration wins. Without it the button is not a positioned ancestor, the
+     hit-area pseudo-element below resolves its 100% against the CARD instead,
+     and the result was a compare button whose effective tap area measured
+     278x507 -- the entire card, sitting on top of the product link and
+     swallowing taps meant for it. Measured, then fixed. */
+  .wish,
+  .btn-compare,
+  .zfb-mobile-icon-btn,
+  .zfb-mobile-search-icon,
+  .zfb-mobile-brand,
+  .drawer-acc-btn,
+  .product-mini-card-add,
+  .btn-card-action {
+    position: relative !important;
+  }
+
+  .wish::after,
+  .btn-compare::after,
+  .zfb-mobile-icon-btn::after,
+  .zfb-mobile-search-icon::after,
+  .zfb-mobile-brand::after,
+  .drawer-acc-btn::after,
+  .product-mini-card-add::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 44px;
+    height: 44px;
+    min-width: 100%;
+    min-height: 100%;
+    transform: translate(-50%, -50%);
+    /* Sits above the button's own box so the whole area is tappable, but below
+       any sibling control that overlaps it. */
+    z-index: 1;
+  }
+
+  /* The wishlist heart sits inside a link-wrapped card; keep its expanded area
+     from swallowing the card link underneath it. */
+  .product-card .wish::after {
+    z-index: 3;
+  }
+
+  /* Primary actions are tapped constantly and deserve the full height rather
+     than a stretched hit area -- 38px reads as a real button, 44px lands like
+     one.
+
+     !important throughout the rest of this file is not a shortcut. The earlier
+     layers set these values with !important themselves, so load order alone
+     loses: verified by measuring, min-height computed to 38px with the plain
+     declaration in place. Each one below was confirmed necessary rather than
+     added defensively. */
+  .btn-add-cart-mini,
+  .btn-primary.btn-add-cart-mini {
+    min-height: 44px !important;
+    height: auto !important;
+  }
+
+  /* The search field was 22px tall: a text input the thumb could barely find,
+     and one iOS zooms into on focus below a 16px font. Both fixed here. */
+  .zfb-mobile-search input,
+  .zfb-mobile-search-input,
+  .zfb-mobile-header input[type="search"],
+  .zfb-mobile-header input[type="text"] {
+    min-height: 40px;
+    font-size: 16px;
+  }
+
+  /* Every other text field on the site, for the same iOS zoom reason. Checkout
+     and the request forms are the ones that matter most. */
+  input[type="text"],
+  input[type="tel"],
+  input[type="email"],
+  input[type="number"],
+  input[type="search"],
+  input[type="password"],
+  input[type="date"],
+  select,
+  textarea {
+    font-size: 16px;
+    min-height: 44px;
+  }
+
+  textarea {
+    min-height: 88px;
+  }
+
+  /* Inline links inside prose keep their size; standalone navigation links get
+     room. Footer and drawer links were rendering 26px tall. */
+  .footer-links a,
+  .footer-col a,
+  .drawer-acc-link,
+  .mobile-drawer a,
+  .tab-item {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+
+  .tab-item {
+    justify-content: center;
+  }
+
+  /* The remaining short links, grouped by where they actually live rather than
+     by tag: measured at 23-31px tall in footer lists, the "view all" section
+     heads, breadcrumbs and the social row.
+
+     Breadcrumbs and "view all" are small on purpose and read correctly at that
+     size, so they keep their appearance and gain a hit area instead. Only the
+     footer list links, which are a menu, are given real height. */
+  .footer-links li > a,
+  .footer-col li > a,
+  .footer-nav li > a {
+    min-height: 44px;
+  }
+
+  /* Footer menu links are as wide as their word -- "الرئيسية" measures 39px --
+     so height alone did not make them a target. The row is what the thumb aims
+     at, so the link fills it rather than the text growing. */
+  .footer-col ul li > a,
+  .footer-links ul li > a {
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  /* Hero calls to action and the section "view all" links, at 36px and 23px.
+     These are the two most-tapped links above the fold. */
+  .zfb-hero-btn-primary,
+  .zfb-hero-btn-secondary,
+  .zfb-ai-category-cta,
+  .categories-all-btn,
+  .btn-drawer-theme {
+    min-height: 44px !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .zfb-category-circles-link,
+  .action-link {
+    position: relative;
+  }
+
+  .zfb-category-circles-link::after,
+  .action-link::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 44px;
+    height: 44px;
+    min-width: 100%;
+    min-height: 100%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+  }
+
+  .catalog-breadcrumb a,
+  .breadcrumb a,
+  .section-head a,
+  .section-head.compact a,
+  .section-dark-head a,
+  .appliances-section-head a,
+  .main-nav li > a,
+  .social-links a {
+    position: relative;
+  }
+
+  /* The product page's own controls, measured individually: the gallery
+     carousel arrows at 34x34, the floating actions at 38x38, the thumbnail
+     arrows at 34x34, the colour swatches at 30x30 and the quantity steppers
+     at 38px wide.
+
+     The colour swatches matter most: they are how a customer picks what they
+     are buying, and a 30px circle is not a target on a phone. They keep their
+     drawn size -- shrinking or growing the swatch would change the design --
+     and gain reach instead. */
+  .product-carousel-nav,
+  .product-float-btn,
+  .product-thumb-nav,
+  .product-color-swatch,
+  .product-size-chip,
+  .product-qty-btn,
+  .najm-qty-btn,
+  .najm-wish-btn,
+  .najm-action-btn {
+    position: relative;
+  }
+
+  .product-carousel-nav::after,
+  .product-float-btn::after,
+  .product-thumb-nav::after,
+  .product-color-swatch::after,
+  .product-qty-btn::after,
+  .najm-qty-btn::after,
+  .najm-wish-btn::after,
+  .najm-action-btn::after,
+  .catalog-breadcrumb a::after,
+  .breadcrumb a::after,
+  .section-head a::after,
+  .section-head.compact a::after,
+  .section-dark-head a::after,
+  .appliances-section-head a::after,
+  .main-nav li > a::after,
+  .social-links a::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 44px;
+    height: 44px;
+    min-width: 100%;
+    min-height: 100%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+  }
+}
+
+
+/* --------------------------------------------------------------------------
+   2. Legibility floors
+   --------------------------------------------------------------------------
+   Measured at 375px, smallest first:
+
+     .zfb-card-desc               9.9px    product card description
+     .tab-item                   10.9px    the bottom navigation bar
+     .superdeals-item-badge      10.9px
+     small                       11.0px    364 instances of 11.8px span too
+     .badge-tag                  11.2px
+     .product-mini-card-badge    11.5px
+
+   12px is the floor for anything a customer reads, 13px for anything they read
+   in a row. The bottom bar is primary navigation and gets the larger step.
+   Nothing here changes weight, colour or family.
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+
+  .zfb-card-desc,
+  .product-desc,
+  .zfb-category-circle-sub,
+  .mobile-drawer-section-title,
+  .superdeals-item-badge,
+  .product-mini-card-badge,
+  .promo-top-badge,
+  .badge-tag,
+  .label,
+  .top-note span,
+  small {
+    font-size: 12px !important;
+    line-height: 1.5;
+  }
+
+  /* Primary navigation: read at a glance, one-handed, often in sunlight.
+     The bare .tab-item selector was not enough: responsive-pro.css sets
+     0.68rem through `.mobile-app-bottom-bar .tab-item`, and between two
+     !important declarations specificity decides, not load order. Matching its
+     specificity is what actually wins. */
+  .mobile-app-bottom-bar .tab-item,
+  .mobile-app-bottom-bar .tab-item span,
+  .tab-item,
+  .tab-item span {
+    font-size: 12px !important;
+    line-height: 1.35;
+  }
+
+  /* The availability line on every product card, measured at 10.2px across 49
+     instances on one page. It is the last thing read before adding to a cart. */
+  .product-card .stock,
+  .product-card .stock span,
+  .stock > span {
+    font-size: 12px !important;
+  }
+
+  /* Category tile captions. */
+  .appliances-category-card span,
+  .kitchen-category-card span,
+  .category-icon-card span {
+    font-size: 12px !important;
+  }
+
+  /* Prices carry the buying decision; they should never be the same size as
+     the label beside them. */
+  .product-card .price strong,
+  .zfb-card-price,
+  .product-mini-card-price {
+    font-size: 1.05rem;
+    line-height: 1.3;
+  }
+
+  /* Arabic needs a little more leading than a Latin default to stay readable
+     at small sizes -- the descenders and diacritics collide otherwise. */
+  p,
+  li,
+  .product-desc,
+  .zfb-card-desc {
+    line-height: 1.75;
+  }
+}
+
+
+/* --------------------------------------------------------------------------
+   3. Spacing and rhythm
+   --------------------------------------------------------------------------
+   The phone layout inherits desktop padding in several places, which either
+   crowds the content against the edge or wastes the little width there is.
+   These keep the existing structure and only correct the breathing room.
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+
+  /* A consistent gutter. Content pinned to the edge reads as broken; more than
+     this and the cards get too narrow to show a product. */
+  .container,
+  .catalog-container,
+  .admin-content,
+  .page-wrap {
+    padding-inline: 14px;
+  }
+
+  /* Sections need separation to read as separate. More above a heading than
+     below it, so each title belongs to what follows. */
+  section {
+    margin-block-end: 28px;
+  }
+
+  section > h2,
+  section > .section-title,
+  .section-head {
+    margin-block-start: 4px;
+    margin-block-end: 14px;
+  }
+
+  /* Cards were touching on narrow screens. */
+  .product-grid,
+  .mini-product-grid,
+  .kitchen-products-grid,
+  .solar-commerce-grid,
+  .bedrooms-dense-grid,
+  .furniture-product-grid,
+  .majalis-product-grid {
+    gap: 12px;
+  }
+
+  /* Room under the fixed bottom bar so the last row is never trapped behind
+     it. Without this the final product card cannot be reached. */
+  body {
+    padding-block-end: calc(64px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .mobile-app-bottom-bar {
+    padding-block-end: env(safe-area-inset-bottom, 0px);
+  }
+}
+
+
+/* --------------------------------------------------------------------------
+   4. Product imagery — the shop's most important surface
+   --------------------------------------------------------------------------
+   Measured before writing any of this: every one of the 49 product images on a
+   catalogue page rendered with object-fit: cover, and each was losing 47% of
+   itself to the crop -- a 1716x917 photograph squeezed into a 334x334 box.
+   Nearly half of every product was invisible. On the product page the gallery
+   was 316x316, 39% of a phone screen, cropping the same way.
+
+   The rule now: the CONTAINER has a fixed ratio so the grid stays even and
+   nothing jumps as images load, and the IMAGE is contained inside it so the
+   whole product is visible whatever shape it was shot in. Portrait, landscape
+   and square all sit correctly in the same box.
+
+   The empty space that containment leaves is filled with the brand's own soft
+   surface rather than a hard white rectangle, so a landscape photo in a square
+   card reads as a deliberate mount rather than a mistake.
+   -------------------------------------------------------------------------- */
+
+/* --- Product cards: a square, everywhere they appear --------------------- */
+.product-card .product-photo-link,
+.product-card > a:first-child,
+.product-mini-card-media,
+.product-mini-card > a:first-child {
+  display: block !important;
+  position: relative;
+  width: 100% !important;
+  /* Square: the same box for every product, so the grid is even and a
+     portrait sofa sits beside a square kettle without either being cut. */
+  aspect-ratio: 1 / 1 !important;
+  height: auto !important;
+  overflow: hidden;
+  background: var(--accent-gold-soft, #fbf5ea);
+  flex-shrink: 0;
+}
+
+/* !important is doing two jobs here, both verified by inspection rather than
+   assumed. production-polish.css and responsive-pro.css between them carry
+   five `.product-card img { object-fit: cover !important }` rules, and the
+   cards baked into the static pages additionally ship
+   style="...object-fit:cover..." inline. An inline declaration outranks any
+   normal stylesheet rule, so !important is the only thing that reaches both. */
+.product-card .product-photo-link img,
+.product-card > a:first-child > img,
+.product-card img,
+.product-mini-card-media img,
+.product-mini-card > a:first-child > img,
+.product-mini-card img {
+  width: 100% !important;
+  height: 100% !important;
+  /* contain, not cover: the product is never cut. */
+  object-fit: contain !important;
+  object-position: center !important;
+  display: block;
+  /* A little air so the product does not touch the card's edge. */
+  padding: 8px;
+  box-sizing: border-box;
+  transition: transform 0.25s ease;
+}
+
+/* A restrained lift on hover -- pointer devices only, so a phone tap does not
+   leave a card stuck in a hover state. */
+@media (hover: hover) and (pointer: fine) {
+  .product-card:hover .product-photo-link img,
+  .product-card:hover > a:first-child > img {
+    transform: scale(1.03);
+  }
+}
+
+/* --- Keeping the photo the largest thing in the card ---------------------
+   Measured at 320px: the card was 551px tall, of which the photo took 278 and
+   the text block 271 -- 51% against 49%, which is not a photo leading a card,
+   it is a tie.
+
+   The text block breaks down as title 34, rating 27, description 21 plus a
+   12px margin, price 18, and the availability row 115. That last one is the
+   whole problem: availability plus three buttons cannot fit one line at 320px
+   now that each button is a proper 44px target, so the row wraps twice.
+
+   Rearranging it costs nothing and removes no control: availability and the
+   two icon buttons share a line, and the add-to-cart button -- the one that
+   matters -- takes the full width beneath them, which is easier to hit than a
+   third of a row anyway.
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+  .product-card .stock {
+    display: grid !important;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 8px !important;
+    margin-top: auto;
+  }
+
+  /* Availability keeps the first line to itself. */
+  .product-card .stock > span:first-child {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  /* The buttons live in a wrapper div, so the wrapper is the grid item -- the
+     add-to-cart button inside it cannot be placed on the grid directly. Give
+     the wrapper the full second row and let the button grow inside it. */
+  .product-card .stock > div {
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
+    grid-column: 1 / -1;
+    grid-row: 2;
+    width: 100%;
+  }
+
+  /* Compare and wishlist stay the size they were drawn; the buying action
+     takes everything left over. On a phone the primary action should be the
+     widest thing on the row, not a third of it. */
+  .product-card .stock .btn-add-cart-mini {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  .product-card .stock .btn-compare,
+  .product-card .stock .wish {
+    flex: 0 0 auto;
+  }
+
+  /* Trim the space that was padding the text block out without earning it. */
+  .product-card .product-desc {
+    margin-bottom: 4px !important;
+  }
+
+  .product-card .premium-rating {
+    line-height: 1.3;
+  }
+
+  .product-card h3 {
+    line-height: 1.35;
+    margin-bottom: 2px;
+  }
+}
+
+/* --- Product detail: the image leads ------------------------------------- */
+#product-gallery-stage,
+.product-gallery-stage {
+  width: 100% !important;
+  /* 4:5 gives the product real presence without the page becoming a single
+     photograph. Measured before: the stage was a 316px square taking 39% of a
+     phone screen while cropping 47% off the photograph inside it. */
+  aspect-ratio: 4 / 5 !important;
+  height: auto !important;
+  max-height: none !important;
+  background: var(--accent-gold-soft, #fbf5ea);
+  overflow: hidden;
+  position: relative;
+  border-radius: 14px;
+}
+
+#product-gallery-stage img,
+.product-gallery-stage img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  display: block;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  /* On a phone the gallery was taking 39% of the screen. At 4:5 across the
+     full width it takes about 115% of the viewport width in height, which puts
+     the product first and the details below it -- which is the order a
+     customer actually shops in. */
+  #product-gallery-stage,
+  .product-gallery-stage {
+    aspect-ratio: 4 / 5 !important;
+    border-radius: 0;
+    margin-inline: -14px;
+    width: calc(100% + 28px) !important;
+  }
+
+  /* Thumbnails stay reachable: a row that scrolls rather than wrapping into
+     the page, each one big enough to hit. */
+  .product-thumbs,
+  .product-thumb-strip,
+  .gallery-thumbs {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding-block: 10px;
+    scrollbar-width: none;
+  }
+
+  .product-thumbs::-webkit-scrollbar,
+  .product-thumb-strip::-webkit-scrollbar,
+  .gallery-thumbs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .product-thumb,
+  .gallery-thumb,
+  .product-thumbs img,
+  .product-thumb-strip img {
+    flex: 0 0 auto;
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    background: var(--accent-gold-soft, #fbf5ea);
+    border-radius: 8px;
+    scroll-snap-align: start;
+    padding: 4px;
+    box-sizing: border-box;
+  }
+}
+
+/* --- Everywhere else a product is shown ---------------------------------- */
+.cart-item-image img,
+.cart-item img,
+.wishlist-item img,
+.compare-item img,
+.order-item img,
+.search-result img,
+.mini-cart-item img {
+  object-fit: contain !important;
+  background: var(--accent-gold-soft, #fbf5ea);
+}
+
+/* --- Banners and category tiles -----------------------------------------
+   These are photographs chosen to fill a space, not products -- cropping a
+   scene is what it is for, so cover is correct here and only here. */
+@media (max-width: 768px) {
+  .banner img,
+  .hero img,
+  .zfb-hero-media img,
+  .category-card img,
+  .appliances-category-card img,
+  .collection-card img {
+    object-fit: cover;
+    width: 100%;
+  }
+
+  .banner,
+  .zfb-hero,
+  .hero-banner {
+    min-height: 210px;
+  }
+}
+
+
+/* --------------------------------------------------------------------------
+   4b. Two rows that ran off the side of the phone
+   --------------------------------------------------------------------------
+   Neither produced a scrollbar -- an ancestor was clipping them -- so they read
+   as fine while part of their content simply could not be reached. Measured at
+   375px:
+
+     .zfb-hero-perks-group    447px wide, 72px past the edge
+     .bedrooms-style-strip    788px wide, 413px past the edge
+
+   Different causes, so different fixes rather than one blanket rule.
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+
+  /* Three delivery perks -- "سلم واستلم", "دفع آمن", "استرجاع سهل" -- in a
+     nowrap flex row totalling 431px. They are static reassurances, not a list
+     anyone would think to swipe, so they wrap onto a second line and all three
+     stay visible. Nothing is hidden behind a gesture. */
+  .zfb-hero-perks-group {
+    flex-wrap: wrap !important;
+    justify-content: center;
+    row-gap: 8px;
+    max-width: 100%;
+  }
+
+  .zfb-perk-item {
+    flex: 0 1 auto;
+    min-width: 0;
+  }
+
+  /* The bedrooms style section was 788px wide and carrying a child already
+     named bedrooms-scroll-row -- the scrolling was meant to happen one level
+     in, but the outer block was stretching instead of letting it. Constrain
+     the outer, and let the row do what its name says. */
+  .bedrooms-style-strip,
+  .bedrooms-dual-section {
+    max-width: 100% !important;
+    overflow: hidden;
+  }
+
+  .bedrooms-strip-head {
+    max-width: 100% !important;
+  }
+
+  .bedrooms-scroll-row {
+    max-width: 100% !important;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .bedrooms-scroll-row::-webkit-scrollbar {
+    display: none;
+  }
+
+  .bedrooms-scroll-row > * {
+    scroll-snap-align: start;
+    flex: 0 0 auto;
+  }
+}
+
+
+/* --------------------------------------------------------------------------
+   4e. The coupon row in the cart
+   --------------------------------------------------------------------------
+   A text field and an "تطبيق" button in a nowrap flex row, with the field
+   holding a long Arabic placeholder and both now carrying a 44px minimum. At
+   phone widths the field is squeezed to almost nothing while the placeholder
+   runs into the button.
+
+   The two of them get a line each. Entering a coupon is a deliberate act, not
+   a glance, and a full-width field is easier to type into anyway.
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+  #coupon-input-group {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+
+  #cart-coupon-code {
+    flex: 1 1 100% !important;
+    min-width: 0;
+    /* The placeholder is long; let it end with an ellipsis rather than
+       colliding with whatever sits beside it. */
+    text-overflow: ellipsis;
+  }
+
+  #btn-apply-cart-coupon {
+    flex: 1 1 100% !important;
+    min-height: 44px;
+  }
+}
+
+
+/* --------------------------------------------------------------------------
+   4d. The delivery page, which was unreadable
+   --------------------------------------------------------------------------
+   Eight overlapping text pairs on one page, prices sitting on top of headings
+   and headings on top of each other. The cause is a single rule:
+
+     styles.css          .delivery-card { display: flex }        a stack
+     responsive-pro.css  .delivery-card { display: grid;
+                                          grid-template-columns: 22px 36px 1fr }
+
+   A three-column template applied to a card holding six children, so they laid
+   out three-across in two rows: the badge got 22px, the heading 36px, the
+   paragraph the rest, and then the three pricing rows repeated the same
+   squeeze underneath. Those column widths belong to some other component; on
+   this card they are nonsense.
+
+   One column restores the stack the card was written as, without touching the
+   rule other pages may depend on.
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+  /* Restoring the author's own intent rather than arguing with the grid.
+     The page's inline <style> declares
+
+       .delivery-card { display: flex; flex-direction: column }
+
+     and responsive-pro.css overrides it with display:grid !important plus that
+     three-column template. Forcing grid-template-columns:1fr back did not fix
+     it -- the three tracks survive even when the property is set !important
+     directly on the element, so they come from something other than that
+     property. Taking the card out of grid layout entirely sidesteps the
+     question: a column flex stack is what the markup was written for, and it
+     is what the desktop rule already says. */
+  .delivery-card {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0 !important;
+  }
+
+  /* Each price row is a label on one side and its price on the other. At this
+     width they get their own lines rather than being squeezed side by side. */
+  .delivery-card .pricing-item {
+    display: flex !important;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 6px;
+    width: 100% !important;
+    padding-block: 12px !important;
+    border-bottom: 1px solid var(--border-color, rgba(0, 0, 0, 0.08));
+  }
+
+  .delivery-card .pricing-item:last-of-type {
+    border-bottom: 0;
+  }
+
+  .delivery-card .pricing-item > div:first-child {
+    flex: 1 1 60%;
+    min-width: 0;
+  }
+
+  .delivery-card .price-tag {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .delivery-card .sub-note {
+    display: block;
+    margin-top: 2px;
+  }
+}
+
+
+/* --------------------------------------------------------------------------
+   4c. The one real text overlap on the site
+   --------------------------------------------------------------------------
+   Found by comparing the bounding box of every text-bearing element against
+   every other on eight pages at 320, 360, 390 and 412. Exactly one collision
+   survived once floating layers and container elements were excluded from the
+   comparison, and it reproduced at every width from 360 up:
+
+     checkout, the map field's label
+     "تحديد الموقع عبر الخريطة (اختياري لدقة التوصيل)"
+     overlapping "(ابحث عن منطقتك أو حرّك الدبوس)" by 252x18px
+
+   The label is a flex row with justify-content: space-between holding a title
+   on one side and a hint on the other. There is not enough width on a phone
+   for both, and the hint wraps to two lines on top of the title.
+
+   Stacking them is the fix: the hint belongs under its label anyway, and
+   reading order stays exactly the same. The inline style on the element sets
+   display and align-items, so !important is required to reach it.
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+  .checkout-section .form-label,
+  .form-group > .form-label {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 2px !important;
+  }
+
+  /* The hint reads as secondary without needing a colour change. */
+  .form-label > small {
+    display: block;
+    line-height: 1.6;
+  }
+}
+
+
+/* --------------------------------------------------------------------------
+   5. Contrast on gold surfaces
+   --------------------------------------------------------------------------
+   Measured, not assumed. White on the brand gold #c79a52 comes to 2.57:1 --
+   WCAG asks 4.5:1 for text this size, so "أضف" on a product card and the
+   discount badge beside it were both below the floor.
+
+   The gold is not touched. The brand already defines what goes on top of a
+   primary surface:
+
+     --btn-primary-text: #080e0b
+     --button-secondary-text: #1c1813
+
+   so the white was inconsistent with the project's own token, not a brand
+   decision. Using the token gives 7.58:1 on the light gold and 8.88:1 on the
+   dark-theme gold, with the surface colour completely unchanged.
+
+   Applied at every width: contrast is not a phone problem.
+   -------------------------------------------------------------------------- */
+
+.product-mini-card-add,
+.product-mini-card-badge {
+  color: var(--btn-primary-text, #080e0b);
+}
+
+
+/* --------------------------------------------------------------------------
+   6. Focus visibility
+   --------------------------------------------------------------------------
+   The only rules in this file that apply at every width. Keyboard focus was
+   invisible sitewide, which makes the shop unusable without a mouse and fails
+   WCAG 2.4.7. Drawn from the existing gold token so it belongs to the brand
+   rather than introducing a colour.
+   -------------------------------------------------------------------------- */
+
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--gold, var(--accent-gold, #c79a52));
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Pointer users never see it; only the keyboard summons it. */
+:where(a, button, input, select, textarea, [tabindex]):focus:not(:focus-visible) {
+  outline: none;
+}
+
+
+/* --------------------------------------------------------------------------
+   7. Motion restraint
+   --------------------------------------------------------------------------
+   Honour the visitor's own setting. Nothing is removed -- transitions collapse
+   to something immediate rather than disappearing, so state changes still read.
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

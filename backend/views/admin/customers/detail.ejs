@@ -1,0 +1,76 @@
+<%- include('../../partials/head', { title }) %>
+<%- include('../../partials/sidebar', { active }) %>
+<main class="admin-main">
+  <%- include('../../partials/topbar') %>
+  <div class="admin-content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="page-title"><%= title %></h1>
+      <a href="/admin/customers" class="btn btn-outline">
+        <span class="material-symbols-rounded">arrow_forward</span> العودة
+      </a>
+    </div>
+    <div class="row" style="display:flex;flex-wrap:wrap;margin:-12px;">
+      <div style="flex:0 0 50%;padding:12px;box-sizing:border-box;">
+        <div class="glass-card">
+          <h2 style="font-size:1.1rem;margin-bottom:20px;color:var(--primary-color);">بيانات العميل</h2>
+          <table style="width:100%;">
+            <tr><td style="padding:8px 0;color:var(--text-muted);width:120px;">الاسم</td><td style="padding:8px 0;"><strong><%= customer.first_name %> <%= customer.last_name || '' %></strong></td></tr>
+            <tr><td style="padding:8px 0;color:var(--text-muted);">الهاتف</td><td style="padding:8px 0;" dir="ltr"><%= customer.phone || '-' %></td></tr>
+            <tr><td style="padding:8px 0;color:var(--text-muted);">البريد</td><td style="padding:8px 0;" dir="ltr"><%= customer.email || '-' %></td></tr>
+            <tr><td style="padding:8px 0;color:var(--text-muted);">المدينة</td><td style="padding:8px 0;"><%= customer.city || '-' %></td></tr>
+            <tr><td style="padding:8px 0;color:var(--text-muted);">الحي</td><td style="padding:8px 0;"><%= customer.district || '-' %></td></tr>
+            <tr><td style="padding:8px 0;color:var(--text-muted);">العنوان</td><td style="padding:8px 0;"><%= customer.address_detail || '-' %></td></tr>
+            <tr><td style="padding:8px 0;color:var(--text-muted);">ملاحظات</td><td style="padding:8px 0;"><%= customer.notes || '-' %></td></tr>
+            <tr><td style="padding:8px 0;color:var(--text-muted);">تاريخ التسجيل</td><td style="padding:8px 0;"><%= customer.created_at || '-' %></td></tr>
+          </table>
+        </div>
+      </div>
+      <div style="flex:0 0 50%;padding:12px;box-sizing:border-box;">
+        <div class="glass-card">
+          <h2 style="font-size:1.1rem;margin-bottom:20px;color:var(--primary-color);">إحصائيات العميل</h2>
+          <div style="display:flex;gap:20px;">
+            <div style="text-align:center;flex:1;padding:20px;background:var(--bg-tertiary);border-radius:12px;">
+              <div style="font-size:2rem;font-weight:700;"><%= customer.total_orders || 0 %></div>
+              <div style="color:var(--text-muted);margin-top:4px;">إجمالي الطلبات</div>
+            </div>
+            <div style="text-align:center;flex:1;padding:20px;background:var(--bg-tertiary);border-radius:12px;">
+              <div style="font-size:2rem;font-weight:700;"><%= helpers.formatPrice(customer.total_spent || 0) %></div>
+              <div style="color:var(--text-muted);margin-top:4px;">إجمالي الإنفاق</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="glass-card mt-4">
+      <h2 style="font-size:1.1rem;margin-bottom:20px;color:var(--primary-color);">سجل الطلبات (<%= orders.length %>)</h2>
+      <div class="table-responsive">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>رقم الطلب</th>
+              <th>المبلغ</th>
+              <th>الحالة</th>
+              <th>التاريخ</th>
+              <th>إجراءات</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (orders.length === 0) { %>
+              <tr><td colspan="5" class="text-center py-5">لا توجد طلبات لهذا العميل.</td></tr>
+            <% } %>
+            <% orders.forEach(o => { %>
+              <tr>
+                <td><code><%= o.order_id %></code></td>
+                <td><%= helpers.formatPrice(o.total) %></td>
+                <td><span class="badge badge-<%= o.status === 'delivered' ? 'success' : o.status === 'cancelled' ? 'danger' : 'warning' %>"><%= helpers.statusLabel(o.status) %></span></td>
+                <td><%= helpers.formatDate(o.created_at) %></td>
+                <td><a href="/admin/orders/<%= o.id %>" class="btn-icon"><span class="material-symbols-rounded">visibility</span></a></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+<%- include('../../partials/foot') %>

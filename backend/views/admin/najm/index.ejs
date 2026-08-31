@@ -1,0 +1,602 @@
+<%- include('../../partials/head', { title }) %>
+<link rel="stylesheet" href="/admin-assets/css/ai-employee.css?v=2">
+<%- include('../../partials/sidebar', { active }) %>
+
+<main class="admin-main ai-shell" data-ai-view="<%= view %>">
+  <%- include('../../partials/topbar') %>
+
+  <div class="admin-content ai-content">
+    <!-- Header Section -->
+    <section class="ai-command-head" style="background: linear-gradient(135deg, rgba(199, 154, 82, 0.08) 0%, rgba(20, 26, 22, 0.95) 100%); border: 1px solid rgba(199, 154, 82, 0.2); border-radius: 16px; padding: 24px; margin-bottom: 24px;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
+        <div>
+          <span class="ai-eyebrow" style="color: var(--primary-gold, #c79a52); font-weight: 700; font-size: 0.85rem; letter-spacing: 0.5px;">ZEYAD CUSTOMER AI AGENT</span>
+          <h1 style="color: #fff; font-size: 1.6rem; font-weight: 800; margin: 4px 0 8px 0; display: flex; align-items: center; gap: 10px;">
+            <span class="material-symbols-rounded" style="color: var(--primary-gold, #c79a52); font-size: 32px;">support_agent</span>
+            نجم — وكيل مبيعات وخدمة العملاء
+          </h1>
+          <p style="color: rgba(255, 255, 255, 0.7); margin: 0; font-size: 0.95rem; max-width: 680px;">
+            نظام ذكاء اصطناعي تجاري متكامل للعملاء في الموقع العام. متصل مباشرة بقاعدة البيانات لإدارة السلة والبحث والطلبات والتذاكر البشرية.
+          </p>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
+          <div class="ai-status-strip" style="display: flex; gap: 10px; background: rgba(0,0,0,0.3); padding: 8px 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+            <span style="color: #fff; font-size: 0.85rem;">الحالة: <b style="color: <%= settings.isActive ? '#22c55e' : '#ef4444' %>"><%= settings.isActive ? 'مفعل نشط' : 'معطل' %></b></span>
+            <span style="color: #fff; font-size: 0.85rem;">المزود: <b style="color: var(--primary-gold, #c79a52)"><%= settings.provider %></b></span>
+            <span style="color: #fff; font-size: 0.85rem;">النموذج: <b style="color: #fff"><%= settings.model %></b></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sub-navigation Tabs -->
+    <nav class="ai-subnav" aria-label="Najm Navigation" style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 12px;">
+      <a class="<%= view === 'overview' ? 'active' : '' %>" href="/admin/najm/overview" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 10px; text-decoration: none; color: #fff; background: <%= view === 'overview' ? 'var(--primary-gold, #c79a52)' : 'rgba(255,255,255,0.04)' %>; color: <%= view === 'overview' ? '#000' : '#fff' %>; font-weight: 700;">
+        <span class="material-symbols-rounded">monitoring</span>لوحة التحكم
+      </a>
+      <a class="<%= view === 'settings' ? 'active' : '' %>" href="/admin/najm/settings" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 10px; text-decoration: none; color: #fff; background: <%= view === 'settings' ? 'var(--primary-gold, #c79a52)' : 'rgba(255,255,255,0.04)' %>; color: <%= view === 'settings' ? '#000' : '#fff' %>; font-weight: 700;">
+        <span class="material-symbols-rounded">tune</span>إعدادات المزود
+      </a>
+      <a class="<%= view === 'instructions' ? 'active' : '' %>" href="/admin/najm/instructions" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 10px; text-decoration: none; color: #fff; background: <%= view === 'instructions' ? 'var(--primary-gold, #c79a52)' : 'rgba(255,255,255,0.04)' %>; color: <%= view === 'instructions' ? '#000' : '#fff' %>; font-weight: 700;">
+        <span class="material-symbols-rounded">edit_note</span>التعليمات والسياسات
+      </a>
+      <a class="<%= view === 'requests' ? 'active' : '' %>" href="/admin/najm/requests" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 10px; text-decoration: none; color: #fff; background: <%= view === 'requests' ? 'var(--primary-gold, #c79a52)' : 'rgba(255,255,255,0.04)' %>; color: <%= view === 'requests' ? '#000' : '#fff' %>; font-weight: 700;">
+        <span class="material-symbols-rounded">confirmation_number</span>تذاكر وطلبات العملاء
+        <% if (stats.pendingRequests > 0) { %>
+          <span style="background: #ef4444; color: #fff; font-size: 0.75rem; padding: 2px 8px; border-radius: 12px;"><%= stats.pendingRequests %></span>
+        <% } %>
+      </a>
+      <a class="<%= view === 'conversations' ? 'active' : '' %>" href="/admin/najm/conversations" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 10px; text-decoration: none; color: #fff; background: <%= view === 'conversations' ? 'var(--primary-gold, #c79a52)' : 'rgba(255,255,255,0.04)' %>; color: <%= view === 'conversations' ? '#000' : '#fff' %>; font-weight: 700;">
+        <span class="material-symbols-rounded">chat</span>المحادثات الحية
+      </a>
+      <a class="<%= view === 'tools' ? 'active' : '' %>" href="/admin/najm/tools" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 10px; text-decoration: none; color: #fff; background: <%= view === 'tools' ? 'var(--primary-gold, #c79a52)' : 'rgba(255,255,255,0.04)' %>; color: <%= view === 'tools' ? '#000' : '#fff' %>; font-weight: 700;">
+        <span class="material-symbols-rounded">construction</span>الأدوات المفعلة
+      </a>
+      <a class="<%= view === 'audits' ? 'active' : '' %>" href="/admin/najm/audits" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 10px; text-decoration: none; color: #fff; background: <%= view === 'audits' ? 'var(--primary-gold, #c79a52)' : 'rgba(255,255,255,0.04)' %>; color: <%= view === 'audits' ? '#000' : '#fff' %>; font-weight: 700;">
+        <span class="material-symbols-rounded">security</span>سجل العمليات
+      </a>
+    </nav>
+
+    <% if (typeof flash !== 'undefined' && flash) { %>
+      <div class="alert alert-<%= flash.type || 'info' %> mb-4" style="padding: 12px 16px; border-radius: 12px; background: <%= flash.type === 'danger' ? 'rgba(239,68,68,0.15)' : 'rgba(34,197,94,0.15)' %>; color: <%= flash.type === 'danger' ? '#ef4444' : '#22c55e' %>; border: 1px solid <%= flash.type === 'danger' ? 'rgba(239,68,68,0.3)' : 'rgba(34,197,94,0.3)' %>; margin-bottom: 20px;">
+        <%= flash.message %>
+      </div>
+    <% } %>
+
+    <!-- 1. OVERVIEW VIEW -->
+    <% if (view === 'overview') { %>
+      <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px;">
+        <div class="glass-card" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 20px;">
+          <div style="color: var(--text-muted, #888); font-size: 0.85rem; margin-bottom: 8px;">إجمالي محادثات العملاء</div>
+          <div style="font-size: 1.8rem; font-weight: 800; color: #fff;"><%= stats.totalConversations %></div>
+          <div style="font-size: 0.8rem; color: #22c55e; margin-top: 4px;">محادثة مسجلة</div>
+        </div>
+        <div class="glass-card" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 20px;">
+          <div style="color: var(--text-muted, #888); font-size: 0.85rem; margin-bottom: 8px;">إجمالي رسائل العملاء</div>
+          <div style="font-size: 1.8rem; font-weight: 800; color: #fff;"><%= stats.totalMessages %></div>
+          <div style="font-size: 0.8rem; color: var(--primary-gold, #c79a52); margin-top: 4px;">تفاعل مباشر</div>
+        </div>
+        <div class="glass-card" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 20px;">
+          <div style="color: var(--text-muted, #888); font-size: 0.85rem; margin-bottom: 8px;">طلبات المتابعة المعلقة</div>
+          <div style="font-size: 1.8rem; font-weight: 800; color: #ef4444;"><%= stats.pendingRequests %></div>
+          <div style="font-size: 0.8rem; color: #ef4444; margin-top: 4px;">تحتاج تواصل بشري</div>
+        </div>
+        <div class="glass-card" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 20px;">
+          <div style="color: var(--text-muted, #888); font-size: 0.85rem; margin-bottom: 8px;">الطلبات المؤكدة عبر نجم</div>
+          <div style="font-size: 1.8rem; font-weight: 800; color: #22c55e;"><%= stats.assistedOrders %></div>
+          <div style="font-size: 0.8rem; color: #22c55e; margin-top: 4px;">معدل التحويل: <%= stats.conversionRate %></div>
+        </div>
+      </section>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px;">
+        <!-- Quick Settings Status Card -->
+        <div class="glass-card" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h3 style="color: #fff; font-size: 1.1rem; margin: 0;">جاهزية الوكيل والاتصال</h3>
+            <a href="/admin/najm/settings" class="btn-link" style="color: var(--primary-gold, #c79a52); text-decoration: none; font-size: 0.85rem; font-weight: 700;">تعديل الإعدادات ←</a>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px;">
+              <span style="color: #888;">المزود الحالي:</span>
+              <strong style="color: #fff;"><%= settings.provider %></strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px;">
+              <span style="color: #888;">النموذج:</span>
+              <code style="color: var(--primary-gold, #c79a52);"><%= settings.model %></code>
+            </div>
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px;">
+              <span style="color: #888;">مفتاح الـ API:</span>
+              <span style="color: #fff;"><%= settings.maskedToken || 'غير مهيأ' %></span>
+            </div>
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px;">
+              <span style="color: #888;">دعم الصور (Vision):</span>
+              <strong style="color: <%= settings.enableVision ? '#22c55e' : '#888' %>"><%= settings.enableVision ? 'مفعل' : 'معطل' %></strong>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: #888;">الأدوات المدمجة (Tools):</span>
+              <strong style="color: <%= settings.enableTools ? '#22c55e' : '#888' %>"><%= settings.enableTools ? 'مفعلة (17 أداة)' : 'معطلة' %></strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Latest Requests Card -->
+        <div class="glass-card" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h3 style="color: #fff; font-size: 1.1rem; margin: 0;">أحدث تذاكر العملاء</h3>
+            <a href="/admin/najm/requests" class="btn-link" style="color: var(--primary-gold, #c79a52); text-decoration: none; font-size: 0.85rem; font-weight: 700;">عرض الكل (<%= requests.length %>) ←</a>
+          </div>
+          <% if (requests.length === 0) { %>
+            <div style="color: #888; text-align: center; padding: 30px 0;">لا توجد تذاكر عملاء جديدة.</div>
+          <% } else { %>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <% requests.slice(0, 4).forEach(r => { %>
+                <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center;">
+                  <div>
+                    <div style="font-weight: 700; color: #fff; font-size: 0.9rem;"><%= r.customer_name %> (<%= r.phone %>)</div>
+                    <div style="font-size: 0.8rem; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 280px;"><%= r.request_text %></div>
+                  </div>
+                  <span style="font-size: 0.75rem; padding: 4px 8px; border-radius: 6px; font-weight: 700; background: <%= r.status === 'new' ? 'rgba(239,68,68,0.2)' : 'rgba(34,197,94,0.2)' %>; color: <%= r.status === 'new' ? '#ef4444' : '#22c55e' %>;">
+                    <%= r.statusLabel || r.status %>
+                  </span>
+                </div>
+              <% }) %>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    <% } %>
+
+    <!-- 2. SETTINGS VIEW -->
+    <% if (view === 'settings') { %>
+      <div class="glass-card" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 24px; max-width: 860px; margin: 0 auto;">
+        <h2 style="color: #fff; font-size: 1.3rem; margin-top: 0; margin-bottom: 8px;">إعدادات مزود الذكاء لوكيل العميل "نجم"</h2>
+        <p style="color: #888; font-size: 0.9rem; margin-bottom: 24px;">هذه الإعدادات مستقلة تماماً ومخصصة فقط لوكيل العميل في المتجر. المفتاح مشفر بالكامل ولا يتم إرساله للـ Frontend أبداً.</p>
+
+        <form action="/admin/najm/settings" method="POST" id="najmSettingsForm">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+            <div>
+              <label style="display: block; color: #fff; font-weight: 700; font-size: 0.9rem; margin-bottom: 8px;">المزود (Provider)</label>
+              <select name="provider" id="settingProvider" style="width: 100%; background: #141a16; border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 10px 14px; border-radius: 10px; font-size: 0.9rem;">
+                <% providers.forEach(p => { %>
+                  <option value="<%= p.id %>" <%= settings.provider === p.id ? 'selected' : '' %>><%= p.label %></option>
+                <% }) %>
+              </select>
+            </div>
+
+            <div>
+              <label style="display: block; color: #fff; font-weight: 700; font-size: 0.9rem; margin-bottom: 8px;">اسم النموذج (Model)</label>
+              <input type="text" name="model" id="settingModel" value="<%= settings.model %>" placeholder="مثال: anthropic/claude-3.5-sonnet أو gpt-4o-mini" style="width: 100%; background: #141a16; border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 10px 14px; border-radius: 10px; font-size: 0.9rem;">
+            </div>
+          </div>
+
+          <div style="margin-bottom: 20px;">
+            <label style="display: block; color: #fff; font-weight: 700; font-size: 0.9rem; margin-bottom: 8px;">عنوان الـ Base URL (اختياري)</label>
+            <input type="text" name="apiBaseUrl" id="settingBaseUrl" value="<%= settings.apiBaseUrl %>" placeholder="مثال: https://openrouter.ai/api/v1 أو اتركه فارغاً للافتراضي" style="width: 100%; background: #141a16; border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 10px 14px; border-radius: 10px; font-size: 0.9rem;">
+          </div>
+
+          <div style="margin-bottom: 20px;">
+            <label style="display: block; color: #fff; font-weight: 700; font-size: 0.9rem; margin-bottom: 8px;">مفتاح الـ API Token / Key</label>
+            <input type="password" name="apiToken" id="settingApiToken" placeholder="<%= settings.maskedToken ? settings.maskedToken + ' (اتركه فارغاً للحفاظ على المفتاح الحالي)' : 'أدخل مفتاح API السري هنا' %>" style="width: 100%; background: #141a16; border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 10px 14px; border-radius: 10px; font-size: 0.9rem;">
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+            <div>
+              <label style="display: block; color: #fff; font-weight: 700; font-size: 0.85rem; margin-bottom: 8px;">درجة الإبداع (Temperature)</label>
+              <input type="number" step="0.05" min="0" max="1" name="temperature" value="<%= settings.temperature %>" style="width: 100%; background: #141a16; border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 8px 12px; border-radius: 10px; font-size: 0.9rem;">
+            </div>
+            <div>
+              <label style="display: block; color: #fff; font-weight: 700; font-size: 0.85rem; margin-bottom: 8px;">أقصى توكن (Max Tokens)</label>
+              <input type="number" step="128" min="256" max="8192" name="maxTokens" value="<%= settings.maxTokens %>" style="width: 100%; background: #141a16; border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 8px 12px; border-radius: 10px; font-size: 0.9rem;">
+            </div>
+            <div>
+              <label style="display: block; color: #fff; font-weight: 700; font-size: 0.85rem; margin-bottom: 8px;">المهلة (Timeout بالثواني)</label>
+              <input type="number" min="5" max="120" name="requestTimeout" value="<%= settings.requestTimeout %>" style="width: 100%; background: #141a16; border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 8px 12px; border-radius: 10px; font-size: 0.9rem;">
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 24px; flex-wrap: wrap; margin-bottom: 28px; background: rgba(255,255,255,0.02); padding: 16px; border-radius: 12px;">
+            <label style="display: flex; align-items: center; gap: 8px; color: #fff; font-size: 0.9rem; cursor: pointer;">
+              <input type="checkbox" name="isActive" <%= settings.isActive ? 'checked' : '' %> style="width: 18px; height: 18px; accent-color: var(--primary-gold, #c79a52);">
+              تفعيل وكيل نجم في الموقع العام
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; color: #fff; font-size: 0.9rem; cursor: pointer;">
+              <input type="checkbox" name="enableVision" <%= settings.enableVision ? 'checked' : '' %> style="width: 18px; height: 18px; accent-color: var(--primary-gold, #c79a52);">
+              دعم تحليل صور العملاء (Vision)
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; color: #fff; font-size: 0.9rem; cursor: pointer;">
+              <input type="checkbox" name="enableTools" <%= settings.enableTools ? 'checked' : '' %> style="width: 18px; height: 18px; accent-color: var(--primary-gold, #c79a52);">
+              تفعيل استدعاء أدوات المتجر (Store Tools)
+            </label>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;">
+            <button type="button" id="btnTestConnection" style="display: flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 12px; font-weight: 700; background: rgba(255,255,255,0.08); color: #fff; border: 1px solid rgba(255,255,255,0.2); cursor: pointer; transition: 0.2s;">
+              <span class="material-symbols-rounded">network_check</span>
+              اختبار الاتصال الفعلي
+            </button>
+
+            <button type="submit" style="display: flex; align-items: center; gap: 8px; padding: 12px 28px; border-radius: 12px; font-weight: 800; background: var(--primary-gold, #c79a52); color: #000; border: none; cursor: pointer; transition: 0.2s;">
+              <span class="material-symbols-rounded">save</span>
+              حفظ إعدادات نجم
+            </button>
+          </div>
+
+          <div id="testResultBox" style="display: none; margin-top: 20px; padding: 16px; border-radius: 12px; font-size: 0.9rem;"></div>
+        </form>
+      </div>
+
+      <script>
+        document.getElementById('btnTestConnection').addEventListener('click', async () => {
+          const btn = document.getElementById('btnTestConnection');
+          const box = document.getElementById('testResultBox');
+          const provider = document.getElementById('settingProvider').value;
+          const model = document.getElementById('settingModel').value;
+          const apiBaseUrl = document.getElementById('settingBaseUrl').value;
+          const apiToken = document.getElementById('settingApiToken').value;
+
+          btn.disabled = true;
+          btn.innerHTML = '<span class="material-symbols-rounded">hourglass_top</span> جارٍ الاختبار...';
+          box.style.display = 'block';
+          box.style.background = 'rgba(255,255,255,0.05)';
+          box.style.color = '#fff';
+          box.style.border = '1px solid rgba(255,255,255,0.1)';
+          box.innerHTML = 'جارٍ إجراء اتصال حقيقي بمزود الذكاء...';
+
+          try {
+            const res = await fetch('/admin/najm/test-connection', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': '<%= csrfToken %>'
+              },
+              body: JSON.stringify({ provider, model, apiBaseUrl, apiToken })
+            });
+            const data = await res.json();
+
+            if (data.ok) {
+              box.style.background = 'rgba(34, 197, 94, 0.15)';
+              box.style.color = '#22c55e';
+              box.style.border = '1px solid rgba(34, 197, 94, 0.3)';
+              box.innerHTML = '<strong>✅ نجح الاتصال بالمزود!</strong><br>المزود: ' + data.provider + ' | النموذج: ' + data.model + ' | زمن الاستجابة: ' + data.latencyMs + 'ms<br>' + (data.message || '');
+            } else {
+              box.style.background = 'rgba(239, 68, 68, 0.15)';
+              box.style.color = '#ef4444';
+              box.style.border = '1px solid rgba(239, 68, 68, 0.3)';
+              box.innerHTML = '<strong>❌ فشل الاتصال بالمزود:</strong><br>' + (data.error || 'تأكد من صحة المفتاح والنموذج والرابط.');
+            }
+          } catch (e) {
+            box.style.background = 'rgba(239, 68, 68, 0.15)';
+            box.style.color = '#ef4444';
+            box.style.border = '1px solid rgba(239, 68, 68, 0.3)';
+            box.innerHTML = '<strong>❌ خطأ في الشبكة أو الخادم:</strong> ' + e.message;
+          } finally {
+            btn.disabled = false;
+            btn.innerHTML = '<span class="material-symbols-rounded">network_check</span> اختبار الاتصال الفعلي';
+          }
+        });
+      </script>
+    <% } %>
+
+    <!-- 3. INSTRUCTIONS VIEW -->
+    <% if (view === 'instructions') { %>
+      <div class="glass-card" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h2 style="color: #fff; font-size: 1.3rem; margin: 0;">محرر تعليمات وسياسات نجم</h2>
+            <p style="color: #888; font-size: 0.88rem; margin: 4px 0 0 0;">الإصدار الحالي: v<%= instructions.version %> — هذه التعليمات يتم تحميلها حياً في Backend عند تشغيل نجم.</p>
+          </div>
+          <form action="/admin/najm/instructions/reset" method="POST" onsubmit="return confirm('هل أنت متأكد من استعادة التعليمات الافتراضية؟');">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button type="submit" style="background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); padding: 8px 16px; border-radius: 10px; font-weight: 700; cursor: pointer;">
+              استعادة الافتراضي
+            </button>
+          </form>
+        </div>
+
+        <form action="/admin/najm/instructions" method="POST">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+            <div>
+              <label style="display: block; color: var(--primary-gold, #c79a52); font-weight: 700; font-size: 0.9rem; margin-bottom: 6px;">1. هوية الوكيل (Agent Identity)</label>
+              <textarea name="agent_identity" rows="3" style="width: 100%; background: #141a16; border: 1px solid rgba(255,255,255,0.12); color: #fff; padding: 10px; border-radius: 10px; font-size: 0.88rem;"><%= instructions.agent_identity || defaultSections.agent_identity %></textarea>
+            </div>
+            <div>
+              <label style="display: block; color: var(--primary-gold, #c79a52); font-weight: 700; font-size: 0.9rem; margin-bottom: 6px;">2. أسلوب الحديث (Tone & Style)</label>
+              <textarea name="tone_and_style" rows="3" style="width: 100%; background: #141a16; border: 1px solid rgba(255,255,255,0.12); color: #fff; padding: 10px; border-radius: 10px; font-size: 0.88rem;"><%= instructions.tone_and_style || defaultSections.tone_and_style %></textarea>
+            </div>
+          </div>
+
+          <div style="margin-bottom: 20px;">
+            <label style="display: block; color: var(--primary-gold, #c79a52); font-weight: 700; font-size: 0.9rem; margin-bottom: 6px;">3. التعليمات الأساسية وقواعد منع الاختلاق (Core Instructions)</label>
+            <textarea name="core_instructions" rows="4" style="width: 100%; background: #141a16; border: 1px solid rgba(255,255,255,0.12); color: #fff; padding: 10px; border-radius: 10px; font-size: 0.88rem;"><%= instructions.core_instructions || defaultSections.core_instructions %></textarea>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+            <div>
+              <label style="display: block; color: var(--primary-gold, #c79a52); font-weight: 700; font-size: 0.9rem; margin-bottom: 6px;">4. سياسة البيع والتوصيات (Sales Policy)</label>
+              <textarea name="sales_policy" rows="3" style="width: 100%; background: #141a16; border: 1px solid rgba(255,255,255,0.12); color: #fff; padding: 10px; border-radius: 10px; font-size: 0.88rem;"><%= instructions.sales_policy || defaultSections.sales_policy %></textarea>
+            </div>
+            <div>
+              <label style="display: block; color: var(--primary-gold, #c79a52); font-weight: 700; font-size: 0.9rem; margin-bottom: 6px;">5. سياسة الأسعار والعملات (Pricing Policy)</label>
+              <textarea name="pricing_policy" rows="3" style="width: 100%; background: #141a16; border: 1px solid rgba(255,255,255,0.12); color: #fff; padding: 10px; border-radius: 10px; font-size: 0.88rem;"><%= instructions.pricing_policy || defaultSections.pricing_policy %></textarea>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+            <div>
+              <label style="display: block; color: var(--primary-gold, #c79a52); font-weight: 700; font-size: 0.9rem; margin-bottom: 6px;">6. سياسة الطلبات والحجز (Orders Policy)</label>
+              <textarea name="orders_and_reservation_policy" rows="3" style="width: 100%; background: #141a16; border: 1px solid rgba(255,255,255,0.12); color: #fff; padding: 10px; border-radius: 10px; font-size: 0.88rem;"><%= instructions.orders_and_reservation_policy || defaultSections.orders_and_reservation_policy %></textarea>
+            </div>
+            <div>
+              <label style="display: block; color: var(--primary-gold, #c79a52); font-weight: 700; font-size: 0.9rem; margin-bottom: 6px;">7. سياسة التحويل للموظف البشري (Human Handoff)</label>
+              <textarea name="human_handoff_policy" rows="3" style="width: 100%; background: #141a16; border: 1px solid rgba(255,255,255,0.12); color: #fff; padding: 10px; border-radius: 10px; font-size: 0.88rem;"><%= instructions.human_handoff_policy || defaultSections.human_handoff_policy %></textarea>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px;">
+            <div>
+              <label style="display: block; color: var(--primary-gold, #c79a52); font-weight: 700; font-size: 0.9rem; margin-bottom: 6px;">8. قواعد استخدام الأدوات (Tool Rules)</label>
+              <textarea name="tool_rules" rows="3" style="width: 100%; background: #141a16; border: 1px solid rgba(255,255,255,0.12); color: #fff; padding: 10px; border-radius: 10px; font-size: 0.88rem;"><%= instructions.tool_rules || defaultSections.tool_rules %></textarea>
+            </div>
+            <div>
+              <label style="display: block; color: var(--primary-gold, #c79a52); font-weight: 700; font-size: 0.9rem; margin-bottom: 6px;">9. قواعد التعامل مع الصور (Vision Rules)</label>
+              <textarea name="vision_rules" rows="3" style="width: 100%; background: #141a16; border: 1px solid rgba(255,255,255,0.12); color: #fff; padding: 10px; border-radius: 10px; font-size: 0.88rem;"><%= instructions.vision_rules || defaultSections.vision_rules %></textarea>
+            </div>
+          </div>
+
+          <button type="submit" style="display: flex; align-items: center; gap: 8px; padding: 12px 28px; border-radius: 12px; font-weight: 800; background: var(--primary-gold, #c79a52); color: #000; border: none; cursor: pointer;">
+            <span class="material-symbols-rounded">save</span>
+            حفظ واعتماد التعليمات الجديدة
+          </button>
+        </form>
+      </div>
+    <% } %>
+
+    <!-- 4. REQUESTS VIEW (Customer Tickets) -->
+    <% if (view === 'requests') { %>
+      <div class="glass-card" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h2 style="color: #fff; font-size: 1.3rem; margin: 0;">طلبات وتذاكر العملاء (Customer Requests & Human Handoff)</h2>
+          <span style="color: #888; font-size: 0.9rem;">الإجمالي: <%= requests.length %> تذكرة</span>
+        </div>
+
+        <div class="table-responsive">
+          <table class="admin-table" style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); text-align: right;">
+                <th style="padding: 12px; color: #888;">رقم الطلب</th>
+                <th style="padding: 12px; color: #888;">العميل</th>
+                <th style="padding: 12px; color: #888;">الهاتف</th>
+                <th style="padding: 12px; color: #888;">تفاصيل الطلب</th>
+                <th style="padding: 12px; color: #888;">الحالة</th>
+                <th style="padding: 12px; color: #888;">التاريخ</th>
+                <th style="padding: 12px; color: #888; text-align: center;">إجراءات</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (requests.length === 0) { %>
+                <tr><td colspan="7" style="text-align: center; padding: 40px; color: #888;">لا توجد تذاكر عملاء حتى الآن.</td></tr>
+              <% } %>
+              <% requests.forEach(r => { %>
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                  <td style="padding: 12px; color: var(--primary-gold, #c79a52); font-weight: 700; font-family: monospace;"><%= r.request_id %></td>
+                  <td style="padding: 12px; color: #fff; font-weight: 600;"><%= r.customer_name %></td>
+                  <td style="padding: 12px; color: #fff; direction: ltr; text-align: right;"><%= r.phone %></td>
+                  <td style="padding: 12px; color: rgba(255,255,255,0.8); max-width: 320px;">
+                    <div><%= r.request_text %></div>
+                    <% if (r.requested_products) { %>
+                      <small style="color: var(--primary-gold, #c79a52);">المنتجات: <%= r.requested_products %></small>
+                    <% } %>
+                    <% if (r.admin_notes) { %>
+                      <div style="color: #22c55e; font-size: 0.8rem; margin-top: 2px;">ملاحظة الإدارة: <%= r.admin_notes %></div>
+                    <% } %>
+                  </td>
+                  <td style="padding: 12px;">
+                    <span style="font-size: 0.8rem; padding: 4px 10px; border-radius: 20px; font-weight: 700; background: <%= r.status === 'new' ? 'rgba(239,68,68,0.2)' : (r.status === 'in_review' ? 'rgba(234,179,8,0.2)' : (r.status === 'contacted' ? 'rgba(59,130,246,0.2)' : 'rgba(34,197,94,0.2)')) %>; color: <%= r.status === 'new' ? '#ef4444' : (r.status === 'in_review' ? '#eab308' : (r.status === 'contacted' ? '#3b82f6' : '#22c55e')) %>;">
+                      <%= r.statusLabel || r.status %>
+                    </span>
+                  </td>
+                  <td style="padding: 12px; color: #888; font-size: 0.85rem;"><%= helpers.formatDateTime(r.created_at) %></td>
+                  <td style="padding: 12px; text-align: center;">
+                    <button type="button" onclick="openStatusModal('<%= r.id %>', '<%= r.request_id %>', '<%= r.status %>', '<%= (r.admin_notes || '').replace(/'/g, "\'") %>')" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 6px 12px; border-radius: 8px; font-size: 0.82rem; cursor: pointer;">
+                      تعديل الحالة
+                    </button>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Status Modal -->
+      <div id="statusModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 9999; align-items: center; justify-content: center;">
+        <div style="background: #18201b; border: 1px solid var(--primary-gold, #c79a52); border-radius: 16px; padding: 24px; width: 100%; max-width: 480px;">
+          <h3 style="color: #fff; margin-top: 0; margin-bottom: 16px;" id="modalTitle">تعديل حالة التذكرة</h3>
+          <form id="modalStatusForm" method="POST">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <div style="margin-bottom: 16px;">
+              <label style="display: block; color: #888; font-size: 0.85rem; margin-bottom: 6px;">الحالة الجديدة</label>
+              <select name="status" id="modalStatusSelect" style="width: 100%; background: #141a16; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 10px; border-radius: 10px;">
+                <option value="new">جديد (New)</option>
+                <option value="in_review">قيد المراجعة (In Review)</option>
+                <option value="contacted">تم التواصل مع العميل (Contacted)</option>
+                <option value="completed">تم التنفيذ بنجاح (Completed)</option>
+                <option value="closed">مغلق (Closed)</option>
+              </select>
+            </div>
+            <div style="margin-bottom: 20px;">
+              <label style="display: block; color: #888; font-size: 0.85rem; margin-bottom: 6px;">ملاحظات الإدارة</label>
+              <textarea name="admin_notes" id="modalAdminNotes" rows="3" style="width: 100%; background: #141a16; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 10px; border-radius: 10px; font-size: 0.9rem;" placeholder="اكتب ما تم مع العميل..."></textarea>
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+              <button type="button" onclick="closeStatusModal()" style="background: rgba(255,255,255,0.1); color: #fff; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer;">إلغاء</button>
+              <button type="submit" style="background: var(--primary-gold, #c79a52); color: #000; font-weight: 700; border: none; padding: 8px 20px; border-radius: 8px; cursor: pointer;">حفظ التغيير</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <script>
+        function openStatusModal(id, reqId, status, notes) {
+          document.getElementById('modalTitle').textContent = 'تعديل حالة التذكرة: ' + reqId;
+          document.getElementById('modalStatusForm').action = '/admin/najm/requests/' + id + '/status';
+          document.getElementById('modalStatusSelect').value = status;
+          document.getElementById('modalAdminNotes').value = notes || '';
+          document.getElementById('statusModal').style.display = 'flex';
+        }
+        function closeStatusModal() {
+          document.getElementById('statusModal').style.display = 'none';
+        }
+      </script>
+    <% } %>
+
+    <!-- 5. CONVERSATIONS VIEW -->
+    <% if (view === 'conversations') { %>
+      <div class="glass-card" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 24px;">
+        <h2 style="color: #fff; font-size: 1.3rem; margin-top: 0; margin-bottom: 20px;">محادثات العملاء الحية مع نجم</h2>
+        <div class="table-responsive">
+          <table class="admin-table" style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); text-align: right;">
+                <th style="padding: 12px; color: #888;">معرف الجلسة</th>
+                <th style="padding: 12px; color: #888;">عنوان المحادثة</th>
+                <th style="padding: 12px; color: #888;">عدد الرسائل</th>
+                <th style="padding: 12px; color: #888;">آخر تفاعل</th>
+                <th style="padding: 12px; color: #888; text-align: center;">معاينة</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (conversations.length === 0) { %>
+                <tr><td colspan="5" style="text-align: center; padding: 40px; color: #888;">لا توجد محادثات مسجلة حتى الآن.</td></tr>
+              <% } %>
+              <% conversations.forEach(c => { %>
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                  <td style="padding: 12px; font-family: monospace; color: #888;"><%= c.session_id %></td>
+                  <td style="padding: 12px; color: #fff; font-weight: 600;"><%= c.title %></td>
+                  <td style="padding: 12px; color: var(--primary-gold, #c79a52); font-weight: 700;"><%= c.message_count %></td>
+                  <td style="padding: 12px; color: #888;"><%= helpers.formatDateTime(c.updated_at) %></td>
+                  <td style="padding: 12px; text-align: center;">
+                    <button type="button" onclick="viewChatTranscript('<%= c.id %>', '<%= (c.title || '').replace(/'/g, "\'") %>')" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 6px 12px; border-radius: 8px; font-size: 0.82rem; cursor: pointer;">
+                      عرض التفريغ
+                    </button>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Transcript Drawer -->
+      <div id="transcriptModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 9999; align-items: center; justify-content: center;">
+        <div style="background: #18201b; border: 1px solid var(--primary-gold, #c79a52); border-radius: 16px; padding: 24px; width: 100%; max-width: 600px; max-height: 80vh; display: flex; flex-direction: column;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">
+            <h3 style="color: #fff; margin: 0;" id="transcriptTitle">تفريغ المحادثة</h3>
+            <button onclick="closeTranscriptModal()" style="background: none; border: none; color: #888; font-size: 1.4rem; cursor: pointer;">&times;</button>
+          </div>
+          <div id="transcriptMessagesList" style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding: 10px 0;"></div>
+        </div>
+      </div>
+
+      <script>
+        async function viewChatTranscript(convId, title) {
+          document.getElementById('transcriptTitle').textContent = title || 'تفريغ المحادثة';
+          const list = document.getElementById('transcriptMessagesList');
+          list.innerHTML = '<div style="color:#888; text-align:center; padding:20px;">جارٍ جلب الرسائل...</div>';
+          document.getElementById('transcriptModal').style.display = 'flex';
+
+          try {
+            const res = await fetch('/admin/najm/conversations/' + convId + '/messages');
+            const data = await res.json();
+            if (data.messages && data.messages.length) {
+              list.innerHTML = data.messages.map(m => {
+                const isUser = m.sender === 'user';
+                return '<div style="align-self: ' + (isUser ? 'flex-start' : 'flex-end') + '; background: ' + (isUser ? 'rgba(255,255,255,0.06)' : 'rgba(199,154,82,0.15)') + '; border: 1px solid ' + (isUser ? 'rgba(255,255,255,0.1)' : 'rgba(199,154,82,0.3)') + '; border-radius: 12px; padding: 10px 14px; max-width: 85%;">' +
+                  '<div style="font-size: 0.75rem; color: ' + (isUser ? '#888' : 'var(--primary-gold, #c79a52)') + '; font-weight:700; margin-bottom:4px;">' + (isUser ? 'العميل' : 'نجم') + '</div>' +
+                  '<div style="color:#fff; font-size:0.9rem; line-height:1.5;">' + m.content + '</div>' +
+                '</div>';
+              }).join('');
+            } else {
+              list.innerHTML = '<div style="color:#888; text-align:center; padding:20px;">لا توجد رسائل مسجلة.</div>';
+            }
+          } catch (e) {
+            list.innerHTML = '<div style="color:#ef4444; text-align:center; padding:20px;">تعذر تحميل الرسائل: ' + e.message + '</div>';
+          }
+        }
+        function closeTranscriptModal() {
+          document.getElementById('transcriptModal').style.display = 'none';
+        }
+      </script>
+    <% } %>
+
+    <!-- 6. TOOLS VIEW -->
+    <% if (view === 'tools') { %>
+      <div class="glass-card" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 24px;">
+        <h2 style="color: #fff; font-size: 1.3rem; margin-top: 0; margin-bottom: 8px;">أدوات المتجر الحقيقية المفعلة لنجم (Store Tools)</h2>
+        <p style="color: #888; font-size: 0.9rem; margin-bottom: 24px;">هذه الأدوات تنفذ العمليات الحقيقية على قاعدة بيانات SQLite مباشرة دون أي اختلاق للبيانات.</p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px;">
+          <% tools.forEach(t => { %>
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 16px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <code style="color: var(--primary-gold, #c79a52); font-weight: 700; font-size: 0.95rem;"><%= t.name %></code>
+                <span style="background: rgba(34,197,94,0.15); color: #22c55e; font-size: 0.72rem; padding: 2px 8px; border-radius: 10px; font-weight: 700;">جاهزة ومفعلة</span>
+              </div>
+              <p style="color: rgba(255,255,255,0.75); font-size: 0.85rem; margin: 0 0 10px 0; line-height: 1.4;"><%= t.description %></p>
+              <% if (t.parameters && t.parameters.properties) { %>
+                <div style="background: rgba(0,0,0,0.2); padding: 8px; border-radius: 8px; font-size: 0.75rem; color: #888;">
+                  <strong>المدخلات:</strong> <%= Object.keys(t.parameters.properties).join(', ') %>
+                </div>
+              <% } %>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+    <% } %>
+
+    <!-- 7. AUDITS VIEW -->
+    <% if (view === 'audits') { %>
+      <div class="glass-card" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 24px;">
+        <h2 style="color: #fff; font-size: 1.3rem; margin-top: 0; margin-bottom: 20px;">سجل العمليات الحساسة لنجم (Action Audit Log)</h2>
+        <div class="table-responsive">
+          <table class="admin-table" style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); text-align: right;">
+                <th style="padding: 12px; color: #888;">الإجراء</th>
+                <th style="padding: 12px; color: #888;">الهدف</th>
+                <th style="padding: 12px; color: #888;">النتيجة</th>
+                <th style="padding: 12px; color: #888;">البيانات</th>
+                <th style="padding: 12px; color: #888;">التاريخ</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (actionAudits.length === 0) { %>
+                <tr><td colspan="5" style="text-align: center; padding: 40px; color: #888;">لا توجد سجلات تدقيق حتى الآن.</td></tr>
+              <% } %>
+              <% actionAudits.forEach(a => { %>
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                  <td style="padding: 12px; color: var(--primary-gold, #c79a52); font-weight: 700;"><%= a.action %></td>
+                  <td style="padding: 12px; color: #fff;"><%= a.target_type %>: <%= a.target_id %></td>
+                  <td style="padding: 12px;">
+                    <span style="font-size: 0.75rem; padding: 3px 8px; border-radius: 6px; font-weight: 700; background: <%= a.result === 'success' ? 'rgba(34,197,94,0.15)' : 'rgba(239,68,68,0.15)' %>; color: <%= a.result === 'success' ? '#22c55e' : '#ef4444' %>;">
+                      <%= a.result %>
+                    </span>
+                  </td>
+                  <td style="padding: 12px; color: #888; font-family: monospace; font-size: 0.78rem; max-width: 320px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><%= typeof a.payload === 'object' ? JSON.stringify(a.payload) : a.payload %></td>
+                  <td style="padding: 12px; color: #888; font-size: 0.85rem;"><%= helpers.formatDateTime(a.created_at) %></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <% } %>
+
+  </div>
+</main>
+
+<%- include('../../partials/foot') %>

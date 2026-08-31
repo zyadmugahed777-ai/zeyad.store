@@ -1,0 +1,278 @@
+<%- include('../../partials/head', { title }) %>
+<%- include('../../partials/sidebar', { active }) %>
+<main class="admin-main">
+  <%- include('../../partials/topbar') %>
+  <div class="admin-content">
+    
+    <!-- Top Bar Navigation -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+      <div>
+        <a href="/admin/customer-reports" class="btn btn-sm btn-outline mb-2" style="display: inline-flex; align-items: center; gap: 4px;">
+          <span class="material-symbols-rounded" style="font-size: 16px;">arrow_forward</span> العودة إلى قائمة البلاغات
+        </a>
+        <h1 class="page-title" style="margin: 0; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+          <span>بلاغ: <%= report.report_number %></span>
+          <% if (report.status === 'new') { %>
+            <span class="badge" style="background: rgba(59, 130, 246, 0.2); color: #60a5fa; font-size: 13px;">جديد</span>
+          <% } else if (report.status === 'in_review') { %>
+            <span class="badge" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; font-size: 13px;">قيد المراجعة</span>
+          <% } else if (report.status === 'verified') { %>
+            <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; font-size: 13px;">تم التحقق</span>
+          <% } else if (report.status === 'rewarded') { %>
+            <span class="badge" style="background: rgba(234, 179, 8, 0.25); color: #facc15; font-size: 13px;">🎁 تمت المكافأة</span>
+          <% } else if (report.status === 'completed') { %>
+            <span class="badge badge-success" style="font-size: 13px;">تم الحل</span>
+          <% } else if (report.status === 'rejected') { %>
+            <span class="badge badge-danger" style="font-size: 13px;">غير معتمد</span>
+          <% } else { %>
+            <span class="badge badge-secondary" style="font-size: 13px;">مغلق</span>
+          <% } %>
+        </h1>
+      </div>
+
+      <div class="d-flex gap-2">
+        <a href="/admin/customer-reports/<%= report.id %>/print" target="_blank" class="btn btn-sm btn-outline" style="display: flex; align-items: center; gap: 4px;">
+          <span class="material-symbols-rounded" style="font-size: 16px;">print</span> طباعة البلاغ
+        </a>
+        <% if (report.customer_phone) { %>
+          <a href="https://wa.me/<%= report.customer_phone.replace(/\+/g, '') %>?text=<%= encodeURIComponent(`مرحباً بك من متجر زياد ستور بخصوص بلاغك رقم ${report.report_number}`) %>" target="_blank" class="btn btn-sm btn-success" style="display: flex; align-items: center; gap: 4px; background: #25d366; border-color: #25d366; color: #fff;">
+            <span>واتساب</span>
+          </a>
+          <a href="tel:<%= report.customer_phone %>" class="btn btn-sm btn-outline" style="display: flex; align-items: center; gap: 4px;">
+            <span class="material-symbols-rounded" style="font-size: 16px;">call</span> اتصال
+          </a>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- Main Content Layout (Grid) -->
+    <div style="display: grid; grid-template-columns: 1fr 340px; gap: 20px; align-items: start;">
+      
+      <!-- Left Column: Details & Evidence -->
+      <div style="display: flex; flex-direction: column; gap: 20px;">
+
+        <!-- Problem Description Card -->
+        <div class="glass-card">
+          <h3 style="font-size: 16px; font-weight: 700; color: var(--primary-gold); margin-top: 0; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+            <span class="material-symbols-rounded">description</span> تفاصيل المشكلة
+          </h3>
+
+          <div style="background: rgba(0,0,0,0.2); border-radius: 10px; padding: 14px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 16px;">
+            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;">وصف العميل:</div>
+            <div style="font-size: 14px; line-height: 1.6; color: #f1f5f9; white-space: pre-wrap;"><%= report.description %></div>
+          </div>
+
+          <% if (report.expected_behavior || report.actual_behavior) { %>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px;">
+              <div style="background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 10px; padding: 12px;">
+                <strong style="color: #34d399; font-size: 12px; display: block; margin-bottom: 4px;">ماذا كان متوقعاً:</strong>
+                <p style="font-size: 13px; color: #e2e8f0; margin: 0;"><%= report.expected_behavior || '—' %></p>
+              </div>
+              <div style="background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 10px; padding: 12px;">
+                <strong style="color: #f87171; font-size: 12px; display: block; margin-bottom: 4px;">ماذا حدث فعلياً:</strong>
+                <p style="font-size: 13px; color: #e2e8f0; margin: 0;"><%= report.actual_behavior || '—' %></p>
+              </div>
+            </div>
+          <% } %>
+
+          <!-- Metadata List -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 14px;">
+            <div>
+              <small style="color: var(--text-muted); display: block;">نوع المشكلة:</small>
+              <strong><%= report.issue_type_ar || report.issue_type %></strong>
+            </div>
+            <div>
+              <small style="color: var(--text-muted); display: block;">الصفحة المبلغ عنها:</small>
+              <% if (report.page_url) { %>
+                <a href="<%= report.page_url %>" target="_blank" style="color: var(--primary-gold); text-decoration: underline; font-size: 12.5px; word-break: break-all;">
+                  <%= report.page_url.length > 35 ? report.page_url.slice(0, 35) + '...' : report.page_url %> 🔗
+                </a>
+              <% } else { %>
+                <span>—</span>
+              <% } %>
+            </div>
+            <div>
+              <small style="color: var(--text-muted); display: block;">تاريخ البلاغ:</small>
+              <span><%= new Date(report.created_at).toLocaleString('ar-YE') %></span>
+            </div>
+            <div>
+              <small style="color: var(--text-muted); display: block;">آخر تحديث:</small>
+              <span><%= new Date(report.updated_at).toLocaleString('ar-YE') %></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Attached Image / Screenshot -->
+        <% if (report.image_path) { %>
+          <div class="glass-card">
+            <h3 style="font-size: 16px; font-weight: 700; color: var(--primary-gold); margin-top: 0; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+              <span class="material-symbols-rounded">image</span> لقطة الشاشة المرفقة
+            </h3>
+            <div style="background: rgba(0,0,0,0.3); border-radius: 12px; padding: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.06);">
+              <a href="<%= report.image_path %>" target="_blank">
+                <img src="<%= report.image_path %>" alt="لقطة الشاشة" style="max-width: 100%; max-height: 440px; border-radius: 8px; object-fit: contain; box-shadow: 0 4px 16px rgba(0,0,0,0.4);" />
+              </a>
+              <div style="margin-top: 8px;">
+                <a href="<%= report.image_path %>" target="_blank" class="btn btn-sm btn-outline">
+                  <span class="material-symbols-rounded" style="font-size: 16px;">open_in_new</span> فتح الصورة بالحجم الكامل
+                </a>
+              </div>
+            </div>
+          </div>
+        <% } %>
+
+        <!-- Context & Diagnostics Data -->
+        <% if (contextData) { %>
+          <div class="glass-card">
+            <h3 style="font-size: 15px; font-weight: 700; color: #94a3b8; margin-top: 0; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+              <span class="material-symbols-rounded">memory</span> بيانات السياق والتشخيص
+            </h3>
+            <div style="background: rgba(0,0,0,0.25); border-radius: 8px; padding: 12px; font-family: monospace; font-size: 12px; color: #cbd5e1; overflow-x: auto;">
+              <pre style="margin: 0;"><%= JSON.stringify(contextData, null, 2) %></pre>
+            </div>
+          </div>
+        <% } %>
+
+      </div>
+
+      <!-- Right Column: Status & Reward Management -->
+      <div style="display: flex; flex-direction: column; gap: 20px;">
+
+        <!-- Customer Card -->
+        <div class="glass-card">
+          <h3 style="font-size: 15px; font-weight: 700; color: var(--primary-gold); margin-top: 0; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+            <span class="material-symbols-rounded">person</span> بيانات العميل
+          </h3>
+          <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13px;">
+            <div>
+              <span style="color: var(--text-muted);">الاسم:</span>
+              <strong><%= report.customer_name || 'غير محدد' %></strong>
+            </div>
+            <div>
+              <span style="color: var(--text-muted);">الهاتف:</span>
+              <strong dir="ltr"><%= report.customer_phone %></strong>
+            </div>
+            <% if (report.customer_email) { %>
+              <div>
+                <span style="color: var(--text-muted);">البريد:</span>
+                <span dir="ltr"><%= report.customer_email %></span>
+              </div>
+            <% } %>
+            <div>
+              <span style="color: var(--text-muted);">عنوان IP:</span>
+              <small style="color: #94a3b8;" dir="ltr"><%= report.ip_address || '—' %></small>
+            </div>
+            <div>
+              <span style="color: var(--text-muted);">رمز المتابعة السري:</span>
+              <code style="background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; color: #facc15;"><%= report.tracking_token %></code>
+            </div>
+          </div>
+        </div>
+
+        <!-- Status Management Form -->
+        <div class="glass-card">
+          <h3 style="font-size: 15px; font-weight: 700; color: var(--primary-gold); margin-top: 0; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+            <span class="material-symbols-rounded">tune</span> إدارة حالة البلاغ
+          </h3>
+          
+          <form action="/admin/customer-reports/<%= report.id %>/status" method="POST">
+            <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+            <div class="mb-3">
+              <label class="form-label" style="font-size: 12px;">الحالة الحالية:</label>
+              <select name="status" class="form-control">
+                <option value="new" <%= report.status === 'new' ? 'selected' : '' %>>جديد</option>
+                <option value="in_review" <%= report.status === 'in_review' ? 'selected' : '' %>>قيد المراجعة</option>
+                <option value="verified" <%= report.status === 'verified' ? 'selected' : '' %>>تم التحقق</option>
+                <option value="rewarded" <%= report.status === 'rewarded' ? 'selected' : '' %>>تمت المكافأة</option>
+                <option value="completed" <%= report.status === 'completed' ? 'selected' : '' %>>تم الحل</option>
+                <option value="rejected" <%= report.status === 'rejected' ? 'selected' : '' %>>غير معتمد (مرفوض)</option>
+                <option value="closed" <%= report.status === 'closed' ? 'selected' : '' %>>مغلق</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label" style="font-size: 12px;">الأولوية:</label>
+              <select name="priority" class="form-control">
+                <option value="low" <%= report.priority === 'low' ? 'selected' : '' %>>منخفضة</option>
+                <option value="medium" <%= report.priority === 'medium' ? 'selected' : '' %>>متوسطة</option>
+                <option value="high" <%= report.priority === 'high' ? 'selected' : '' %>>عالية</option>
+                <option value="critical" <%= report.priority === 'critical' ? 'selected' : '' %>>حرجة ⚠️</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label" style="font-size: 12px;">ملاحظات الإدارة الداخلية:</label>
+              <textarea name="admin_notes" class="form-control" rows="3" placeholder="ملاحظات سرية لفريق العمل..."><%= report.admin_notes || '' %></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-accent w-100">
+              <span class="material-symbols-rounded">save</span> حفظ التحديثات
+            </button>
+          </form>
+        </div>
+
+        <!-- Reward Management Card -->
+        <div class="glass-card" style="border: 1px solid rgba(234, 179, 8, 0.3); background: rgba(234, 179, 8, 0.04);">
+          <h3 style="font-size: 15px; font-weight: 700; color: #facc15; margin-top: 0; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+            <span class="material-symbols-rounded">military_tech</span> نظام المكافأة
+          </h3>
+
+          <% if (report.reward_status === 'approved') { %>
+            <div style="background: rgba(0,0,0,0.25); border: 1px solid rgba(234, 179, 8, 0.3); border-radius: 10px; padding: 14px; margin-bottom: 12px;">
+              <div style="font-size: 11px; color: #fde047; margin-bottom: 4px;">✓ تم اعتماد المكافأة</div>
+              <div style="font-size: 18px; font-weight: 800; color: #facc15;">
+                <%= report.reward_type === 'percentage' ? `خصم ${report.reward_value}%` : `خصم ${report.reward_value} ر.ي` %>
+              </div>
+              <div style="margin-top: 8px; font-size: 12px;">
+                كود الكوبون: <strong style="color: #fff; font-family: monospace; font-size: 14px;"><%= report.reward_code %></strong>
+              </div>
+              <% if (report.approved_by) { %>
+                <small style="color: var(--text-muted); display: block; margin-top: 6px;">
+                  بواسطة: <%= report.approved_by %> بتاريخ <%= new Date(report.approved_at).toLocaleDateString('ar-YE') %>
+                </small>
+              <% } %>
+            </div>
+          <% } else { %>
+            <p style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 12px;">
+              يمكنك اعتماد مكافأة للعميل (مثل خصم 10% أو كوبون تسوق) تقديراً لمساعدته في تحسين المتجر.
+            </p>
+          <% } %>
+
+          <form action="/admin/customer-reports/<%= report.id %>/reward" method="POST">
+            <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+            <div class="mb-2">
+              <label class="form-label" style="font-size: 12px;">نوع المكافأة:</label>
+              <select name="reward_type" class="form-control">
+                <option value="percentage" <%= report.reward_type === 'percentage' ? 'selected' : '' %>>نسبة مئوية (%)</option>
+                <option value="fixed_amount" <%= report.reward_type === 'fixed_amount' ? 'selected' : '' %>>مبلغ ثابت (ر.ي)</option>
+                <option value="coupon" <%= report.reward_type === 'coupon' ? 'selected' : '' %>>قسيمة شراء</option>
+                <option value="custom" <%= report.reward_type === 'custom' ? 'selected' : '' %>>مكافأة خاصة</option>
+              </select>
+            </div>
+
+            <div class="mb-2">
+              <label class="form-label" style="font-size: 12px;">القيمة (مثلاً 10 للنسبة 10%):</label>
+              <input type="number" name="reward_value" class="form-control" placeholder="10" value="<%= report.reward_value || '10' %>" step="any" required>
+            </div>
+
+            <div class="mb-2">
+              <label class="form-label" style="font-size: 12px;">ملاحظات / رسالة المكافأة للعميل:</label>
+              <input type="text" name="reward_notes" class="form-control" placeholder="شكراً لملاحظتك القيمة" value="<%= report.reward_notes || 'شكراً لمساعدتك في تطوير متجر زياد ستور!' %>">
+            </div>
+
+            <div class="mb-3 form-check" style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
+              <input type="checkbox" name="generate_coupon" id="generate_coupon" value="true" checked>
+              <label for="generate_coupon" style="font-size: 12px; margin: 0; cursor: pointer;">إنشاء وتفعيل كود كوبون حقيقي في النظام</label>
+            </div>
+
+            <button type="submit" class="btn btn-warning w-100" style="font-weight: 700;">
+              <span class="material-symbols-rounded">card_giftcard</span> <%= report.reward_status === 'approved' ? 'تحديث المكافأة' : 'اعتماد ومنح المكافأة' %>
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</main>
+<%- include('../../partials/foot') %>

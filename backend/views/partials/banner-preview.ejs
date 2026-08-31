@@ -1,0 +1,116 @@
+<%
+/**
+ * Live preview for the banner form.
+ *
+ * A banner is the largest thing on a page and was the one element you could
+ * not see before publishing it. Text over an image is exactly where a bad
+ * choice shows: a pale headline on a pale photo, or a subtitle that wraps to
+ * four lines on a phone. This shows both, at the width they will actually be
+ * read at, while the operator is still typing.
+ */
+const _b = (typeof banner !== 'undefined' && banner) ? banner : null;
+%>
+<div class="glass-card mb-4">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+    <h2 style="font-size:1rem; margin:0; color:var(--primary-color);">معاينة مباشرة</h2>
+    <div style="display:flex; gap:4px;">
+      <button type="button" class="btn btn-outline banner-preview-device is-active" data-width="380"
+              style="font-size:11px; padding:4px 10px;">جوال</button>
+      <button type="button" class="btn btn-outline banner-preview-device" data-width="100%"
+              style="font-size:11px; padding:4px 10px;">كمبيوتر</button>
+    </div>
+  </div>
+  <p class="text-muted" style="font-size:12px; margin-bottom:14px;">
+    تتحدث أثناء الكتابة. معظم زوار الموقع على الجوال، لذا هو العرض الافتراضي.
+  </p>
+
+  <div id="bannerPreviewFrame" style="max-width:380px; margin:0 auto; transition:max-width .2s ease;">
+    <div id="bannerPreviewCard"
+         style="position:relative; border-radius:14px; overflow:hidden; min-height:190px;
+                display:flex; align-items:center;
+                background:#241d16 center/cover no-repeat;">
+      <div style="position:absolute; inset:0;
+                  background:linear-gradient(90deg, rgba(0,0,0,.72) 0%, rgba(0,0,0,.25) 70%, transparent 100%);"></div>
+      <div style="position:relative; padding:22px 20px; color:#fff; max-width:78%;">
+        <h3 id="bannerPreviewTitle" style="margin:0 0 6px; font-size:1.25rem; line-height:1.35; color:#fff;">
+          العنوان الرئيسي
+        </h3>
+        <p id="bannerPreviewSubtitle"
+           style="margin:0 0 6px; font-size:.9rem; line-height:1.6; color:rgba(255,255,255,.9);"></p>
+        <p id="bannerPreviewBody"
+           style="margin:0 0 12px; font-size:.8rem; line-height:1.7; color:rgba(255,255,255,.75);"></p>
+        <span id="bannerPreviewCta"
+              style="display:none; background:var(--primary-gold,#c79a52); color:#1c1813;
+                     font-weight:600; font-size:.84rem; padding:8px 18px; border-radius:8px;"></span>
+      </div>
+    </div>
+    <p id="bannerPreviewNote" class="text-muted"
+       style="font-size:11px; margin-top:10px; text-align:center; line-height:1.7;"></p>
+  </div>
+</div>
+
+<script>
+(function () {
+  const form = document.querySelector('form');
+  if (!form) return;
+
+  const frame = document.getElementById('bannerPreviewFrame');
+  const card = document.getElementById('bannerPreviewCard');
+  const $ = (id) => document.getElementById(id);
+  const val = (name) => {
+    const el = form.querySelector('[name="' + name + '"]');
+    return el ? String(el.value || '').trim() : '';
+  };
+
+  function setLine(id, text) {
+    const el = $(id);
+    el.textContent = text;
+    el.style.display = text ? '' : 'none';
+  }
+
+  function render() {
+    $('bannerPreviewTitle').textContent = val('title') || 'العنوان الرئيسي';
+    setLine('bannerPreviewSubtitle', val('subtitle'));
+    setLine('bannerPreviewBody', val('body'));
+
+    const cta = val('button_text');
+    const ctaEl = $('bannerPreviewCta');
+    ctaEl.textContent = cta;
+    ctaEl.style.display = cta ? 'inline-block' : 'none';
+
+    const link = val('button_url') || val('link');
+    $('bannerPreviewNote').textContent = cta && !link
+      ? 'للزر نص بلا رابط — سيظهر للزائر ولن يفتح شيئاً.'
+      : (link ? 'الزر يفتح: ' + link : '');
+  }
+
+  form.addEventListener('input', render);
+  form.addEventListener('change', render);
+
+  // Preview the chosen file directly; it only reaches the server on save.
+  form.querySelectorAll('input[type="file"]').forEach((input) => {
+    input.addEventListener('change', (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => { card.style.backgroundImage = "url('" + reader.result + "')"; };
+      reader.readAsDataURL(file);
+    });
+  });
+
+  document.querySelectorAll('.banner-preview-device').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.banner-preview-device').forEach((b) => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      const w = btn.dataset.width;
+      frame.style.maxWidth = w === '100%' ? '100%' : w + 'px';
+    });
+  });
+
+  <% if (_b && (_b.image || _b.image_desktop)) { %>
+    card.style.backgroundImage = "url('<%= _b.image_desktop || _b.image %>')";
+  <% } %>
+
+  render();
+})();
+</script>

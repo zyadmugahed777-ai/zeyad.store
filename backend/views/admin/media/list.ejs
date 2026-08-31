@@ -1,0 +1,224 @@
+<%- include('../../partials/head', { title }) %>
+<%- include('../../partials/sidebar', { active }) %>
+<main class="admin-main">
+  <%- include('../../partials/topbar') %>
+  <div class="admin-content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="page-title"><%= title %></h1>
+    </div>
+
+    <!-- The operator asked outright what this screen is for. It never said.
+         Stating it plainly is cheaper than leaving them to guess, and the
+         honest answer includes what it does NOT do: product, department,
+         banner and offer images are uploaded from their own forms and never
+         pass through here. -->
+    <div class="glass-card mb-4" style="border-right: 3px solid var(--primary-gold, #c79a52);">
+      <h3 style="margin: 0 0 8px; font-size: 1rem; color: var(--primary-gold, #c79a52);">
+        ما هذه الصفحة؟
+      </h3>
+      <p style="margin: 0 0 10px; font-size: 13px; line-height: 1.9;">
+        مخزن مشترك للصور والملفات. ترفع الصورة هنا مرة واحدة فتحصل على رابط ثابت
+        تستطيع لصقه في أي مكان يطلب رابط صورة — في محرر المظهر، أو منشئ الصفحات،
+        أو داخل وصف منتج.
+      </p>
+      <p class="text-muted" style="margin: 0; font-size: 12px; line-height: 1.9;">
+        <strong>وما لا تفعله:</strong> صور المنتجات والأقسام والبنرات والعروض تُرفع
+        من نماذجها هي مباشرة ولا تمر من هنا. فلا حاجة لرفع صورة منتج في هذه الصفحة —
+        ارفعها من صفحة تعديل المنتج نفسها.
+      </p>
+    </div>
+
+    <!-- Upload Zone -->
+    <div class="glass-card mb-4 text-center" id="mediaDropzone" style="border: 2px dashed var(--border-color); padding: 40px; cursor: pointer; transition: all 0.3s ease;">
+      <form id="mediaUploadForm" action="/admin/media/upload-ajax" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="folder" value="<%= typeof currentFolder !== 'undefined' && currentFolder === 'all' ? 'general' : (typeof currentFolder !== 'undefined' ? currentFolder : 'general') %>">
+        <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+        <input id="mediaFiles" type="file" name="files" multiple accept="image/*,video/*,application/pdf" hidden>
+        
+        <span class="material-symbols-rounded text-muted" style="font-size: 48px; margin-bottom: 16px; display: block;">cloud_upload</span>
+        <h3 style="margin-bottom: 8px;">اسحب الصور أو الملفات هنا</h3>
+        <p class="text-muted mb-3">أو</p>
+        <label for="mediaFiles" class="btn btn-primary d-inline-flex" style="cursor: pointer;">
+          <span class="material-symbols-rounded">folder_open</span> اختر الملفات
+        </label>
+      </form>
+    </div>
+
+    <!-- Filters -->
+    <div class="glass-card mb-4">
+      <form method="GET" action="/admin/media" class="d-flex gap-3 align-items-center flex-wrap">
+        <div style="flex: 1; min-width: 200px;">
+          <input type="text" name="q" class="form-control" placeholder="البحث في الوسائط..." value="<%= typeof search !== 'undefined' ? search : '' %>">
+        </div>
+        <div style="width: 200px;">
+          <select name="folder" class="form-control">
+            <option value="all">كل المجلدات</option>
+            <% if (typeof folders !== 'undefined' && folders) { %>
+              <% folders.forEach(folder => { %>
+                <option value="<%= folder.folder %>" <%= typeof currentFolder !== 'undefined' && currentFolder === folder.folder ? 'selected' : '' %>><%= folder.folder %> (<%= folder.count %>)</option>
+              <% }) %>
+            <% } %>
+          </select>
+        </div>
+        <div style="width: 200px;">
+          <select class="form-control" name="type">
+            <option value="">كل الأنواع</option>
+            <option value="image" <%= typeof type !== 'undefined' && type === 'image' ? 'selected' : '' %>>صور</option>
+            <option value="video" <%= typeof type !== 'undefined' && type === 'video' ? 'selected' : '' %>>فيديو</option>
+            <option value="application" <%= typeof type !== 'undefined' && type === 'application' ? 'selected' : '' %>>PDF/ملفات</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-accent">
+          <span class="material-symbols-rounded">search</span> تصفية
+        </button>
+        <% if((typeof search !== 'undefined' && search) || (typeof currentFolder !== 'undefined' && currentFolder !== 'all') || (typeof type !== 'undefined' && type)) { %>
+          <a href="/admin/media" class="btn btn-outline">إلغاء</a>
+        <% } %>
+      </form>
+    </div>
+
+    <!-- Bulk Actions -->
+    <div class="d-flex align-items-center gap-3 mb-4 p-3 glass-card">
+      <form id="mediaBulkForm" method="POST" action="/admin/media/bulk" style="display: none;">
+        <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+      </form>
+      <select name="action" form="mediaBulkForm" class="form-control" style="width: 200px;">
+        <option value="">إجراء جماعي</option>
+        <option value="delete">حذف المحدد</option>
+      </select>
+      <button class="btn btn-outline" form="mediaBulkForm" type="submit">تنفيذ الإجراء</button>
+      <div class="text-muted" style="margin-right: auto; font-size: 14px;">
+        الوسائط الموجودة: <%= typeof media !== 'undefined' ? media.length : 0 %>
+      </div>
+    </div>
+
+    <!-- Media Grid -->
+    <div class="row" style="display: flex; flex-wrap: wrap; margin: -8px;">
+      <% if (!media || media.length === 0) { %>
+        <div class="col-12 text-center py-5 w-100" style="padding: 40px; color: var(--text-muted);">
+          <span class="material-symbols-rounded d-block mb-2" style="font-size: 48px;">image_not_supported</span>
+          لا توجد وسائط مطابقة للبحث
+        </div>
+      <% } %>
+      
+      <% if (media) media.forEach(item => { %>
+        <div style="flex: 0 0 20%; padding: 8px; box-sizing: border-box; min-width: 200px;">
+          <article class="glass-card p-0 overflow-hidden h-100 d-flex flex-column" style="position: relative;">
+            
+            <label style="position: absolute; top: 10px; right: 10px; z-index: 10; background: rgba(255,255,255,0.8); border-radius: 4px; padding: 4px; cursor: pointer;">
+              <input type="checkbox" form="mediaBulkForm" name="ids" value="<%= item.id %>" style="width: 18px; height: 18px; margin: 0;">
+            </label>
+
+            <div style="height: 160px; background: var(--bg-tertiary); display: flex; align-items: center; justify-content: center; overflow: hidden;">
+              <% if ((item.mime_type || '').startsWith('image/')) { %>
+                <img src="<%= item.path %>" alt="<%= item.alt_text || item.original_name %>" style="width: 100%; height: 100%; object-fit: cover;">
+              <% } else if ((item.mime_type || '').startsWith('video/')) { %>
+                <video src="<%= item.path %>" style="width: 100%; height: 100%; object-fit: cover;"></video>
+                <span class="material-symbols-rounded" style="position: absolute; color: white; background: rgba(0,0,0,0.5); border-radius: 50%; padding: 8px;">play_arrow</span>
+              <% } else { %>
+                <span class="material-symbols-rounded" style="font-size: 48px; color: var(--text-muted);">description</span>
+              <% } %>
+            </div>
+
+            <div class="p-3" style="flex: 1; display: flex; flex-direction: column;">
+              <strong style="font-size: 14px; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="<%= item.title || item.original_name || item.filename %>">
+                <%= item.title || item.original_name || item.filename %>
+              </strong>
+              <div class="text-muted mb-3" style="font-size: 12px;">
+                <span class="badge badge-info d-inline-block mb-1"><%= item.folder || 'general' %></span><br>
+                <%= Math.ceil((item.size || 0) / 1024) %> KB
+              </div>
+              
+              <div class="mt-auto d-flex gap-2">
+                <button type="button" class="btn btn-outline" style="flex: 1; padding: 4px; font-size: 12px;" onclick="navigator.clipboard.writeText('<%= item.path %>'); alert('تم نسخ الرابط');">
+                  <span class="material-symbols-rounded" style="font-size: 16px;">link</span> نسخ
+                </button>
+                <form method="POST" action="/admin/media/<%= item.id %>/delete" style="flex: 1; display: flex;" onsubmit="return confirm('هل أنت متأكد من حذف هذا الملف؟');">
+                  <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+                  <button type="submit" class="btn text-danger" style="flex: 1; padding: 4px; font-size: 12px; background: rgba(239, 68, 68, 0.1); border: none;">
+                    <span class="material-symbols-rounded" style="font-size: 16px;">delete</span> حذف
+                  </button>
+                </form>
+              </div>
+            </div>
+          </article>
+        </div>
+      <% }) %>
+    </div>
+
+    <% if (typeof totalPages !== 'undefined' && totalPages > 1) { %>
+      <div class="d-flex justify-content-between align-items-center mt-4 glass-card p-3">
+        <div class="text-muted" style="font-size: 13px;">إجمالي الملفات: <%= typeof totalItems !== 'undefined' ? totalItems : media.length %></div>
+        <div class="d-flex gap-2">
+          <% if (page > 1) { %>
+            <a href="?page=<%= page - 1 %>&q=<%= search %>&folder=<%= typeof currentFolder !== 'undefined' ? currentFolder : '' %>&type=<%= typeof type !== 'undefined' ? type : '' %>" class="btn btn-outline">السابق</a>
+          <% } %>
+          <% for(let i = 1; i <= totalPages; i++) { %>
+            <a href="?page=<%= i %>&q=<%= search %>&folder=<%= typeof currentFolder !== 'undefined' ? currentFolder : '' %>&type=<%= typeof type !== 'undefined' ? type : '' %>" class="btn <%= page === i ? 'btn-primary' : 'btn-outline' %>"><%= i %></a>
+          <% } %>
+          <% if (page < totalPages) { %>
+            <a href="?page=<%= page + 1 %>&q=<%= search %>&folder=<%= typeof currentFolder !== 'undefined' ? currentFolder : '' %>&type=<%= typeof type !== 'undefined' ? type : '' %>" class="btn btn-outline">التالي</a>
+          <% } %>
+        </div>
+      </div>
+    <% } %>
+
+  </div>
+</main>
+
+<style>
+  #mediaDropzone.is-dragging {
+    background: rgba(234, 179, 8, 0.1);
+    border-color: var(--primary-color) !important;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('mediaUploadForm');
+    const input = document.getElementById('mediaFiles');
+    const zone = document.getElementById('mediaDropzone');
+    
+    async function upload(files) {
+      if (!files || files.length === 0) return;
+      
+      zone.innerHTML = '<div style="padding: 40px;"><div class="spinner" style="width: 40px; height: 40px; border: 4px solid rgba(234, 179, 8, 0.3); border-top-color: var(--primary-color); border-radius: 50%; animation: spin 1s infinite linear; margin: 0 auto 16px;"></div><h3>جاري رفع الملفات...</h3></div>';
+      
+      const data = new FormData(form);
+      Array.from(files).forEach(file => data.append('files', file));
+      
+      try {
+        const response = await fetch('/admin/media/upload-ajax', { method: 'POST', body: data });
+        if (response.ok) {
+          window.location.reload();
+        } else {
+          alert('حدث خطأ أثناء الرفع');
+          window.location.reload();
+        }
+      } catch (e) {
+        alert('حدث خطأ أثناء الرفع');
+        window.location.reload();
+      }
+    }
+    
+    if (input && zone) {
+      input.addEventListener('change', () => upload(input.files));
+      
+      zone.addEventListener('dragover', event => { 
+        event.preventDefault(); 
+        zone.classList.add('is-dragging'); 
+      });
+      
+      zone.addEventListener('dragleave', () => {
+        zone.classList.remove('is-dragging');
+      });
+      
+      zone.addEventListener('drop', event => { 
+        event.preventDefault(); 
+        zone.classList.remove('is-dragging'); 
+        upload(event.dataTransfer.files); 
+      });
+    }
+  });
+</script>
+<%- include('../../partials/foot') %>

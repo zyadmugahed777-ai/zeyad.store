@@ -1,0 +1,74 @@
+<%- include('../../partials/head', { title }) %>
+<%- include('../../partials/sidebar', { active }) %>
+<main class="admin-main">
+  <%- include('../../partials/topbar') %>
+  <div class="admin-content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="page-title"><%= title %></h1>
+      <a href="/admin/branches" class="btn btn-outline">
+        <span class="material-symbols-rounded">arrow_forward</span> العودة
+      </a>
+    </div>
+    <form action="<%= branch ? '/admin/branches/' + branch.id + '/edit' : '/admin/branches/create' %>" method="POST" enctype="multipart/form-data">
+      <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+      <div class="glass-card mb-4">
+        <div class="form-group">
+          <label class="form-label">اسم الفرع (عربي) <span class="text-danger">*</span></label>
+          <input type="text" name="name_ar" class="form-control" value="<%= branch ? branch.name_ar : '' %>" required>
+        </div>
+        <div class="form-group mt-3">
+          <label class="form-label">اسم الفرع (إنجليزي)</label>
+          <input type="text" name="name_en" class="form-control" value="<%= branch ? branch.name_en : '' %>" dir="ltr">
+        </div>
+        <div class="form-group mt-3">
+          <label class="form-label">المدينة</label>
+          <input type="text" name="city" class="form-control" value="<%= branch ? branch.city : '' %>">
+        </div>
+        <div class="form-group mt-3">
+          <label class="form-label">العنوان التفصيلي</label>
+          <textarea name="address" class="form-control" rows="2"><%= branch ? branch.address : '' %></textarea>
+        </div>
+        <div class="form-group mt-3">
+          <label class="form-label">رقم الهاتف</label>
+          <input type="text" name="phone" class="form-control" value="<%= branch ? branch.phone : '' %>" dir="ltr">
+        </div>
+        <div class="form-group mt-3">
+          <label class="form-label">رقم الواتساب</label>
+          <input type="text" name="whatsapp" class="form-control" value="<%= branch ? branch.whatsapp : '' %>" dir="ltr">
+        </div>
+        <div class="form-group mt-3">
+          <label class="form-label">رابط خرائط قوقل</label>
+          <input type="text" name="google_maps" class="form-control" value="<%= branch ? branch.google_maps : '' %>" dir="ltr">
+        </div>
+        <div class="form-group mt-3">
+          <label class="form-label">ساعات العمل</label>
+          <input type="text" name="working_hours" class="form-control" value="<%= branch ? branch.working_hours : '' %>" placeholder="مثال: 8 صباحاً - 10 مساءً">
+        </div>
+        <div class="form-group mt-3">
+          <label class="form-label">صورة الفرع</label>
+          <% if (branch && branch.image) { %>
+            <div class="mb-2"><img src="<%= branch.image %>" style="width:200px;height:100px;object-fit:cover;border-radius:8px;"></div>
+          <% } %>
+          <input type="file" name="image" class="form-control" accept="image/*">
+        </div>
+        <div class="form-group mt-3">
+          <label class="form-label">الترتيب</label>
+          <input type="number" name="sort_order" class="form-control" value="<%= branch ? branch.sort_order : '0' %>" dir="ltr">
+        </div>
+        <div class="form-group mt-3" style="background:var(--bg-tertiary);padding:16px;border-radius:8px;">
+          <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+            <input type="checkbox" name="is_active" <%= (!branch || branch.is_active) ? 'checked' : '' %> style="width:20px;height:20px;">
+            <span style="font-weight:600;">الفرع نشط ومرئي</span>
+          </label>
+        </div>
+      </div>
+      <div class="d-flex justify-content-end gap-3 mb-5">
+        <a href="/admin/branches" class="btn btn-outline">إلغاء</a>
+        <button type="submit" class="btn btn-primary" style="padding:12px 32px;font-size:16px;">
+          <span class="material-symbols-rounded">save</span> حفظ
+        </button>
+      </div>
+    </form>
+  </div>
+</main>
+<%- include('../../partials/foot') %>

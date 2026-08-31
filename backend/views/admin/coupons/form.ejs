@@ -1,0 +1,239 @@
+<%- include('../../partials/head', { title }) %>
+<%- include('../../partials/sidebar', { active }) %>
+
+<main class="admin-main">
+  <%- include('../../partials/topbar') %>
+
+  <div class="admin-content">
+    
+    <div class="page-header d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+      <div>
+        <a href="/admin/coupons" class="btn btn-outline btn-sm mb-2" style="display: inline-flex; align-items: center; gap: 4px;">
+          <span class="material-symbols-rounded" style="font-size: 16px;">arrow_forward</span>
+          العودة لقائمة الكوبونات
+        </a>
+        <h1 class="page-title"><%= coupon ? `تعديل الكوبون: ${coupon.code}` : 'إنشاء كوبون جديد' %></h1>
+      </div>
+    </div>
+
+    <div class="row g-4" style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
+      
+      <!-- Main Form -->
+      <div class="card p-4">
+        <form action="<%= coupon ? `/admin/coupons/${coupon.id}/edit` : '/admin/coupons/create' %>" method="POST">
+          <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+          
+          <div class="row g-3" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            
+            <!-- Code -->
+            <div style="grid-column: span 2;">
+              <label class="form-label" style="font-weight: 600;">كود الكوبون (Coupon Code) <span class="text-danger">*</span></label>
+              <input type="text" name="code" value="<%= coupon ? coupon.code : '' %>" <%= coupon ? 'readonly' : '' %>
+                     placeholder="اتركه فارغاً للتوليد التلقائي الآمن (مثال: ZFB-10-A8B9C0)"
+                     class="form-control" style="font-family: monospace; font-size: 16px; font-weight: 700; text-transform: uppercase;">
+              <small class="text-muted">يتكون من أحرف إنجليزية وأرقام وعلامة (-). فريد ولا يتكرر.</small>
+            </div>
+
+            <!-- Discount Type -->
+            <div>
+              <label class="form-label" style="font-weight: 600;">نوع الخصم <span class="text-danger">*</span></label>
+              <select name="discount_type" id="discount_type" class="form-control" onchange="handleTypeChange(this.value)">
+                <% Object.entries(typeMap).forEach(([k, v]) => { %>
+                  <option value="<%= k %>" <%= (coupon && coupon.discount_type === k) ? 'selected' : '' %>><%= v %></option>
+                <% }) %>
+              </select>
+            </div>
+
+            <!-- Discount Value -->
+            <div id="value_container">
+              <label class="form-label" id="value_label" style="font-weight: 600;">نسبة الخصم المئوية (%) <span class="text-danger">*</span></label>
+              <input type="number" step="0.5" min="0" max="100" name="discount_value" id="discount_value"
+                     value="<%= coupon ? coupon.discount_value : 10 %>" class="form-control">
+              <small class="text-muted" id="value_hint">القيمة من 1% إلى 100% تخصم من إجمالي المنتجات.</small>
+            </div>
+
+            <!-- Min Order (SAR) -->
+            <div>
+              <label class="form-label" style="font-weight: 600;">الحد الأدنى لقيمة الطلب (ر.س)</label>
+              <input type="number" min="0" name="min_order" value="<%= coupon ? coupon.min_order : 0 %>" class="form-control">
+              <small class="text-muted">بالريال السعودي (0 = بدون حد أدنى).</small>
+            </div>
+
+            <!-- Max Uses -->
+            <div>
+              <label class="form-label" style="font-weight: 600;">أقصى عدد مرات استخدام</label>
+              <input type="number" min="0" name="max_uses" value="<%= coupon ? coupon.max_uses : 100 %>" class="form-control">
+              <small class="text-muted">0 تعني استخدام غير محدود.</small>
+            </div>
+
+            <!-- Start Date -->
+            <div>
+              <label class="form-label" style="font-weight: 600;">تاريخ بدء السريان</label>
+              <input type="date" name="start_date" value="<%= helpers.toDateInput(coupon && coupon.start_date) %>" class="form-control">
+            </div>
+
+            <!-- End Date -->
+            <div>
+              <label class="form-label" style="font-weight: 600;">تاريخ انتهاء الصلاحية</label>
+              <input type="date" name="end_date" value="<%= helpers.toDateInput(coupon && coupon.end_date) %>" class="form-control">
+            </div>
+
+            <!-- Scope -->
+            <div>
+              <label class="form-label" style="font-weight: 600;">نطاق التخصيص</label>
+              <select name="scope" id="scope_select" class="form-control" onchange="handleScopeChange(this.value)">
+                <% Object.entries(scopeMap).forEach(([k, v]) => { %>
+                  <option value="<%= k %>" <%= (coupon && coupon.scope === k) ? 'selected' : '' %>><%= v %></option>
+                <% }) %>
+              </select>
+            </div>
+
+            <!-- Customer Phone (for private/reward) -->
+            <div id="phone_container">
+              <label class="form-label" style="font-weight: 600;">رقم هاتف العميل المخصص</label>
+              <input type="text" name="customer_phone" value="<%= coupon ? (coupon.customer_phone || '') : '' %>" placeholder="77xxxxxxx" class="form-control" style="direction: ltr; text-align: right;">
+              <small class="text-muted">إذا تم تحديده، لا يمكن لأي عميل آخر استخدام هذا الكود.</small>
+            </div>
+
+            <!-- Notes -->
+            <div style="grid-column: span 2;">
+              <label class="form-label" style="font-weight: 600;">ملاحظات إدارية داخلية</label>
+              <textarea name="notes" rows="2" class="form-control" placeholder="وصف الكوبون، الحملة الإعلانية، أو سبب المنح..."><%= coupon ? (coupon.notes || '') : '' %></textarea>
+            </div>
+
+            <% if (coupon) { %>
+              <div style="grid-column: span 2;">
+                <label class="d-flex align-items-center gap-2" style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                  <input type="checkbox" name="is_active" value="1" <%= coupon.is_active ? 'checked' : '' %>>
+                  <span style="font-weight: 600;">الكوبون مفعّل ونشط</span>
+                </label>
+              </div>
+            <% } %>
+
+          </div>
+
+          <div class="mt-4 pt-3" style="border-top: 1px solid var(--border-color, rgba(255,255,255,0.1)); display: flex; gap: 12px;">
+            <button type="submit" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 6px;">
+              <span class="material-symbols-rounded">save</span>
+              <%= coupon ? 'حفظ التعديلات' : 'إنشاء وحفظ الكوبون' %>
+            </button>
+            <a href="/admin/coupons" class="btn btn-outline">إلغاء</a>
+          </div>
+
+        </form>
+      </div>
+
+      <!-- Sidebar Info & Redemption History -->
+      <div>
+        <% if (coupon) { %>
+          <div class="card p-4 mb-4">
+            <h3 style="font-size: 16px; margin: 0 0 16px; font-weight: 700;">إحصائيات الاستخدام</h3>
+            <div style="display: flex; flex-direction: column; gap: 12px; font-size: 13px;">
+              <div style="display: flex; justify-content: space-between;">
+                <span class="text-muted">مرات الاستخدام:</span>
+                <strong><%= coupon.used_count %> من <%= coupon.max_uses > 0 ? coupon.max_uses : 'غير محدود' %></strong>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span class="text-muted">المصدر:</span>
+                <strong><%= coupon.source_type %></strong>
+              </div>
+              <% if (coupon.source_id) { %>
+                <div style="display: flex; justify-content: space-between;">
+                  <span class="text-muted">رقم المرجع:</span>
+                  <strong>#<%= coupon.source_id %></strong>
+                </div>
+              <% } %>
+              <div style="display: flex; justify-content: space-between;">
+                <span class="text-muted">أنشئ بواسطة:</span>
+                <strong><%= coupon.created_by || 'Admin' %></strong>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span class="text-muted">تاريخ الإنشاء:</span>
+                <span><%= new Date(coupon.created_at).toLocaleString('ar-YE') %></span>
+              </div>
+            </div>
+          </div>
+
+          <% if (typeof recentOrders !== 'undefined' && recentOrders && recentOrders.length > 0) { %>
+            <div class="card p-4">
+              <h3 style="font-size: 16px; margin: 0 0 12px; font-weight: 700;">الطلبات التي استخدمت هذا الكود</h3>
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <% recentOrders.forEach(ord => { %>
+                  <a href="/admin/orders/<%= ord.id %>" class="d-flex justify-content-between align-items-center p-2 rounded" style="background: rgba(255,255,255,0.03); text-decoration: none; color: inherit;">
+                    <div>
+                      <strong>#<%= ord.order_id %></strong>
+                      <div class="text-muted" style="font-size: 11px;"><%= new Date(ord.created_at).toLocaleDateString('ar-YE') %></div>
+                    </div>
+                    <div style="text-align: left;">
+                      <strong style="color: var(--primary-gold, #eab308);"><%= ord.total %> <%= ord.currency %></strong>
+                    </div>
+                  </a>
+                <% }) %>
+              </div>
+            </div>
+          <% } %>
+        <% } else { %>
+          <div class="card p-4">
+            <h3 style="font-size: 16px; margin: 0 0 12px; font-weight: 700;">إرشادات الكوبونات</h3>
+            <ul style="font-size: 13px; color: var(--text-muted); padding-right: 20px; line-height: 1.6; margin: 0;">
+              <li><strong>خصم النسبة المئوية:</strong> يخصم النسبة المحددة من إجمالي المنتجات في السلة.</li>
+              <li><strong>التوصيل المجاني:</strong> يجعل رسوم التوصيل = 0 دون المساس بأسعار المنتجات أو التركيب.</li>
+              <li><strong>التوليد التلقائي:</strong> اترك خانة الكود فارغة لتوليد كود مشفر عالي الأمان تلقائياً.</li>
+              <li><strong>التحقق الآمن:</strong> يتم إعادة التحقق من الكوبون في الـ Backend عند كل خطوة وتحديث للسلة.</li>
+            </ul>
+          </div>
+        <% } %>
+      </div>
+
+    </div>
+
+  </div>
+</main>
+
+<script>
+function handleTypeChange(val) {
+  const container = document.getElementById('value_container');
+  const input = document.getElementById('discount_value');
+  const label = document.getElementById('value_label');
+  const hint = document.getElementById('value_hint');
+
+  if (val === 'free_shipping') {
+    container.style.display = 'none';
+    input.removeAttribute('required');
+    input.removeAttribute('min');
+    input.value = '0';
+  } else {
+    container.style.display = 'block';
+    input.setAttribute('required', 'required');
+    input.setAttribute('min', '1');
+    input.setAttribute('max', '100');
+    if (input.value === '0' || !input.value) {
+      input.value = '10';
+    }
+  }
+}
+
+function handleScopeChange(val) {
+  const phoneContainer = document.getElementById('phone_container');
+  const phoneInput = phoneContainer ? phoneContainer.querySelector('input') : null;
+  if (!phoneContainer) return;
+  if (val === 'public') {
+    phoneContainer.style.opacity = '0.7';
+  } else {
+    phoneContainer.style.opacity = '1';
+    if (phoneInput && !phoneInput.value) {
+      phoneInput.focus();
+    }
+  }
+}
+
+// Run on load
+document.addEventListener('DOMContentLoaded', () => {
+  const typeSelect = document.getElementById('discount_type');
+  if (typeSelect) handleTypeChange(typeSelect.value);
+  const scopeSelect = document.getElementById('scope_select');
+  if (scopeSelect) handleScopeChange(scopeSelect.value);
+});
+</script>
+
+<%- include('../../partials/foot') %>

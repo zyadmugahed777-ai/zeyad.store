@@ -1,0 +1,2011 @@
+<html lang="ar" dir="rtl"><head></head><body id="top" class="appliances-page">﻿
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الأجهزة المنزلية | زياد ستور</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <script src="assets/js/core/theme-engine.js?v=20260830-v2327"></script>
+    <style>
+    .appliances-page { background: var(--paper); }
+    .appliances-main { display: flex; flex-direction: column; gap: 10px; padding-bottom: 14px; }
+    .appliances-section { padding-inline: var(--container-px); }
+
+    .appliances-hero-wrap {
+      display: grid;
+      grid-template-columns: 1fr 310px;
+      gap: 10px;
+      background: #070f15;
+      padding-inline: var(--container-px);
+      padding-top: 8px;
+      padding-bottom: 8px;
+    }
+    .appliances-hero {
+      position: relative;
+      min-height: 300px;
+      overflow: hidden;
+      background: #071019;
+      color: #fff;
+      border-radius: 18px;
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      align-items: stretch;
+    }
+    .appliances-hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to left, rgba(7,16,25,0.08) 0%, rgba(7,16,25,0.2) 30%, rgba(7,16,25,0.8) 70%, rgba(7,16,25,0.96) 100%),
+        radial-gradient(circle at 82% 20%, rgba(214,165,62,.2), transparent 22%);
+      pointer-events: none;
+    }
+    .appliances-hero-copy,
+    .appliances-hero-visual { position: relative; z-index: 1; }
+    .appliances-hero-copy {
+      padding: 34px 26px 24px 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .appliances-hero-copy h1 {
+      margin: 0 0 10px;
+      font-size: clamp(2.3rem, 4.2vw, 4.1rem);
+      line-height: 1.05;
+      color: #fff;
+    }
+    .appliances-hero-copy h1 span { color: var(--gold); }
+    .appliances-hero-copy p {
+      margin: 0 0 18px;
+      font-size: 1rem;
+      line-height: 1.7;
+      color: rgba(250,245,236,.84);
+    }
+    .appliances-hero-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .appliances-hero-actions .btn-hero-primary,
+    .appliances-hero-actions .btn-hero-secondary { min-width: 170px; justify-content: center; }
+    .appliances-mini-features {
+      display: flex; flex-wrap: wrap; gap: 16px; margin-top: 16px;
+      color: rgba(250,245,236,.82); font-size: .82rem;
+    }
+    .appliances-mini-features span { display: inline-flex; align-items: center; gap: 6px; }
+    .appliances-mini-features svg {
+      width: 15px; height: 15px; stroke: var(--gold); fill: none; stroke-width: 1.8;
+    }
+    .appliances-hero-visual {
+      background: linear-gradient(to left, rgba(7,16,25,.02), rgba(7,16,25,.08)), url('assets/appliances-hero.jpg') center/cover no-repeat;
+      min-height: 300px;
+    }
+
+    .kitchen-bundle-panel {
+      position: relative;
+      border-radius: 18px;
+      overflow: hidden;
+      background:
+        linear-gradient(to left, rgba(24,18,12,.2), rgba(24,18,12,.82) 50%, rgba(13,12,11,.96) 100%),
+        url('assets/appliances-hero.jpg') center/cover no-repeat;
+      color: var(--cream);
+      padding: 16px;
+      min-height: 300px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid rgba(214,165,62,.22);
+    }
+    .kitchen-bundle-panel .promo-top-badge {
+      align-self: flex-start;
+      background: #d84b39;
+      color: #fff;
+      font-size: .72rem;
+      font-weight: 700;
+      border-radius: 999px;
+      padding: 6px 10px;
+    }
+    .kitchen-bundle-panel h3 {
+      margin: 10px 0 6px;
+      font-size: 2rem;
+      line-height: 1.15;
+      color: var(--cream);
+    }
+    .kitchen-bundle-panel .bundle-price {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 10px 0 8px;
+    }
+    .kitchen-bundle-panel .bundle-price strong {
+      font-size: 2.5rem;
+      line-height: .95;
+      color: var(--gold);
+    }
+    .kitchen-bundle-panel .bundle-price del {
+      color: rgba(250,245,236,.42);
+      font-size: 1rem;
+    }
+    .bundle-discount-badge {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: #d84b39;
+      color: #fff;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: .8rem;
+      line-height: 1.05;
+    }
+    .kitchen-bundle-list {
+      margin: 10px 0 12px;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 6px;
+      font-size: .8rem;
+      color: rgba(250,245,236,.85);
+    }
+    .kitchen-bundle-list li { display: flex; align-items: center; gap: 8px; }
+    .kitchen-bundle-list li::before {
+      content: "•";
+      color: var(--gold);
+      font-size: 1rem;
+    }
+    .kitchen-bundle-panel .countdown-box {
+      justify-content: center;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .kitchen-bundle-panel .countdown-unit {
+      min-width: 46px;
+      padding: 6px 5px;
+      border-radius: 10px;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.08);
+    }
+    .kitchen-bundle-panel .btn-hero-primary { width: 100%; justify-content: center; }
+
+    .appliances-categories {
+      display: grid;
+      grid-template-columns: repeat(20, minmax(0, 1fr));
+      gap: 8px;
+      background-color: var(--surface);
+      border: 1px solid #e8ddd1;
+      border-radius: 16px;
+      padding: 10px;
+    }
+    .appliances-category-card {
+      min-height: 78px;
+      border-radius: 12px;
+      text-decoration: none;
+      color: var(--ink);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px 4px;
+    }
+    .appliances-category-card:hover { background: rgba(214,165,62,.04); }
+    .appliances-category-card .icon-circle {
+      width: 34px; height: 34px; border-radius: 10px; background: rgba(214,165,62,.08);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .appliances-category-card svg {
+      width: 19px; height: 19px; stroke: #b97b21; fill: none; stroke-width: 1.7;
+    }
+    .appliances-category-card span {
+      font-size: .7rem; line-height: 1.2; text-align: center; font-weight: 600;
+    }
+
+    .split-row {
+      display: grid;
+      grid-template-columns: 1.15fr 2fr;
+      gap: 10px;
+    }
+    .bridal-bundle-card {
+      position: relative;
+      min-height: 180px;
+      border-radius: 16px;
+      overflow: hidden;
+      color: var(--cream);
+      padding: 20px 22px;
+      background:
+        linear-gradient(to left, rgba(26,18,10,.16), rgba(17,14,11,.84) 48%, rgba(11,12,12,.97) 100%),
+        url('assets/appliances-hero.jpg') center/cover no-repeat;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .bridal-bundle-card h3 {
+      margin: 0 0 6px;
+      font-size: 2rem;
+      color: var(--gold);
+      line-height: 1.08;
+    }
+    .bridal-bundle-card p {
+      margin: 0;
+      color: rgba(250,245,236,.84);
+      font-size: .9rem;
+      line-height: 1.7;
+    }
+    .bridal-bundle-features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      color: rgba(250,245,236,.86);
+      font-size: .8rem;
+    }
+    .bridal-bundle-price {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+    .bridal-bundle-price strong { color: var(--gold); font-size: 2rem; }
+    .bridal-bundle-price del { color: rgba(250,245,236,.45); }
+
+    .appliances-section-head {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 4px 4px 0; margin-bottom: 8px;
+    }
+    .appliances-section-head h2 { margin: 0; font-size: 1.55rem; color: var(--ink); }
+    .appliances-section-head a {
+      color: #b97b21; text-decoration: none; font-size: .94rem; font-weight: 600;
+    }
+    .appliances-count-inline {
+      display: inline-flex; align-items: center; gap: 10px; color: var(--muted); font-size: .84rem;
+    }
+    .appliances-count-inline .countdown-box { gap: 8px; }
+    .appliances-count-inline .countdown-unit {
+      min-width: 46px; padding: 6px 5px; border-radius: 10px; background-color: var(--surface); border: 1px solid #e8ddd1;
+    }
+    .appliances-count-inline .countdown-unit .num { font-size: .95rem; }
+
+    .today-offers-grid,
+    .appliances-product-row,
+    .mini-product-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .appliance-offer-card {
+      background-color: var(--surface);
+      border: 1px solid #e8ddd1;
+      border-radius: 14px;
+      overflow: hidden;
+      min-width: 0;
+      position: relative;
+    }
+/* fixed height removed - governed by aspect-ratio: 4/5 */
+    .appliance-offer-card .product-body { padding: 10px; }
+    .appliance-offer-card h3 {
+      margin: 0 0 5px;
+      min-height: 36px;
+      font-size: .88rem;
+      line-height: 1.35;
+      color: var(--ink);
+    }
+    .appliance-offer-card .product-desc {
+      margin: 0 0 7px;
+      min-height: 16px;
+      font-size: .72rem;
+      color: var(--muted);
+    }
+    .appliance-offer-card .product-price { margin-bottom: 8px; }
+    .appliance-offer-card .product-price strong { font-size: 1rem; }
+    .appliance-offer-card .btn-checkout { min-height: 32px; font-size: .76rem; }
+    .appliance-offer-card .stock-note { font-size: .68rem; color: var(--muted); margin-top: 6px; }
+
+    .brand-strip {
+      display: grid;
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+      gap: 8px;
+      background-color: var(--surface);
+      border: 1px solid #e8ddd1;
+      border-radius: 14px;
+      padding: 10px;
+    }
+    .brand-strip .brand-logo {
+      height: 34px;
+      border-radius: 10px;
+      background: #faf7f2;
+      border: 1px solid #eee3d9;
+      color: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: sans-serif;
+      font-size: .86rem;
+      font-weight: 700;
+    }
+
+    .section-dark-frame {
+      background: #081017;
+      border-radius: 18px;
+      padding: 10px;
+      border: 1px solid rgba(214,165,62,.12);
+    }
+    .section-dark-head {
+      display: flex; align-items: center; justify-content: space-between;
+      color: var(--cream); padding: 4px 6px 10px;
+    }
+    .section-dark-head h2 {
+      margin: 0; color: var(--gold); font-size: 1.25rem;
+    }
+    .section-dark-head a { color: rgba(250,245,236,.84); text-decoration: none; font-size: .82rem; }
+    .section-dark-frame .appliance-offer-card {
+      border-color: rgba(214,165,62,.14);
+      background-color: var(--surface);
+    }
+
+    .why-zeyad {
+      background: #0a1117;
+      border-radius: 16px;
+      padding: 10px 8px;
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 0;
+      color: var(--cream);
+    }
+    .why-item {
+      min-height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-left: 1px solid rgba(214,165,62,.12);
+      text-align: center;
+      font-size: .77rem;
+      color: rgba(250,245,236,.82);
+    }
+    .why-item:last-child { border-left: 0; }
+    .why-item svg { width: 18px; height: 18px; color: var(--gold); flex: 0 0 auto; }
+    .why-item strong { color: var(--gold); font-size: .79rem; }
+
+    .faq-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .faq-box,
+    .subscribe-box,
+    .contact-box {
+      background-color: var(--surface);
+      border: 1px solid #e8ddd1;
+      border-radius: 14px;
+      padding: 14px 16px;
+    }
+    .faq-list { display: grid; gap: 10px; }
+    details.faq-item {
+      border: 1px solid #efe4d9;
+      border-radius: 12px;
+      padding: 12px 14px;
+      background: #fcfaf7;
+    }
+    details.faq-item summary {
+      cursor: pointer;
+      list-style: none;
+      font-size: .86rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    details.faq-item p {
+      margin: 10px 0 0;
+      font-size: .78rem;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+    .subscribe-box h3,
+    .contact-box h3,
+    .faq-box h3 { margin: 0 0 10px; font-size: 1rem; color: var(--ink); }
+    .subscribe-box p,
+    .contact-box p { margin: 0 0 12px; color: var(--muted); font-size: .8rem; line-height: 1.7; }
+    .subscribe-row {
+      display: flex; gap: 8px; flex-wrap: wrap;
+    }
+    .subscribe-row input {
+      flex: 1 1 180px;
+      min-height: 40px;
+      border-radius: 10px;
+      border: 1px solid #e8ddd1;
+      padding: 0 12px;
+      font: inherit;
+      background: #fcfaf7;
+    }
+    .contact-list { display: grid; gap: 6px; font-size: .8rem; color: var(--muted); }
+
+    @media (max-width: 1199px) {
+      .appliances-hero-wrap,
+      .split-row,
+      .faq-grid {
+        grid-template-columns: 1fr;
+      }
+      .appliances-hero {
+        grid-template-columns: 1fr;
+      }
+      .appliances-categories {
+        grid-template-columns: repeat(10, minmax(0, 1fr));
+      }
+      .today-offers-grid,
+      .appliances-product-row,
+      .mini-product-grid,
+      .brand-strip {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+      .why-zeyad {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+      .why-item:nth-child(3n) { border-left: 0; }
+    }
+
+    @media (max-width: 767px) {
+      .appliances-main { gap: 8px; }
+      .appliances-hero-copy { padding: 24px 18px 16px; }
+      .appliances-hero-actions { width: 100%; }
+      .appliances-hero-actions .btn-hero-primary,
+      .appliances-hero-actions .btn-hero-secondary { flex: 1 1 100%; }
+      .appliances-categories {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+      .today-offers-grid,
+      .appliances-product-row,
+      .mini-product-grid,
+      .brand-strip,
+      .why-zeyad {
+        grid-template-columns: 1fr 1fr;
+      }
+      /* product-photo height removed - uses aspect-ratio: 4/5 */
+      .why-item {
+        border-left: 0;
+        border-bottom: 1px solid rgba(214,165,62,.12);
+      }
+      .why-item:last-child { border-bottom: 0; }
+      .faq-grid,
+      .today-offers-grid,
+      .appliances-product-row,
+      .mini-product-grid,
+      .brand-strip,
+      .why-zeyad {
+        grid-template-columns: 1fr;
+      }
+    }
+  
+    /* ------------------------------------------------------------------
+       Two product columns on a phone, not one.
+
+       The grids above step down to a single column below 768px, which makes
+       every card the full width of the screen: one product fills the
+       viewport and the shopper scrolls a whole screen per item. Wider
+       breakpoints keep three or more, so one was the outlier.
+
+       Overrides the product grids by name only. The same rule above also
+       covers FAQ, trust and promo strips, which are meant to be full width
+       and are deliberately left alone.
+       ------------------------------------------------------------------ */
+    @media (max-width: 767px) {
+      .today-offers-grid,
+      .appliances-product-row,
+      .mini-product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+    }
+  </style>
+
+<style>
+/* CSS FOR THE NEW IMAGE CARDS - EXACTLY LIKE UPLOADED IMAGE */
+.catalog-image-cards-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+.cat-image-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--surface);
+    border: 1px solid #e8ddd1;
+    border-radius: 12px;
+    padding: 10px;
+    text-decoration: none;
+    color: var(--ink);
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+    width: calc((100% - 108px) / 10); /* default desktop 10 items per row */
+}
+.cat-image-card:hover {
+    border-color: var(--gold);
+    box-shadow: 0 4px 12px rgba(214,165,62,0.15);
+    transform: translateY(-2px);
+}
+.cat-image-card.active {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 2px var(--gold);
+}
+.cat-image-wrap {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    background: var(--paper);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+.cat-image-wrap img {
+    width: 90%;
+    height: 90%;
+    object-fit: contain;
+    mix-blend-mode: darken; /* helps blend white backgrounds */
+}
+
+@media (max-width: 1200px) {
+    .cat-image-card { width: calc((100% - 84px) / 8); }
+}
+@media (max-width: 991px) {
+    .cat-image-card { width: calc((100% - 60px) / 6); }
+}
+@media (max-width: 767px) {
+    .cat-image-card { width: calc((100% - 36px) / 4); }
+}
+@media (max-width: 480px) {
+    .cat-image-card { width: calc((100% - 24px) / 3); }
+}
+
+/* SAFELY HIDE THE OLD HERO AND CATEGORIES SO THEY DONT BREAK THE PAGE */
+.appliances-hero-wrap, .appliances-categories {
+    display: none !important;
+}
+</style>
+
+
+<style>
+/* DYNAMIC OFFERS SPACE CSS (BASED ON UPLOADED IMAGE) */
+.catalog-dynamic-offers {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 32px;
+}
+.promo-card {
+    flex: 1;
+    border-radius: 16px;
+    min-height: 240px;
+    position: relative;
+    overflow: hidden;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 32px;
+}
+.promo-card.promo-right { background-color: #1a1512; }
+.promo-card.promo-right .promo-bg {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to left, #1a1512 40%, transparent 100%);
+    z-index: 1;
+}
+.promo-card.promo-right .promo-img {
+    position: absolute; top: 0; left: 0; width: 60%; height: 100%;
+    object-fit: cover; z-index: 0;
+}
+.promo-card.promo-left { background-color: #1b261b; }
+.promo-card.promo-left .promo-bg {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to right, #1b261b 45%, transparent 100%);
+    z-index: 1;
+}
+.promo-card.promo-left .promo-img {
+    position: absolute; top: 0; right: 0; width: 60%; height: 100%;
+    object-fit: cover; z-index: 0;
+}
+.promo-content {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column; align-items: flex-start;
+}
+.promo-card.promo-right .promo-content { width: 60%; }
+.promo-card.promo-left .promo-content { width: 60%; margin-right: auto; }
+
+.promo-subtitle { color: var(--gold); font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+.promo-title { font-size: 1.8rem; font-weight: 800; margin: 0 0 4px 0; line-height: 1.2; }
+.promo-desc { font-size: 1rem; margin: 0 0 20px 0; opacity: 0.9; }
+.promo-btn {
+    background: #c38c35; color: #fff; padding: 8px 24px; border-radius: 8px;
+    text-decoration: none; font-weight: 700; font-size: 0.95rem; margin-bottom: 16px;
+    transition: background 0.3s;
+}
+.promo-btn:hover { background: #a8762a; }
+.promo-note { font-size: 0.85rem; opacity: 0.7; display: flex; align-items: center; gap: 6px; }
+.promo-note svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; }
+
+@media (max-width: 991px) {
+    .catalog-dynamic-offers { flex-direction: column; }
+    .promo-card { min-height: 200px; }
+    .promo-card.promo-right .promo-content, .promo-card.promo-left .promo-content { width: 80%; }
+}
+</style>
+
+
+    <style>
+    /* GLOBAL PRODUCT CARD FIXES */
+    .product-card .product-body {
+        display: flex;
+        flex-direction: column;
+    }
+    .product-card .price {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+        margin-top: 8px !important;
+    }
+    .product-card .price strong {
+        font-size: 1.15rem !important;
+        color: var(--ink, #1a1a1a) !important;
+        white-space: nowrap !important;
+    }
+    .product-card .price del {
+        font-size: 0.85rem !important;
+        color: #9c9286 !important;
+        text-decoration: line-through !important;
+        white-space: nowrap !important;
+    }
+    .product-card .discount-tag {
+        position: static !important;
+        display: inline-block !important;
+        margin-right: 4px !important;
+    }
+    .product-card .stock {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        margin-top: auto !important;
+        padding-top: 12px !important;
+    }
+    .product-card .stock > div {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+    }
+    .product-card .meta {
+        margin-bottom: 4px;
+        display: block;
+        color: var(--muted, #666);
+        font-size: 0.85rem;
+    }
+    </style>
+    
+      <link rel="stylesheet" href="styles.css?v=20260830-v2327">
+  <link rel="stylesheet" href="production-polish.css?v=20260830-v2327">
+  <link rel="stylesheet" href="responsive-pro.css?v=20260830-v2327">
+  <link rel="stylesheet" href="mobile-first.css?v=20260830-v2327">
+  <link rel="stylesheet" href="assets/css/storefront-2026.css?v=a6bef9ab1d2b033c">
+
+  <!-- ZFB Core UX Systems -->
+    <script src="assets/js/core/translations.js?v=20260830-v2327"></script>
+    <script src="assets/js/core/i18n.js?v=20260830-v2327"></script>
+    <script src="assets/js/core/theme.js?v=48c1790c"></script>
+    <script src="assets/js/core/currency.js?v=1a885696"></script>
+    <script src="assets/js/core/global-ux.js?v=20260830-v2327"></script>
+  <meta name="description" content="اكتشف أحدث وأفضل الأجهزة المنزلية بأسعار تنافسية وضمان معتمد.">
+
+    <link rel="canonical" href="https://zeyad.store/appliances-catalog.html">
+    <meta property="og:title" content="الأجهزة المنزلية — زياد ستور | زياد ستور">
+    <meta property="og:description" content="اكتشف أحدث وأفضل الأجهزة المنزلية بأسعار تنافسية وضمان معتمد.">
+    <meta property="og:url" content="https://zeyad.store/appliances-catalog.html">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://zeyad.store/assets/placeholder-logo.webp">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="الأجهزة المنزلية — زياد ستور | زياد ستور">
+    <meta name="twitter:description" content="اكتشف أحدث وأفضل الأجهزة المنزلية بأسعار تنافسية وضمان معتمد.">
+    
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "الرئيسية",
+      "item": "https://zeyad.store"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "الأجهزة المنزلية — زياد ستور",
+      "item": "https://zeyad.store/appliances-catalog.html"
+    }
+  ]
+}
+    </script>
+\n
+
+  <div class="shop-shell">
+    <header class="top-note" data-vid="v-8a2f6456">
+      <span data-vid="v-e01fe4b4">توصيل بأسعار رمزية داخل المدن الرئيسية</span>
+      <span data-vid="v-c7dfdc9d">ضمان 10 سنوات على معظم الأجهزة</span>
+      <span data-vid="v-4c7b2804">أسعارنا تشمل الضريبة</span>
+    </header>
+
+    <nav class="main-nav" aria-label="التنقل الرئيسي" data-vid="v-d0cf5228">
+      <a class="brand" href="index.html" data-vid="v-80d69ba0">
+          <span class="brand-content" data-vid="v-489e32c4-new">
+            <span class="brand-mark" data-vid="v-ad424d87">ز</span>
+        <span data-vid="v-f0feb377">
+          <strong data-vid="v-35265afd">زياد ستور</strong>
+          <small data-vid="v-76790153">للأثاث والمفروشات</small>
+        </span>
+          </span>
+        </a>
+      <form class="search" role="search" aria-label="البحث في المتجر" name="site-search" action="search.html" method="get">
+        <button type="submit" aria-label="بحث" data-vid="v-5b882b6a"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="m21 21-4.3-4.3M10.8 18a7.2 7.2 0 1 1 0-14.4 7.2 7.2 0 0 1 0 14.4Z"></path></svg></button>
+        <input name="q" type="search" aria-label="ابحث في المتجر" placeholder="ابحث عن جهاز أو منتج..." id="q-1" autocomplete="off" maxlength="120">
+      </form>
+      <div class="nav-actions">
+          <a class="nav-account-btn" href="account.html" aria-label="حسابي" data-vid="v-3b6a98ed">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <span data-vid="v-150369a3">حسابي</span>
+          </a>
+        <a href="appliances.html" style="color: var(--gold); font-weight: 600;" data-vid="v-1a06fe3b">الأجهزة والمنزلية</a>
+        <a href="bedrooms.html" data-vid="v-8eef86f7">غرف النوم</a>
+        <a href="kitchens.html" data-vid="v-23de7671">المطابخ</a>
+        <a href="majalis.html" data-vid="v-0ffd4b56">المجالس</a>
+        <a href="solar.html" data-vid="v-676b47d5">الطاقة الشمسية</a>
+        <a href="offers.html" data-vid="v-2aadf3d6">العروض</a>
+      </div>
+    </nav>
+
+    <main class="appliances-main">
+
+    <!-- بداية Catalog Header المضافة فوق الصفحة الأصلية -->
+    <header class="catalog-page-header" style="background: var(--paper); padding: 20px 0 10px; border-bottom: 1px solid #e8ddd1;" data-vid="v-fc043031">
+        <div class="container">
+            <nav class="catalog-breadcrumb" id="catalog-breadcrumb" style="font-size: 0.85rem; color: var(--muted); margin-bottom: 16px; display: flex; gap: 8px; align-items: center;" data-vid="v-c6a45350">
+                <a href="index.html" style="color: var(--gold); text-decoration: none; font-weight: 600;" data-vid="v-162ca32d">الرئيسية</a> <span data-vid="v-0113f56a">/</span>
+                
+                    <span id="breadcrumb-current" data-vid="v-5a7c31d5">الأجهزة المنزلية</span>
+            </nav>
+            
+            <div class="catalog-title-row" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px; flex-wrap: wrap; gap: 16px;">
+                <div>
+                    <h1 id="catalog-h1" style="font-size: 2rem; color: var(--ink); margin: 0 0 8px; line-height: 1.2;" data-vid="v-5b8fdb5b">الأجهزة المنزلية</h1>
+                    <p id="catalog-desc" style="color: var(--muted); margin: 0; font-size: 0.95rem; max-width: 600px;" data-vid="v-80206f83">اكتشف أحدث وأفضل الأجهزة المنزلية بأسعار تنافسية وضمان معتمد.</p>
+                </div>
+                <div class="catalog-count" style="background-color: var(--surface); padding: 6px 12px; border-radius: 999px; font-size: 0.85rem; font-weight: 600; color: var(--ink); border: 1px solid #e8ddd1;" data-vid="v-5131556e">
+                    <span id="catalog-total-count" data-vid="v-5d1a8526">0</span> منتج
+                </div>
+            </div>
+
+            <!-- شبكة الكروت بالصور بناء على الصورة المرفقة -->
+            
+                <!-- مساحة العروض (Promotional Banners) -->
+                <div class="catalog-dynamic-offers" id="catalog-dynamic-offer" style="display: flex;">
+                    <div class="promo-card promo-right">
+                        <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" class="promo-img" alt="عروض" data-vid="v-d3e2dc27">
+                        <div class="promo-bg"></div>
+                        <div class="promo-content">
+                            <span class="promo-subtitle" data-vid="v-c0b2b9ce">باقات متكاملة</span>
+                            <h3 class="promo-title" data-vid="v-94331150">أجهزة + تركيب</h3>
+                            <p class="promo-desc" data-vid="v-c6d0fc60">دون أي رسوم إضافية</p>
+                            <a href="installation-service.html" class="promo-btn" data-vid="v-63f38018">اطلع على الباقات &gt;</a>
+                            <span class="promo-note" data-vid="v-e8a6e91a">
+                                <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9 12l2 2 4-4"></path></svg>
+                                ضمان 10 سنوات
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="promo-card promo-left">
+                        <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" class="promo-img" alt="عروض" data-vid="v-d7d216bd">
+                        <div class="promo-bg"></div>
+                        <div class="promo-content">
+                            <span class="promo-subtitle" data-vid="v-63fed2d4">عرض خاص</span>
+                            <h3 class="promo-title" id="offer-title-dyn" data-vid="v-b51d09f1">خصم حتى 30%</h3>
+                            <p class="promo-desc" id="offer-desc-dyn" data-vid="v-8bcab4de">على الأجهزة المنزلية</p>
+                            <a href="offers.html" class="promo-btn" data-vid="v-ba36c1df">اكتشف العرض &gt;</a>
+                            <span class="promo-note" data-vid="v-f9bb912b">
+                                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                لفترة محدودة فقط
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="catalog-image-cards-wrapper" style="margin-bottom: 24px;">
+                <h3 style="font-size: 1.2rem; color: var(--ink); margin-bottom: 16px;" data-vid="v-4f256e7a">تسوق حسب الفئة</h3>
+                <div class="catalog-image-cards-grid" id="catalog-chips-container">
+                    
+        <a href="search.html?q=%D8%AC%D9%85%D9%8A%D8%B9%20%D8%A7%D9%84%D9%81%D8%A6%D8%A7%D8%AA" onclick="window.scrollTo(0,0)" class="cat-image-card" data-id="all" data-vid="v-2953c3d8">
+            <div class="cat-image-wrap">
+                <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="جميع الفئات" loading="lazy" data-vid="v-4e8777ac">
+            </div>
+            <span data-vid="v-9144159e">جميع الفئات</span>
+        </a>
+    
+        <a href="appliances-catalog.html" onclick="window.scrollTo(0,0)" class="cat-image-card" data-id="packages" data-vid="v-0ca199ab">
+            <div class="cat-image-wrap">
+                <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="باقات الأجهزة" loading="lazy" data-vid="v-6adb6018">
+            </div>
+            <span data-vid="v-10464b71">باقات الأجهزة</span>
+        </a>
+    
+        <a href="search.html?q=%D8%AB%D9%84%D8%A7%D8%AC%D8%A7%D8%AA" onclick="window.scrollTo(0,0)" class="cat-image-card" data-id="refrigerators" data-vid="v-51aee547">
+            <div class="cat-image-wrap">
+                <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="ثلاجات" loading="lazy" data-vid="v-3e407a51">
+            </div>
+            <span data-vid="v-70ec8f76">ثلاجات</span>
+        </a>
+    
+        <a href="search.html?q=%D8%BA%D8%B3%D8%A7%D9%84%D8%A7%D8%AA" onclick="window.scrollTo(0,0)" class="cat-image-card" data-id="washers" data-vid="v-83526c3f">
+            <div class="cat-image-wrap">
+                <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="غسالات" loading="lazy" data-vid="v-ef711dd6">
+            </div>
+            <span data-vid="v-8ee426cc">غسالات</span>
+        </a>
+    
+        <a href="search.html?q=%D8%B4%D8%A7%D8%B4%D8%A7%D8%AA" onclick="window.scrollTo(0,0)" class="cat-image-card" data-id="tvs" data-vid="v-ee16e630">
+            <div class="cat-image-wrap">
+                <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="شاشات" loading="lazy" data-vid="v-db15eddc">
+            </div>
+            <span data-vid="v-c668ffef">شاشات</span>
+        </a>
+    
+        <a href="search.html?q=%D9%85%D9%83%D9%8A%D9%81%D8%A7%D8%AA" onclick="window.scrollTo(0,0)" class="cat-image-card" data-id="air-conditioners" data-vid="v-01f7d248">
+            <div class="cat-image-wrap">
+                <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="مكيفات" loading="lazy" data-vid="v-602dddab">
+            </div>
+            <span data-vid="v-88ae0134">مكيفات</span>
+        </a>
+    
+        <a href="search.html?q=%D8%A3%D9%81%D8%B1%D8%A7%D9%86" onclick="window.scrollTo(0,0)" class="cat-image-card" data-id="ovens" data-vid="v-e3a938f1">
+            <div class="cat-image-wrap">
+                <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="أفران" loading="lazy" data-vid="v-d804add4">
+            </div>
+            <span data-vid="v-40d2ba2f">أفران</span>
+        </a>
+    
+        <a href="search.html?q=%D9%85%D9%8A%D9%83%D8%B1%D9%88%D9%8A%D9%81" onclick="window.scrollTo(0,0)" class="cat-image-card" data-id="microwaves" data-vid="v-9b5f9bc0">
+            <div class="cat-image-wrap">
+                <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="ميكرويف" loading="lazy" data-vid="v-1333c65b">
+            </div>
+            <span data-vid="v-e9e423bb">ميكرويف</span>
+        </a>
+    
+        <a href="search.html?q=%D8%A8%D9%88%D8%AA%D8%A7%D8%AC%D8%A7%D8%B2%D8%A7%D8%AA" onclick="window.scrollTo(0,0)" class="cat-image-card" data-id="cookers" data-vid="v-bc5f8c1e">
+            <div class="cat-image-wrap">
+                <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="بوتاجازات" loading="lazy" data-vid="v-bf0c6f8a">
+            </div>
+            <span data-vid="v-9f281887">بوتاجازات</span>
+        </a>
+    
+        <a href="search.html?q=%D8%AE%D9%84%D8%A7%D8%B7%D8%A7%D8%AA" onclick="window.scrollTo(0,0)" class="cat-image-card" data-id="blenders" data-vid="v-c06bd850">
+            <div class="cat-image-wrap">
+                <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="خلاطات" loading="lazy" data-vid="v-83621a90">
+            </div>
+            <span data-vid="v-7bfbfb0a">خلاطات</span>
+        </a>
+    
+        <a href="search.html?q=%D9%85%D8%A7%D9%83%D9%8A%D9%86%D8%A7%D8%AA%20%D9%82%D9%87%D9%88%D8%A9" onclick="window.scrollTo(0,0)" class="cat-image-card" data-id="coffee-makers" data-vid="v-970eef86">
+            <div class="cat-image-wrap">
+                <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="ماكينات قهوة" loading="lazy" data-vid="v-2c7c73d3">
+            </div>
+            <span data-vid="v-ee133867">ماكينات قهوة</span>
+        </a>
+    
+        <a href="search.html?q=%D8%A8%D8%B1%D8%A7%D8%AF%D8%A7%D8%AA%20%D9%85%D9%8A%D8%A7%D9%87" onclick="window.scrollTo(0,0)" class="cat-image-card" data-id="water-coolers" data-vid="v-92d9272b">
+            <div class="cat-image-wrap">
+                <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="برادات مياه" loading="lazy" data-vid="v-7c2a5320">
+            </div>
+            <span data-vid="v-bcf61e34">برادات مياه</span>
+        </a>
+    
+        <a href="search.html?q=%D9%85%D9%83%D8%A7%D9%86%D8%B3" onclick="window.scrollTo(0,0)" class="cat-image-card" data-id="vacuums" data-vid="v-f94a9032">
+            <div class="cat-image-wrap">
+                <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="مكانس" loading="lazy" data-vid="v-32ade765">
+            </div>
+            <span data-vid="v-87f2a43b">مكانس</span>
+        </a>
+    
+        <a href="search.html?q=%D9%85%D8%B1%D8%A7%D9%88%D8%AD" onclick="window.scrollTo(0,0)" class="cat-image-card" data-id="fans" data-vid="v-bbc21a19">
+            <div class="cat-image-wrap">
+                <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="مراوح" loading="lazy" data-vid="v-e85ea2f7">
+            </div>
+            <span data-vid="v-8fe8391e">مراوح</span>
+        </a>
+    
+        <a href="search.html?q=%D8%B3%D8%AE%D8%A7%D9%86%D8%A7%D8%AA" onclick="window.scrollTo(0,0)" class="cat-image-card" data-id="heaters" data-vid="v-07d0f39d">
+            <div class="cat-image-wrap">
+                <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="سخانات" loading="lazy" data-vid="v-be88a3a6">
+            </div>
+            <span data-vid="v-6623e83d">سخانات</span>
+        </a>
+    
+        <a href="search.html?q=%D9%85%D9%83%D8%A7%D9%88%D9%8A" onclick="window.scrollTo(0,0)" class="cat-image-card" data-id="irons" data-vid="v-0b2f8bb9">
+            <div class="cat-image-wrap">
+                <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="مكاوي" loading="lazy" data-vid="v-844b3908">
+            </div>
+            <span data-vid="v-ff33127e">مكاوي</span>
+        </a>
+    
+        <a href="search.html?q=%D9%82%D9%84%D8%A7%D9%8A%D8%A7%D8%AA%20%D9%87%D9%88%D8%A7%D8%A6%D9%8A%D8%A9" onclick="window.scrollTo(0,0)" class="cat-image-card" data-id="air-fryers" data-vid="v-b601fa55">
+            <div class="cat-image-wrap">
+                <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="قلايات هوائية" loading="lazy" data-vid="v-0f3c42cd">
+            </div>
+            <span data-vid="v-40efd159">قلايات هوائية</span>
+        </a>
+    
+        <a href="search.html?q=%D8%BA%D9%84%D8%A7%D9%8A%D8%A7%D8%AA" onclick="window.scrollTo(0,0)" class="cat-image-card" data-id="kettles" data-vid="v-b30afa4d">
+            <div class="cat-image-wrap">
+                <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="غلايات" loading="lazy" data-vid="v-0f10c9e0">
+            </div>
+            <span data-vid="v-de786e3b">غلايات</span>
+        </a>
+    
+        <a href="search.html?q=%D8%B3%D9%85%D8%A7%D8%B9%D8%A7%D8%AA" onclick="window.scrollTo(0,0)" class="cat-image-card" data-id="speakers" data-vid="v-6022d334">
+            <div class="cat-image-wrap">
+                <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="سماعات" loading="lazy" data-vid="v-81cb37e4">
+            </div>
+            <span data-vid="v-680f58c5">سماعات</span>
+        </a>
+    
+        <a href="search.html?q=%D8%B9%D8%B5%D8%A7%D8%B1%D8%A7%D8%AA" onclick="window.scrollTo(0,0)" class="cat-image-card" data-id="juicers" data-vid="v-e45a91db">
+            <div class="cat-image-wrap">
+                <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="عصارات" loading="lazy" data-vid="v-3c138b07">
+            </div>
+            <span data-vid="v-f0cc4b67">عصارات</span>
+        </a>
+    
+                </div>
+            </div>
+
+            <div class="catalog-toolbar" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-top: 1px solid #f0e9e1; flex-wrap: wrap; gap: 16px;">
+                <div class="toolbar-left" style="display: flex; align-items: center; gap: 16px;">
+                    <button type="button" class="btn-filter" aria-label="عرض الفلاتر" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background-color: var(--surface); border: 1px solid var(--gold); color: var(--gold); border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.9rem;" data-vid="v-9147720c">
+                        <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2;"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"></path></svg> 
+                        الفلاتر
+                    </button>
+                    <span class="toolbar-results" id="catalog-result-count" style="font-size: 0.85rem; color: var(--muted); font-weight: 500;" data-vid="v-fbdf2c4a">عرض النتائج</span>
+                </div>
+                <div class="toolbar-right" style="display: flex; align-items: center; gap: 16px;">
+                    <div class="sort-dropdown">
+                        <select name="catalog-sort" id="catalog-sort" aria-label="ترتيب المنتجات" style="padding: 8px 12px; border-radius: 8px; border: 1px solid #e8ddd1; background-color: var(--surface); font-family: inherit; font-size: 0.85rem; color: var(--ink); cursor: pointer;" required="">
+                            <option value="recommended">الأكثر تطابقاً</option>
+                            <option value="newest">الأحدث</option>
+                            <option value="price-asc">السعر: من الأقل للأعلى</option>
+                            <option value="price-desc">السعر: من الأعلى للأقل</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- نهاية Catalog Header -->
+
+      <section class="appliances-hero-wrap" aria-label="الأجهزة المنزلية" data-vid="v-c3f859ac">
+        <section class="appliances-hero" data-vid="v-af74f8b9">
+          <div class="appliances-hero-copy">
+            <h1 data-vid="v-ca3ffbda">أجهزة منزلية ذكية<br><span data-vid="v-7d996c44">لكل بيت يمني</span></h1>
+            <p data-vid="v-09ffa016">أحدث الأجهزة العالمية بأفضل الأسعار<br>وضمان يصل إلى 10 سنوات</p>
+            <div class="appliances-hero-actions">
+              <a href="search.html?q=%D8%AA%D8%B3%D9%88%D9%82%20%D8%A7%D9%84%D8%A3%D8%AC%D9%87%D8%B2%D8%A9" onclick="window.scrollTo(0,0)" class="btn-hero-primary" data-vid="v-84c81780">تسوق الأجهزة</a>
+              <a href="appliances-catalog.html" onclick="window.scrollTo(0,0)" class="btn-hero-secondary" data-vid="v-b906dcef">باقات التجهيز</a>
+            </div>
+            <div class="appliances-mini-features">
+              <span data-vid="v-bcb0fb4e"><svg viewBox="0 0 24 24"><path d="M1 3h15v13H1zM16 8h4l3 5v5h-7V8z"></path></svg> توصيل لجميع المدن</span>
+              <span data-vid="v-70e5f625"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"></path></svg> تركيب احترافي</span>
+              <span data-vid="v-4e884249"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg> ضمان موثق</span>
+              <span data-vid="v-60451a8a"><svg viewBox="0 0 24 24"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path></svg> خدمة عملاء 24/7</span>
+            </div>
+          </div>
+          <div class="appliances-hero-visual" aria-hidden="true"></div>
+        </section>
+
+        <aside class="kitchen-bundle-panel" id="bundle-kitchen" aria-label="باقة تجهيز المطبخ المتكاملة" data-vid="v-0ff6be89">
+          <span class="promo-top-badge" data-vid="v-34c57936">عرض محدود</span>
+          <div>
+            <h3 data-vid="v-c58fb08b">باقة تجهيز المطبخ المتكاملة</h3>
+            <div class="bundle-price">
+              <del>7,890</del>
+              <strong data-vid="v-389a7fc2">4,990 ر.س</strong>
+              <span class="bundle-discount-badge" data-vid="v-78a73e81">وفر<br>37%</span>
+            </div>
+            <ul class="kitchen-bundle-list">
+              <li data-vid="v-eb559163">ثلاجة 18 قدم</li>
+              <li data-vid="v-cfaf982e">غسالة 9 كيلو</li>
+              <li data-vid="v-4d8e99c9">فرن غاز كهربائي</li>
+              <li data-vid="v-20557608">شاشة 43 بوصة</li>
+              <li data-vid="v-3809a835">خلاط + مكواة + غلاية</li>
+            </ul>
+          </div>
+          <div>
+            <div class="countdown-box light" id="bundleCountdown">
+              <div class="countdown-unit"><span class="num" data-vid="v-795e64c7">28</span><span class="label" data-vid="v-63b143d8">ساعة</span></div>
+              <div class="countdown-unit"><span class="num" data-vid="v-05388e96">14</span><span class="label" data-vid="v-c7cdf131">دقيقة</span></div>
+              <div class="countdown-unit"><span class="num" data-vid="v-d9d888a6">35</span><span class="label" data-vid="v-5f280259">ثانية</span></div>
+            </div>
+            <a href="checkout.html" onclick="window.scrollTo(0,0)" class="btn-hero-primary" data-vid="v-0e93aec7">اطلب الآن</a>
+          </div>
+        </aside>
+      </section>
+
+      <section class="appliances-section" aria-label="مستكشف الفئات" data-vid="v-88190f7d">
+        <div class="appliances-categories">
+          <a href="appliances-catalog.html?category=refrigerators" class="appliances-category-card" data-vid="v-bad00af7"><div class="icon-circle"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM9 8h6M9 12h6M9 16h6"></path></svg></div><span data-vid="v-af6ca0dc">ثلاجات</span></a>
+          <a href="appliances-catalog.html?category=washers" class="appliances-category-card" data-vid="v-d62b875e"><div class="icon-circle"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"></circle><path d="M12 2v3M12 19v3"></path></svg></div><span data-vid="v-a8ec6845">غسالات</span></a>
+          <a href="appliances-catalog.html?category=tvs" class="appliances-category-card" data-vid="v-54d33f56"><div class="icon-circle"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"></rect></svg></div><span data-vid="v-ed13bce0">شاشات</span></a>
+          <a href="appliances-catalog.html?category=air-conditioners" class="appliances-category-card" data-vid="v-ade33492"><div class="icon-circle"><svg viewBox="0 0 24 24"><path d="M3 8h18v8H3zM7 20h10"></path></svg></div><span data-vid="v-e4e16b6e">مكيفات</span></a>
+          <a href="appliances-catalog.html?category=ovens" class="appliances-category-card" data-vid="v-2631fdb0"><div class="icon-circle"><svg viewBox="0 0 24 24"><path d="M4 7h16v10H4z"></path></svg></div><span data-vid="v-f703ae58">أفران</span></a>
+          <a href="offers.html" class="appliances-category-card" data-vid="v-8b2eb93d"><div class="icon-circle"><svg viewBox="0 0 24 24"><path d="M7 4h10v16H7z"></path></svg></div><span data-vid="v-7e5e0aa8">ميكرويف</span></a>
+          <a href="offers.html" class="appliances-category-card" data-vid="v-2234166a"><div class="icon-circle"><svg viewBox="0 0 24 24"><path d="M10 3v18M14 3v18"></path></svg></div><span data-vid="v-3736c409">بوتاجازات</span></a>
+          <a href="offers.html" class="appliances-category-card" data-vid="v-4fbcd5e9"><div class="icon-circle"><svg viewBox="0 0 24 24"><path d="M8 2h8v20H8z"></path></svg></div><span data-vid="v-49c1a64a">خلاطات</span></a>
+          <a href="offers.html" class="appliances-category-card" data-vid="v-a4e053c8"><div class="icon-circle"><svg viewBox="0 0 24 24"><path d="M12 2v20"></path><path d="M7 8h10"></path></svg></div><span data-vid="v-b2ce2b7a">ماكينات قهوة</span></a>
+          <a href="offers.html" class="appliances-category-card" data-vid="v-0f0333ab"><div class="icon-circle"><svg viewBox="0 0 24 24"><path d="M6 3h12v12H6z"></path><path d="M9 19h6"></path></svg></div><span data-vid="v-e853eda8">مايكروويف</span></a>
+          <a href="offers.html" class="appliances-category-card" data-vid="v-5abbd748"><div class="icon-circle"><svg viewBox="0 0 24 24"><path d="M9 2h6v20H9z"></path></svg></div><span data-vid="v-0ffaccd0">برادات مياه</span></a>
+          <a href="offers.html" class="appliances-category-card" data-vid="v-acec0f6a"><div class="icon-circle"><svg viewBox="0 0 24 24"><path d="M12 2 6 9h12l-6 13"></path></svg></div><span data-vid="v-a9c8f3ec">مكانس</span></a>
+          <a href="offers.html" class="appliances-category-card" data-vid="v-921e9fd9"><div class="icon-circle"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle></svg></div><span data-vid="v-4659d660">مراوح</span></a>
+          <a href="offers.html" class="appliances-category-card" data-vid="v-6b7ad410"><div class="icon-circle"><svg viewBox="0 0 24 24"><path d="M8 4h8v16H8z"></path></svg></div><span data-vid="v-a65abbcf">سخانات</span></a>
+          <a href="offers.html" class="appliances-category-card" data-vid="v-ecdeca7f"><div class="icon-circle"><svg viewBox="0 0 24 24"><path d="M6 4h12v16H6z"></path></svg></div><span data-vid="v-c764ff26">مكاوي</span></a>
+          <a href="offers.html" class="appliances-category-card" data-vid="v-30f343c7"><div class="icon-circle"><svg viewBox="0 0 24 24"><path d="M5 6h14v12H5z"></path></svg></div><span data-vid="v-ee456dd6">قلايات هوائية</span></a>
+          <a href="offers.html" class="appliances-category-card" data-vid="v-9318ce84"><div class="icon-circle"><svg viewBox="0 0 24 24"><path d="M12 3v18"></path><path d="M7 8h10"></path></svg></div><span data-vid="v-2ea8bb0e">غلايات</span></a>
+          <a href="offers.html" class="appliances-category-card" data-vid="v-56ac9921"><div class="icon-circle"><svg viewBox="0 0 24 24"><path d="M4 6h16v12H4z"></path></svg></div><span data-vid="v-600ddb10">سماعات</span></a>
+          <a href="offers.html" class="appliances-category-card" data-vid="v-90d0094b"><div class="icon-circle"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"></circle></svg></div><span data-vid="v-c9268490">عصارات</span></a>
+          <a href="offers.html" class="appliances-category-card" data-vid="v-37a902fc"><div class="icon-circle"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"></rect></svg></div><span data-vid="v-8c6a6798">جميع الفئات</span></a>
+        </div>
+      </section>
+
+      <section class="appliances-section split-row" aria-label="باقة العرسان والأكثر طلباً" data-vid="v-2511c11e">
+        <article class="bridal-bundle-card" data-vid="v-7cbc0a99">
+          <div>
+            <h3 data-vid="v-a66f7637">باقة العرسان الذهبية</h3>
+            <p data-vid="v-88195c76">تجهيز متكامل لمنزل الأحلام يشمل الأجهزة الأساسية والضيافة والمطبخ.</p>
+            <div class="bridal-bundle-features">
+              <span data-vid="v-2c39ac42">ثلاجة + غسالة</span>
+              <span data-vid="v-bc0a07b1">شاشة + مكنسة</span>
+              <span data-vid="v-04d4e3e4">خلاط + غلاية</span>
+              <span data-vid="v-3c0a1df5">توصيل بأسعار رمزية</span>
+            </div>
+          </div>
+          <div style="display:flex;align-items:end;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+            <div class="bridal-bundle-price"><del>18,950</del><strong data-vid="v-c5b682d7">12,990 ر.س</strong></div>
+            <a href="search.html?q=%D8%AA%D9%81%D8%A7%D8%B5%D9%8A%D9%84%20%D8%A7%D9%84%D8%A8%D8%A7%D9%82%D8%A9" onclick="window.scrollTo(0,0)" class="btn-hero-primary" data-vid="v-a41c1d75">تفاصيل الباقة</a>
+          </div>
+        </article>
+
+        <div>
+          <div class="appliances-section-head" style="padding-top:0;">
+            <a href="offers.html" data-vid="v-2140c0ee">الأكثر طلباً</a>
+            <h2 style="font-size:1.1rem;" data-vid="v-24e1bb27">🔥 الأكثر طلباً</h2>
+          </div>
+          <div class="today-offers-grid">
+            <article class="product-card" data-product-id="appl-0001" data-category="appl" data-stock="in-stock" data-price="2399" data-brand="شارپ" data-subcategory="catalog" data-sku="ZFB-APPL-0001-4169" data-vid="v-88293a52">
+  <a href="product.html?id=appl-0001" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-18f22878" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="ثلاجة سامسونج 18 قدم" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-351c3671">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-cb2739a2">ثلاجة سامسونج 18 قدم</h3>
+    <p class="product-desc" data-vid="v-9d1e62eb">نوفروست - فضي</p>
+    <div class="price">
+      <strong data-vid="v-099f957d">2,399 ر.س</strong>
+      <del>2,999</del>
+      <span class="discount-tag tag-gold" style="position:static; display:inline-block; margin-right:8px;" data-vid="v-741cc561">28%</span>
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-3551573b">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-9efdfeb4"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-a2ee0dda"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-ecbfa6e7">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+            <article class="product-card" data-product-id="appl-0002" data-category="appl" data-stock="in-stock" data-price="1599" data-brand="كليكون" data-subcategory="catalog" data-sku="ZFB-APPL-0002-2112" data-vid="v-5b8761f2">
+  <a href="product.html?id=appl-0002" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-2aeacfe1" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="غسالة 9 كيلو LG" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-476a8452">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-daa558bc">غسالة 9 كيلو LG</h3>
+    <p class="product-desc" data-vid="v-5e75c306">موتور إنفرتر</p>
+    <div class="price">
+      <strong data-vid="v-6e1c42bf">1,599 ر.س</strong>
+      <del>2,049</del>
+      <span class="discount-tag tag-gold" style="position:static; display:inline-block; margin-right:8px;" data-vid="v-62c76e22">22%</span>
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-1204aa59">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-35de964a"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-61b44069"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-17e4572f">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+            <article class="product-card" data-product-id="appl-0003" data-category="appl" data-stock="in-stock" data-price="2099" data-brand="هاير" data-subcategory="catalog" data-sku="ZFB-APPL-0003-7279" data-vid="v-3f758b3b">
+  <a href="product.html?id=appl-0003" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-082288f2" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="مكيف سبليت 18000" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-6acbcf5f">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-b9b518aa">مكيف سبليت 18000</h3>
+    <p class="product-desc" data-vid="v-b6a30018">تبريد قوي</p>
+    <div class="price">
+      <strong data-vid="v-00f16447">2,099 ر.س</strong>
+      <del>2,899</del>
+      <span class="discount-tag tag-gold" style="position:static; display:inline-block; margin-right:8px;" data-vid="v-e35f1113">25%</span>
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-caacdf23">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-4e5f9701"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-abfdf8f7"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-3e3b9586">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+            <article class="product-card" data-product-id="appl-0004" data-category="appl" data-stock="in-stock" data-price="1899" data-brand="كليكون" data-subcategory="catalog" data-sku="ZFB-APPL-0004-2348" data-vid="v-0f79b895">
+  <a href="product.html?id=appl-0004" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-a87090ef" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="شاشة 55 بوصة 4K" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-d0f68ac7">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-b3ea531b">شاشة 55 بوصة 4K</h3>
+    <p class="product-desc" data-vid="v-5b373393">سمارت - HDR</p>
+    <div class="price">
+      <strong data-vid="v-9b5d385c">1,899 ر.س</strong>
+      <del>2,699</del>
+      <span class="discount-tag tag-gold" style="position:static; display:inline-block; margin-right:8px;" data-vid="v-07e251d3">30%</span>
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-068b58eb">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-2e3c2757"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-fcdbef40"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-b9cd6c44">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+            <article class="product-card" data-product-id="appl-0005" data-category="appl" data-stock="in-stock" data-price="299" data-brand="توشيبا" data-subcategory="catalog" data-sku="ZFB-APPL-0005-6899" data-vid="v-9753d2c9">
+  <a href="product.html?id=appl-0005" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-6639a516" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="قلاية هوائية 6 لتر" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-268752e6">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-626e9dad">قلاية هوائية 6 لتر</h3>
+    <p class="product-desc" data-vid="v-33c0d070">ديجيتال</p>
+    <div class="price">
+      <strong data-vid="v-cf273325">299 ر.س</strong>
+      <del>399</del>
+      <span class="discount-tag tag-gold" style="position:static; display:inline-block; margin-right:8px;" data-vid="v-54180230">26%</span>
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-732ac18e">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-366972d5"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-a9bab633"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-3147c39b">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+            <article class="product-card" data-product-id="appl-0006" data-category="appl" data-stock="in-stock" data-price="349" data-brand="شارپ" data-subcategory="catalog" data-sku="ZFB-APPL-0006-3367" data-vid="v-5343909d">
+  <a href="product.html?id=appl-0006" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-00dea0a4" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="مكنسة كهربائية 2200 واط" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-52e86504">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-d8c25981">مكنسة كهربائية 2200 واط</h3>
+    <p class="product-desc" data-vid="v-9b8d721a">شفط قوي</p>
+    <div class="price">
+      <strong data-vid="v-137ea2ca">349 ر.س</strong>
+      <del>479</del>
+      <span class="discount-tag tag-gold" style="position:static; display:inline-block; margin-right:8px;" data-vid="v-e9f963a2">26%</span>
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-42ec6ca9">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-3c55b37e"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-ac619f19"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-d01b4e17">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+          </div>
+        </div>
+      </section>
+
+      <section class="appliances-section" aria-label="الماركات" data-vid="v-ec425d9c">
+        <div class="brand-strip">
+          <div class="brand-logo" data-vid="v-205bbde4">SAMSUNG</div>
+          <div class="brand-logo" style="color:#b0003a;" data-vid="v-59f962ff">LG</div>
+          <div class="brand-logo" style="color:#0b61c9;" data-vid="v-37404644">Midea</div>
+          <div class="brand-logo" style="color:#d32f2f;" data-vid="v-cd9ac499">BOSCH</div>
+          <div class="brand-logo" style="color:#ef3d3a;" data-vid="v-1fe2e7ae">TCL</div>
+          <div class="brand-logo" style="color:#1a4da1;" data-vid="v-9cd2efd7">Haier</div>
+          <div class="brand-logo" style="color:#e50012;" data-vid="v-488641a5">SHARP</div>
+          <div class="brand-logo" style="color:#009688;" data-vid="v-382458ff">Hisense</div>
+        </div>
+      </section>
+
+      <section class="appliances-section section-dark-frame" id="today-offers" aria-label="عروض اليوم" data-vid="v-911873b1">
+        <div class="section-dark-head"><a href="appliances-catalog.html" data-vid="v-3263b230">عرض الكل</a><h2 data-vid="v-234ed3d1">عروض اليوم</h2></div>
+        <div class="mini-product-grid">
+          <article class="product-card" data-product-id="appl-0007" data-category="appl" data-stock="in-stock" data-price="2699" data-brand="ديلونجي" data-subcategory="catalog" data-sku="ZFB-APPL-0007-8666" data-vid="v-8acbd07a">
+  <a href="product.html?id=appl-0007" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-f0f4ee6c" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="ثلاجة 20 قدم" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-8192e098">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-d21fd9a2">ثلاجة 20 قدم</h3>
+    <p class="product-desc" data-vid="v-3e7f4e7e">تبريد ذكي</p>
+    <div class="price">
+      <strong data-vid="v-3cdb55d1">2,699 ر.س</strong>
+      <del>4,190</del>
+      <span class="discount-tag tag-gold" style="position:static; display:inline-block; margin-right:8px;" data-vid="v-cf22463d">35%</span>
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-bd1db890">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-786abb9c"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-dcd9198a"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-bd6f2d4b">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+          <article class="product-card" data-product-id="appl-0008" data-category="appl" data-stock="in-stock" data-price="1799" data-brand="بوش" data-subcategory="catalog" data-sku="ZFB-APPL-0008-9558" data-vid="v-2dae59e8">
+  <a href="product.html?id=appl-0008" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-f56fa98d" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="غسالة 11 كيلو LG" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-5b3ce26c">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-5283b4dd">غسالة 11 كيلو LG</h3>
+    <p class="product-desc" data-vid="v-dba2d1df">انفرتر</p>
+    <div class="price">
+      <strong data-vid="v-ec214fe2">1,799 ر.س</strong>
+      <del>2,590</del>
+      <span class="discount-tag tag-gold" style="position:static; display:inline-block; margin-right:8px;" data-vid="v-f2187256">30%</span>
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-0099f5f9">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-db89995a"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-5d802d26"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-cf7be4ea">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+          <article class="product-card" data-product-id="appl-0009" data-category="appl" data-stock="in-stock" data-price="899" data-brand="زياد هوم" data-subcategory="catalog" data-sku="ZFB-APPL-0009-1590" data-vid="v-265ad21f">
+  <a href="product.html?id=appl-0009" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-25a08dc2" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="فرن كهربائي 60 لتر" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-65502ebc">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-ee33a52f">فرن كهربائي 60 لتر</h3>
+    <p class="product-desc" data-vid="v-d6481576">للمنزل</p>
+    <div class="price">
+      <strong data-vid="v-bd493412">899 ر.س</strong>
+      <del>1,490</del>
+      <span class="discount-tag tag-gold" style="position:static; display:inline-block; margin-right:8px;" data-vid="v-35b19b91">40%</span>
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-e15d5620">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-6fcbb16a"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-91f11db3"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-fa566098">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+          <article class="product-card" data-product-id="appl-0010" data-category="appl" data-stock="in-stock" data-price="2499" data-brand="شارپ" data-subcategory="catalog" data-sku="ZFB-APPL-0010-4699" data-vid="v-33ceb6fa">
+  <a href="product.html?id=appl-0010" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-0bd4e998" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="مكيف 24 ألف" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-cd7c8c81">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-2e2d7a13">مكيف 24 ألف</h3>
+    <p class="product-desc" data-vid="v-e88ae325">بارد/حار</p>
+    <div class="price">
+      <strong data-vid="v-fa9176b5">2,499 ر.س</strong>
+      <del>3,899</del>
+      <span class="discount-tag tag-gold" style="position:static; display:inline-block; margin-right:8px;" data-vid="v-f04791f9">36%</span>
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-c5979a19">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-1aa510d3"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-e3f9fd42"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-275b7434">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+          <article class="product-card" data-product-id="appl-0011" data-category="appl" data-stock="in-stock" data-price="2299" data-brand="سامسونج" data-subcategory="catalog" data-sku="ZFB-APPL-0011-5610" data-vid="v-66830bd7">
+  <a href="product.html?id=appl-0011" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-b0f3fa07" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="شاشة 65 بوصة 4K" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-35996061">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-3204cbfb">شاشة 65 بوصة 4K</h3>
+    <p class="product-desc" data-vid="v-b94a0747">سمارت</p>
+    <div class="price">
+      <strong data-vid="v-cec8a2ff">2,299 ر.س</strong>
+      <del>3,399</del>
+      <span class="discount-tag tag-gold" style="position:static; display:inline-block; margin-right:8px;" data-vid="v-cd2175e5">32%</span>
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-05124d5b">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-743a47af"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-4cf1de44"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-5a485070">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+        </div>
+      </section>
+
+      <section class="appliances-section section-dark-frame" aria-label="الأجهزة الصغيرة" data-vid="v-c7ce1d3c">
+        <div class="section-dark-head"><a href="appliances-catalog.html" data-vid="v-6417c8e4">عرض الكل</a><h2 data-vid="v-d70bf4bc">الأجهزة الصغيرة</h2></div>
+        <div class="mini-product-grid">
+          <article class="product-card" data-product-id="appl-0012" data-category="appl" data-stock="in-stock" data-price="129" data-brand="سامسونج" data-subcategory="catalog" data-sku="ZFB-APPL-0012-2483" data-vid="v-84c24a62">
+  <a href="product.html?id=appl-0012" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-b37e9246" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="خلاط كهربائي" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-e2fd5540">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-f5dc24da">خلاط كهربائي</h3>
+    <p class="product-desc" data-vid="v-a6557222">1.5 لتر</p>
+    <div class="price">
+      <strong data-vid="v-525f91fc">129 ر.س</strong>
+      <del>169</del>
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-5296cc67">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-61ea9d1b"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-5cbb0a93"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-3743e1df">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+          <article class="product-card" data-product-id="appl-0013" data-category="appl" data-stock="in-stock" data-price="249" data-brand="بوش" data-subcategory="catalog" data-sku="ZFB-APPL-0013-9896" data-vid="v-a22a6ad1">
+  <a href="product.html?id=appl-0013" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-3784fe19" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="ماكينة قهوة" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-423e4b76">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-237f6106">ماكينة قهوة</h3>
+    <p class="product-desc" data-vid="v-16ad0dc4">تحضير سريع</p>
+    <div class="price">
+      <strong data-vid="v-ca650bd4">249 ر.س</strong>
+      <del>329</del>
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-a4e232a6">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-0b5d62fe"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-8f631a3c"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-7d93e0a1">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+          <article class="product-card" data-product-id="appl-0014" data-category="appl" data-stock="in-stock" data-price="299" data-brand="زياد هوم" data-subcategory="catalog" data-sku="ZFB-APPL-0014-5843" data-vid="v-f4b7b898">
+  <a href="product.html?id=appl-0014" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-430fa896" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="قلاية هوائية 6 لتر" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-a7117968">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-ea34afaa">قلاية هوائية 6 لتر</h3>
+    <p class="product-desc" data-vid="v-7216a74d">ديجيتال</p>
+    <div class="price">
+      <strong data-vid="v-346722df">299 ر.س</strong>
+      <del>399</del>
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-3bfd5373">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-51eba921"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-681a56f2"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-bf3dbe22">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+          <article class="product-card" data-product-id="appl-0015" data-category="appl" data-stock="in-stock" data-price="79" data-brand="LG" data-subcategory="catalog" data-sku="ZFB-APPL-0015-5669" data-vid="v-7007c959">
+  <a href="product.html?id=appl-0015" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-1961092f" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="غلاية كهربائية" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-c6b8ed38">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-8d7381c5">غلاية كهربائية</h3>
+    <p class="product-desc" data-vid="v-196888d3">ستانلس</p>
+    <div class="price">
+      <strong data-vid="v-a22b9544">79 ر.س</strong>
+      <del>119</del>
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-97b2f930">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-050a43b1"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-92e33151"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-8ee8aff6">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+          <article class="product-card" data-product-id="appl-0016" data-category="appl" data-stock="in-stock" data-price="185" data-brand="زياد هوم" data-subcategory="catalog" data-sku="ZFB-APPL-0016-4823" data-vid="v-609c7a8e">
+  <a href="product.html?id=appl-0016" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-5af067d1" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="مكواة بخار" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-ff989f74">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-4706cb7c">مكواة بخار</h3>
+    <p class="product-desc" data-vid="v-5ee520a6">2400 واط</p>
+    <div class="price">
+      <strong data-vid="v-7e12994f">185 ر.س</strong>
+      <del>235</del>
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-20e165c7">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-c395a63f"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-b585aeed"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-3e92df78">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+        </div>
+      </section>
+
+      <section class="appliances-section section-dark-frame" aria-label="الأجهزة الكبيرة" data-vid="v-58126694">
+        <div class="section-dark-head"><a href="appliances-catalog.html" data-vid="v-e284a01f">عرض الكل</a><h2 data-vid="v-9a1b68d0">الأجهزة الكبيرة</h2></div>
+        <div class="mini-product-grid">
+          <article class="product-card" data-product-id="appl-0017" data-category="appl" data-stock="in-stock" data-price="2399" data-brand="شارپ" data-subcategory="catalog" data-sku="ZFB-APPL-0017-6477" data-vid="v-b379dcd9">
+  <a href="product.html?id=appl-0017" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-a878c8d8" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="ثلاجة 18 قدم" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-c20d1d02">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-db679355">ثلاجة 18 قدم</h3>
+    <p class="product-desc" data-vid="v-adf456ba">نوفروست</p>
+    <div class="price">
+      <strong data-vid="v-294de330">2,399 ر.س</strong>
+      <del>2,999</del>
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-51b7d764">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-ec8d510d"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-978ab32b"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-72f1739d">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+          <article class="product-card" data-product-id="appl-0018" data-category="appl" data-stock="in-stock" data-price="1599" data-brand="هاير" data-subcategory="catalog" data-sku="ZFB-APPL-0018-6935" data-vid="v-8fba5591">
+  <a href="product.html?id=appl-0018" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-5bf8ef6c" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="غسالة 10 كيلو" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-099c3c8e">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-2c61d997">غسالة 10 كيلو</h3>
+    <p class="product-desc" data-vid="v-72e5d0c8">أمامي</p>
+    <div class="price">
+      <strong data-vid="v-4d0f89f7">1,599 ر.س</strong>
+      <del>2,049</del>
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-be3fa950">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-9cbb455f"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-7d5701f5"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-aef7ddf7">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+          <article class="product-card" data-product-id="appl-0019" data-category="appl" data-stock="in-stock" data-price="1099" data-brand="كليكون" data-subcategory="catalog" data-sku="ZFB-APPL-0019-8295" data-vid="v-cdfddd1d">
+  <a href="product.html?id=appl-0019" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-cb84f478" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="فرن كهربائي" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-5bf75894">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-22b8995c">فرن كهربائي</h3>
+    <p class="product-desc" data-vid="v-0e8a0bd8">60 لتر</p>
+    <div class="price">
+      <strong data-vid="v-bd4d75da">1,099 ر.س</strong>
+      <del>1,490</del>
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-f49bcb55">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-47ad2618"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-f6799e8f"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-a9e83100">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+          <article class="product-card" data-product-id="appl-0020" data-category="appl" data-stock="in-stock" data-price="2099" data-brand="بوش" data-subcategory="catalog" data-sku="ZFB-APPL-0020-1445" data-vid="v-f8eb0312">
+  <a href="product.html?id=appl-0020" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-a9992817" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="مكيف 24,000" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-9052c253">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-15b68292">مكيف 24,000</h3>
+    <p class="product-desc" data-vid="v-cfe375c6">تبريد سريع</p>
+    <div class="price">
+      <strong data-vid="v-6eb4adc5">2,099 ر.س</strong>
+      <del>2,899</del>
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-9458b0d6">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-7bd08cc3"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-923fee2c"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-347b92e1">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+          <article class="product-card" data-product-id="appl-0021" data-category="appl" data-stock="in-stock" data-price="1899" data-brand="زياد هوم" data-subcategory="catalog" data-sku="ZFB-APPL-0021-3460" data-vid="v-12552e87">
+  <a href="product.html?id=appl-0021" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-06dd54dc" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="شاشة 55 بوصة" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-a8af526a">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-4a84c710">شاشة 55 بوصة</h3>
+    <p class="product-desc" data-vid="v-ac902f32">4K</p>
+    <div class="price">
+      <strong data-vid="v-c46abf81">1,899 ر.س</strong>
+      <del>2,699</del>
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-76659152">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-a3b0114c"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-d908c184"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-407092d3">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+        </div>
+      </section>
+
+      <section class="appliances-section section-dark-frame" aria-label="وصل حديثاً" data-vid="v-f352a00e">
+        <div class="section-dark-head"><a href="appliances-catalog.html" data-vid="v-60d817ab">عرض الكل</a><h2 data-vid="v-4f528b30">وصل حديثاً</h2></div>
+        <div class="mini-product-grid">
+          <article class="product-card" data-product-id="appl-0022" data-category="appl" data-stock="in-stock" data-price="899" data-brand="شارپ" data-subcategory="catalog" data-sku="ZFB-APPL-0022-1974" data-vid="v-603b3aca">
+  <a href="product.html?id=appl-0022" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-3ab6ecb3" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="مكنسة روبوت" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-f7bfc7fc">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-f03fa183">مكنسة روبوت</h3>
+    <p class="product-desc" data-vid="v-dc3a5955">تنظيف ذكي</p>
+    <div class="price">
+      <strong data-vid="v-67ca2d7e">899 ر.س</strong>
+      <del>1,190</del>
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-b83f3d3c">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-19682d25"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-2980511b"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-7ea712f6">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+          <article class="product-card" data-product-id="appl-0023" data-category="appl" data-stock="in-stock" data-price="1399" data-brand="شارپ" data-subcategory="catalog" data-sku="ZFB-APPL-0023-4721" data-vid="v-2c2cbabb">
+  <a href="product.html?id=appl-0023" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-ae1afa06" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="مكيف شباك" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-ed646436">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-10f65b2c">مكيف شباك</h3>
+    <p class="product-desc" data-vid="v-bcb80313">صغير عملي</p>
+    <div class="price">
+      <strong data-vid="v-3e1c97c4">1,399 ر.س</strong>
+      <del>1,690</del>
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-e367a48d">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-4ca4b11f"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-241cdd26"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-a76c5880">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+          <article class="product-card" data-product-id="appl-0024" data-category="appl" data-stock="in-stock" data-price="1199" data-brand="ديلونجي" data-subcategory="catalog" data-sku="ZFB-APPL-0024-2893" data-vid="v-c51cc130">
+  <a href="product.html?id=appl-0024" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-145c69f3" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="غسالة صحون" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-1fa3a12c">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-0e980a90">غسالة صحون</h3>
+    <p class="product-desc" data-vid="v-ed029913">توفير ماء</p>
+    <div class="price">
+      <strong data-vid="v-531441f7">1,199 ر.س</strong>
+      <del>1,540</del>
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-01b5c27b">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-75ec4e8a"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-731428ff"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-ac1aad2a">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+          <article class="product-card" data-product-id="appl-0025" data-category="appl" data-stock="in-stock" data-price="2699" data-brand="توشيبا" data-subcategory="catalog" data-sku="ZFB-APPL-0025-1770" data-vid="v-daf5abe4">
+  <a href="product.html?id=appl-0025" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-6cf9982e" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="شاشة 70 بوصة" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-b8be0f72">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-d6c572ad">شاشة 70 بوصة</h3>
+    <p class="product-desc" data-vid="v-5bfd7e99">ألوان مذهلة</p>
+    <div class="price">
+      <strong data-vid="v-d91a8690">2,699 ر.س</strong>
+      <del>3,290</del>
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-d3ece724">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-0960b5c0"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-7c373be9"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-ed5f1a1f">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+        </div>
+      </section>
+
+      <section class="appliances-section" aria-label="لماذا تختار زياد ستور" data-vid="v-85648698">
+        <div class="why-zeyad">
+          <div class="why-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg><div data-vid="v-54f8441f"><strong data-vid="v-d750af83">ضمان موثق</strong><br>حتى 10 سنوات</div></div>
+          <div class="why-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 3h15v13H1zM16 8h4l3 5v5h-7V8z"></path></svg><div data-vid="v-40b304fa"><strong data-vid="v-a65c21ae">توصيل رمزي</strong><br>لجميع المدن الرئيسية</div></div>
+          <div class="why-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12a9 9 0 0 1 9-9"></path></svg><div data-vid="v-7325b98b"><strong data-vid="v-b4429f11">إرجاع سهل</strong><br>حتى 7 أيام</div></div>
+          <div class="why-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"></rect></svg><div data-vid="v-06b65789"><strong data-vid="v-4627de79">دفع آمن</strong><br>جميع طرق الدفع</div></div>
+          <div class="why-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path></svg><div data-vid="v-d15b503d"><strong data-vid="v-b408e5ee">خدمة عملاء</strong><br>24/7</div></div>
+          <div class="why-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"></circle></svg><div data-vid="v-918dde41"><strong data-vid="v-77fae2e4">أفضل قيمة</strong><br>أسعار منافسة</div></div>
+          <div class="why-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12l5 5L20 7"></path></svg><div data-vid="v-1e68f613"><strong data-vid="v-c91a885c">تركيب احترافي</strong><br>بفريق متخصص</div></div>
+        </div>
+      </section>
+
+      <section class="appliances-section" aria-label="الأسئلة الشائعة والاشتراك" data-vid="v-6f92b5ce">
+        <div class="faq-grid">
+          <div class="faq-box">
+            <h3 data-vid="v-10af4590">الأسئلة الشائعة</h3>
+            <div class="faq-list">
+              <details class="faq-item" open=""><summary>ما مدة الضمان على الأجهزة؟</summary><p data-vid="v-dd31b21b">تختلف حسب العلامة التجارية، وتصل في بعض الأجهزة إلى 10 سنوات مع ضمان موثق.</p></details>
+              <details class="faq-item"><summary>هل يشمل السعر التوصيل والتركيب؟</summary><p data-vid="v-2d0477cf">نوفر التوصيل بأسعار رمزية داخل المدن الرئيسية والمحافظات مع توفير خدمة التركيب حسب نوع المنتج.</p></details>
+              <details class="faq-item"><summary>هل يمكن طلب أجهزة ضمن باقة متكاملة؟</summary><p data-vid="v-15f09c42">نعم، نوفر باقات جاهزة للمطبخ، العرسان، وتجهيز المنزل بالكامل مع توفير أكبر.</p></details>
+            </div>
+          </div>
+          <div style="display:grid;gap:10px;" data-vid="v-f9fc43cf">
+            <div class="subscribe-box">
+              <h3 data-vid="v-d6a3a3f3">اشترك في نشرتنا</h3>
+              <p data-vid="v-08818c0f">احصل على أحدث العروض والمنتجات الجديدة مباشرة إلى بريدك الإلكتروني.</p>
+              <form class="subscribe-row backend-form" onsubmit="event.preventDefault(); this.innerHTML='<div style=\'color:var(--olive);font-weight:600;padding:8px 0;\' method=" post"="" action="/api/submit-form" name="contact-form">تم الاشتراك بنجاح! شكراً لك.</form></div>'; return false;"&gt;
+                <input name="email" type="email" placeholder="ادخل بريدك الإلكتروني" aria-label="البريد الإلكتروني" id="email-3" autocomplete="email" maxlength="120">
+                <button type="submit" class="btn-checkout" data-vid="v-635fd5b4">اشترك الآن</button>
+              
+            </div>
+            <div class="contact-box">
+              <h3 data-vid="v-48c95325">تواصل معنا</h3>
+              <p data-vid="v-f4f3405d">فريقنا جاهز لمساعدتك في اختيار الجهاز الأنسب ومتابعة الطلب حتى التوصيل.</p>
+              <div class="contact-list">
+                <span data-vid="v-69877c02">800 123 4567</span>
+                <span data-vid="v-0ac7294b">zeyad775010@gmail.com</span>
+                <span data-vid="v-1d2740f0">خدمة العملاء متاحة يومياً</span>
+              </div>
+            </div>
+          </div>
+        </section></main></div>
+      
+    
+
+    
+
+<footer class="site-footer" data-vid="v-dc31fc2f">
+    <div class="footer-top">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col brand-col">
+                    <h3 data-vid="store_name">زياد ستور</h3>
+                    <p data-vid="footer_about">وجهتك الأولى للتسوق الإلكتروني بمنتجات أصلية وتجربة تسوق لا تُنسى.</p>
+                    <div class="social-links">
+                        <a href="https://facebook.com" data-vid="social_facebook" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a>
+                        <a href="https://instagram.com" data-vid="social_instagram" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
+                        <a href="https://twitter.com" data-vid="social_twitter" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path></svg></a>
+                        <a href="https://tiktok.com" data-vid="social_tiktok" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 0h1.98c.144 2.58 1.97 4.776 4.54 5.24v3.132c-1.354-.044-2.612-.52-3.69-1.31v7.62a5.41 5.41 0 1 1-5.41-5.41c.42 0 .82.048 1.2.14v3.23a2.18 2.18 0 1 0 1.38 2.03V0z"></path></svg></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4 data-vid="v-63f3754c">روابط سريعة</h4>
+                    <ul>
+                        <li data-vid="v-98ab0905"><a href="offers.html" data-vid="v-5d07c558">العروض الخاصة</a></li>
+                        <li data-vid="v-86f91d23"><a href="search.html?q=الجديد" data-vid="v-13ddac92">أحدث المنتجات</a></li>
+                        <li data-vid="v-9d587e17"><a href="search.html?q=الأكثر مبيعا" data-vid="v-3800c966">الأكثر مبيعاً</a></li>
+                        <li data-vid="v-1e6b96ee"><a href="/#categories" data-vid="v-ab182353">تصفح الأقسام</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-vid="v-f8d88949">خدمة العملاء</h4>
+                    <ul>
+                        <li data-vid="v-0d17d0e5"><a href="track-order.html" data-vid="v-0e4e093c">تتبع الطلب</a></li>
+                        <li data-vid="v-7cba1f8d"><a href="faq.html" data-vid="v-680d03af">الأسئلة الشائعة</a></li>
+                        <li data-vid="v-1aabdf67"><a href="/terms.html" data-vid="v-964ed9b8">سياسة الاسترجاع</a></li>
+                        <li data-vid="v-f6d8ab34"><a href="/shipping.html" data-vid="v-6f23363d">معلومات الشحن</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col contact-col">
+                    <h4 data-vid="v-ab6ba5eb">تواصل معنا</h4>
+                    <ul>
+                        <li data-vid="v-d901ab32">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                            <span data-vid="footer_phone">+967775010726</span>
+                        </li>
+                        <li data-vid="v-f708aba0">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                            <span data-vid="footer_email">zeyad775010@gmail.com</span>
+                        </li>
+                        <li data-vid="v-66196927">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                            <span data-vid="footer_address">صنعاء، شارع الزبيري</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <div class="container">
+            <div class="footer-bottom-flex">
+                <p class="copyright" data-vid="v-784be8e2">© 2026 جميع الحقوق محفوظة - <span data-vid="store_name">زياد ستور</span></p>
+                <div class="payment-methods">
+                    <svg viewBox="0 0 38 24" fill="none"><rect width="38" height="24" rx="4" fill="var(--surface-2)"></rect><path d="M12 7L14.5 16H17L19.5 7H17L15.75 12.5L14.5 7H12Z" fill="var(--ink)"></path></svg>
+                    <svg viewBox="0 0 38 24" fill="none"><rect width="38" height="24" rx="4" fill="var(--surface-2)"></rect><circle cx="15" cy="12" r="6" fill="#eb001b"></circle><circle cx="23" cy="12" r="6" fill="#f79e1b"></circle></svg>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+  
+
+  <script>
+    (function() {
+      let totalSeconds = 12 * 3600 + 45 * 60 + 38;
+      let bundleSeconds = 28 * 3600 + 14 * 60 + 35;
+
+      function updateThree(boxId, total) {
+        const box = document.getElementById(boxId);
+        if (!box || total < 0) return total;
+        const h = Math.floor(total / 3600);
+        const m = Math.floor((total % 3600) / 60);
+        const s = total % 60;
+        const nums = box.querySelectorAll('.num');
+        if (nums.length === 3) {
+          nums[0].textContent = String(h).padStart(2, '0');
+          nums[1].textContent = String(m).padStart(2, '0');
+          nums[2].textContent = String(s).padStart(2, '0');
+        }
+        return total - 1;
+      }
+
+      function tick() {
+        document.querySelectorAll('.appliances-count-inline .countdown-box').forEach(function(box) {
+          const nums = box.querySelectorAll('.num');
+          if (nums.length === 3 && totalSeconds >= 0) {
+            const h = Math.floor(totalSeconds / 3600);
+            const m = Math.floor((totalSeconds % 3600) / 60);
+            const s = totalSeconds % 60;
+            nums[0].textContent = String(h).padStart(2, '0');
+            nums[1].textContent = String(m).padStart(2, '0');
+            nums[2].textContent = String(s).padStart(2, '0');
+          }
+        });
+        totalSeconds--;
+        bundleSeconds = updateThree('bundleCountdown', bundleSeconds);
+      }
+
+      tick();
+      /* setInterval(tick, 1000); disabled for Phase 1 placeholder */
+    })();
+  </script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const categoryData = {
+        'all': { title: 'الأجهزة المنزلية', desc: 'اكتشف أحدث وأفضل الأجهزة المنزلية بأسعار تنافسية وضمان معتمد.' },
+        'packages': { title: 'باقات الأجهزة', desc: 'باقات متكاملة لتجهيز منزلك بأفضل الأسعار المتوافقة.' },
+        'refrigerators': { title: 'ثلاجات', desc: 'ثلاجات ذكية وموفرة للطاقة بأحجام تناسب جميع المطابخ.' },
+        'washers': { title: 'غسالات', desc: 'غسالات أوتوماتيك ونشّافات فائقة العناية بالملابس.' },
+        'tvs': { title: 'شاشات', desc: 'شاشات ذكية 4K و 8K بتجربة سينمائية مذهلة.' },
+        'air-conditioners': { title: 'مكيفات', desc: 'مكيفات سبليت وشباك بتبريد قوي وتوفير عالي.' },
+        'ovens': { title: 'أفران', desc: 'أفران غاز وكهرباء لتجربة طبخ احترافية.' },
+        'microwaves': { title: 'ميكرويف', desc: 'أجهزة ميكرويف حديثة لتسخين سريع ومتساوٍ.' },
+        'cookers': { title: 'بوتاجازات', desc: 'مواقد عصرية آمنة بتصاميم تناسب كل مطبخ.' },
+        'blenders': { title: 'خلاطات', desc: 'خلاطات قوية متعددة الاستخدام لتجهيز الطعام بسرعة.' },
+        'coffee-makers': { title: 'ماكينات قهوة', desc: 'ماكينات قهوة احترافية لعشاق القهوة.' },
+        'water-coolers': { title: 'برادات مياه', desc: 'برادات مياه بتصاميم عصرية وتبريد سريع.' },
+        'vacuums': { title: 'مكانس', desc: 'مكانس كهربائية قوية لتنظيف منزلك بسهولة.' },
+        'fans': { title: 'مراوح', desc: 'مراوح تبريد بتهوية مثالية وصوت هادئ.' },
+        'heaters': { title: 'سخانات', desc: 'سخانات مياه وكهرباء آمنة وفعالة.' },
+        'irons': { title: 'مكاوي', desc: 'مكاوي بخار وجافة لعناية مثالية بالملابس.' },
+        'air-fryers': { title: 'قلايات هوائية', desc: 'قلايات صحية بدون زيت لطبخ ألذ.' },
+        'kettles': { title: 'غلايات', desc: 'غلايات مياه سريعة وآمنة.' },
+        'speakers': { title: 'سماعات', desc: 'أنظمة صوتية وسماعات بجودة صوت عالية.' },
+        'juicers': { title: 'عصارات', desc: 'عصارات فواكه لتحضير عصائر طازجة يومياً.' }
+    };
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentCat = urlParams.get('category') || 'all';
+
+    const productCards = document.querySelectorAll('article.product-card');
+    productCards.forEach(card => {
+        const text = card.textContent;
+        let category = 'all';
+        if (text.includes('ثلاجة')) category = 'refrigerators';
+        else if (text.includes('غسالة')) category = 'washers';
+        else if (text.includes('مكيف')) category = 'air-conditioners';
+        else if (text.includes('شاشة')) category = 'tvs';
+        else if (text.includes('قلاية')) category = 'air-fryers';
+        else if (text.includes('مكنسة')) category = 'vacuums';
+        else if (text.includes('فرن')) category = 'ovens';
+        else if (text.includes('ميكرويف')) category = 'microwaves';
+        
+        if(!card.hasAttribute('data-category')) {
+           card.setAttribute('data-category', category);
+           card.setAttribute('data-product-id', Math.floor(Math.random() * 10000));
+        }
+    });
+
+    function updateCatalog(categoryId) {
+        const data = categoryData[categoryId] || categoryData['all'];
+        
+        document.getElementById('catalog-h1').textContent = data.title;
+        document.getElementById('catalog-desc').textContent = data.desc;
+        document.getElementById('breadcrumb-current').textContent = data.title;
+
+        document.querySelectorAll('.cat-image-card').forEach(chip => {
+            if(chip.getAttribute('data-id') === categoryId) {
+                chip.classList.add('active');
+            } else {
+                chip.classList.remove('active');
+            }
+        });
+
+        let visibleCount = 0;
+        productCards.forEach(card => {
+            const cardCat = card.getAttribute('data-category');
+            if (categoryId === 'all' || categoryId === 'packages' || cardCat === categoryId) {
+                card.style.display = ''; 
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        document.getElementById('catalog-total-count').textContent = visibleCount;
+        document.getElementById('catalog-result-count').textContent = 'عرض ' + visibleCount + ' نتيجة';
+    }
+
+    updateCatalog(currentCat);
+
+    document.querySelectorAll('.cat-image-card').forEach(chip => {
+        chip.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetCat = chip.getAttribute('data-id');
+            const newUrl = new URL(window.location);
+            newUrl.searchParams.set('category', targetCat);
+            window.history.pushState({}, '', newUrl);
+            updateCatalog(targetCat);
+        });
+    });
+});
+</script>
+
+
+
+
+
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const catBtns = document.querySelectorAll('.cat-image-card');
+    const firstCat = catBtns[0];
+    if (firstCat) {
+        const parentSection = firstCat.closest('section, .section-block, [class*="-section"]') || firstCat.parentNode;
+        if (parentSection) {
+            let headerDiv = parentSection.querySelector('.section-head, [class*="-row-head"]');
+            
+            if (!headerDiv) {
+                headerDiv = document.createElement('div');
+                headerDiv.className = 'section-head compact';
+                headerDiv.style.cssText = 'display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; width: 100%;';
+                const titleDiv = document.createElement('div');
+                titleDiv.innerHTML = '<h2 style="margin:0; font-size:1.45rem; color:var(--ink);">تسوق حسب النوع</h2>';
+                headerDiv.appendChild(titleDiv);
+                
+                const railContainer = firstCat.closest('.appliances-categories-grid, .category-grid') || firstCat.parentNode;
+                if(railContainer && railContainer.parentNode) {
+                    railContainer.parentNode.insertBefore(headerDiv, railContainer);
+                }
+            }
+
+            if (headerDiv) {
+                let nativeShowAll = Array.from(headerDiv.querySelectorAll('a')).find(a => a.textContent.includes('عرض الكل'));
+                if (!nativeShowAll) {
+                    nativeShowAll = document.createElement('a');
+                    nativeShowAll.href = '#';
+                    nativeShowAll.textContent = 'عرض الكل';
+                    nativeShowAll.style.cssText = 'text-decoration: none; color: #b97b21; font-size: .88rem; font-weight: 600; cursor: pointer;';
+                    headerDiv.appendChild(nativeShowAll);
+                }
+                
+                nativeShowAll.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const newUrl = new URL(window.location);
+                    newUrl.searchParams.delete('category');
+                    window.history.pushState({}, '', newUrl);
+                    if(typeof updateCatalog === 'function') {
+                        updateCatalog('all');
+                    } else {
+                        window.location.reload();
+                    }
+                    parentSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+            }
+        }
+    }
+});
+</script>
+
+
+
+
+
+<!-- FLOATING CART INJECTION -->
+<div id="floating-cart" style="position: fixed; bottom: 24px; left: 24px; z-index: 99999; display: flex; align-items: center; justify-content: center; width: 64px; height: 64px; background-color: var(--gold, #c38c35); border-radius: 50%; box-shadow: 0 4px 16px rgba(0,0,0,0.25); cursor: pointer; transition: transform 0.3s ease, background-color 0.3s ease;" onclick="window.location.href='cart.html'">
+    <svg viewBox="0 0 24 24" style="width: 28px; height: 28px; fill: none; stroke: #fff; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+    <span id="floating-cart-count" style="position: absolute; top: -4px; right: -4px; background: #dc2626; color: #fff; font-size: 0.85rem; font-weight: bold; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" data-vid="v-65e1fcff">0</span>
+</div>
+
+<style>
+.btn-add-cart-mini {
+    background-color: var(--gold, #c38c35);
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-family: inherit;
+    font-size: 0.95rem;
+}
+.btn-add-cart-mini:hover {
+    background-color: var(--gold-dark, #a8762a);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(195, 140, 53, 0.2);
+}
+#floating-cart:hover {
+    background-color: var(--gold-dark, #a8762a);
+    transform: translateY(-4px) scale(1.05);
+}
+</style>
+
+<!-- Inline addToCart removed to allow global site.js?v=20260830-v2327 logic -->
+<!-- END FLOATING CART INJECTION -->
+  <script src="site.js?v=714c6eb3" defer=""></script>
+
+
+  <script src="zfb-config.js"></script>
+<script src="products_db.js"></script>
+<script src="zfb-core.js?v=cd21c70c" defer=""></script>
+  <script src="assets/js/core/premium-cards.js?v=f2491789"></script>
+  <script src="/search-manager.js?v=20260830-v2327"></script>\n  <script src="/wishlist-manager.js?v=20260830-v2327"></script>\n
+
+
+  <script src="assets/js/core/storefront-2026.js?v=a6bef9ab1d2b033c"></script>
+</body></html>

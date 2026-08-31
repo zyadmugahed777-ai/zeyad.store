@@ -1,0 +1,62 @@
+<%- include('../../partials/head', { title }) %>
+<%- include('../../partials/sidebar', { active }) %>
+<main class="admin-main">
+  <%- include('../../partials/topbar') %>
+  <div class="admin-content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="page-title"><%= title %></h1>
+      <a href="/admin/users" class="btn btn-outline">
+        <span class="material-symbols-rounded">arrow_forward</span> العودة للمستخدمين
+      </a>
+    </div>
+
+    <form class="glass-card mb-4" action="<%= user ? '/admin/users/' + user.id + '/edit' : '/admin/users/create' %>" method="POST" style="max-width: 800px; margin: 0 auto;">
+      <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+      
+      <div class="row" style="display: flex; flex-wrap: wrap; margin: 0 -8px;">
+        <div style="flex: 0 0 50%; padding: 0 8px; box-sizing: border-box;" class="mb-3">
+          <label class="form-label">اسم المستخدم <span class="text-danger">*</span></label>
+          <input class="form-control" name="username" required dir="ltr" value="<%= user ? user.username : '' %>">
+        </div>
+        <div style="flex: 0 0 50%; padding: 0 8px; box-sizing: border-box;" class="mb-3">
+          <label class="form-label">الاسم الكامل</label>
+          <input class="form-control" name="full_name" value="<%= user ? user.full_name || '' : '' %>">
+        </div>
+        <div style="flex: 0 0 50%; padding: 0 8px; box-sizing: border-box;" class="mb-3">
+          <label class="form-label">البريد الإلكتروني</label>
+          <input class="form-control" type="email" name="email" dir="ltr" value="<%= user ? user.email || '' : '' %>">
+        </div>
+        <div style="flex: 0 0 50%; padding: 0 8px; box-sizing: border-box;" class="mb-3">
+          <label class="form-label">الصلاحية <span class="text-danger">*</span></label>
+          <select class="form-control" name="role_id" required>
+            <% if (typeof roles !== 'undefined' && roles) { %>
+              <% roles.forEach(role => { %>
+                <option value="<%= role.id %>" <%= user && user.role_id == role.id ? 'selected' : '' %>><%= role.name %></option>
+              <% }) %>
+            <% } %>
+          </select>
+        </div>
+        
+        <div style="flex: 0 0 100%; padding: 0 8px; box-sizing: border-box;" class="mb-3">
+          <label class="form-label"><%= user ? 'تغيير كلمة المرور (اتركها فارغة إذا لم ترد التغيير)' : 'كلمة المرور' %> <span class="text-danger"><%= user ? '' : '*' %></span></label>
+          <input class="form-control" type="password" name="password" <%= user ? '' : 'required' %> minlength="8" dir="ltr">
+        </div>
+      </div>
+      
+      <div class="mt-4 mb-4" style="background: var(--bg-tertiary); padding: 16px; border-radius: 8px;">
+        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; margin: 0;">
+          <input type="checkbox" name="is_active" <%= (!user || user.is_active) ? 'checked' : '' %> style="width: 20px; height: 20px;">
+          <span style="font-weight: 600;">الحساب نشط (يمكنه تسجيل الدخول)</span>
+        </label>
+      </div>
+
+      <div class="d-flex gap-3 justify-content-end pt-3" style="border-top: 1px solid var(--border-color);">
+        <a href="/admin/users" class="btn btn-outline">إلغاء</a>
+        <button type="submit" class="btn btn-primary" style="padding: 12px 32px; font-size: 16px;">
+          <span class="material-symbols-rounded">save</span> حفظ
+        </button>
+      </div>
+    </form>
+  </div>
+</main>
+<%- include('../../partials/foot') %>

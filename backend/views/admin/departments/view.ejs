@@ -1,0 +1,64 @@
+<%- include('../../partials/head', { title: title }) %>
+<%- include('../../partials/sidebar', { active: active }) %>
+
+<main class="admin-main">
+  <%- include('../../partials/topbar') %>
+
+  <div class="content-header">
+    <div class="header-left">
+      <h1 class="page-title">
+        <span class="material-symbols-rounded"><%= department.icon %></span>
+        قسم <%= department.name_ar %>
+      </h1>
+      <p class="page-subtitle">إدارة كاملة للقسم المستقل ومحتوياته</p>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mt-6">
+    <a href="/admin/products?department=<%= department.id %>" class="stat-card" style="text-decoration: none; color: inherit;">
+      <div class="stat-icon" style="background: rgba(234, 179, 8, 0.1); color: var(--primary-gold);">
+        <span class="material-symbols-rounded">inventory_2</span>
+      </div>
+      <div class="stat-content">
+        <h3>المنتجات</h3>
+        <p class="stat-value"><%= productsCount %></p>
+        <span class="stat-trend" style="color: var(--primary-gold);">إدارة منتجات القسم →</span>
+      </div>
+    </a>
+
+    <a href="/admin/categories?department_id=<%= department.id %>" class="stat-card" style="text-decoration: none; color: inherit;">
+      <div class="stat-icon" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6;">
+        <span class="material-symbols-rounded">category</span>
+      </div>
+      <div class="stat-content">
+        <h3>الفئات</h3>
+        <p class="stat-value">إدارة</p>
+        <span class="stat-trend" style="color: #3b82f6;">تنظيم فئات القسم →</span>
+      </div>
+    </a>
+
+    <a href="/admin/offers?department=<%= department.id %>" class="stat-card" style="text-decoration: none; color: inherit;">
+      <div class="stat-icon" style="background: rgba(239, 68, 68, 0.1); color: #ef4444;">
+        <span class="material-symbols-rounded">local_offer</span>
+      </div>
+      <div class="stat-content">
+        <h3>العروض الخاصة</h3>
+        <p class="stat-value">إدارة</p>
+        <span class="stat-trend" style="color: #ef4444;">عروض هذا القسم →</span>
+      </div>
+    </a>
+
+    <a href="/admin/editor?url=/<%= department.slug %>.html" class="stat-card" style="text-decoration: none; color: inherit;">
+      <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">
+        <span class="material-symbols-rounded">web</span>
+      </div>
+      <div class="stat-content">
+        <h3>تصميم القسم</h3>
+        <p class="stat-value">المحرر المرئي</p>
+        <span class="stat-trend" style="color: #10b981;">تعديل واجهة القسم →</span>
+      </div>
+    </a>
+  </div>
+</main>
+
+<%- include('../../partials/foot') %>

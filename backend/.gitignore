@@ -1,0 +1,13 @@
+node_modules/
+db/zeyad.db
+uploads/
+.env
+*.log
+
+# Timestamped .env copies made by tooling (.env.bak-1787800265168 and friends).
+# The bare `.env` rule above does not match them, so two such files carrying a
+# real SESSION_SECRET were sitting untracked-but-committable in the working
+# tree: one `git add -A` away from publishing the secret that signs every admin
+# and customer session. Match every variant, and keep .env.example tracked.
+.env.*
+!.env.example

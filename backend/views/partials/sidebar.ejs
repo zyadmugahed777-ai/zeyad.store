@@ -1,0 +1,122 @@
+<aside class="admin-sidebar" id="adminSidebar">
+  <div class="sidebar-header" style="flex-direction: column; height: auto; padding: 30px 20px; gap: 8px;">
+    <h2>
+      <span class="material-symbols-rounded" style="font-size: 32px;">military_tech</span>
+      زياد ستور
+    </h2>
+    <span style="color: var(--text-muted); font-size: 12px; margin-right: 42px;">لوحة الإدارة</span>
+  </div>
+  
+  <nav class="sidebar-nav">
+    <div style="background: rgba(255,255,255,0.03); border-radius: 12px; padding: 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; border: 1px solid rgba(255,255,255,0.05);">
+      <div style="width: 44px; height: 44px; border-radius: 50%; background: var(--bg-body); overflow: hidden; border: 2px solid var(--primary-gold);">
+        <img src="https://ui-avatars.com/api/?name=<%= (typeof admin !== 'undefined' && admin && admin.full_name) ? encodeURIComponent(admin.full_name) : 'Admin' %>&background=eab308&color=000" style="width: 100%;" alt="Admin">
+      </div>
+      <div>
+        <div style="font-weight: 600; color: #fff; font-size: 15px;"><%= (typeof admin !== 'undefined' && admin && admin.full_name) ? admin.full_name : 'أحمد المدير' %></div>
+        <div style="font-size: 12px; color: var(--primary-gold);">مدير النظام</div>
+      </div>
+    </div>
+
+    <a href="/admin" class="<%= typeof active !== 'undefined' && active === 'dashboard' ? 'active' : '' %>">
+      <span class="material-symbols-rounded">home</span>
+      لوحة التحكم
+    </a>
+
+    <a href="/admin/products" class="<%= typeof active !== 'undefined' && active === 'products' ? 'active' : '' %>">
+      <span class="material-symbols-rounded">inventory_2</span>
+      المنتجات
+    </a>
+    <a href="/admin/frame-products" class="<%= typeof active !== 'undefined' && active === 'frame-products' ? 'active' : '' %>">
+      <span class="material-symbols-rounded">view_carousel</span>
+      منتجات الإطار
+    </a>
+    <a href="/admin/departments" class="<%= typeof active !== 'undefined' && active === 'departments' ? 'active' : '' %>">
+      <span class="material-symbols-rounded">domain</span>
+      الأقسام الرئيسية
+    </a>
+    <a href="/admin/categories" class="<%= typeof active !== 'undefined' && active === 'categories' ? 'active' : '' %>">
+      <span class="material-symbols-rounded">category</span>
+      التصنيفات والفئات
+    </a>
+    <a href="/admin/orders" class="<%= typeof active !== 'undefined' && active === 'orders' ? 'active' : '' %>">
+      <span class="material-symbols-rounded">shopping_bag</span>
+      الطلبات
+    </a>
+    <a href="/admin/requests" class="<%= typeof active !== 'undefined' && active === 'requests' ? 'active' : '' %>">
+      <span class="material-symbols-rounded">contact_support</span>
+      طلبات العملاء
+    </a>
+    <a href="/admin/customers" class="<%= typeof active !== 'undefined' && active === 'customers' ? 'active' : '' %>">
+      <span class="material-symbols-rounded">group</span>
+      العملاء
+    </a>
+    <a href="/admin/branches" class="<%= typeof active !== 'undefined' && active === 'branches' ? 'active' : '' %>">
+      <span class="material-symbols-rounded">storefront</span>
+      الفروع
+    </a>
+    <a href="/admin/offers" class="<%= typeof active !== 'undefined' && active === 'offers' ? 'active' : '' %>">
+      <span class="material-symbols-rounded">local_offer</span>
+      العروض
+    </a>
+    <a href="/admin/coupons" class="<%= typeof active !== 'undefined' && active === 'coupons' ? 'active' : '' %>">
+      <span class="material-symbols-rounded">sell</span>
+      الكوبونات والخصومات
+    </a>
+    <a href="/admin/delivery" class="<%= (typeof active !== 'undefined' && active === 'delivery') || (typeof activeMenu !== 'undefined' && activeMenu === 'delivery') ? 'active' : '' %>">
+      <span class="material-symbols-rounded">local_shipping</span>
+      سياسات وأسعار التوصيل
+    </a>
+    <a href="/admin/banners" class="<%= typeof active !== 'undefined' && active === 'banners' ? 'active' : '' %>">
+      <span class="material-symbols-rounded">image</span>
+      البنرات
+    </a>
+    <a href="/admin/media" class="<%= typeof active !== 'undefined' && active === 'media' ? 'active' : '' %>">
+      <span class="material-symbols-rounded">photo_library</span>
+      الوسائط
+    </a>
+    <a href="/admin/pages" class="<%= typeof active !== 'undefined' && active === 'pages' ? 'active' : '' %>">
+      <span class="material-symbols-rounded">web</span>
+      الصفحات (CMS)
+    </a>
+    <a href="/admin/notifications" class="<%= typeof active !== 'undefined' && active === 'notifications' ? 'active' : '' %>">
+      <span class="material-symbols-rounded">notifications</span>
+      الإشعارات
+    </a>
+    <a href="/admin/reports" class="<%= typeof active !== 'undefined' && active === 'reports' ? 'active' : '' %>">
+      <span class="material-symbols-rounded">monitoring</span>
+      التقارير
+    </a>
+    <a href="/admin/customer-reports" class="<%= typeof active !== 'undefined' && active === 'customer-reports' ? 'active' : '' %>">
+      <span class="material-symbols-rounded">bug_report</span>
+      بلاغات المشاكل
+    </a>
+    <a href="/admin/ai-employee" class="<%= typeof active !== 'undefined' && active === 'ai-employee' ? 'active' : '' %>">
+      <span class="material-symbols-rounded">neurology</span>
+      AI Employee (الإدارة)
+    </a>
+    <a href="/admin/najm" class="<%= typeof active !== 'undefined' && active === 'najm' ? 'active' : '' %>">
+      <span class="material-symbols-rounded">support_agent</span>
+      نجم — وكيل العملاء
+    </a>
+    <a href="/admin/settings" class="<%= typeof active !== 'undefined' && active === 'settings' ? 'active' : '' %>">
+      <span class="material-symbols-rounded">settings</span>
+      الإعدادات
+    </a>
+    <a href="/admin/theme" class="<%= typeof active !== 'undefined' && active === 'theme' ? 'active' : '' %>">
+      <span class="material-symbols-rounded">palette</span>
+      محرر المظهر
+    </a>
+    <a href="/admin/users" class="<%= typeof active !== 'undefined' && active === 'users' ? 'active' : '' %>">
+      <span class="material-symbols-rounded">admin_panel_settings</span>
+      المستخدمين
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <a href="/admin/logout" style="display: flex; align-items: center; gap: 12px; color: var(--text-muted); text-decoration: none; padding: 12px; border-radius: 12px; transition: 0.2s;">
+      <span class="material-symbols-rounded">logout</span>
+      تسجيل الخروج
+    </a>
+  </div>
+</aside>

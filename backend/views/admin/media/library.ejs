@@ -1,0 +1,275 @@
+<%- include('../../partials/head', { title }) %>
+<%- include('../../partials/sidebar', { active }) %>
+
+<style>
+  /* Media Manager Styles */
+  .dropzone {
+    border: 2px dashed var(--border-color);
+    border-radius: 12px;
+    padding: 40px;
+    text-align: center;
+    background: var(--bg-card);
+    transition: 0.3s;
+    cursor: pointer;
+    margin-bottom: 24px;
+  }
+  .dropzone.dragover {
+    border-color: var(--primary-gold);
+    background: rgba(234, 179, 8, 0.05);
+  }
+  
+  .media-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+  }
+  
+  .media-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    aspect-ratio: 1;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  
+  .media-item:hover {
+    border-color: var(--primary-gold);
+    box-shadow: 0 0 0 2px var(--primary-gold);
+  }
+  
+  .media-thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background: #000;
+  }
+  
+  .media-file-icon {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-body);
+    color: var(--text-muted);
+  }
+  
+  .media-info-bar {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(0,0,0,0.7);
+    color: white;
+    padding: 6px 12px;
+    font-size: 11px;
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transform: translateY(100%);
+    transition: 0.2s;
+  }
+  .media-item:hover .media-info-bar {
+    transform: translateY(0);
+  }
+
+  /* File Size formatting */
+  .file-size { font-size: 10px; color: #ccc; }
+
+  /* Upload Progress */
+  #uploadProgressContainer { display: none; margin-top: 16px; }
+  .progress-bar-bg { height: 8px; background: var(--bg-body); border-radius: 4px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: var(--primary-gold); width: 0%; transition: width 0.2s; }
+  
+  /* Filter bar */
+  .filter-bar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+</style>
+
+<main class="admin-main">
+  <%- include('../../partials/topbar') %>
+  
+  <div class="admin-content">
+    
+    <div class="card p-24 mb-24">
+      <div class="flex-between mb-16">
+        <h2>إدارة الوسائط</h2>
+        <input type="file" id="fileInput" multiple style="display: none;">
+        <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+          <span class="material-symbols-rounded">cloud_upload</span>
+          رفع ملفات
+        </button>
+      </div>
+
+      <div class="dropzone" id="dropzone">
+        <span class="material-symbols-rounded" style="font-size: 48px; color: var(--text-muted); margin-bottom: 16px; display: block;">upload_file</span>
+        <h3 style="font-size: 16px; margin-bottom: 8px;">اسحب الملفات وأفلتها هنا للرفع</h3>
+        <p style="color: var(--text-muted); font-size: 13px;">الصور سيتم ضغطها وتحويلها تلقائياً إلى صيغة WebP</p>
+        
+        <div id="uploadProgressContainer">
+          <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
+            <span>جاري الرفع...</span>
+            <span id="uploadPercent">0%</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="uploadProgressBar"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filter-bar">
+      <a href="?folder=all" class="btn <%= currentFolder === 'all' ? 'btn-primary' : 'btn-outline' %>">الكل</a>
+      <a href="?folder=products" class="btn <%= currentFolder === 'products' ? 'btn-primary' : 'btn-outline' %>">المنتجات</a>
+      <a href="?folder=banners" class="btn <%= currentFolder === 'banners' ? 'btn-primary' : 'btn-outline' %>">البنرات</a>
+      <a href="?folder=media" class="btn <%= currentFolder === 'media' ? 'btn-primary' : 'btn-outline' %>">أخرى</a>
+    </div>
+
+    <!-- Media Grid -->
+    <div class="media-grid" id="mediaGrid">
+      <% if (media.length === 0) { %>
+        <div style="grid-column: 1 / -1; padding: 40px; text-align: center; color: var(--text-muted);">
+          لا توجد وسائط في هذا المجلد
+        </div>
+      <% } %>
+      
+      <% media.forEach(m => { 
+        const isImage = m.mime_type.startsWith('image/');
+        const sizeKb = (m.size / 1024).toFixed(1);
+      %>
+        <div class="media-item" onclick="viewMediaDetails('<%= m.id %>', '<%= m.path %>', '<%= m.filename %>', '<%= sizeKb %>KB')">
+          <% if (isImage) { %>
+            <img src="<%= m.path %>" class="media-thumb" loading="lazy">
+          <% } else { %>
+            <div class="media-file-icon">
+              <span class="material-symbols-rounded" style="font-size: 48px;">description</span>
+              <span style="font-size: 11px; margin-top: 8px; direction: ltr;"><%= m.mime_type.split('/')[1] || 'FILE' %></span>
+            </div>
+          <% } %>
+          
+          <div class="media-info-bar">
+            <span style="max-width: 100px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; direction: ltr;"><%= m.filename %></span>
+            <span class="file-size"><%= sizeKb %> KB</span>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+    
+    <div class="mt-6">
+      <%- include('../../partials/pagination') %>
+    </div>
+
+  </div>
+</main>
+<%- include('../../partials/foot') %>
+
+<!-- Script for Advanced Media Manager -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const dropzone = document.getElementById('dropzone');
+  const fileInput = document.getElementById('fileInput');
+  const progressContainer = document.getElementById('uploadProgressContainer');
+  const progressBar = document.getElementById('uploadProgressBar');
+  const progressPercent = document.getElementById('uploadPercent');
+  const grid = document.getElementById('mediaGrid');
+
+  // Drag Events
+  ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    dropzone.addEventListener(eventName, preventDefaults, false);
+  });
+  function preventDefaults(e) { e.preventDefault(); e.stopPropagation(); }
+  
+  ['dragenter', 'dragover'].forEach(eventName => {
+    dropzone.addEventListener(eventName, () => dropzone.classList.add('dragover'), false);
+  });
+  
+  ['dragleave', 'drop'].forEach(eventName => {
+    dropzone.addEventListener(eventName, () => dropzone.classList.remove('dragover'), false);
+  });
+
+  dropzone.addEventListener('drop', (e) => {
+    const dt = e.dataTransfer;
+    const files = dt.files;
+    handleFiles(files);
+  });
+
+  fileInput.addEventListener('change', function() {
+    handleFiles(this.files);
+  });
+
+  function handleFiles(files) {
+    if (files.length === 0) return;
+    
+    const formData = new FormData();
+    for (let i = 0; i < files.length; i++) {
+      formData.append('files', files[i]);
+    }
+    
+    // Add current folder
+    const urlParams = new URLSearchParams(window.location.search);
+    const folder = urlParams.get('folder') || 'media';
+    formData.append('folder', folder === 'all' ? 'media' : folder);
+
+    uploadFiles(formData);
+  }
+
+  function uploadFiles(formData) {
+    progressContainer.style.display = 'block';
+    
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '/admin/media/upload-ajax', true);
+    
+    xhr.upload.onprogress = (e) => {
+      if (e.lengthComputable) {
+        const percentComplete = Math.round((e.loaded / e.total) * 100);
+        progressBar.style.width = percentComplete + '%';
+        progressPercent.textContent = percentComplete + '%';
+      }
+    };
+    
+    xhr.onload = function() {
+      if (xhr.status === 200) {
+        const response = JSON.parse(xhr.responseText);
+        if (response.success) {
+          // Success! Reload page to show new files (simplest robust way for now)
+          window.location.reload();
+        } else {
+          alert('خطأ في الرفع: ' + response.message);
+          progressContainer.style.display = 'none';
+        }
+      } else {
+        alert('حدث خطأ أثناء الاتصال بالخادم.');
+        progressContainer.style.display = 'none';
+      }
+    };
+    
+    xhr.send(formData);
+  }
+
+});
+
+function viewMediaDetails(id, path, filename, size) {
+  // Simple prompt/alert based viewer. For Production, use a nice Modal dialog.
+  const action = prompt(`الملف: ${filename}\nالحجم: ${size}\n\nاكتب "حذف" لحذف الملف\nاكتب "نسخ" لنسخ الرابط\nاضغط إلغاء للخروج`);
+  
+  if (action === 'نسخ') {
+    navigator.clipboard.writeText(window.location.origin + path).then(() => alert('تم النسخ'));
+  } else if (action === 'حذف') {
+    if(confirm('هل أنت متأكد من حذف هذا الملف نهائياً؟')) {
+      fetch(`/admin/media/${id}/delete`, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' }
+      }).then(res => res.json()).then(data => {
+        if(data.success) window.location.reload();
+      });
+    }
+  }
+}
+</script>

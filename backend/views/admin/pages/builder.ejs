@@ -1,0 +1,333 @@
+<%- include('../../partials/head', { title }) %>
+<%- include('../../partials/sidebar', { active }) %>
+
+<style>
+  .builder-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 24px;
+  }
+  
+  .section-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    transition: 0.2s;
+  }
+  
+  .section-header {
+    padding: 16px 24px;
+    background: var(--bg-card-hover);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+  }
+  
+  .drag-handle {
+    cursor: grab;
+    color: var(--text-muted);
+    margin-left: 12px; /* RTL */
+  }
+  .drag-handle:active { cursor: grabbing; }
+  
+  .section-body {
+    padding: 24px;
+    display: none; /* hidden by default */
+    border-top: 1px solid var(--border-color);
+  }
+  .section-card.expanded .section-body {
+    display: block;
+  }
+  
+  .block-group {
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px dashed var(--border-color);
+  }
+  .block-group:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+  
+  .block-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-muted);
+    font-size: 13px;
+    text-transform: capitalize;
+  }
+  
+  .save-block-btn {
+    margin-top: 8px;
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+  
+  /* Sortable Ghost */
+  .sortable-ghost { opacity: 0.4; }
+  .sortable-drag { cursor: grabbing !important; }
+
+  .media-picker-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 1200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(15, 23, 42, 0.58);
+  }
+
+  .media-picker-backdrop.active { display: flex; }
+
+  .media-picker-modal {
+    width: min(920px, 100%);
+    max-height: 84vh;
+    overflow: hidden;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.22);
+  }
+
+  .media-picker-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 22px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .media-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 14px;
+    max-height: 58vh;
+    overflow: auto;
+    padding: 18px;
+  }
+
+  .media-picker-item {
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--bg-card-hover);
+    cursor: pointer;
+    text-align: start;
+    transition: 0.18s ease;
+  }
+
+  .media-picker-item:hover {
+    border-color: var(--primary);
+    transform: translateY(-2px);
+  }
+
+  .media-picker-item img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    display: block;
+  }
+
+  .media-picker-item span {
+    display: block;
+    padding: 10px;
+    font-size: 12px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    direction: ltr;
+  }
+</style>
+
+<main class="admin-main">
+  <%- include('../../partials/topbar') %>
+  
+  <div class="admin-content">
+    <div class="card p-24">
+      <div class="builder-header">
+        <div>
+          <h2><%= page.title %></h2>
+          <p class="text-muted mt-2">إعادة ترتيب الأقسام بالسحب والإفلات، وانقر لتعديل المحتوى.</p>
+        </div>
+        <a href="/<%= page.slug === 'home' ? '' : page.slug %>" target="_blank" class="btn btn-outline">
+          <span class="material-symbols-rounded">visibility</span> عرض الصفحة
+        </a>
+      </div>
+
+      <div id="sectionsList">
+        <% if(sections.length === 0) { %>
+          <div class="text-center p-24 text-muted">لا توجد أقسام في هذه الصفحة</div>
+        <% } %>
+        
+        <% sections.forEach(sec => { %>
+          <div class="section-card" data-id="<%= sec.id %>">
+            <div class="section-header" onclick="this.parentElement.classList.toggle('expanded')">
+              <div class="flex">
+                <span class="material-symbols-rounded drag-handle" title="اسحب لإعادة الترتيب" onclick="event.stopPropagation()">drag_indicator</span>
+                <strong><%= sec.name %></strong>
+              </div>
+              <span class="material-symbols-rounded text-muted">expand_more</span>
+            </div>
+            
+            <div class="section-body">
+              <% if(sec.blocks && sec.blocks.length > 0) { %>
+                <% sec.blocks.forEach(block => { %>
+                  <div class="block-group">
+                    <label class="block-label"><%= block.key.replace(/_/g, ' ') %> (<%= block.type %>)</label>
+                    
+                    <div style="display: flex; gap: 12px;">
+                      <% if(block.type === 'image') { %>
+                        <input type="text" id="block-<%= block.id %>" class="form-control" value="<%= block.value %>" dir="ltr">
+                        <button class="btn btn-outline" type="button" onclick="openMediaSelector('block-<%= block.id %>')">
+                          <span class="material-symbols-rounded">image</span>
+                        </button>
+                      <% } else if(block.type === 'color') { %>
+                        <input type="color" id="block-<%= block.id %>" class="form-control" value="<%= block.value %>" style="width: 60px; padding: 4px;">
+                        <input type="text" class="form-control" value="<%= block.value %>" dir="ltr" onchange="document.getElementById('block-<%= block.id %>').value = this.value">
+                      <% } else if(block.type === 'html') { %>
+                        <textarea id="block-<%= block.id %>" class="form-control" rows="4"><%= block.value %></textarea>
+                      <% } else { %>
+                        <input type="text" id="block-<%= block.id %>" class="form-control" value="<%= block.value %>">
+                      <% } %>
+                    </div>
+                    
+                    <button class="btn btn-primary save-block-btn" onclick="saveBlock('<%= block.id %>')">حفظ التغيير</button>
+                    <span id="status-<%= block.id %>" style="font-size: 12px; color: var(--success); margin-right: 12px; display: none;">تم الحفظ!</span>
+                  </div>
+                <% }) %>
+              <% } else { %>
+                <p class="text-muted text-center" style="font-size: 13px;">لا توجد عناصر قابلة للتعديل في هذا القسم</p>
+              <% } %>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+
+    </div>
+  </div>
+</main>
+<div class="media-picker-backdrop" id="mediaPicker" aria-hidden="true">
+  <div class="media-picker-modal" role="dialog" aria-modal="true" aria-labelledby="mediaPickerTitle">
+    <div class="media-picker-head">
+      <div>
+        <h3 id="mediaPickerTitle">اختيار صورة من مكتبة الوسائط</h3>
+        <p class="text-muted mt-2">اختر الصورة وسيتم وضع الرابط في الحقل مباشرة.</p>
+      </div>
+      <button class="btn btn-outline" type="button" onclick="closeMediaSelector()">إغلاق</button>
+    </div>
+    <div class="media-picker-grid" id="mediaPickerGrid">
+      <div class="text-muted p-24">جارٍ تحميل الصور...</div>
+    </div>
+  </div>
+</div>
+<%- include('../../partials/foot') %>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Init SortableJS for drag and drop reordering
+  const el = document.getElementById('sectionsList');
+  if(el && el.children.length > 0) {
+    Sortable.create(el, {
+      handle: '.drag-handle',
+      animation: 150,
+      onEnd: function (evt) {
+        // Save new order
+        const itemEls = el.querySelectorAll('.section-card');
+        const order = Array.from(itemEls).map(item => item.getAttribute('data-id'));
+        
+        fetch('/admin/pages/<%= page.id %>/reorder-sections', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ order })
+        }).then(res => res.json()).then(data => {
+          if(!data.success) alert('حدث خطأ أثناء حفظ الترتيب');
+        });
+      }
+    });
+  }
+});
+
+function saveBlock(blockId) {
+  const value = document.getElementById('block-' + blockId).value;
+  const statusEl = document.getElementById('status-' + blockId);
+  
+  fetch('/admin/pages/block/' + blockId + '/update', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ value })
+  }).then(res => res.json()).then(data => {
+    if(data.success) {
+      statusEl.style.display = 'inline';
+      setTimeout(() => statusEl.style.display = 'none', 2000);
+    } else {
+      alert('حدث خطأ أثناء الحفظ');
+    }
+  });
+}
+
+function openMediaSelectorLegacy(inputId) {
+  // In a real production environment, this would open a Modal with the Media Library
+  // For now, we prompt for URL, but the user is expected to use the Media Library tab
+  alert('ميزة استعراض مكتبة الوسائط المنبثقة ستتوفر قريباً. يرجى نسخ الرابط من قسم الوسائط ولصقه هنا.');
+}
+function openMediaSelector(inputId) {
+  const picker = document.getElementById('mediaPicker');
+  const grid = document.getElementById('mediaPickerGrid');
+  picker.dataset.targetInput = inputId;
+  picker.classList.add('active');
+  picker.setAttribute('aria-hidden', 'false');
+  grid.innerHTML = '<div class="text-muted p-24">جارٍ تحميل الصور...</div>';
+
+  fetch('/api/media?limit=60', { headers: { Accept: 'application/json' } })
+    .then(res => res.json())
+    .then(data => {
+      const items = (data.data || []).filter(item => String(item.mime_type || '').startsWith('image/'));
+      if (!items.length) {
+        grid.innerHTML = '<div class="text-muted p-24">لا توجد صور في مكتبة الوسائط حتى الآن.</div>';
+        return;
+      }
+      grid.innerHTML = items.map(item => {
+        const url = item.path || item.url || ('/uploads/media/' + item.filename);
+        const name = item.original_name || item.filename || url;
+        const safeUrl = String(url).replace(/'/g, "\\'");
+        return `
+          <button class="media-picker-item" type="button" onclick="selectMediaImage('${safeUrl}')">
+            <img src="${url}" alt="${name}" onerror="this.onerror=null;this.src='/assets/placeholder.svg';">
+            <span>${name}</span>
+          </button>
+        `;
+      }).join('');
+    })
+    .catch(() => {
+      grid.innerHTML = '<div class="text-muted p-24">تعذر تحميل مكتبة الوسائط الآن.</div>';
+    });
+}
+
+function selectMediaImage(url) {
+  const picker = document.getElementById('mediaPicker');
+  const input = document.getElementById(picker.dataset.targetInput);
+  if (input) {
+    input.value = url;
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+  closeMediaSelector();
+}
+
+function closeMediaSelector() {
+  const picker = document.getElementById('mediaPicker');
+  picker.classList.remove('active');
+  picker.setAttribute('aria-hidden', 'true');
+}
+</script>

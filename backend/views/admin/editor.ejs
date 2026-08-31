@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+  <script>
+    // This view renders with layout:false, so it never picked up the token that
+    // partials/head.ejs publishes. Without it every save/publish/undo/rollback
+    // was refused by csrfProtection and came back as an HTML page.
+    window.ZFB_ADMIN_CSRF = '<%= typeof csrfToken !== "undefined" ? csrfToken : "" %>';
+  </script>
+  <script src="/admin-assets/js/csrf-fetch.js"></script>
+  <style>
+    :root {
+      --sidebar-width: 380px;
+      --topbar-height: 64px;
+      --bg: #0b1118;
+      --bg-panel: #131d27;
+      --bg-input: #0e1620;
+      --text: #f9fafb;
+      --text-muted: #94a3b8;
+      --border: #233549;
+      --primary: #d6a84f;
+      --primary-hover: #b88d3b;
+      --success: #10b981;
+      --danger: #ef4444;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .material-symbols-rounded {
+      font-family: 'Material Symbols Rounded', sans-serif;
+      font-weight: normal;
+      font-style: normal;
+      font-size: 20px;
+      line-height: 1;
+      display: inline-block;
+      white-space: nowrap;
+      direction: ltr;
+      -webkit-font-smoothing: antialiased;
+      vertical-align: middle;
+    }
+
+    /* Topbar */
+    .topbar {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: var(--topbar-height);
+      background: var(--bg-panel);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 16px;
+      z-index: 100;
+    }
+    .topbar-section { display: flex; align-items: center; gap: 10px; }
+
+    .btn {
+      background: var(--border);
+      color: var(--text);
+      border: 1px solid transparent;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-primary { background: var(--primary); color: #0b1118; font-weight: 700; }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-success { background: var(--success); color: #fff; font-weight: 700; }
+    .btn-outline { background: transparent; border-color: var(--border); }
+    .btn-outline:hover { background: rgba(255,255,255,0.05); }
+
+    /* Viewport & Device Toggles */
+    .viewport-controls {
+      display: flex;
+      align-items: center;
+      background: var(--bg);
+      padding: 4px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      gap: 4px;
+    }
+    .device-btn {
+      background: transparent;
+      color: var(--text-muted);
+      border: none;
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
+      font-size: 12px;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+    .device-btn.active {
+      background: var(--border);
+      color: var(--primary);
+      font-weight: 600;
+    }
+    .viewport-select {
+      background: var(--bg-input);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 12px;
+      font-family: inherit;
+      outline: none;
+    }
+
+    /* Workspace */
+    .workspace {
+      margin-top: var(--topbar-height);
+      display: flex;
+      width: 100%;
+      height: calc(100vh - var(--topbar-height));
+    }
+
+    /* Sidebar Properties */
+    .sidebar {
+      width: var(--sidebar-width);
+      background: var(--bg-panel);
+      border-left: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+    .sidebar-header {
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      font-size: 14px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .sidebar-content {
+      padding: 16px;
+      flex: 1;
+    }
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+    }
+    .empty-state .material-symbols-rounded { font-size: 48px; margin-bottom: 12px; opacity: 0.4; }
+
+    /* Form Controls */
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; margin-bottom: 6px; font-size: 12px; font-weight: 600; color: var(--text-muted); }
+    .form-control {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 13px;
+      transition: border-color 0.2s;
+    }
+    textarea.form-control { resize: vertical; min-height: 90px; }
+    .form-control:focus { outline: none; border-color: var(--primary); }
+
+    /* Override Scope Pill */
+    .scope-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      background: rgba(214, 168, 79, 0.15);
+      color: var(--primary);
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    /* Preview Stage */
+    .preview-area {
+      flex: 1;
+      background: #05080c;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      position: relative;
+      overflow: auto;
+    }
+    .viewport-indicator {
+      position: absolute;
+      top: 12px;
+      background: rgba(19, 29, 39, 0.8);
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      color: var(--text-muted);
+      backdrop-filter: blur(4px);
+    }
+    .iframe-wrapper {
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+      transition: width 0.3s ease;
+      border: 1px solid var(--border);
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* Revisions Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      width: 90%;
+      max-width: 600px;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+    }
+    .modal-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .modal-body {
+      padding: 20px;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .revision-item {
+      padding: 12px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar-section">
+      <a href="/admin/pages" class="btn btn-outline" title="خروج إلى قائمة الصفحات">
+        <span class="material-symbols-rounded">arrow_forward</span> خروج
+      </a>
+
+      <select id="pageSelector" class="form-control" style="width: 220px; font-weight: 600;">
+        <% allPages.forEach(p => { %>
+          <option value="<%= p.id %>" <%= p.id === cmsPage.id ? 'selected' : '' %>>
+            <%= p.title_ar %> (<%= p.slug %>)
+          </option>
+        <% }) %>
+      </select>
+    </div>
+
+    <!-- Viewport & Device Controls -->
+    <div class="topbar-section">
+      <div class="viewport-controls">
+        <button class="device-btn active" data-device="desktop" data-width="100%">
+          <span class="material-symbols-rounded">desktop_windows</span> سطح المكتب
+        </button>
+        <button class="device-btn" data-device="tablet" data-width="768px">
+          <span class="material-symbols-rounded">tablet_mac</span> تابلت
+        </button>
+        <button class="device-btn" data-device="mobile" data-width="375px">
+          <span class="material-symbols-rounded">smartphone</span> جوال
+        </button>
+
+        <select id="exactViewportSelect" class="viewport-select">
+          <optgroup label="📱 الجوال (Mobile)">
+            <option value="320px">320px (صغير)</option>
+            <option value="360px">360px (أندرويد)</option>
+            <option value="375px" selected>375px (iPhone X/11/12)</option>
+            <option value="390px">390px (iPhone 13/14)</option>
+            <option value="414px">414px (iPhone Plus)</option>
+            <option value="430px">430px (iPhone Pro Max)</option>
+          </optgroup>
+          <optgroup label="💻 التابلت (Tablet)">
+            <option value="768px">768px (iPad عمودي)</option>
+            <option value="1024px">1024px (iPad أفقي)</option>
+          </optgroup>
+          <optgroup label="🖥️ سطح المكتب (Desktop)">
+            <option value="1280px">1280px (شاشة عادية)</option>
+            <option value="1440px">1440px (شاشة عريضة)</option>
+            <option value="100%">100% (كامل العرض)</option>
+          </optgroup>
+        </select>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="topbar-section">
+      <button class="btn btn-outline" id="historyBtn" title="عرض تاريخ النسخ والمراجعات">
+        <span class="material-symbols-rounded">history</span> السجل
+      </button>
+      <button class="btn btn-outline" id="undoBtn" title="تراجع عن آخر تعديل للعنصر">
+        <span class="material-symbols-rounded">undo</span> تراجع (Undo)
+      </button>
+      <button class="btn btn-outline" id="saveDraftBtn" style="border-color: var(--primary); color: var(--primary);">
+        <span class="material-symbols-rounded">save</span> حفظ مسودة (Draft)
+      </button>
+      <button class="btn btn-primary" id="publishBtn" title="نشر التعديلات فوراً على الموقع العام">
+        <span class="material-symbols-rounded">rocket_launch</span> نشر فوري (Publish)
+      </button>
+    </div>
+  </header>
+
+  <!-- Workspace -->
+  <div class="workspace">
+    <!-- Preview Area -->
+    <main class="preview-area">
+      <div class="viewport-indicator" id="viewportIndicator">العرض الحالي: 100% (Desktop)</div>
+      <div class="iframe-wrapper" id="iframeWrapper">
+        <iframe id="previewIframe" src="<%= previewUrl %>"></iframe>
+      </div>
+    </main>
+
+    <!-- Sidebar Properties -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <span>خصائص العنصر المحدد</span>
+        <span class="material-symbols-rounded" style="color: var(--primary);">tune</span>
+      </div>
+
+      <div class="sidebar-content" id="propertiesPanel">
+        <div class="empty-state">
+          <span class="material-symbols-rounded">touch_app</span>
+          <p>اضغط على أي نص، صورة، زر، أو خلفية داخل المعاينة لتعديلها فوراً.</p>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Revisions / History Modal -->
+  <div class="modal-backdrop" id="historyModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 style="font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
+          <span class="material-symbols-rounded" style="color: var(--primary);">history</span>
+          سجل مراجعات ونسخ صفحة: <%= cmsPage.title_ar %>
+        </h3>
+        <button class="btn btn-outline" onclick="closeHistoryModal()" style="padding: 4px 8px;">&times;</button>
+      </div>
+      <div class="modal-body" id="historyList">
+        <!-- Revisions loaded dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const iframe = document.getElementById('previewIframe');
+    const iframeWrapper = document.getElementById('iframeWrapper');
+    const propertiesPanel = document.getElementById('propertiesPanel');
+    const pageSelector = document.getElementById('pageSelector');
+    const exactViewportSelect = document.getElementById('exactViewportSelect');
+    const viewportIndicator = document.getElementById('viewportIndicator');
+    const historyModal = document.getElementById('historyModal');
+
+    const PAGE_ID = <%= cmsPage.id %>;
+    const PAGE_SLUG = '<%= cmsPage.slug %>';
+
+    let currentElement = null;
+    let activeDeviceMode = 'desktop'; // desktop | tablet | mobile
+
+    // Which colour theme an edit applies to. 'both' keeps the old behaviour
+    // and is the default, so nothing already saved changes meaning. Choosing
+    // dark or light writes into a "<device>.<theme>" bucket, which the page
+    // renderer emits under :root[data-theme="..."] -- so a dark-mode tweak
+    // cannot leak into the light page and vice versa.
+    let activeThemeScope = 'both'; // both | dark | light
+    let currentStyles = { global: {}, desktop: {}, tablet: {}, mobile: {} };
+
+    // Handle Page Selection
+    pageSelector.addEventListener('change', (e) => {
+      window.location.href = `/admin/editor?page_id=${e.target.value}`;
+    });
+
+    // Handle Device & Viewport Changes
+    document.querySelectorAll('.device-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.device-btn').forEach(b => b.classList.remove('active'));
+        e.currentTarget.classList.add('active');
+        activeDeviceMode = e.currentTarget.dataset.device;
+        const width = e.currentTarget.dataset.width;
+        setIframeWidth(width, activeDeviceMode);
+      });
+    });
+
+    exactViewportSelect.addEventListener('change', (e) => {
+      const val = e.target.value;
+      if (parseInt(val) <= 480) activeDeviceMode = 'mobile';
+      else if (parseInt(val) <= 1024) activeDeviceMode = 'tablet';
+      else activeDeviceMode = 'desktop';
+
+      document.querySelectorAll('.device-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.device === activeDeviceMode);
+      });
+      setIframeWidth(val, activeDeviceMode);
+    });
+
+    function setIframeWidth(width, mode) {
+      iframeWrapper.style.width = width;
+      viewportIndicator.innerText = `العرض الحالي: ${width} (${mode.toUpperCase()})`;
+      if (currentElement) renderProperties(currentElement);
+    }
+
+    // Message from Iframe
+    window.addEventListener('message', (event) => {
+      const data = event.data;
+      if (data && data.type === 'ELEMENT_SELECTED') {
+        currentElement = data.payload;
+        currentStyles = { global: {}, desktop: {}, tablet: {}, mobile: {} };
+        renderProperties(data.payload);
+      }
+    });
+
+    // The fonts the storefront actually loads, plus system stacks that need no
+    // download. Offering a font the page never fetches would silently fall back
+    // to the default and look like the control did nothing.
+    const FONT_CHOICES = [
+      { value: '', label: 'افتراضي (كما هو)' },
+      { value: '"IBM Plex Sans Arabic", Tahoma, Arial, sans-serif', label: 'IBM Plex Sans Arabic (خط الموقع)' },
+      { value: 'Tahoma, Arial, sans-serif', label: 'Tahoma' },
+      { value: '"Segoe UI", Tahoma, sans-serif', label: 'Segoe UI' },
+      { value: 'Arial, Helvetica, sans-serif', label: 'Arial' },
+      { value: '"Times New Roman", serif', label: 'Times New Roman' },
+      { value: 'Georgia, serif', label: 'Georgia' },
+      { value: '"Courier New", monospace', label: 'Courier New (ثابت العرض)' }
+    ];
+
+    // getComputedStyle normalises quotes and spacing, so an exact string match
+    // against the option value almost never holds. Compare the first family
+    // name instead.
+    function matchesFont(computedFamily, optionValue) {
+      if (!optionValue) return false;
+      const first = (s) => String(s || '').split(',')[0].replace(/["']/g, '').trim().toLowerCase();
+      return first(computedFamily) === first(optionValue);
+    }
+
+    // Render Context Properties
+    function renderProperties(el) {
+      // Pre-fill every control from the element's current computed style.
+      // The panel used to render blank inputs, so an operator could not see
+      // what a value was before changing it -- only what they had typed.
+      const cur = el.styles || {};
+      const isImg = el.tagName === 'IMG' || el.elementType === 'image';
+      const isBtn = el.tagName === 'BUTTON' || el.elementType === 'button';
+      const isLink = el.tagName === 'A' || el.elementType === 'link';
+      const isSection = el.tagName === 'SECTION' || el.elementType === 'section';
+
+      let html = `
+        <div class="scope-pill" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+          <label style="display:flex; align-items:center; gap:6px; font-size:12px;">
+            <span class="material-symbols-rounded" style="font-size:14px;">contrast</span>
+            يُطبَّق على:
+            <select id="themeScopeSelect" style="font-size:12px; padding:2px 6px; border-radius:6px; background:var(--bg); color:var(--text); border:1px solid var(--border);">
+              <option value="both">الوضعين معاً</option>
+              <option value="light">الوضع النهاري فقط</option>
+              <option value="dark">الوضع الليلي فقط</option>
+            </select>
+          </label>
+        </div>
+        <div class="scope-pill">
+          <span class="material-symbols-rounded" style="font-size: 14px;">devices</span>
+          جهاز التعديل الحالي: ${activeDeviceMode.toUpperCase()}
+        </div>
+        <div style="margin-bottom: 16px; padding: 10px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; font-size: 12px; font-family: monospace;">
+          <strong>ID / VID:</strong> ${el.vid}<br>
+          <strong>العنصر:</strong> &lt;${el.tagName.toLowerCase()}&gt; (${el.elementType})
+        </div>
+      `;
+
+      // 1. Text / Content Editor
+      if (!isImg && !isSection) {
+        html += `
+          <div class="form-group">
+            <label class="form-label">محتوى النص (Text / Content)</label>
+            <textarea class="form-control" id="prop-text">${el.text || el.html || ''}</textarea>
+          </div>
+        `;
+      }
+
+      // 2. Link / URL Editor
+      if (isLink || isBtn) {
+        html += `
+          <div class="form-group">
+            <label class="form-label">رابط التوجيه (Link URL)</label>
+            <input type="text" class="form-control" id="prop-href" value="${el.href || ''}" placeholder="https://... أو offers.html">
+          </div>
+        `;
+      }
+
+      // 3. Image Editor
+      if (isImg) {
+        html += `
+          <div class="form-group">
+            <label class="form-label">معاينة الصورة الحالية</label>
+            <div style="width: 100%; height: 120px; border-radius: 6px; overflow: hidden; border: 1px solid var(--border); background: #000; margin-bottom: 10px;">
+              <img id="img-preview-tag" src="${el.src || '/assets/placeholder.svg'}" style="width: 100%; height: 100%; object-fit: contain;">
+            </div>
+            <label class="form-label">رابط الصورة (URL)</label>
+            <input type="text" class="form-control" id="prop-src" value="${el.src || ''}" placeholder="/uploads/cms/...">
+            <label class="form-label" style="margin-top: 8px;">النص البديل (Alt)</label>
+            <input type="text" class="form-control" id="prop-alt" value="${el.alt || ''}">
+            <button class="btn btn-outline" style="width: 100%; margin-top: 10px; justify-content: center;" onclick="document.getElementById('cms-file-input').click()">
+              <span class="material-symbols-rounded">cloud_upload</span> رفع صورة جديدة (WebP)
+            </button>
+            <input type="file" id="cms-file-input" style="display: none;" accept="image/*" onchange="handleFileUpload(event, 'src')">
+          </div>
+        `;
+      }
+
+      // 4. Background / Banner Image
+      if (isSection || el.elementType === 'background') {
+        html += `
+          <div class="form-group">
+            <label class="form-label">صورة الخلفية (Background Image)</label>
+            <input type="text" class="form-control" id="prop-bg-image" placeholder="/uploads/banners/...">
+            <button class="btn btn-outline" style="width: 100%; margin-top: 8px; justify-content: center;" onclick="document.getElementById('cms-bg-file-input').click()">
+              <span class="material-symbols-rounded">wallpaper</span> رفع خلفية (WebP)
+            </button>
+            <input type="file" id="cms-bg-file-input" style="display: none;" accept="image/*" onchange="handleFileUpload(event, 'bg-image')">
+          </div>
+        `;
+      }
+
+      // 5. Responsive Style Overrides
+      html += `
+        <hr style="border: 0; border-top: 1px solid var(--border); margin: 16px 0;">
+        <h4 style="font-size: 12px; color: var(--primary); margin-bottom: 10px;">تخصيص المظهر (${activeDeviceMode.toUpperCase()})</h4>
+        
+        <div class="form-group">
+          <label class="form-label">نوع الخط (Font Family)</label>
+          <select class="form-control" id="style-fontFamily">
+            ${FONT_CHOICES.map(f => `<option value="${f.value}" ${matchesFont(cur.fontFamily, f.value) ? 'selected' : ''}>${f.label}</option>`).join('')}
+          </select>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div class="form-group">
+            <label class="form-label">حجم الخط (Font Size)</label>
+            <input type="text" class="form-control" id="style-fontSize" placeholder="e.g. 18px" value="${cur.fontSize || ''}">
+          </div>
+          <div class="form-group">
+            <label class="form-label">وزن الخط (Font Weight)</label>
+            <select class="form-control" id="style-fontWeight">
+              ${[['','افتراضي'],['300','خفيف (300)'],['400','عادي (400)'],['500','وسط (500)'],['600','متوسط (600)'],['700','عريض (700)'],['800','عريض جداً (800)']]
+                .map(([v,l]) => `<option value="${v}" ${String(cur.fontWeight || '') === v ? 'selected' : ''}>${l}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div class="form-group">
+            <label class="form-label">لون النص</label>
+            <input type="color" class="form-control" id="style-color" style="height: 38px; padding: 2px;" value="${cur.colorHex || '#000000'}">
+          </div>
+          <div class="form-group">
+            <label class="form-label">لون الخلفية ${cur.backgroundIsTransparent ? '<span style="color: var(--text-muted); font-weight: 400;">(شفافة حالياً)</span>' : ''}</label>
+            <input type="color" class="form-control" id="style-backgroundColor" style="height: 38px; padding: 2px;" value="${cur.backgroundColorHex || '#ffffff'}">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div class="form-group">
+            <label class="form-label">محاذاة النص</label>
+            <select class="form-control" id="style-textAlign">
+              ${[['','افتراضي'],['right','يمين'],['center','وسط'],['left','يسار'],['justify','ضبط']]
+                .map(([v,l]) => `<option value="${v}" ${String(cur.textAlign || '') === v ? 'selected' : ''}>${l}</option>`).join('')}
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">تباعد الأسطر</label>
+            <input type="text" class="form-control" id="style-lineHeight" placeholder="e.g. 1.8" value="${cur.lineHeight === 'normal' ? '' : (cur.lineHeight || '')}">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div class="form-group">
+            <label class="form-label">الهوامش الداخلية (Padding)</label>
+            <input type="text" class="form-control" id="style-padding" placeholder="e.g. 16px 24px" value="${cur.padding || ''}">
+          </div>
+          <div class="form-group">
+            <label class="form-label">الهوامش الخارجية (Margin)</label>
+            <input type="text" class="form-control" id="style-margin" placeholder="e.g. 0 0 24px" value="${cur.margin || ''}">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">استدارة الحواف (Border Radius)</label>
+          <input type="text" class="form-control" id="style-borderRadius" placeholder="e.g. 12px" value="${cur.borderRadius === '0px' ? '' : (cur.borderRadius || '')}">
+        </div>
+      `;
+
+      propertiesPanel.innerHTML = html;
+      attachLiveListeners(el);
+    }
+
+    // Attach Live 2-Way Listeners
+    function attachLiveListeners(el) {
+      const textInput = document.getElementById('prop-text');
+      if (textInput) {
+        textInput.addEventListener('input', (e) => {
+          iframe.contentWindow.postMessage({
+            type: 'UPDATE_ELEMENT',
+            payload: { vid: el.vid, prop: 'text', value: e.target.value }
+          }, '*');
+        });
+      }
+
+      const srcInput = document.getElementById('prop-src');
+      if (srcInput) {
+        srcInput.addEventListener('input', (e) => {
+          document.getElementById('img-preview-tag').src = e.target.value;
+          iframe.contentWindow.postMessage({
+            type: 'UPDATE_ELEMENT',
+            payload: { vid: el.vid, prop: 'src', value: e.target.value }
+          }, '*');
+        });
+      }
+
+      // Styles. 'change' as well as 'input' because <select> fires only
+      // 'change' in some browsers, which is why the font-weight dropdown could
+      // look inert while the text boxes worked.
+      [
+        'fontFamily', 'fontSize', 'fontWeight',
+        'color', 'backgroundColor',
+        'textAlign', 'lineHeight',
+        'padding', 'margin', 'borderRadius'
+      ].forEach(key => {
+        const styleInp = document.getElementById(`style-${key}`);
+        if (!styleInp) return;
+
+        const apply = (e) => {
+          const bucket = activeThemeScope === 'both'
+            ? activeDeviceMode
+            : activeDeviceMode + '.' + activeThemeScope;
+          if (!currentStyles[bucket]) currentStyles[bucket] = {};
+          const value = e.target.value;
+
+          if (value === '') {
+            // An emptied field means "stop overriding this", not "set it to
+            // empty string" -- otherwise clearing a box baked a broken
+            // declaration into the published CSS.
+            delete currentStyles[bucket][key];
+          } else {
+            currentStyles[bucket][key] = value;
+          }
+
+          const st = {};
+          st[key] = value;
+          iframe.contentWindow.postMessage({
+            type: 'UPDATE_ELEMENT',
+            payload: { vid: el.vid, styles: st, device: activeDeviceMode }
+          }, '*');
+        };
+
+        styleInp.addEventListener('input', apply);
+        styleInp.addEventListener('change', apply);
+      });
+    }
+
+    // Direct Image Upload
+    async function handleFileUpload(event, propType) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const formData = new FormData();
+      formData.append('files', file);
+      formData.append('folder', 'cms');
+
+      try {
+        const res = await fetch('/admin/media/upload-ajax', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await res.json();
+        if (data.success && data.files && data.files.length > 0) {
+          const newPath = data.files[0].path;
+          if (propType === 'src') {
+            const srcInp = document.getElementById('prop-src');
+            if (srcInp) srcInp.value = newPath;
+            const prev = document.getElementById('img-preview-tag');
+            if (prev) prev.src = newPath;
+            iframe.contentWindow.postMessage({
+              type: 'UPDATE_ELEMENT',
+              payload: { vid: currentElement.vid, prop: 'src', value: newPath }
+            }, '*');
+          } else if (propType === 'bg-image') {
+            const bgInp = document.getElementById('prop-bg-image');
+            if (bgInp) bgInp.value = newPath;
+            iframe.contentWindow.postMessage({
+              type: 'UPDATE_ELEMENT',
+              payload: { vid: currentElement.vid, prop: 'bg-image', value: newPath }
+            }, '*');
+          }
+          alert('تم رفع الصورة بنجاح وتطبيقها في المعاينة!');
+        } else {
+          alert('فشل الرفع: ' + (data.message || 'خطأ غير معروف'));
+        }
+      } catch (err) {
+        alert('خطأ أثناء الرفع: ' + err.message);
+      }
+    }
+
+    // Save Draft
+    document.addEventListener('change', (e) => {
+      if (!e.target || e.target.id !== 'themeScopeSelect') return;
+      activeThemeScope = e.target.value;
+      // Show the preview in the theme being edited, so what the operator sees
+      // is the thing they are changing.
+      const iframeDoc = document.getElementById('previewIframe');
+      try {
+        if (iframeDoc && iframeDoc.contentDocument && activeThemeScope !== 'both') {
+          iframeDoc.contentDocument.documentElement.setAttribute('data-theme', activeThemeScope);
+        }
+      } catch (_) {
+        // Cross-origin should not happen for a same-origin preview, but a
+        // failure here must never break the selector.
+      }
+    });
+
+    document.getElementById('saveDraftBtn').addEventListener('click', async () => {
+      if (!currentElement) return alert('الرجاء تحديد عنصر لتعديله أولاً.');
+
+      const textInp = document.getElementById('prop-text');
+      const srcInp = document.getElementById('prop-src');
+      const bgInp = document.getElementById('prop-bg-image');
+      const hrefInp = document.getElementById('prop-href');
+
+      let contentValue = '';
+      let elType = currentElement.elementType || 'text';
+
+      if (currentElement.tagName === 'IMG' || elType === 'image') {
+        contentValue = srcInp ? srcInp.value : currentElement.src;
+        elType = 'image';
+      } else if (elType === 'background') {
+        contentValue = bgInp ? bgInp.value : '';
+        elType = 'bg-image';
+      } else if (currentElement.tagName === 'A' || elType === 'link') {
+        contentValue = JSON.stringify({
+          text: textInp ? textInp.value : currentElement.text,
+          href: hrefInp ? hrefInp.value : currentElement.href
+        });
+        elType = 'link';
+      } else {
+        contentValue = textInp ? textInp.value : (currentElement.text || currentElement.html);
+      }
+
+      const btn = document.getElementById('saveDraftBtn');
+      btn.innerHTML = '<span class="material-symbols-rounded">hourglass_empty</span> جاري الحفظ...';
+
+      try {
+        const res = await fetch('/admin/editor/save', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            page_id: PAGE_ID,
+            element_key: currentElement.vid,
+            element_type: elType,
+            content: contentValue,
+            styles: currentStyles
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          btn.innerHTML = '<span class="material-symbols-rounded">check</span> تم حفظ المسودة';
+          setTimeout(() => {
+            btn.innerHTML = '<span class="material-symbols-rounded">save</span> حفظ مسودة (Draft)';
+          }, 2000);
+        } else {
+          alert('فشل حفظ المسودة: ' + data.message);
+          btn.innerHTML = '<span class="material-symbols-rounded">save</span> حفظ مسودة (Draft)';
+        }
+      } catch (err) {
+        alert('خطأ أثناء حفظ المسودة: ' + err.message);
+        btn.innerHTML = '<span class="material-symbols-rounded">save</span> حفظ مسودة (Draft)';
+      }
+    });
+
+    // Publish Page Live
+    document.getElementById('publishBtn').addEventListener('click', async () => {
+      if (!confirm(`هل أنت متأكد من نشر كافة تعديلات صفحة "${pageSelector.options[pageSelector.selectedIndex].text}" فوراً على الموقع العام؟`)) return;
+
+      const btn = document.getElementById('publishBtn');
+      btn.innerHTML = '<span class="material-symbols-rounded">hourglass_empty</span> جاري النشر...';
+
+      try {
+        const res = await fetch('/admin/editor/publish', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ page_id: PAGE_ID })
+        });
+        const data = await res.json();
+        if (data.success) {
+          btn.innerHTML = '<span class="material-symbols-rounded">check_circle</span> تم النشر بنجاح!';
+          alert('تم النشر بنجاح! التغييرات أصبحت مباشرة على الموقع العام للزوار.');
+          setTimeout(() => {
+            btn.innerHTML = '<span class="material-symbols-rounded">rocket_launch</span> نشر فوري (Publish)';
+          }, 2000);
+        } else {
+          alert('فشل النشر: ' + data.message);
+          btn.innerHTML = '<span class="material-symbols-rounded">rocket_launch</span> نشر فوري (Publish)';
+        }
+      } catch (err) {
+        alert('خطأ أثناء النشر: ' + err.message);
+        btn.innerHTML = '<span class="material-symbols-rounded">rocket_launch</span> نشر فوري (Publish)';
+      }
+    });
+
+    // Undo
+    document.getElementById('undoBtn').addEventListener('click', async () => {
+      if (!currentElement) return alert('الرجاء تحديد عنصر لاسترجاع آخر تعديل له.');
+      if (!confirm('هل تريد التراجع عن آخر تعديل مسودة لهذا العنصر؟')) return;
+
+      try {
+        const res = await fetch('/admin/editor/undo', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ page_id: PAGE_ID, element_key: currentElement.vid })
+        });
+        const data = await res.json();
+        if (data.success) {
+          iframe.contentWindow.location.reload();
+          alert('تم التراجع بنجاح!');
+        } else {
+          alert('خطأ أثناء التراجع: ' + data.message);
+        }
+      } catch (err) {
+        alert('خطأ: ' + err.message);
+      }
+    });
+
+    // History & Rollback Modal
+    document.getElementById('historyBtn').addEventListener('click', async () => {
+      historyModal.style.display = 'flex';
+      const historyList = document.getElementById('historyList');
+      historyList.innerHTML = '<p class="text-center py-4">جاري تحميل السجل...</p>';
+
+      try {
+        const res = await fetch(`/admin/editor/revisions?page_id=${PAGE_ID}`);
+        const data = await res.json();
+        if (data.success && data.data && data.data.length > 0) {
+          let html = '';
+          data.data.forEach(rev => {
+            html += `
+              <div class="revision-item">
+                <div>
+                  <strong style="color: var(--primary);">[#${rev.id}] ${rev.revision_type}</strong>
+                  <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">
+                    ${rev.description || '-'} | ${new Date(rev.created_at).toLocaleString('ar-YE')}
+                  </div>
+                </div>
+                ${rev.revision_type === 'publish_snapshot' ? `
+                  <button class="btn btn-outline" style="color: var(--primary); border-color: var(--primary); font-size: 11px;" onclick="performRollback(${rev.id})">
+                    <span class="material-symbols-rounded" style="font-size: 14px;">history</span> استرجاع (Rollback)
+                  </button>
+                ` : ''}
+              </div>
+            `;
+          });
+          historyList.innerHTML = html;
+        } else {
+          // Say why it is empty, rather than leaving the operator wondering
+          // whether the panel is broken.
+          historyList.innerHTML =
+            '<p class="text-center py-4">لا توجد مراجعات لهذه الصفحة بعد.' +
+            '<br><small style="color: var(--text-muted);">تُسجَّل نسخة في كل مرة تضغط «نشر فوري»، ويمكنك الرجوع إليها من هنا.</small></p>';
+        }
+      } catch (err) {
+        historyList.innerHTML = `<p class="text-danger py-4">حدث خطأ: ${err.message}</p>`;
+      }
+    });
+
+    function closeHistoryModal() {
+      historyModal.style.display = 'none';
+    }
+
+    // The history panel covers the page and used to be dismissable only by its
+    // small × -- which reads as the page having frozen. Clicking the backdrop
+    // or pressing Escape closes it, the way every other dialog does.
+    historyModal.addEventListener('click', (e) => {
+      if (e.target === historyModal) closeHistoryModal();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && historyModal.style.display === 'flex') closeHistoryModal();
+    });
+
+    async function performRollback(revId) {
+      if (!confirm(`هل أنت متأكد من استرجاع النسخة المنشورة رقم #${revId}؟ سيتم تطبيقها فوراً على المسودة والموقع العام.`)) return;
+
+      try {
+        const res = await fetch('/admin/editor/rollback', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ page_id: PAGE_ID, revision_id: revId })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert('تم الاسترجاع بنجاح! تم تطبيق النسخة السابقة على الموقع العام.');
+          closeHistoryModal();
+          iframe.contentWindow.location.reload();
+        } else {
+          alert('فشل الاسترجاع: ' + data.message);
+        }
+      } catch (err) {
+        alert('خطأ أثناء الاسترجاع: ' + err.message);
+      }
+    }
+  </script>
+</body>
+</html>

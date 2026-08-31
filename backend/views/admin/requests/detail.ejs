@@ -1,0 +1,198 @@
+<%- include('../../partials/head', { title }) %>
+<%- include('../../partials/sidebar', { active }) %>
+
+<main class="admin-main">
+  <%- include('../../partials/topbar') %>
+
+  <div class="admin-content">
+    
+    <!-- Top Action Bar -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <div>
+        <a href="/admin/requests" class="btn btn-sm btn-outline mb-2" style="display: inline-flex; align-items: center; gap: 4px;">
+          <span class="material-symbols-rounded" style="font-size: 18px;">arrow_forward</span>
+          العودة لقائمة الطلبات
+        </a>
+        <h1 class="page-title" style="margin: 0;">
+          <%= request.type_ar %> <span style="color: var(--primary-gold); font-size: 0.85em;">#<%= request.request_id %></span>
+        </h1>
+      </div>
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <a href="/admin/requests/<%= request.id %>/print" target="_blank" class="btn btn-outline" style="display: inline-flex; align-items: center; gap: 6px;">
+          <span class="material-symbols-rounded" style="font-size: 18px;">print</span>
+          طباعة الطلب
+        </a>
+        <a href="<%= typeof whatsappLink !== 'undefined' && whatsappLink ? whatsappLink : '#' %>" target="_blank" class="btn btn-success" style="background: #16a34a; color: #fff; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; padding: 8px 16px; border-radius: 8px; font-weight: 600;">
+          <span class="material-symbols-rounded" style="font-size: 18px;">chat</span>
+          تواصل واتساب
+        </a>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
+      
+      <!-- Main Request Content -->
+      <div>
+        <!-- Customer & Request Info Card -->
+        <div class="card p-4 mb-4">
+          <h3 style="font-size: 16px; font-weight: 700; margin-top: 0; padding-bottom: 12px; border-bottom: 1px solid var(--border-color, rgba(255,255,255,0.1));">
+            بيانات العميل والتفاصيل
+          </h3>
+          
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px;">
+            <div>
+              <span class="text-muted" style="font-size: 13px;">اسم العميل</span>
+              <div style="font-weight: 700; font-size: 15px;"><%= request.customer_name %></div>
+            </div>
+            <div>
+              <span class="text-muted" style="font-size: 13px;">رقم الهاتف</span>
+              <div style="font-weight: 700; font-size: 15px; direction: ltr; text-align: right;">
+                <a href="tel:<%= request.phone %>" style="color: inherit; text-decoration: none;"><%= request.phone %></a>
+              </div>
+            </div>
+            <% if (request.email) { %>
+              <div>
+                <span class="text-muted" style="font-size: 13px;">البريد الإلكتروني</span>
+                <div style="font-weight: 600;"><%= request.email %></div>
+              </div>
+            <% } %>
+            <% if (request.city) { %>
+              <div>
+                <span class="text-muted" style="font-size: 13px;">المدينة / المنطقة</span>
+                <div style="font-weight: 600;"><%= request.city %></div>
+              </div>
+            <% } %>
+            <div>
+              <span class="text-muted" style="font-size: 13px;">تاريخ الإنشاء</span>
+              <div style="font-size: 14px;"><%= new Date(request.created_at).toLocaleString('ar-YE') %></div>
+            </div>
+            <div>
+              <span class="text-muted" style="font-size: 13px;">مصدر الطلب</span>
+              <div style="font-size: 14px;"><%= request.source || 'الموقع العام' %></div>
+            </div>
+          </div>
+
+          <!-- Subject & Message -->
+          <div style="background: rgba(255,255,255,0.03); padding: 16px; border-radius: 8px; border: 1px solid var(--border-color, rgba(255,255,255,0.06)); margin-bottom: 16px;">
+            <strong style="display: block; margin-bottom: 6px; color: var(--primary-gold);"><%= request.subject || 'نص الطلب' %></strong>
+            <p style="margin: 0; white-space: pre-wrap; line-height: 1.6;"><%= request.message || 'لا توجد تفاصيل إضافية.' %></p>
+          </div>
+
+          <!-- Attachments if any -->
+          <% if (request.attachmentsList && request.attachmentsList.length > 0) { %>
+            <div style="margin-top: 16px;">
+              <span class="text-muted" style="font-size: 13px; font-weight: 600; display: block; margin-bottom: 8px;">الملفات والمرفقات:</span>
+              <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                <% request.attachmentsList.forEach(file => { %>
+                  <a href="<%= file %>" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color, rgba(255,255,255,0.1)); border-radius: 6px; text-decoration: none; color: inherit; font-size: 13px;">
+                    <span class="material-symbols-rounded" style="font-size: 18px;">attach_file</span>
+                    عرض المرفق
+                  </a>
+                <% }) %>
+              </div>
+            </div>
+          <% } %>
+        </div>
+
+        <!-- Linked Entity Context (Product / Order) -->
+        <% if (request.linkedProduct) { %>
+          <div class="card p-4 mb-4" style="border-right: 4px solid var(--primary-gold);">
+            <h3 style="font-size: 15px; font-weight: 700; margin-top: 0; color: var(--primary-gold);">المنتج المرتبط بالطلب</h3>
+            <div style="display: flex; gap: 16px; align-items: center;">
+              <img src="<%= request.linkedProduct.primary_image || '/assets/placeholder.svg' %>" style="width: 64px; height: 64px; border-radius: 8px; object-fit: cover; border: 1px solid rgba(255,255,255,0.1);">
+              <div>
+                <h4 style="margin: 0 0 4px; font-size: 15px;"><%= request.linkedProduct.title %></h4>
+                <div style="font-weight: 700; color: var(--primary-gold);"><%= request.linkedProduct.price %> ر.س</div>
+                <% if (request.linkedProduct.warranty) { %><small class="text-muted">ضمان: <%= request.linkedProduct.warranty %></small><% } %>
+              </div>
+            </div>
+          </div>
+        <% } else if (request.linkedOrder) { %>
+          <div class="card p-4 mb-4" style="border-right: 4px solid #3b82f6;">
+            <h3 style="font-size: 15px; font-weight: 700; margin-top: 0; color: #3b82f6;">الطلب الشرائي المرتبط</h3>
+            <div>
+              <strong>رقم الطلب: </strong> <a href="/admin/orders/<%= request.linkedOrder.id %>" style="color: var(--primary-gold);"><%= request.linkedOrder.order_id %></a>
+              <div><strong>الإجمالي: </strong> <%= request.linkedOrder.total %> <%= request.linkedOrder.currency %></div>
+              <div><strong>الحالة: </strong> <%= request.linkedOrder.status %></div>
+            </div>
+          </div>
+        <% } %>
+
+        <!-- Audit History -->
+        <% if (request.auditLogs && request.auditLogs.length > 0) { %>
+          <div class="card p-4 mb-4">
+            <h3 style="font-size: 15px; font-weight: 700; margin-top: 0; margin-bottom: 16px;">سجل التعديلات والإجراءات (Audit Log)</h3>
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <% request.auditLogs.forEach(log => { %>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: rgba(255,255,255,0.02); border-radius: 6px; font-size: 13px;">
+                  <div>
+                    <strong><%= log.admin_name || 'مسؤول النظام' %></strong>
+                    <span class="text-muted" style="margin: 0 6px;">—</span>
+                    <span><%= log.action %></span>
+                  </div>
+                  <small class="text-muted"><%= new Date(log.created_at).toLocaleString('ar-YE') %></small>
+                </div>
+              <% }) %>
+            </div>
+          </div>
+        <% } %>
+      </div>
+
+      <!-- Sidebar Status & Action Form -->
+      <div>
+        <div class="card p-4 sticky-top" style="top: 20px;">
+          <h3 style="font-size: 16px; font-weight: 700; margin-top: 0; margin-bottom: 16px;">تحديث حالة الطلب</h3>
+          
+          <form action="/admin/requests/<%= request.id %>/status" method="POST">
+            <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+            <div class="mb-3" style="margin-bottom: 14px;">
+              <label class="form-label" style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: 600;">حالة الطلب</label>
+              <select name="status" class="form-control" style="width: 100%;">
+                <% Object.entries(statusMap).forEach(([k, v]) => { %>
+                  <option value="<%= k %>" <%= request.status === k ? 'selected' : '' %>><%= v %></option>
+                <% }) %>
+              </select>
+            </div>
+
+            <div class="mb-3" style="margin-bottom: 14px;">
+              <label class="form-label" style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: 600;">الأولوية</label>
+              <select name="priority" class="form-control" style="width: 100%;">
+                <% Object.entries(priorityMap).forEach(([k, v]) => { %>
+                  <option value="<%= k %>" <%= request.priority === k ? 'selected' : '' %>><%= v %></option>
+                <% }) %>
+              </select>
+            </div>
+
+            <div class="mb-3" style="margin-bottom: 14px;">
+              <label class="form-label" style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: 600;">إسناد إلى الموظف</label>
+              <input type="text" name="assigned_to" value="<%= request.assigned_to || '' %>" placeholder="مثال: أحمد الدعم الفني" class="form-control" style="width: 100%;">
+            </div>
+
+            <div class="mb-3" style="margin-bottom: 16px;">
+              <label class="form-label" style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: 600;">ملاحظات داخلية (الإدارة فقط)</label>
+              <textarea name="admin_notes" rows="4" class="form-control" style="width: 100%;" placeholder="ملاحظات المتابعة والاتصال..."><%= request.admin_notes || '' %></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 10px; font-weight: 700;">
+              حفظ التحديثات
+            </button>
+          </form>
+
+          <% if (previousRequests && previousRequests.length > 0) { %>
+            <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-color, rgba(255,255,255,0.1));">
+              <span class="text-muted" style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 8px;">طلبات سابقة لنفس العميل:</span>
+              <% previousRequests.forEach(pr => { %>
+                <a href="/admin/requests/<%= pr.id %>" style="display: flex; justify-content: space-between; font-size: 12px; padding: 6px 0; color: inherit; text-decoration: none; border-bottom: 1px dashed rgba(255,255,255,0.05);">
+                  <span style="color: var(--primary-gold);"><%= pr.request_id %></span>
+                  <span><%= typeMap[pr.request_type] || pr.request_type %></span>
+                </a>
+              <% }) %>
+            </div>
+          <% } %>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</main>

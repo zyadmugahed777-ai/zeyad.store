@@ -1,0 +1,173 @@
+<%- include('../../partials/head', { title }) %>
+<%- include('../../partials/sidebar', { active }) %>
+<main class="admin-main">
+  <%- include('../../partials/topbar') %>
+  
+  <div class="admin-content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h1 class="page-title"><%= title %></h1>
+        <p class="page-description">إدارة بنرات الإعلانات والعروض على الموقع.</p>
+      </div>
+      <div class="admin-header-actions">
+        <a href="/admin/banners/create" class="btn btn-primary">
+          <span class="material-symbols-rounded">add</span>
+          إضافة بنر جديد
+        </a>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="glass-card mb-4">
+      <form action="/admin/banners" method="GET" class="d-flex gap-3 align-items-center">
+        <div style="flex: 1;">
+          <input type="text" name="q" class="form-control" placeholder="البحث في العناوين..." value="<%= search %>">
+        </div>
+        <div style="width: 200px;">
+          <select name="status" class="form-control">
+            <option value="">جميع الحالات</option>
+            <option value="active" <%= status === 'active' ? 'selected' : '' %>>نشط</option>
+            <option value="hidden" <%= status === 'hidden' ? 'selected' : '' %>>مخفي</option>
+            <option value="draft" <%= status === 'draft' ? 'selected' : '' %>>مسودة</option>
+          </select>
+        </div>
+        <div style="width: 200px;">
+          <select name="position" class="form-control">
+            <option value="">مكان الظهور</option>
+            <option value="home_hero" <%= position === 'home_hero' ? 'selected' : '' %>>الرئيسية (العلوي)</option>
+            <option value="home_middle" <%= position === 'home_middle' ? 'selected' : '' %>>الرئيسية (الوسط)</option>
+            <option value="category_top" <%= position === 'category_top' ? 'selected' : '' %>>أعلى الأقسام</option>
+            <option value="popup" <%= position === 'popup' ? 'selected' : '' %>>نافذة منبثقة</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-accent">
+          <span class="material-symbols-rounded">search</span> بحث
+        </button>
+        <% if(search || status || position) { %>
+          <a href="/admin/banners" class="btn btn-outline">إلغاء الفلترة</a>
+        <% } %>
+      </form>
+    </div>
+
+    <!-- Table -->
+    <div class="glass-card">
+      <form action="/admin/banners/bulk" method="POST" id="bulkForm">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <div class="d-flex gap-2 mb-3">
+          <select name="action" class="form-control" style="width: 200px;" required>
+            <option value="">إجراءات جماعية...</option>
+            <option value="activate">تفعيل المحدد</option>
+            <option value="hide">إخفاء المحدد</option>
+            <option value="delete">حذف المحدد</option>
+          </select>
+          <button type="submit" class="btn btn-outline" onclick="return confirm('تأكيد تنفيذ الإجراء الجماعي؟')">تطبيق</button>
+        </div>
+
+        <div class="table-responsive">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th width="40"><input type="checkbox" id="selectAll"></th>
+                <th width="100">صورة</th>
+                <th>العنوان</th>
+                <th>المكان</th>
+                <th>الرابط</th>
+                <th>الترتيب</th>
+                <th class="text-center">الحالة</th>
+                <th class="text-center" width="150">إجراءات</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (banners.length === 0) { %>
+                <tr>
+                  <td colspan="8" class="text-center py-5">لا توجد بنرات مسجلة.</td>
+                </tr>
+              <% } %>
+              <% banners.forEach(banner => { %>
+                <tr>
+                  <td><input type="checkbox" name="ids[]" value="<%= banner.id %>" class="row-checkbox"></td>
+                  <td>
+                    <% if (banner.image) { %>
+                      <img src="<%= banner.image %>" alt="<%= banner.title %>" style="width: 80px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid var(--border-color);">
+                    <% } else { %>
+                      <div style="width: 80px; height: 40px; border-radius: 4px; background: var(--bg-tertiary);"></div>
+                    <% } %>
+                  </td>
+                  <td>
+                    <strong><%= banner.title %></strong><br>
+                    <small class="text-muted"><%= banner.subtitle || '' %></small>
+                  </td>
+                  <td>
+                    <% 
+                      let positionMap = { home_hero: 'الرئيسية (علوي)', home_middle: 'الرئيسية (وسط)', category_top: 'أعلى الأقسام', popup: 'منبثقة' };
+                    %>
+                    <span class="badge badge-warning" style="font-size: 11px;"><%= positionMap[banner.position] || banner.position %></span>
+                  </td>
+                  <td>
+                    <% if(banner.link) { %>
+                      <a href="<%= banner.link %>" target="_blank" class="text-muted"><span class="material-symbols-rounded" style="font-size: 16px;">link</span> الرابط</a>
+                    <% } else { %>
+                      -
+                    <% } %>
+                  </td>
+                  <td dir="ltr"><%= banner.sort_order %></td>
+                  <td class="text-center">
+                    <% if (banner.status === 'active') { %>
+                      <span class="badge badge-success">نشط</span>
+                    <% } else if (banner.status === 'hidden') { %>
+                      <span class="badge badge-warning">مخفي</span>
+                    <% } else { %>
+                      <span class="badge badge-info">مسودة</span>
+                    <% } %>
+                  </td>
+                  <td class="text-center">
+                    <div class="d-flex justify-content-center gap-2">
+                      <a href="/admin/banners/<%= banner.id %>/edit" class="btn-icon" title="تعديل">
+                        <span class="material-symbols-rounded">edit</span>
+                      </a>
+                      <button type="button" class="btn-icon text-danger" title="حذف" onclick="if(confirm('حذف هذا البنر؟')) { document.getElementById('delete-banner-<%= banner.id %>').submit(); }">
+                        <span class="material-symbols-rounded">delete</span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </form>
+      
+      <% banners.forEach(banner => { %>
+        <form action="/admin/banners/<%= banner.id %>/delete" method="POST" id="delete-banner-<%= banner.id %>" style="display:none;">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        </form>
+      <% }) %>
+
+      <!-- Pagination -->
+      <% if (totalPages > 1) { %>
+        <div class="d-flex justify-content-between align-items-center mt-4">
+          <div class="text-muted" style="font-size: 13px;">
+            إجمالي البنرات: <%= totalItems %>
+          </div>
+          <div class="d-flex gap-2">
+            <% if (page > 1) { %>
+              <a href="?page=<%= page - 1 %>&q=<%= search %>&status=<%= status %>&position=<%= position %>" class="btn btn-outline">السابق</a>
+            <% } %>
+            <% for(let i = 1; i <= totalPages; i++) { %>
+              <a href="?page=<%= i %>&q=<%= search %>&status=<%= status %>&position=<%= position %>" class="btn <%= page === i ? 'btn-primary' : 'btn-outline' %>"><%= i %></a>
+            <% } %>
+            <% if (page < totalPages) { %>
+              <a href="?page=<%= page + 1 %>&q=<%= search %>&status=<%= status %>&position=<%= position %>" class="btn btn-outline">التالي</a>
+            <% } %>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</main>
+<script>
+document.getElementById('selectAll').addEventListener('change', function(e) {
+  document.querySelectorAll('.row-checkbox').forEach(cb => cb.checked = e.target.checked);
+});
+</script>
+<%- include('../../partials/foot') %>

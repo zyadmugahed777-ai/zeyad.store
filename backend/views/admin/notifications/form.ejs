@@ -1,0 +1,45 @@
+<%- include('../../partials/head', { title }) %>
+<%- include('../../partials/sidebar', { active }) %>
+<main class="admin-main">
+  <%- include('../../partials/topbar') %>
+  <div class="admin-content">
+    <form class="card admin-form narrow" action="/admin/notifications/create" method="POST">
+      <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+      <div class="card-header flex-between">
+        <h2>إنشاء إشعار</h2>
+        <div class="row-actions">
+          <a class="btn btn-outline" href="/admin/notifications">إلغاء</a>
+          <button class="btn btn-primary" type="submit"><span class="material-symbols-rounded">send</span> إنشاء</button>
+        </div>
+      </div>
+      <div style="padding: 24px;">
+        <div class="grid grid-cols-2 gap-4">
+          <div class="form-group">
+            <label>النوع</label>
+            <select class="form-control" name="type">
+              <option value="general">عام</option>
+              <option value="order">طلب</option>
+              <option value="customer">عميل</option>
+              <option value="system">النظام</option>
+              <option value="offer">عرض</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Reference ID</label>
+            <input class="form-control" name="reference_id" dir="ltr">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>العنوان</label>
+          <input class="form-control" name="title" required>
+        </div>
+        <div class="form-group">
+          <label>الرسالة</label>
+          <textarea class="form-control" name="message" rows="6"></textarea>
+        </div>
+        <label class="check-row"><input type="checkbox" name="is_read"> إنشاء كمقروء</label>
+      </div>
+    </form>
+  </div>
+</main>
+<%- include('../../partials/foot') %>

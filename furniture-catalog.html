@@ -1,0 +1,1297 @@
+<html lang="ar" dir="rtl"><head></head><body id="top">﻿
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>الأثاث والمفروشات | زياد ستور</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+    <script src="assets/js/core/theme-engine.js?v=20260830-v2327"></script>
+    <style>
+/* PREMIUM CATALOG CSS */
+.catalog-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    width: 100%;
+    box-sizing: border-box;
+}
+.catalog-page-header {
+    background: #fdfaf6;
+    padding: 32px 0 0;
+    margin-bottom: 24px;
+    width: 100%;
+}
+.catalog-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 32px;
+}
+.title-desc h1 {
+    font-size: 2.4rem;
+    font-weight: 800;
+    color: var(--ink, #1a1a1a);
+    margin: 0 0 8px 0;
+}
+.title-desc p {
+    font-size: 1.05rem;
+    color: var(--muted, #666);
+    margin: 0;
+}
+.catalog-count-badge {
+    background-color: var(--surface);
+    border: 1px solid #e8ddd1;
+    padding: 8px 24px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--ink, #1a1a1a);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.catalog-dynamic-offers {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 32px;
+}
+.promo-card {
+    flex: 1;
+    border-radius: 16px;
+    min-height: 240px;
+    position: relative;
+    overflow: hidden;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 32px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+.promo-card.promo-right {
+    background-color: #1a1512;
+}
+.promo-card.promo-right .promo-bg {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to left, #1a1512 40%, transparent 100%);
+    z-index: 1;
+}
+.promo-card.promo-right .promo-img {
+    position: absolute;
+    top: 0; left: 0; width: 60%; height: 100%;
+    object-fit: cover;
+    z-index: 0;
+}
+.promo-card.promo-left {
+    background-color: #1b261b;
+}
+.promo-card.promo-left .promo-bg {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to right, #1b261b 45%, transparent 100%);
+    z-index: 1;
+}
+.promo-card.promo-left .promo-img {
+    position: absolute;
+    top: 0; right: 0; width: 60%; height: 100%;
+    object-fit: cover;
+    z-index: 0;
+}
+.promo-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.promo-card.promo-right .promo-content {
+    width: 60%;
+}
+.promo-card.promo-left .promo-content {
+    width: 60%;
+    margin-right: auto;
+}
+.promo-subtitle {
+    color: var(--gold, #c38c35);
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+.promo-title {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin: 0 0 4px 0;
+    line-height: 1.2;
+}
+.promo-desc {
+    font-size: 1rem;
+    margin: 0 0 20px 0;
+    opacity: 0.9;
+}
+.promo-btn {
+    background: #c38c35;
+    color: #fff;
+    padding: 8px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 16px;
+    transition: background 0.3s;
+}
+.promo-btn:hover {
+    background: #a8762a;
+}
+.promo-note {
+    font-size: 0.85rem;
+    opacity: 0.7;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.promo-note svg {
+    width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2;
+}
+.catalog-toolbar {
+    display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-top: 1px solid #e8ddd1; flex-wrap: wrap; gap: 16px;
+}
+@media (max-width: 991px) {
+    .catalog-dynamic-offers { flex-direction: column; }
+    .promo-card { min-height: 200px; }
+    .promo-card.promo-right .promo-content, .promo-card.promo-left .promo-content { width: 80%; }
+}
+
+/* GLOBAL PRODUCT CARD FIXES */
+.product-card .product-body {
+    display: flex;
+    flex-direction: column;
+}
+.product-card .price {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    margin-top: 8px !important;
+}
+.product-card .price strong {
+    font-size: 1.15rem !important;
+    color: var(--ink, #1a1a1a) !important;
+    white-space: nowrap !important;
+}
+.product-card .price del {
+    font-size: 0.85rem !important;
+    color: #9c9286 !important;
+    text-decoration: line-through !important;
+    white-space: nowrap !important;
+}
+.product-card .discount-tag {
+    position: static !important;
+    display: inline-block !important;
+    margin-right: 4px !important;
+}
+.product-card .stock {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    margin-top: auto !important;
+    padding-top: 12px !important;
+}
+.product-card .stock > div {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+.product-card .meta {
+    margin-bottom: 4px;
+    display: block;
+    color: var(--muted, #666);
+    font-size: 0.85rem;
+}
+</style>
+
+    <style>.furniture-hero { display: none !important; }</style>
+
+      <link rel="stylesheet" href="styles.css?v=20260830-v2327">
+  <link rel="stylesheet" href="production-polish.css?v=20260830-v2327">
+  <link rel="stylesheet" href="responsive-pro.css?v=20260830-v2327">
+  <link rel="stylesheet" href="mobile-first.css?v=20260830-v2327">
+  <link rel="stylesheet" href="assets/css/storefront-2026.css?v=a6bef9ab1d2b033c">
+
+  <!-- ZFB Core UX Systems -->
+    <script src="assets/js/core/translations.js?v=20260830-v2327"></script>
+    <script src="assets/js/core/i18n.js?v=20260830-v2327"></script>
+    <script src="assets/js/core/theme.js?v=48c1790c"></script>
+    <script src="assets/js/core/currency.js?v=1a885696"></script>
+    <script src="assets/js/core/global-ux.js?v=20260830-v2327"></script>
+  <meta name="description" content="تشكيلة مميزة من الأثاث بتصاميم تناسب ذوقك ومساحتك.">
+
+    <link rel="canonical" href="https://zeyad.store/furniture-catalog.html">
+    <meta property="og:title" content="الأثاث والمفروشات - زياد ستور | زياد ستور">
+    <meta property="og:description" content="تشكيلة مميزة من الأثاث بتصاميم تناسب ذوقك ومساحتك.">
+    <meta property="og:url" content="https://zeyad.store/furniture-catalog.html">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://zeyad.store/assets/placeholder-logo.webp">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="الأثاث والمفروشات - زياد ستور | زياد ستور">
+    <meta name="twitter:description" content="تشكيلة مميزة من الأثاث بتصاميم تناسب ذوقك ومساحتك.">
+    
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "الرئيسية",
+      "item": "https://zeyad.store"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "الأثاث والمفروشات - زياد ستور",
+      "item": "https://zeyad.store/furniture-catalog.html"
+    }
+  ]
+}
+    </script>
+
+  
+    <div class="shop-shell furniture-page-shell">
+      <header class="top-note" data-vid="v-719c3024">
+        <span data-vid="v-dd0f213a">توصيل بأسعار رمزية لجميع المدن والمحافظات</span>
+        <span data-vid="v-6b63bae6">ضمان موثق على الأثاث والمفروشات</span>
+        <span data-vid="v-a418880d">استشارة مجانية لتجهيز المنزل الكامل</span>
+      </header>
+
+      <nav class="main-nav" aria-label="التنقل الرئيسي" data-vid="v-40d84e63">
+        <a class="brand" href="index.html" data-vid="v-c38b76c5">
+          <span class="brand-content" data-vid="v-a8fa275d-new">
+            <span data-vid="v-ec9e095f">
+            <strong data-vid="v-158555dc">زياد ستور</strong>
+            <small data-vid="v-4ecea1ce">أثاث ومفروشات</small>
+          </span>
+          <span class="brand-mark" data-vid="v-bfb4c31f">Z</span>
+          </span>
+        </a>
+
+        <form class="search furniture-search" role="search" aria-label="البحث في متجر الأثاث" name="site-search" action="search.html" method="get">
+          <button type="submit" aria-label="بحث" data-vid="v-29a01cf5">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.3-4.3M10.8 18a7.2 7.2 0 1 1 0-14.4 7.2 7.2 0 0 1 0 14.4Z"></path></svg>
+          </button>
+          <input name="q" type="search" aria-label="ابحث عن منتج" placeholder="ابحث عن منتج" id="q-1" autocomplete="off" maxlength="120">
+        </form>
+
+        <div class="nav-actions furniture-nav-actions">
+          <a class="nav-account-btn" href="account.html" aria-label="حسابي" data-vid="v-84cc1445">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <span data-vid="v-c830738d">حسابي</span>
+          </a>
+          <a href="index.html#best" data-vid="v-46fea9b0">الرئيسية</a>
+          <a href="appliances.html" data-vid="v-cabafe83">الأجهزة المنزلية</a>
+          <a href="kitchens.html" data-vid="v-3c39c625">المطابخ</a>
+          <a href="majalis.html" data-vid="v-e63d8ba9">المجالس</a>
+          <a href="bedrooms.html" data-vid="v-63d9bd87">غرف النوم</a>
+          <a class="active-nav-link" href="furniture.html" data-vid="v-8584abc2">الأثاث والمفروشات</a>
+          <a href="solar.html" data-vid="v-fde6c171">الطاقة الشمسية</a>
+          <a href="offers.html" data-vid="v-e7fd151b">العروض</a>
+        </div>
+      </nav>
+
+      <main class="furniture-page">
+
+        <!-- بداية Catalog Header -->
+        <header class="catalog-page-header" data-vid="v-ad0a053b">
+            <div class="catalog-container">
+                <nav class="catalog-breadcrumb" id="catalog-breadcrumb" style="font-size: 0.9rem; color: var(--muted, #666); margin-bottom: 16px; display: flex; gap: 8px; align-items: center;" data-vid="v-3c4c795a">
+                    <a href="index.html" style="color: var(--gold, #c38c35); text-decoration: none; font-weight: 600;" data-vid="v-17d3d205">الرئيسية</a> <span data-vid="v-dc8f57d2">/</span>
+                    <a href="furniture-catalog.html" style="color: var(--muted, #666); text-decoration: none;" data-vid="v-68982f07">الأثاث المنزلي</a> <span data-vid="v-689e07e3">/</span>
+                    <span id="breadcrumb-current" style="font-weight: 600; color: var(--ink, #1a1a1a);" data-vid="v-92507cce">الأثاث المنزلي</span>
+                </nav>
+                
+                <div class="catalog-title-row">
+                    <div class="title-desc">
+                        <h1 id="catalog-h1" data-vid="v-a699fde3">الأثاث المنزلي</h1>
+                        <p id="catalog-desc" data-vid="v-b8a405f3">تشكيلة مميزة من الأثاث بتصاميم تناسب ذوقك ومساحتك.</p>
+                    </div>
+                    <div class="catalog-count-badge" data-vid="v-3ae5e0f9">
+                        <span id="catalog-total-count" data-vid="v-232f00e4">0</span> منتج
+                    </div>
+                </div>
+
+                <div class="catalog-dynamic-offers" id="catalog-dynamic-offer" style="display: flex;">
+                    <div class="promo-card promo-right">
+                        <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" class="promo-img" alt="عروض" data-vid="v-d44d380d">
+                        <div class="promo-bg"></div>
+                        <div class="promo-content">
+                            <span class="promo-subtitle" data-vid="v-1bd769d6">باقات متكاملة</span>
+                            <h3 class="promo-title" data-vid="v-bb9922fd">تجهيز كامل</h3>
+                            <p class="promo-desc" data-vid="v-373bdf34">دون أي رسوم إضافية</p>
+                            <a href="offers.html" class="promo-btn" data-vid="v-cc77727f">اطلع على الباقات &gt;</a>
+                            <span class="promo-note" data-vid="v-119ec23b">
+                                <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9 12l2 2 4-4"></path></svg>
+                                ضمان 10 سنوات
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="promo-card promo-left">
+                        <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" class="promo-img" alt="عروض" data-vid="v-8a1edeb3">
+                        <div class="promo-bg"></div>
+                        <div class="promo-content">
+                            <span class="promo-subtitle" data-vid="v-33d7a1f5">عرض خاص</span>
+                            <h3 class="promo-title" id="offer-title-dyn" data-vid="v-d315dec3">خصم حتى 30%</h3>
+                            <p class="promo-desc" id="offer-desc-dyn" data-vid="v-0da50c33">على الأثاث المنزلي</p>
+                            <a href="offers.html" class="promo-btn" data-vid="v-011db0bf">اكتشف العرض &gt;</a>
+                            <span class="promo-note" data-vid="v-3ba521d7">
+                                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                لفترة محدودة فقط
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="catalog-toolbar">
+                    <div class="toolbar-right" style="display: flex; align-items: center; gap: 16px;">
+                        <div class="sort-dropdown">
+                            <select name="catalog-sort" id="catalog-sort" aria-label="ترتيب المنتجات" style="padding: 10px 16px; border-radius: 8px; border: 1px solid #e8ddd1; background-color: var(--surface); font-family: inherit; font-size: 0.95rem; color: var(--ink, #1a1a1a); cursor: pointer; font-weight: 500; outline: none; min-width: 180px;" required="">
+                                <option value="recommended">الأحدث</option>
+                                <option value="newest">الأكثر تطابقاً</option>
+                                <option value="price-asc">السعر: من الأقل للأعلى</option>
+                                <option value="price-desc">السعر: من الأعلى للأقل</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="toolbar-left" style="display: flex; align-items: center; gap: 16px;">
+                        <span class="toolbar-results" id="catalog-result-count" style="font-size: 0.95rem; color: var(--muted, #666); font-weight: 500;" data-vid="v-ed6432e7">عرض النتائج</span>
+                        <button type="button" class="btn-filter" aria-label="عرض الفلاتر" style="display: flex; align-items: center; gap: 8px; padding: 10px 24px; background-color: var(--surface); border: 1px solid var(--gold, #c38c35); color: var(--gold, #c38c35); border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 1rem; transition: all 0.3s ease;" data-vid="v-8cdd1193">
+                            <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2;"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"></path></svg> 
+                            الفلاتر
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+    
+        <nav class="breadcrumb furniture-breadcrumb" aria-label="مسار التنقل" data-vid="v-97b64581">
+          <ol>
+            <li data-vid="v-640ddbbe"><a href="index.html" data-vid="v-c71bc67f">الرئيسية</a></li>
+            <li aria-current="page" data-vid="v-351bc1c1">الأثاث والمفروشات</li>
+          </ol>
+        </nav>
+<section class="furniture-hero" aria-labelledby="furniture-hero-title" data-vid="v-7a589c41">
+          <div class="furniture-hero-media" aria-hidden="true"></div>
+          <div class="furniture-hero-overlay"></div>
+          <div class="furniture-hero-content">
+            <p class="furniture-hero-breadcrumb" data-vid="v-c02af93c">الرئيسية / الأثاث والمفروشات</p>
+            <h1 id="furniture-hero-title" data-vid="v-6caf660f">الأثاث والمفروشات</h1>
+            <p data-vid="v-600a2ba6">كل ما تحتاجه لمنزل أنيق ومريح<br>اختر حلول التأثيث الأفضل بأسعار واضحة</p>
+            <a class="furniture-hero-cta" href="search.html?q=%D8%AA%D8%B3%D9%88%D9%82%20%D8%A7%D9%84%D8%A2%D9%86" onclick="window.scrollTo(0,0)" data-vid="v-d3e2bc08">تسوق الآن</a>
+          </div>
+        </section>
+
+        <section class="furniture-categories" aria-labelledby="furniture-categories-title" data-vid="v-225c431c">
+          <div class="section-head compact furniture-section-head">
+            <div>
+              <h2 id="furniture-categories-title" data-vid="v-03a306ad">تسوق حسب الفئة</h2>
+            </div>
+          </div>
+          <div class="furniture-category-strip">
+            <a class="furniture-mini-cat active" href="search.html?q=%D9%83%D9%86%D8%A8%20%D9%88%D8%B2%D9%88%D8%A7%D9%8A%D8%A7" onclick="window.scrollTo(0,0)" data-vid="v-cc0f7105">
+              <span class="furniture-mini-thumb thumb-sofa" data-vid="v-9646f547"></span>
+              <strong data-vid="v-3c12c090">كنب وزوايا</strong>
+            </a>
+            <a class="furniture-mini-cat" href="search.html?q=%D8%B3%D9%81%D8%B1%20%D9%88%D8%B7%D8%A7%D9%88%D9%84%D8%A7%D8%AA%20%D8%B7%D8%B9%D8%A7%D9%85" onclick="window.scrollTo(0,0)" data-vid="v-c1714f81">
+              <span class="furniture-mini-thumb thumb-dining" data-vid="v-977485eb"></span>
+              <strong data-vid="v-8695b8b3">سفر وطاولات طعام</strong>
+            </a>
+            <a class="furniture-mini-cat" href="search.html?q=%D9%85%D9%83%D8%A7%D8%AA%D8%A8" onclick="window.scrollTo(0,0)" data-vid="v-acc383d0">
+              <span class="furniture-mini-thumb thumb-office" data-vid="v-10e648d6"></span>
+              <strong data-vid="v-605ab24a">مكاتب</strong>
+            </a>
+            <a class="furniture-mini-cat" href="search.html?q=%D9%83%D8%B1%D8%A7%D8%B3%D9%8A" onclick="window.scrollTo(0,0)" data-vid="v-67de2cec">
+              <span class="furniture-mini-thumb thumb-chair" data-vid="v-67f127a6"></span>
+              <strong data-vid="v-9da61685">كراسي</strong>
+            </a>
+            <a class="furniture-mini-cat" href="search.html?q=%D8%AE%D8%B2%D8%A7%D9%86%D8%A7%D8%AA" onclick="window.scrollTo(0,0)" data-vid="v-4b86e0f8">
+              <span class="furniture-mini-thumb thumb-wardrobe" data-vid="v-35db6f12"></span>
+              <strong data-vid="v-af0aa0e6">خزانات</strong>
+            </a>
+            <a class="furniture-mini-cat" href="search.html?q=%D8%B3%D8%AA%D8%A7%D9%86%D8%AF%D8%A7%D8%AA" onclick="window.scrollTo(0,0)" data-vid="v-325dd283">
+              <span class="furniture-mini-thumb thumb-stand" data-vid="v-3ba67729"></span>
+              <strong data-vid="v-7c92edee">ستاندات</strong>
+            </a>
+            <a class="furniture-mini-cat" href="search.html?q=%D8%B3%D8%AA%D8%A7%D8%A6%D8%B1" onclick="window.scrollTo(0,0)" data-vid="v-a5a96b85">
+              <span class="furniture-mini-thumb thumb-curtain" data-vid="v-8305a3ba"></span>
+              <strong data-vid="v-7e5a25fa">ستائر</strong>
+            </a>
+            <a class="furniture-mini-cat" href="search.html?q=%D9%85%D9%88%D9%83%D9%8A%D8%AA%20%D9%88%D8%B3%D8%AC%D8%A7%D8%AF" onclick="window.scrollTo(0,0)" data-vid="v-c1011ca7">
+              <span class="furniture-mini-thumb thumb-rug" data-vid="v-b5b89100"></span>
+              <strong data-vid="v-4d568b50">موكيت وسجاد</strong>
+            </a>
+            <a class="furniture-mini-cat" href="search.html?q=%D9%85%D9%81%D8%A7%D8%B1%D8%B4" onclick="window.scrollTo(0,0)" data-vid="v-f8d75f3e">
+              <span class="furniture-mini-thumb thumb-bedding" data-vid="v-ddefc7bb"></span>
+              <strong data-vid="v-72001a41">مفارش</strong>
+            </a>
+          </div>
+        </section>
+
+        <section class="furniture-bundles-section" id="furniture-bundles" aria-labelledby="furniture-bundles-title" data-vid="v-c34977bd">
+          <div class="section-head compact furniture-section-head with-link">
+            <div>
+              <h2 id="furniture-bundles-title" data-vid="v-1709f12b">عروض وتجهيزات مميزة</h2>
+            </div>
+            <a href="search.html?q=%D8%B9%D8%B1%D8%B6%20%D8%A7%D9%84%D9%83%D9%84" onclick="window.scrollTo(0,0)" data-vid="v-ead04308">عرض الكل</a>
+          </div>
+
+          <div class="furniture-bundles-grid">
+            <article class="furniture-bundle-card bundle-large warm-tone" data-vid="v-c421d4fe">
+              <div class="furniture-bundle-visual sofa-scene"></div>
+              <div class="furniture-bundle-panel">
+                <div class="furniture-bundle-top">
+                  <span class="bundle-badge" data-vid="v-4419c478">عرض خاص</span>
+                  <div class="countdown-box light" aria-label="الوقت المتبقي للباقة">
+                    <div class="countdown-unit"><span class="num" data-vid="v-e7129080">05</span><span class="label" data-vid="v-f1a64bae">يوم</span></div>
+                    <div class="countdown-unit"><span class="num" data-vid="v-61cce3d4">12</span><span class="label" data-vid="v-36d34569">ساعة</span></div>
+                    <div class="countdown-unit"><span class="num" data-vid="v-557df4c4">45</span><span class="label" data-vid="v-1748dd08">دقيقة</span></div>
+                    <div class="countdown-unit"><span class="num" data-vid="v-1016bfef">30</span><span class="label" data-vid="v-0f30bbc1">ثانية</span></div>
+                  </div>
+                </div>
+                <h3 data-vid="v-ad47e2f4">باقة تجهيز غرفة كاملة</h3>
+                <ul>
+                  <li data-vid="v-d0b1c1bc">كنبة زاوية</li>
+                  <li data-vid="v-af818d3f">طاولة وسط</li>
+                  <li data-vid="v-a69de7d1">سجادة</li>
+                  <li data-vid="v-e7af8e62">ستائر</li>
+                </ul>
+                <div class="bundle-pricing">
+                  <strong data-vid="v-7e5543a3">1,249,000 ر.ي</strong>
+                  <del>1,590,000 ر.ي</del>
+                  <span data-vid="v-1da5a88d">توفير 341,000 ر.ي</span>
+                </div>
+                <a href="cart.html" class="bundle-cta" data-vid="v-5c9d86aa">اطلب الباقة الآن</a>
+              </div>
+            </article>
+
+            <article class="furniture-bundle-card compact-bundle soft-tone" data-vid="v-f6176ca9">
+              <div class="furniture-bundle-visual bedroom-scene"></div>
+              <div class="furniture-bundle-panel">
+                <div class="furniture-bundle-top">
+                  <span class="bundle-badge muted" data-vid="v-3ee7a867">تجهيز منزل</span>
+                  <div class="countdown-box light">
+                    <div class="countdown-unit"><span class="num" data-vid="v-fe199e11">05</span><span class="label" data-vid="v-c752cef4">يوم</span></div>
+                    <div class="countdown-unit"><span class="num" data-vid="v-7964a559">12</span><span class="label" data-vid="v-d27f2641">ساعة</span></div>
+                    <div class="countdown-unit"><span class="num" data-vid="v-7abe0706">45</span><span class="label" data-vid="v-b3e05294">دقيقة</span></div>
+                    <div class="countdown-unit"><span class="num" data-vid="v-a7c646c2">30</span><span class="label" data-vid="v-e560ec34">ثانية</span></div>
+                  </div>
+                </div>
+                <h3 data-vid="v-670aa8fb">باقة غرفة نوم كاملة</h3>
+                <p data-vid="v-fe2b4f83">سرير + كومودينو + مرتبة + تسريحة</p>
+                <div class="bundle-pricing">
+                  <strong data-vid="v-abb44515">749,000 ر.ي</strong>
+                  <del>830,000 ر.ي</del>
+                  <span data-vid="v-c219e8f7">توفير 81,000 ر.ي</span>
+                </div>
+                <a href="bedrooms.html" class="bundle-cta secondary" data-vid="v-47d8a074">اطلب الباقة الآن</a>
+              </div>
+            </article>
+
+            <article class="furniture-bundle-card compact-bundle dark-tone" data-vid="v-8cd44cbe">
+              <div class="furniture-bundle-visual living-scene"></div>
+              <div class="furniture-bundle-panel">
+                <div class="furniture-bundle-top">
+                  <span class="bundle-badge muted" data-vid="v-94b9c8a6">حل متكامل</span>
+                  <div class="countdown-box light">
+                    <div class="countdown-unit"><span class="num" data-vid="v-8d5ea8bf">05</span><span class="label" data-vid="v-7dd682f9">يوم</span></div>
+                    <div class="countdown-unit"><span class="num" data-vid="v-6d4a0f81">12</span><span class="label" data-vid="v-099781d4">ساعة</span></div>
+                    <div class="countdown-unit"><span class="num" data-vid="v-b2f80843">45</span><span class="label" data-vid="v-e46e7ec3">دقيقة</span></div>
+                    <div class="countdown-unit"><span class="num" data-vid="v-cfbf1fb6">30</span><span class="label" data-vid="v-6ead54de">ثانية</span></div>
+                  </div>
+                </div>
+                <h3 data-vid="v-c7e1f1fe">باقة غرفة معيشة</h3>
+                <p data-vid="v-5649974e">كنبة زاوية + طاولة وسط + طاولة جانبية</p>
+                <div class="bundle-pricing">
+                  <strong data-vid="v-fb7646b3">599,000 ر.ي</strong>
+                  <del>690,000 ر.ي</del>
+                  <span data-vid="v-56e88bd1">توفير 91,000 ر.ي</span>
+                </div>
+                <a href="search.html?q=%D8%A7%D8%B7%D9%84%D8%A8%20%D8%A7%D9%84%D8%A8%D8%A7%D9%82%D8%A9%20%D8%A7%D9%84%D8%A2%D9%86" onclick="window.scrollTo(0,0)" class="bundle-cta secondary" data-vid="v-83e6bda0">اطلب الباقة الآن</a>
+              </div>
+            </article>
+
+            <article class="furniture-bundle-card compact-bundle gold-tone" data-vid="v-ecc49f13">
+              <div class="furniture-bundle-visual dining-scene"></div>
+              <div class="furniture-bundle-panel">
+                <div class="furniture-bundle-top">
+                  <span class="bundle-badge muted" data-vid="v-61d8895f">مجموعة سفرة</span>
+                  <div class="countdown-box light">
+                    <div class="countdown-unit"><span class="num" data-vid="v-d185e23a">05</span><span class="label" data-vid="v-c7aa7378">يوم</span></div>
+                    <div class="countdown-unit"><span class="num" data-vid="v-a7146b21">12</span><span class="label" data-vid="v-311479a5">ساعة</span></div>
+                    <div class="countdown-unit"><span class="num" data-vid="v-27b8c52d">45</span><span class="label" data-vid="v-727e25dc">دقيقة</span></div>
+                    <div class="countdown-unit"><span class="num" data-vid="v-f506a092">30</span><span class="label" data-vid="v-f999cb1c">ثانية</span></div>
+                  </div>
+                </div>
+                <h3 data-vid="v-7f3389c0">باقة سفرة فاخرة</h3>
+                <p data-vid="v-dacda309">طاولة طعام + كراسي + بوفيه</p>
+                <div class="bundle-pricing">
+                  <strong data-vid="v-76352419">499,000 ر.ي</strong>
+                  <del>590,000 ر.ي</del>
+                  <span data-vid="v-973b1ae9">توفير 91,000 ر.ي</span>
+                </div>
+                <a href="search.html?q=%D8%A7%D8%B7%D9%84%D8%A8%20%D8%A7%D9%84%D8%A8%D8%A7%D9%82%D8%A9%20%D8%A7%D9%84%D8%A2%D9%86" onclick="window.scrollTo(0,0)" class="bundle-cta secondary" data-vid="v-c204f0da">اطلب الباقة الآن</a>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="product-section furniture-dense-products" id="featured-products" aria-labelledby="featured-products-title" data-vid="v-94f94f1a">
+          <div class="section-head compact furniture-section-head with-link">
+            <div>
+              <h2 id="featured-products-title" data-vid="v-fba05638">الأكثر مبيعًا</h2>
+            </div>
+            <a href="search.html?q=%D8%B9%D8%B1%D8%B6%20%D8%A7%D9%84%D9%83%D9%84" onclick="window.scrollTo(0,0)" data-vid="v-d761c66d">عرض الكل</a>
+          </div>
+          <div class="product-grid furniture-product-grid dense-six">
+            <article class="product-card" data-product-id="fur-0001" data-category="fur" data-stock="in-stock" data-price="216" data-brand="زياد هوم" data-subcategory="catalog" data-sku="ZFB-FUR-0001-5282" data-vid="v-50c60c5c">
+  <a href="product.html?id=fur-0001" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-2fd1503a" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="كنب زاوية 7 مقاعد" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-612dc833">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-acd176d9">كنب زاوية 7 مقاعد</h3>
+    
+    <div class="price">
+      <strong data-vid="v-6d574381">685,000</strong>
+      
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-7ec01b2e">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-896968c6"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-5ad0effb"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-702cb8e2">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+            <article class="product-card" data-product-id="fur-0002" data-category="fur" data-stock="in-stock" data-price="163" data-brand="بوش" data-subcategory="catalog" data-sku="ZFB-FUR-0002-1063" data-vid="v-fbef95a5">
+  <a href="product.html?id=fur-0002" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-d2b14d06" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="طاوله تلفزيون مودرن 180 سم" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-67555618">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-cd9c4862">طاوله تلفزيون مودرن 180 سم</h3>
+    
+    <div class="price">
+      <strong data-vid="v-b79d063a">175,000</strong>
+      
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-aaa22b7d">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-4fdcf575"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-6d4b9ca3"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-f0e34b43">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+            <article class="product-card" data-product-id="fur-0003" data-category="fur" data-stock="in-stock" data-price="590" data-brand="توشيبا" data-subcategory="catalog" data-sku="ZFB-FUR-0003-3744" data-vid="v-850a36c1">
+  <a href="product.html?id=fur-0003" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-1b019bfb" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="سفرة 4 كراسي خشب فاخر" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-3f4ead0c">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-d24578cf">سفرة 4 كراسي خشب فاخر</h3>
+    
+    <div class="price">
+      <strong data-vid="v-44ca563b">498,000</strong>
+      
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-d164cde6">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-2e47ff6c"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-43832d6c"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-78979249">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+            <article class="product-card" data-product-id="fur-0004" data-category="fur" data-stock="in-stock" data-price="229" data-brand="بوش" data-subcategory="catalog" data-sku="ZFB-FUR-0004-9944" data-vid="v-604ce1a0">
+  <a href="product.html?id=fur-0004" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-86f67183" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="دولاب 6 أبواب مع مرآة" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-1549c060">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-3b2c88f8">دولاب 6 أبواب مع مرآة</h3>
+    
+    <div class="price">
+      <strong data-vid="v-dd902f8d">410,000</strong>
+      
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-531e19fb">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-a5bf2828"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-ce53518f"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-a6e86029">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+            <article class="product-card" data-product-id="fur-0005" data-category="fur" data-stock="in-stock" data-price="278" data-brand="هاير" data-subcategory="catalog" data-sku="ZFB-FUR-0005-9303" data-vid="v-b301a27f">
+  <a href="product.html?id=fur-0005" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-dad3019c" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="مكتب دراسة مع رفوف" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-48de20dd">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-ec762de2">مكتب دراسة مع رفوف</h3>
+    
+    <div class="price">
+      <strong data-vid="v-4b631838">225,000</strong>
+      
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-45eb55d7">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-3e67fdbf"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-90ee755c"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-ce85c454">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+            <article class="product-card" data-product-id="fur-0006" data-category="fur" data-stock="in-stock" data-price="313" data-brand="باناسونيك" data-subcategory="catalog" data-sku="ZFB-FUR-0006-6178" data-vid="v-6dda76e0">
+  <a href="product.html?id=fur-0006" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-b6cf85ea" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="كرسي مكتب مريح" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-4c0f72d5">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-e656f705">كرسي مكتب مريح</h3>
+    
+    <div class="price">
+      <strong data-vid="v-2a1dc66d">115,000</strong>
+      
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-d787b858">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-71404c57"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-144e318b"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-8045b56f">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+            <article class="product-card" data-product-id="fur-0007" data-category="fur" data-stock="in-stock" data-price="583" data-brand="LG" data-subcategory="catalog" data-sku="ZFB-FUR-0007-9390" data-vid="v-793ebe57">
+  <a href="product.html?id=fur-0007" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-54b5cf41" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="وحدة رفوف جانبية" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-30353af2">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-42c68e67">وحدة رفوف جانبية</h3>
+    
+    <div class="price">
+      <strong data-vid="v-af45654e">98,000</strong>
+      
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-a70d21ac">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-0aea2b45"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-6c6b837a"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-12dce3a5">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+            <article class="product-card" data-product-id="fur-0008" data-category="fur" data-stock="in-stock" data-price="580" data-brand="بوش" data-subcategory="catalog" data-sku="ZFB-FUR-0008-6447" data-vid="v-92724cc6">
+  <a href="product.html?id=fur-0008" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-14d9405d" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="موكيت ناعم فاخر" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-fb01fcfe">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-3691baee">موكيت ناعم فاخر</h3>
+    
+    <div class="price">
+      <strong data-vid="v-0e449b32">95,000</strong>
+      
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-176338c7">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-96840d7d"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-15c25725"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-87cd57ef">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+            <article class="product-card" data-product-id="fur-0009" data-category="fur" data-stock="in-stock" data-price="354" data-brand="ديلونجي" data-subcategory="catalog" data-sku="ZFB-FUR-0009-8808" data-vid="v-34519e31">
+  <a href="product.html?id=fur-0009" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-ee8bd67e" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="ركنة مودرن قماش بيج" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-98835dd9">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-26645247">ركنة مودرن قماش بيج</h3>
+    
+    <div class="price">
+      <strong data-vid="v-471e52b2">560,000</strong>
+      
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-209f663e">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-b042fa48"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-52b44ce5"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-e5a3773c">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+            <article class="product-card" data-product-id="fur-0010" data-category="fur" data-stock="in-stock" data-price="501" data-brand="LG" data-subcategory="catalog" data-sku="ZFB-FUR-0010-4043" data-vid="v-73e5e9b1">
+  <a href="product.html?id=fur-0010" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-33f48a74" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="طاولة قهوة دائرية" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-21eb45be">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-8574b9d7">طاولة قهوة دائرية</h3>
+    
+    <div class="price">
+      <strong data-vid="v-a4cdc7a7">135,000</strong>
+      
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-f8389255">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-1245f931"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-0befad95"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-3e450a79">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+            <article class="product-card" data-product-id="fur-0011" data-category="fur" data-stock="in-stock" data-price="467" data-brand="توشيبا" data-subcategory="catalog" data-sku="ZFB-FUR-0011-7512" data-vid="v-f766be51">
+  <a href="product.html?id=fur-0011" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-af2a0367" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="تسريحة LED مع مرآة" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-e75aba7f">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-da17704a">تسريحة LED مع مرآة</h3>
+    
+    <div class="price">
+      <strong data-vid="v-a968c213">295,000</strong>
+      
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-c3eaf7d6">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-e8de9d23"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-6e1b9570"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-53c3586a">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+          </div>
+        </section>
+
+        <section class="brand-section furniture-brands" id="brands-section" aria-labelledby="brands-title" data-vid="v-174dead2">
+          <div class="section-head compact furniture-section-head">
+            <div><h2 id="brands-title" data-vid="v-549e03c9">تسوق حسب الماركة</h2></div>
+          </div>
+          <div class="furniture-brand-strip">
+            <span data-vid="v-4e10a0a1">IKEA</span>
+            <span data-vid="v-d4bb72b0">Prea</span>
+            <span data-vid="v-ae436ba3">HomeBox</span>
+            <span data-vid="v-1fe49582">ALFEMO</span>
+            <span data-vid="v-bb29b27e">OZ</span>
+            <span data-vid="v-63782131">ROOMZ</span>
+            <span data-vid="v-d43a2ad5">HATIL</span>
+            <span data-vid="v-803cb717">FLEXA</span>
+          </div>
+        </section>
+
+        <section class="product-section furniture-new-arrivals" id="new-arrivals" aria-labelledby="new-arrivals-title" data-vid="v-868a5616">
+          <div class="section-head compact furniture-section-head with-link">
+            <div><h2 id="new-arrivals-title" data-vid="v-2005b0ba">وصل حديثًا</h2></div>
+            <a href="search.html?q=%D8%B9%D8%B1%D8%B6%20%D8%A7%D9%84%D9%83%D9%84" onclick="window.scrollTo(0,0)" data-vid="v-54e3ed6e">عرض الكل</a>
+          </div>
+          <div class="product-grid furniture-product-grid dense-six">
+            <article class="product-card" data-product-id="fur-0012" data-category="fur" data-stock="in-stock" data-price="243" data-brand="شارپ" data-subcategory="catalog" data-sku="ZFB-FUR-0012-2651" data-vid="v-290c4e68">
+  <a href="product.html?id=fur-0012" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-788688a4" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="ركنة حرف L حديثة 6 مقاعد" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-57ab9369">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-5cebe911">ركنة حرف L حديثة 6 مقاعد</h3>
+    
+    <div class="price">
+      <strong data-vid="v-4fe3e2c6">560,000</strong>
+      
+      <span class="discount-tag tag-gold" style="position:static; display:inline-block; margin-right:8px;" data-vid="v-2e944ba0">جديد</span>
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-211c5043">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-8e0fd4e7"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-b8b75079"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-19888946">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+            <article class="product-card" data-product-id="fur-0013" data-category="fur" data-stock="in-stock" data-price="454" data-brand="LG" data-subcategory="catalog" data-sku="ZFB-FUR-0013-7090" data-vid="v-c989c07b">
+  <a href="product.html?id=fur-0013" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-3e073224" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="خزانة جزم وأغراض" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-fd70c096">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-ba66f2f3">خزانة جزم وأغراض</h3>
+    
+    <div class="price">
+      <strong data-vid="v-35eed65e">135,000</strong>
+      
+      <span class="discount-tag tag-gold" style="position:static; display:inline-block; margin-right:8px;" data-vid="v-89b914af">جديد</span>
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-911c1910">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-89b18a0e"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-27899af6"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-cd88b4a6">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+            <article class="product-card" data-product-id="fur-0014" data-category="fur" data-stock="in-stock" data-price="530" data-brand="زياد هوم" data-subcategory="catalog" data-sku="ZFB-FUR-0014-8967" data-vid="v-cfe00f61">
+  <a href="product.html?id=fur-0014" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-b62a65b0" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="تسريحة غرفة نوم LED" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-7f8c5094">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-596bb86f">تسريحة غرفة نوم LED</h3>
+    
+    <div class="price">
+      <strong data-vid="v-e959fe07">295,000</strong>
+      
+      <span class="discount-tag tag-gold" style="position:static; display:inline-block; margin-right:8px;" data-vid="v-ce5fa6c8">جديد</span>
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-23c52b61">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-45a5ee1b"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-d5be71b7"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-439c3e5d">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+            <article class="product-card" data-product-id="fur-0015" data-category="fur" data-stock="in-stock" data-price="263" data-brand="ديلونجي" data-subcategory="catalog" data-sku="ZFB-FUR-0015-1245" data-vid="v-7f12ef7c">
+  <a href="product.html?id=fur-0015" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-389bd862" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="سرير مودرن مبطن" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-7f02c823">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-c7d0280e">سرير مودرن مبطن</h3>
+    
+    <div class="price">
+      <strong data-vid="v-a90be884">385,000</strong>
+      
+      <span class="discount-tag tag-gold" style="position:static; display:inline-block; margin-right:8px;" data-vid="v-94564baa">جديد</span>
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-9fd5cb57">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-6b335e7a"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-635d8bf6"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-6fa3db71">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+            <article class="product-card" data-product-id="fur-0016" data-category="fur" data-stock="in-stock" data-price="370" data-brand="توشيبا" data-subcategory="catalog" data-sku="ZFB-FUR-0016-6067" data-vid="v-d20cf729">
+  <a href="product.html?id=fur-0016" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-9f9f28cb" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="سجاد تركي فاخر" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-2f475cbd">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-43a78c3b">سجاد تركي فاخر</h3>
+    
+    <div class="price">
+      <strong data-vid="v-56f26bd0">285,000</strong>
+      
+      <span class="discount-tag tag-gold" style="position:static; display:inline-block; margin-right:8px;" data-vid="v-f98eb796">جديد</span>
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-8661a217">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-38cdd800"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-bd6956cf"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-8de9fef3">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+            <article class="product-card" data-product-id="fur-0017" data-category="fur" data-stock="in-stock" data-price="587" data-brand="باناسونيك" data-subcategory="catalog" data-sku="ZFB-FUR-0017-9212" data-vid="v-18d85bae">
+  <a href="product.html?id=fur-0017" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-08fcf4fb" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="ستائر نافذة فاخرة" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-285a0227">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-e4a4419d">ستائر نافذة فاخرة</h3>
+    
+    <div class="price">
+      <strong data-vid="v-9a34f6ca">95,000</strong>
+      
+      <span class="discount-tag tag-gold" style="position:static; display:inline-block; margin-right:8px;" data-vid="v-1833c4d7">جديد</span>
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-12c298f9">متوفر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-addf508c"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-1714fa50"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-e64deeec">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+          </div>
+        </section>
+
+        <section class="furniture-guide-section" aria-labelledby="furniture-guide-title" data-vid="v-2c0922ed">
+          <div class="furniture-guide-card">
+            <div class="furniture-guide-image"></div>
+            <div class="furniture-guide-copy">
+              <h2 id="furniture-guide-title" data-vid="v-c3e4ca1c">دليل اختيار الأثاث</h2>
+              <ul>
+                <li data-vid="v-9d004f24">اختر المقاس المناسب قبل الشراء</li>
+                <li data-vid="v-c268b38c">نسق الألوان حسب استخدام الغرفة</li>
+                <li data-vid="v-aeebaa43">حدد أولوية القطع الأساسية أولًا</li>
+                <li data-vid="v-7fd2d400">اطلب استشارة مجانية لتجهيز المنزل</li>
+              </ul>
+              <a href="room-ideas.html" class="furniture-guide-link" data-vid="v-6ed0549f">اقرأ الدليل</a>
+            </div>
+            <div class="furniture-trust-inline">
+              <div><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg><strong data-vid="v-aa5519b4">خدمة عملاء</strong><span data-vid="v-93c98143">طوال 24/7</span></div>
+              <div><svg viewBox="0 0 24 24"><path d="M3 7h10v10H3z"></path><path d="M13 10h4l4 4v3h-8z"></path><circle cx="7.5" cy="18.5" r="1.5"></circle><circle cx="17.5" cy="18.5" r="1.5"></circle></svg><strong data-vid="v-4b9e950f">توصيل وتركيب</strong><span data-vid="v-14f59d88">سريع وآمن</span></div>
+              <div><svg viewBox="0 0 24 24"><path d="M12 1v22"></path><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14.5a3.5 3.5 0 0 1 0 7H6"></path></svg><strong data-vid="v-82563b1f">أفضل الأسعار</strong><span data-vid="v-5322a69b">تنافسية</span></div>
+              <div><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 10h18"></path></svg><strong data-vid="v-5b03fe18">دفع آمن</strong><span data-vid="v-3c4e6fb6">خيارات متعددة</span></div>
+              <div><svg viewBox="0 0 24 24"><path d="M12 21s-6.716-4.36-9-8.5C.54 8.1 3.225 4 7.2 4c2.075 0 3.6 1.2 4.8 2.7C13.2 5.2 14.725 4 16.8 4 20.775 4 23.46 8.1 21 12.5 18.716 16.64 12 21 12 21z"></path></svg><strong data-vid="v-3f0706ce">ضمان الجودة</strong><span data-vid="v-8a4c8727">خامات مختارة</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="furniture-faq-section" aria-labelledby="furniture-faq-title" data-vid="v-4fdd4901">
+          <div class="section-head compact furniture-section-head">
+            <div><h2 id="furniture-faq-title" data-vid="v-89f0f49a">أسئلة شائعة</h2></div>
+          </div>
+          <div class="faq-list furniture-faq-list">
+            <details class="faq-item"><summary class="faq-summary">هل يوجد ضمان على الأثاث؟ <span class="faq-icon" data-vid="v-9025e06b"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></span></summary><div class="faq-content" data-vid="v-1d0786a4">نعم، جميع قطع الأثاث الأساسية تشمل ضمانًا موثقًا حسب الفئة والماركة.</div></details>
+            <details class="faq-item"><summary class="faq-summary">كم مدة التوصيل والتركيب؟ <span class="faq-icon" data-vid="v-219b4b13"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></span></summary><div class="faq-content" data-vid="v-acbc8be0">داخل المدن الرئيسية يتم التنسيق للتوصيل والتركيب خلال فترة سريعة حسب الجاهزية والمخزون.</div></details>
+            <details class="faq-item"><summary class="faq-summary">هل يمكن طلب استشارة قبل الشراء؟ <span class="faq-icon" data-vid="v-9cc9fd1e"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></span></summary><div class="faq-content" data-vid="v-9c734ba3">نعم، يمكن طلب استشارة مجانية لتنسيق المساحات واختيار الباقة المناسبة لمنزلك.</div></details>
+            <details class="faq-item"><summary class="faq-summary">هل يمكن تجهيز منزل كامل كباقة واحدة؟ <span class="faq-icon" data-vid="v-67485359"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></span></summary><div class="faq-content" data-vid="v-9b8d87d0">نعم، هذا أحد تخصصات زياد ستور، ويمكننا تجهيز غرفة أو شقة أو منزل كامل عبر باقات متكاملة.</div></details>
+          </div>
+        </section>
+      </main>
+
+      
+
+<footer class="site-footer" data-vid="v-4f980f36">
+    <div class="footer-top">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col brand-col">
+                    <h3 data-vid="store_name">زياد ستور</h3>
+                    <p data-vid="footer_about">وجهتك الأولى للتسوق الإلكتروني بمنتجات أصلية وتجربة تسوق لا تُنسى.</p>
+                    <div class="social-links">
+                        <a href="https://facebook.com" data-vid="social_facebook" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a>
+                        <a href="https://instagram.com" data-vid="social_instagram" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
+                        <a href="https://twitter.com" data-vid="social_twitter" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path></svg></a>
+                        <a href="https://tiktok.com" data-vid="social_tiktok" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 0h1.98c.144 2.58 1.97 4.776 4.54 5.24v3.132c-1.354-.044-2.612-.52-3.69-1.31v7.62a5.41 5.41 0 1 1-5.41-5.41c.42 0 .82.048 1.2.14v3.23a2.18 2.18 0 1 0 1.38 2.03V0z"></path></svg></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4 data-vid="v-485cdec6">روابط سريعة</h4>
+                    <ul>
+                        <li data-vid="v-8f22ec09"><a href="offers.html" data-vid="v-a76ee51c">العروض الخاصة</a></li>
+                        <li data-vid="v-f047c1ee"><a href="search.html?q=الجديد" data-vid="v-354a2d7b">أحدث المنتجات</a></li>
+                        <li data-vid="v-f79f10d1"><a href="search.html?q=الأكثر مبيعا" data-vid="v-af998bbd">الأكثر مبيعاً</a></li>
+                        <li data-vid="v-a188d8e0"><a href="/#categories" data-vid="v-e660f3f5">تصفح الأقسام</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-vid="v-98b5790d">خدمة العملاء</h4>
+                    <ul>
+                        <li data-vid="v-3c05014a"><a href="track-order.html" data-vid="v-8ffdf0d0">تتبع الطلب</a></li>
+                        <li data-vid="v-6a49290f"><a href="faq.html" data-vid="v-466eb9d2">الأسئلة الشائعة</a></li>
+                        <li data-vid="v-fa76a17c"><a href="/terms.html" data-vid="v-8899338a">سياسة الاسترجاع</a></li>
+                        <li data-vid="v-2614f709"><a href="/shipping.html" data-vid="v-63afd66f">معلومات الشحن</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col contact-col">
+                    <h4 data-vid="v-58e8eb7a">تواصل معنا</h4>
+                    <ul>
+                        <li data-vid="v-6c4ed1c1">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                            <span data-vid="footer_phone">+967775010726</span>
+                        </li>
+                        <li data-vid="v-d69a70b5">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                            <span data-vid="footer_email">zeyad775010@gmail.com</span>
+                        </li>
+                        <li data-vid="v-d75ddc0f">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                            <span data-vid="footer_address">صنعاء، شارع الزبيري</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <div class="container">
+            <div class="footer-bottom-flex">
+                <p class="copyright" data-vid="v-1dc90226">© 2026 جميع الحقوق محفوظة - <span data-vid="store_name">زياد ستور</span></p>
+                <div class="payment-methods">
+                    <svg viewBox="0 0 38 24" fill="none"><rect width="38" height="24" rx="4" fill="var(--surface-2)"></rect><path d="M12 7L14.5 16H17L19.5 7H17L15.75 12.5L14.5 7H12Z" fill="var(--ink)"></path></svg>
+                    <svg viewBox="0 0 38 24" fill="none"><rect width="38" height="24" rx="4" fill="var(--surface-2)"></rect><circle cx="15" cy="12" r="6" fill="#eb001b"></circle><circle cx="23" cy="12" r="6" fill="#f79e1b"></circle></svg>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+      <a href="contact.html" class="whatsapp-float" aria-label="تواصل عبر الواتساب" style="position: fixed; bottom: 24px; right: 24px; background: #25D366; color: white; width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; z-index: 100; box-shadow: var(--shadow-lift); transition: transform var(--ease);" data-vid="v-8f7a6b2c">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor" stroke="none"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a5.8 5.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.81 11.81 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.88 11.88 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 0 0-3.48-8.413Z"></path></svg>
+      </a>
+    </div>
+  
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const defaultTitle = 'الأثاث المنزلي';
+    const categorySelector = '.furniture-mini-cat, .furniture-category-card, .furniture-option, .category-card';
+    
+    const nativeCategoryButtons = document.querySelectorAll(categorySelector);
+    const productCards = document.querySelectorAll('article.product-card');
+    
+    const aliases = {
+        'أنظمة': ['نظام', 'انظمة', 'سيستم'],
+        'ألواح': ['لوح', 'لوحة', 'الواح'],
+        'بطاريات': ['بطارية'],
+        'الإنفرترات': ['إنفرتر', 'انفرتر', 'محول', 'محولات'],
+        'منظمات': ['منظم'],
+        'مضخات': ['مضخة'],
+        'كابلات': ['كابل', 'سلك', 'اسلاك'],
+        'تركيبات': ['هيكل', 'هياكل', 'تركيب'],
+        'مجالس': ['مجلس', 'طقم', 'كنب', 'ركنية'],
+        'غرف': ['غرفة', 'سرير'],
+        'كنب': ['كنبة', 'زاوية'],
+        'سفر': ['سفرة', 'طاولة'],
+        'مكاتب': ['مكتب'],
+        'كراسي': ['كرسي'],
+        'خزانات': ['خزانة', 'دولاب'],
+        'ستاندات': ['ستاند'],
+        'ستائر': ['ستارة'],
+        'موكيت': ['سجاد', 'سجادة', 'موكيت'],
+        'مفارش': ['مفرش'],
+        // Majalis extra aliases
+        'رويال': ['ملكي', 'وصابي'],
+        'اقتصادي': ['اقتصادي'],
+        'مطرز': ['مطرز', 'قتيبة'],
+        'كشمير': ['كشمير'],
+        'مودرن': ['مودرن', 'ركنية'],
+        'خليجي': ['خليجي'],
+        'أرضي': ['أرضي']
+    };
+
+    function extractCatName(btn) {
+        let el = btn.querySelector('strong') || btn.querySelector('span:not([aria-hidden])') || btn;
+        let text = el.innerHTML.replace(/<br\s*\/?>/gi, ' ').replace(/<[^>]*>?/gm, '');
+        return text.replace(/\s+/g, ' ').trim();
+    }
+
+    const keywordsExtracted = Array.from(nativeCategoryButtons).map(btn => {
+        const name = extractCatName(btn);
+        let words = name.split(' ').filter(w => w.length > 2);
+        let kw = words[0] || name;
+        const generic = ['مجالس', 'غرف', 'مطبخ', 'مطابخ', 'طقم', 'أطقم', 'تفصيل', 'باقات', 'غرفة', 'كنب', 'كراسي', 'طاولات', 'قطيفة'];
+        if (words.length > 1 && generic.includes(kw)) kw = words[1];
+        if (words.length > 2 && generic.includes(kw)) kw = words[2];
+        return { name, kw };
+    }).filter(t => t.name.length > 0);
+
+    productCards.forEach(card => {
+        if(!card.hasAttribute('data-category')) {
+            const cardText = card.textContent;
+            let matchedCat = 'all';
+            for(let {name, kw} of keywordsExtracted) {
+                const related = aliases[kw] || [];
+                const searchTerms = [kw, name, ...related];
+                
+                if(searchTerms.some(term => cardText.includes(term))) {
+                    matchedCat = name;
+                    break;
+                }
+            }
+            card.setAttribute('data-category', matchedCat);
+        }
+    });
+
+    function updateCatalog(categoryName) {
+        const h1El = document.getElementById('catalog-h1');
+        const descEl = document.getElementById('catalog-desc');
+        const breadEl = document.getElementById('breadcrumb-current');
+        const offerDiv = document.getElementById('catalog-dynamic-offer');
+        const offerDescDyn = document.getElementById('offer-desc-dyn');
+        
+        if(!categoryName || categoryName === 'all' || categoryName === defaultTitle) {
+            h1El.textContent = defaultTitle;
+            descEl.textContent = 'تشكيلة مميزة من ' + defaultTitle + ' بتصاميم تناسب ذوقك ومساحتك.';
+            breadEl.textContent = defaultTitle;
+            if(offerDiv) offerDiv.style.display = 'flex';
+            if(offerDescDyn) offerDescDyn.textContent = 'على ' + defaultTitle;
+        } else {
+            h1El.textContent = categoryName;
+            descEl.textContent = 'تشكيلة مميزة من ' + categoryName + ' بتصاميم تناسب ذوقك ومساحتك.';
+            breadEl.textContent = categoryName;
+            
+            if(offerDiv) offerDiv.style.display = 'flex';
+            if(offerDescDyn) offerDescDyn.textContent = 'على ' + categoryName;
+        }
+
+        let visibleCount = 0;
+        productCards.forEach(card => {
+            const catAttr = card.getAttribute('data-category');
+            if (!categoryName || categoryName === 'all' || categoryName === defaultTitle || catAttr === categoryName) {
+                card.style.display = ''; 
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        document.getElementById('catalog-total-count').textContent = visibleCount + ' منتج';
+        document.getElementById('catalog-result-count').textContent = 'عرض ' + visibleCount + ' نتيجة';
+        
+        nativeCategoryButtons.forEach(btn => {
+            if(extractCatName(btn) === categoryName) {
+                btn.style.boxShadow = '0 0 0 2px var(--gold, #c38c35)';
+                btn.style.borderColor = 'var(--gold, #c38c35)';
+                btn.classList.add('active');
+            } else {
+                btn.style.boxShadow = 'none';
+                btn.style.borderColor = ''; 
+                btn.classList.remove('active');
+            }
+        });
+    }
+
+    // Hijack or Inject the native "عرض الكل" link
+    const firstCat = nativeCategoryButtons[0];
+    if (firstCat) {
+        const parentSection = firstCat.closest('section, .section-block, .solar-top-cats, [class*="-section"]') || firstCat.parentNode;
+        if (parentSection) {
+            let headerDiv = parentSection.querySelector('.section-head, [class*="-row-head"]');
+            
+            // If the section doesn't have a header row (like in Furniture), create one safely
+            if (!headerDiv) {
+                headerDiv = document.createElement('div');
+                headerDiv.className = 'section-head compact';
+                headerDiv.style.cssText = 'display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; width: 100%;';
+                
+                const titleDiv = document.createElement('div');
+                titleDiv.innerHTML = '<h2 style="margin:0; font-size:1.45rem; color:var(--ink);">تسوق حسب النوع</h2>';
+                headerDiv.appendChild(titleDiv);
+                
+                // Insert it right before the category rail container
+                const railContainer = firstCat.closest('.furniture-category-strip, .kitchen-categories-grid, .bedroom-categories-rail, .majalis-types-rail, .category-icons-grid') || firstCat.parentNode;
+                if(railContainer && railContainer.parentNode) {
+                    railContainer.parentNode.insertBefore(headerDiv, railContainer);
+                } else {
+                    parentSection.insertBefore(headerDiv, parentSection.firstChild);
+                }
+            }
+
+            if (headerDiv) {
+                let nativeShowAll = Array.from(headerDiv.querySelectorAll('a')).find(a => a.textContent.includes('عرض الكل'));
+                if (!nativeShowAll) {
+                    nativeShowAll = document.createElement('a');
+                    nativeShowAll.href = '#';
+                    nativeShowAll.textContent = 'عرض الكل';
+                    nativeShowAll.style.cssText = 'text-decoration: none; color: #b97b21; font-size: .88rem; font-weight: 600; cursor: pointer; display: inline-block; padding: 4px 8px;';
+                    headerDiv.appendChild(nativeShowAll);
+                } else {
+                    // Make sure it looks clickable and isn't hidden
+                    nativeShowAll.style.display = 'inline-block';
+                    nativeShowAll.style.cursor = 'pointer';
+                }
+                
+                nativeShowAll.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const newUrl = new URL(window.location);
+                    newUrl.searchParams.delete('category');
+                    window.history.pushState({}, '', newUrl);
+                    updateCatalog('all');
+                    parentSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+            }
+        }
+    }
+
+    nativeCategoryButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const catName = extractCatName(btn);
+            
+            const newUrl = new URL(window.location);
+            newUrl.searchParams.set('category', encodeURIComponent(catName));
+            window.history.pushState({}, '', newUrl);
+            
+            updateCatalog(catName);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    });
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlCat = urlParams.get('category');
+    if(urlCat) {
+        updateCatalog(decodeURIComponent(urlCat));
+    } else {
+        updateCatalog('all');
+    }
+});
+</script>
+
+
+
+
+
+<!-- FLOATING CART INJECTION -->
+<div id="floating-cart" style="position: fixed; bottom: 24px; left: 24px; z-index: 99999; display: flex; align-items: center; justify-content: center; width: 64px; height: 64px; background-color: var(--gold, #c38c35); border-radius: 50%; box-shadow: 0 4px 16px rgba(0,0,0,0.25); cursor: pointer; transition: transform 0.3s ease, background-color 0.3s ease;" onclick="window.location.href='cart.html'">
+    <svg viewBox="0 0 24 24" style="width: 28px; height: 28px; fill: none; stroke: #fff; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+    <span id="floating-cart-count" style="position: absolute; top: -4px; right: -4px; background: #dc2626; color: #fff; font-size: 0.85rem; font-weight: bold; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" data-vid="v-33f1b640">0</span>
+</div>
+
+<style>
+.btn-add-cart-mini {
+    background-color: var(--gold, #c38c35);
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-family: inherit;
+    font-size: 0.95rem;
+}
+.btn-add-cart-mini:hover {
+    background-color: var(--gold-dark, #a8762a);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(195, 140, 53, 0.2);
+}
+#floating-cart:hover {
+    background-color: var(--gold-dark, #a8762a);
+    transform: translateY(-4px) scale(1.05);
+}
+</style>
+
+<!-- Inline addToCart removed to allow global site.js?v=20260830-v2327 logic -->
+<!-- END FLOATING CART INJECTION -->
+  <script src="site.js?v=714c6eb3" defer=""></script>
+
+  <script src="zfb-config.js"></script>
+<script src="products_db.js"></script>
+<script src="zfb-core.js?v=cd21c70c" defer=""></script>
+  <script src="assets/js/core/premium-cards.js?v=f2491789"></script>
+  <script src="/search-manager.js?v=20260830-v2327"></script>\n  <script src="/wishlist-manager.js?v=20260830-v2327"></script>\n
+
+
+  <script src="assets/js/core/storefront-2026.js?v=a6bef9ab1d2b033c"></script>
+</body></html>

@@ -1,0 +1,558 @@
+<%- include('../../partials/head', { title }) %>
+<link rel="stylesheet" href="/admin-assets/css/ai-employee.css?v=1">
+<%- include('../../partials/sidebar', { active }) %>
+<main class="admin-main ai-shell" data-ai-view="<%= view %>">
+  <%- include('../../partials/topbar') %>
+  <div class="admin-content ai-content">
+    <section class="ai-command-head">
+      <div>
+        <span class="ai-eyebrow">Zeyad Store AI Operations</span>
+        <h1>الموظف الذكي لإدارة زياد ستور</h1>
+        <p>مركز عمليات آمن يعتمد على بيانات المتجر الفعلية، وصلاحيات أدوات واضحة، وتأكيد منفصل لأي إجراء كتابي.</p>
+      </div>
+      <div class="ai-status-strip">
+        <span><i></i> API <b><%= insights.system.api %></b></span>
+        <span><i></i> DB <b><%= insights.system.database %></b></span>
+        <span>Provider <b><%= settings.provider %></b></span>
+      </div>
+    </section>
+
+    <nav class="ai-subnav" aria-label="AI Employee">
+      <a class="<%= view === 'home' ? 'active' : '' %>" href="/admin/ai-employee"><span class="material-symbols-rounded">forum</span>الموظف الداخلي</a>
+      <a class="<%= view === 'overview' ? 'active' : '' %>" href="/admin/ai-employee/overview"><span class="material-symbols-rounded">monitoring</span>أداء نجم (العملاء)</a>
+      <a class="<%= view === 'requests' ? 'active' : '' %>" href="/admin/ai-employee/requests"><span class="material-symbols-rounded">support_agent</span>طلبات العملاء</a>
+      <a class="<%= view === 'conversations' ? 'active' : '' %>" href="/admin/ai-employee/customer-conversations"><span class="material-symbols-rounded">chat</span>محادثات العملاء</a>
+      <a class="<%= view === 'audits' ? 'active' : '' %>" href="/admin/ai-employee/audits"><span class="material-symbols-rounded">security</span>سجل العمليات (Audit)</a>
+      <a class="<%= view === 'insights' ? 'active' : '' %>" href="/admin/ai-employee/insights"><span class="material-symbols-rounded">query_stats</span>الرؤى</a>
+      <a class="<%= view === 'tasks' ? 'active' : '' %>" href="/admin/ai-employee/tasks"><span class="material-symbols-rounded">task_alt</span>المهام</a>
+      <a class="<%= view === 'settings' ? 'active' : '' %>" href="/admin/ai-employee/settings"><span class="material-symbols-rounded">tune</span>الإعدادات والمزود</a>
+      <a class="<%= view === 'knowledge' ? 'active' : '' %>" href="/admin/ai-employee/knowledge"><span class="material-symbols-rounded">library_books</span>المعرفة والسياسات</a>
+      <a class="<%= view === 'permissions' ? 'active' : '' %>" href="/admin/ai-employee/permissions"><span class="material-symbols-rounded">shield_lock</span>الصلاحيات</a>
+    </nav>
+
+    <% if (view === 'home') { %>
+      <section class="ai-grid">
+        <aside class="ai-panel ai-overview-panel">
+          <div class="ai-panel-title">
+            <h2>Today's Store Briefing</h2>
+            <span><%= briefing.title %></span>
+          </div>
+          <div class="ai-metric-grid">
+            <div><small>مبيعات اليوم</small><strong><%= helpers.formatPrice(briefing.overview.todayRevenue) %></strong></div>
+            <div><small>طلبات اليوم</small><strong><%= briefing.overview.todayOrders %></strong></div>
+            <div><small>الطلبات المعلقة</small><strong><%= briefing.overview.pendingOrders %></strong></div>
+            <div><small>بدون صور</small><strong><%= briefing.overview.productsWithoutImages %></strong></div>
+            <div><small>بدون أسعار</small><strong><%= briefing.overview.productsWithoutPrices %></strong></div>
+            <div><small>رسائل جديدة</small><strong><%= briefing.overview.unreadMessages %></strong></div>
+          </div>
+          <div class="ai-recommendation"><span class="material-symbols-rounded">tips_and_updates</span><%= briefing.recommendation %></div>
+          <div class="ai-mini-list">
+            <% briefing.priorities.forEach(task => { %>
+              <a href="/admin/ai-employee/tasks"><b><%= task.priority %></b><%= task.title %></a>
+            <% }) %>
+          </div>
+        </aside>
+
+        <section class="ai-panel ai-chat-panel">
+          <div class="ai-chat-toolbar">
+            <div>
+              <h2>محادثة العمليات</h2>
+              <span>الأجوبة تستخدم أدوات آمنة وبيانات فعلية.</span>
+            </div>
+            <div class="ai-chat-actions">
+              <button class="ai-icon-btn" id="aiNewConversation" title="محادثة جديدة"><span class="material-symbols-rounded">add</span></button>
+              <button class="ai-icon-btn" id="aiStop" title="إيقاف"><span class="material-symbols-rounded">stop_circle</span></button>
+            </div>
+          </div>
+
+          <div class="ai-chat-layout">
+            <aside class="ai-conversations">
+              <input id="aiConversationSearch" placeholder="بحث في المحادثات">
+              <div id="aiConversationList">
+                <% conversations.forEach(conversation => { %>
+                  <button data-conversation-id="<%= conversation.id %>"><%= conversation.title %><small><%= helpers.formatDateTime(conversation.updated_at) %></small></button>
+                <% }) %>
+              </div>
+            </aside>
+            <div class="ai-chat-main">
+              <div class="ai-suggestions">
+                <% ['اعرض لي مبيعات اليوم','ما أكثر المنتجات مبيعًا؟','ما المنتجات التي لم تبع منذ 30 يومًا؟','ما الطلبات الجديدة؟','هل يوجد منتجات بدون صور؟','افحص أخطاء الموقع','حلل أداء المتجر','ما الصفحات التي تحتاج تحسين SEO؟','اعطني تقريرًا عن المتجر','ما الذي يحتاج انتباهي اليوم؟'].forEach(command => { %>
+                  <button type="button" data-ai-suggestion="<%= command %>"><%= command %></button>
+                <% }) %>
+              </div>
+              <div class="ai-messages" id="aiMessages" aria-live="polite">
+                <div class="ai-message assistant">
+                  <div class="ai-avatar">AI</div>
+                  <div class="ai-bubble">أنا جاهز لمراجعة المتجر. سأستخدم البيانات المتاحة فقط، وسأطلب تأكيدك قبل أي تعديل.</div>
+                </div>
+              </div>
+              <form class="ai-composer" id="aiComposer">
+                <textarea id="aiPrompt" rows="2" placeholder="اكتب أمرًا تشغيليًا للموظف الذكي"></textarea>
+                <button type="submit"><span class="material-symbols-rounded">send</span></button>
+              </form>
+              <div class="ai-response-actions">
+                <button id="aiCopyLast" type="button"><span class="material-symbols-rounded">content_copy</span>نسخ</button>
+                <button id="aiRegenerate" type="button"><span class="material-symbols-rounded">refresh</span>إعادة التوليد</button>
+                <button id="aiRetry" type="button"><span class="material-symbols-rounded">replay</span>إعادة المحاولة</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <aside class="ai-panel ai-side-panel">
+          <div class="ai-panel-title"><h2>AI Insights</h2><span>Live</span></div>
+          <canvas id="aiMiniChart" height="180"></canvas>
+          <div class="ai-health-list">
+            <div><span>صحة API</span><b><%= insights.system.api %></b></div>
+            <div><span>قاعدة البيانات</span><b><%= insights.system.database %></b></div>
+            <div><span>أداء الصفحات</span><b><%= insights.performance.available ? 'متاح' : 'غير مجمع' %></b></div>
+            <div><span>سجلات الأخطاء</span><b><%= insights.website.unavailableMetrics.includes('browser_javascript_errors') ? 'غير مجمعة' : 'متاحة' %></b></div>
+          </div>
+        </aside>
+      </section>
+    <% } %>
+
+    <% if (view === 'insights') { %>
+      <section class="ai-panel">
+        <div class="ai-panel-title">
+          <h2>الرؤى التشغيلية</h2>
+          <form method="GET" class="ai-periods">
+            <% [['today','اليوم'],['yesterday','أمس'],['7d','7 أيام'],['30d','30 يوم'],['90d','90 يوم']].forEach(option => { %>
+              <button name="period" value="<%= option[0] %>" class="<%= period === option[0] ? 'active' : '' %>"><%= option[1] %></button>
+            <% }) %>
+          </form>
+        </div>
+        <div class="ai-insight-grid">
+          <div><h3>Sales Insights</h3><canvas id="aiSalesChart" height="190"></canvas></div>
+          <div><h3>Product Insights</h3><% insights.products.slice(0,6).forEach(p => { %><p><b><%= p.product_title %></b><span><%= p.quantity_sold %> / <%= helpers.formatPrice(p.revenue) %></span></p><% }) %></div>
+          <div><h3>Inventory Insights</h3><p>بدون صور <span><%= insights.inventory.withoutImages.length %></span></p><p>بدون أسعار <span><%= insights.inventory.withoutPrices.length %></span></p></div>
+          <div><h3>Website Insights</h3><p>العروض <span><%= insights.website.offers %></span></p><p>الوسائط <span><%= insights.website.mediaItems %></span></p></div>
+          <div><h3>SEO Insights</h3><p>منتجات بدون وصف <span><%= insights.seo.productsWithoutDescriptions %></span></p><p>ملاحظة <span><%= insights.seo.note %></span></p></div>
+          <div><h3>Performance Insights</h3><p><%= insights.performance.message %></p></div>
+        </div>
+      </section>
+    <% } %>
+
+    <% if (view === 'tasks') { %>
+      <section class="ai-panel">
+        <div class="ai-panel-title"><h2>المهام الذكية</h2><span><%= tasks.filter(t => t.status === 'open').length %> Open</span></div>
+        <div class="ai-task-list" id="aiTaskList">
+          <% tasks.forEach(task => { %>
+            <article data-task-id="<%= task.id %>" class="<%= task.status %>">
+              <strong class="<%= task.priority %>"><%= task.priority %></strong>
+              <h3><%= task.title %></h3>
+              <p><%= task.description %></p>
+              <div>
+                <button data-task-status="complete">Mark Complete</button>
+                <button data-task-status="ignored">Ignore</button>
+                <button data-ask-ai="<%= task.title %>">Ask AI</button>
+                <% if (task.related_type === 'products') { %><a href="/admin/products">Open Related Items</a><% } %>
+                <% if (task.related_type === 'orders') { %><a href="/admin/orders">Open Related Items</a><% } %>
+              </div>
+            </article>
+          <% }) %>
+        </div>
+      </section>
+    <% } %>
+
+    <% if (view === 'activity') { %>
+      <section class="ai-panel">
+        <div class="ai-panel-title"><h2>سجل نشاط الموظف الذكي</h2><span>Audit</span></div>
+        <div class="ai-activity-table">
+          <% activity.forEach(item => { %>
+            <div>
+              <time><%= helpers.formatDateTime(item.created_at) %></time>
+              <b><%= item.actor %></b>
+              <span><%= item.action %></span>
+              <small><%= item.tool_name || '' %> <%= item.confirmation_status || '' %></small>
+            </div>
+          <% }) %>
+        </div>
+      </section>
+    <% } %>
+
+    <% if (view === 'settings') { %>
+      <section class="ai-settings-grid">
+        <form class="ai-panel ai-form" id="aiSettingsForm">
+          <div class="ai-panel-title"><h2>Provider Configuration</h2><span>Server-side only</span></div>
+          <label>Provider<select name="provider"><% providers.forEach(provider => { %><option value="<%= provider.id %>" <%= settings.provider === provider.id ? 'selected' : '' %>><%= provider.label %></option><% }) %></select></label>
+          <label>Model<input name="model" value="<%= settings.model %>" dir="ltr"></label>
+          <label>API Base URL<input name="apiBaseUrl" value="<%= settings.apiBaseUrl %>" dir="ltr"></label>
+          <label>API Token<div class="ai-secret-row"><input name="apiToken" value="<%= settings.maskedToken %>" type="password" dir="ltr"><button type="button" id="aiToggleToken"><span class="material-symbols-rounded">visibility</span></button></div></label>
+          <label>Region<input name="region" value="<%= settings.region %>" dir="ltr"></label>
+          <div class="ai-two"><label>Temperature<input name="temperature" type="number" min="0" max="2" step="0.1" value="<%= settings.temperature %>"></label><label>Max Tokens<input name="maxTokens" type="number" value="<%= settings.maxTokens %>"></label></div>
+          <label>Request Timeout<input name="requestTimeout" type="number" value="<%= settings.requestTimeout %>"></label>
+          <div class="ai-toggles"><label><input type="checkbox" name="enableStreaming" <%= settings.enableStreaming ? 'checked' : '' %>>Enable Streaming</label><label><input type="checkbox" name="enableToolCalling" <%= settings.enableToolCalling ? 'checked' : '' %>>Enable Tool Calling</label></div>
+          <div class="ai-form-actions"><button type="submit">Save</button><button type="button" id="aiTestProvider">Test Connection</button></div>
+          <p id="aiSettingsResult"></p>
+        </form>
+        <form class="ai-panel ai-form" id="aiInstructionsForm">
+          <div class="ai-panel-title"><h2>System Instructions</h2><span>Versioned</span></div>
+          <textarea name="body" rows="18"><%= systemInstructions.body %></textarea>
+          <div class="ai-form-actions"><button type="submit">Save</button><button type="button" id="aiResetInstructions">Reset to Default</button></div>
+        </form>
+      </section>
+    <% } %>
+
+    <% if (view === 'knowledge') { %>
+      <section class="ai-settings-grid">
+        <form class="ai-panel ai-form" id="aiKnowledgeForm">
+          <div class="ai-panel-title"><h2>Store Knowledge</h2><span>Policies</span></div>
+          <% const knowledgeDefaults = ['Company information','Delivery policies','Warranty policies','Return policy','Payment methods','Contact information','Branches','Business hours','Product policies']; %>
+          <% knowledgeDefaults.forEach((title, index) => { const existing = knowledge.find(k => k.title === title) || {}; %>
+            <label><%= title %><textarea name="knowledge_<%= index %>" data-title="<%= title %>" rows="3"><%= existing.content || '' %></textarea></label>
+          <% }) %>
+          <div class="ai-form-actions"><button type="submit">Save Knowledge</button></div>
+        </form>
+        <form class="ai-panel ai-form" id="aiMemoryForm">
+          <div class="ai-panel-title"><h2>AI Memory</h2><span>Controlled</span></div>
+          <label>Type<select name="memory_type"><option value="conversation_memory">Conversation memory</option><option value="administrator_instruction">Administrator instruction</option><option value="business_rule">Business rule</option></select></label>
+          <label>Title<input name="title"></label>
+          <label>Content<textarea name="content" rows="5"></textarea></label>
+          <div class="ai-form-actions"><button type="submit">Save Memory</button><button type="button" id="aiClearMemory">Clear All AI Memory</button></div>
+          <div class="ai-memory-list" id="aiMemoryList">
+            <% memory.forEach(item => { %><div><b><%= item.title %></b><span><%= item.memory_type %></span><p><%= item.content %></p><button type="button" data-delete-memory="<%= item.id %>">Delete</button></div><% }) %>
+          </div>
+        </form>
+      </section>
+    <% } %>
+
+    <% if (view === 'permissions') { %>
+      <form class="ai-panel ai-form" id="aiPermissionsForm">
+        <div class="ai-panel-title"><h2>Tool Permissions</h2><span>Read / Write separation</span></div>
+        <div class="ai-permissions-grid">
+          <% permissions.forEach(permission => { %>
+            <label class="<%= permission.operation_type %>">
+              <input type="checkbox" name="enabled" value="<%= permission.permission_key %>" <%= permission.is_enabled ? 'checked' : '' %>>
+              <span><%= permission.label_ar %></span>
+              <small><%= permission.operation_type %> / <%= permission.group_name %></small>
+            </label>
+          <% }) %>
+        </div>
+        <div class="ai-form-actions"><button type="submit">Save Permissions</button></div>
+      </form>
+    <% } %>
+
+    <% if (view === 'overview') { %>
+      <section class="ai-panel">
+        <div class="ai-panel-title"><h2>نظرة عامة على أداء موظف الذكاء الاصطناعي (نجم)</h2><span>مؤشرات الخدمة والتفاعل</span></div>
+        <div class="ai-metric-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); margin-bottom: 24px;">
+          <div style="background: var(--admin-card-bg, #fff); padding: 18px; border-radius: 12px; border: 1px solid var(--admin-border, #e2e8f0);">
+            <small style="color: #64748b; display: block; margin-bottom: 4px;">إجمالي المحادثات</small>
+            <strong style="font-size: 24px; color: #0f6b4f;"><%= customerStats.totalConversations %></strong>
+          </div>
+          <div style="background: var(--admin-card-bg, #fff); padding: 18px; border-radius: 12px; border: 1px solid var(--admin-border, #e2e8f0);">
+            <small style="color: #64748b; display: block; margin-bottom: 4px;">طلبات المساعدة (Handoff)</small>
+            <strong style="font-size: 24px; color: #c79a52;"><%= customerStats.totalRequests %></strong>
+          </div>
+          <div style="background: var(--admin-card-bg, #fff); padding: 18px; border-radius: 12px; border: 1px solid var(--admin-border, #e2e8f0);">
+            <small style="color: #64748b; display: block; margin-bottom: 4px;">الطلبات المعلقة للرد</small>
+            <strong style="font-size: 24px; color: #ef4444;"><%= customerStats.pendingRequests %></strong>
+          </div>
+          <div style="background: var(--admin-card-bg, #fff); padding: 18px; border-radius: 12px; border: 1px solid var(--admin-border, #e2e8f0);">
+            <small style="color: #64748b; display: block; margin-bottom: 4px;">الطلبات المكتملة عبر نجم</small>
+            <strong style="font-size: 24px; color: #22c55e;"><%= customerStats.assistedOrders %></strong>
+          </div>
+        </div>
+        <div style="background: rgba(15, 107, 79, 0.06); padding: 18px; border-radius: 12px; border: 1px solid rgba(15, 107, 79, 0.15);">
+          <strong style="color: #0f6b4f; display: block; margin-bottom: 6px;">معدل تحويل الاستفسارات إلى طلبات: <%= customerStats.conversionRate %></strong>
+          <p style="margin: 0; font-size: 13.5px; color: #475569;">يقوم نجم بتوجيه العملاء تلقائياً واقتراح المنتجات التكميلية وتجهيز مسودات الطلبات دون تدخل بشري مباشر مع الحفاظ على دقة الأسعار والضمانات.</p>
+        </div>
+      </section>
+    <% } %>
+
+    <% if (view === 'requests') { %>
+      <section class="ai-panel">
+        <div class="ai-panel-title"><h2>طلبات الدعم والتحويل البشري (Human Handoff Tickets)</h2><span>قائمة التذاكر المسجلة عبر نجم</span></div>
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse; text-align: right; font-size: 13.5px;">
+            <thead>
+              <tr style="background: rgba(0,0,0,0.03); border-bottom: 2px solid #e2e8f0;">
+                <th style="padding: 10px;">رقم الطلب</th>
+                <th style="padding: 10px;">العميل</th>
+                <th style="padding: 10px;">الهاتف</th>
+                <th style="padding: 10px;">الفئة</th>
+                <th style="padding: 10px;">تفاصيل الطلب</th>
+                <th style="padding: 10px;">الحالة</th>
+                <th style="padding: 10px;">التاريخ</th>
+                <th style="padding: 10px;">الإجراء</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (!customerRequests || customerRequests.length === 0) { %>
+                <tr><td colspan="8" style="text-align: center; padding: 24px; color: #94a3b8;">لا توجد طلبات دعم مسجلة حتى الآن.</td></tr>
+              <% } else { %>
+                <% customerRequests.forEach(req => { %>
+                  <tr style="border-bottom: 1px solid #e2e8f0;">
+                    <td style="padding: 10px; font-weight: bold; color: #0f6b4f;"><%= req.request_id %></td>
+                    <td style="padding: 10px;"><%= req.customer_name %></td>
+                    <td style="padding: 10px;" dir="ltr"><%= req.phone %></td>
+                    <td style="padding: 10px;"><span style="background: #f1f5f9; padding: 2px 8px; border-radius: 4px;"><%= req.category %></span></td>
+                    <td style="padding: 10px; max-width: 250px;"><%= req.request_text %></td>
+                    <td style="padding: 10px;">
+                      <% if (req.status === 'pending') { %><span style="color: #ef4444; font-weight: bold;">معلق</span><% } %>
+                      <% if (req.status === 'in_progress') { %><span style="color: #f59e0b; font-weight: bold;">جاري المعالجة</span><% } %>
+                      <% if (req.status === 'resolved') { %><span style="color: #22c55e; font-weight: bold;">تم الحل</span><% } %>
+                      <% if (req.status === 'cancelled') { %><span style="color: #64748b;">ملغي</span><% } %>
+                    </td>
+                    <td style="padding: 10px; font-size: 12px; color: #64748b;"><%= req.created_at %></td>
+                    <td style="padding: 10px; white-space: nowrap;">
+                      <button type="button" class="req-view-btn"
+                              data-req='<%- JSON.stringify({ id: req.id, request_id: req.request_id, customer_name: req.customer_name, phone: req.phone, category: req.category, request_text: req.request_text, status: req.status, statusLabel: req.statusLabel, admin_notes: req.admin_notes || "", order_id: req.order_id || "", created_at: String(req.created_at || ""), requested_products: req.requested_products || "", quantity: req.quantity || "", budget: req.budget || "", najm_notes: req.najm_notes || "", priority: req.priority || "" }).replace(/'/g, "&#39;") %>'
+                              style="background: #0f6b4f; color: #fff; border: none; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 12px; margin-inline-end: 6px;">عرض / تعديل</button>
+                      <% if (req.status !== 'resolved') { %>
+                      <button type="button" onclick="updateRequestStatus('<%= req.id %>', 'resolved')" style="background: #22c55e; color: #fff; border: none; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 12px;">حل الطلب</button>
+                      <% } %>
+                    </td>
+                  </tr>
+                <% }) %>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Request details / edit drawer. The panel previously had no way to
+           read a request's full body or record what was done about it. -->
+      <div id="reqModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:9999; align-items:center; justify-content:center;">
+        <div style="background:#0f172a; color:#e2e8f0; width:min(680px,94vw); max-height:88vh; overflow:auto; border-radius:14px; padding:22px; box-shadow:0 20px 60px rgba(0,0,0,.5);">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:14px;">
+            <h3 style="margin:0; font-size:17px;">تفاصيل الطلب <span id="reqModalId" style="color:#4ade80;"></span></h3>
+            <button type="button" onclick="closeReqModal()" style="background:transparent; border:none; color:#94a3b8; font-size:22px; cursor:pointer; line-height:1;">&times;</button>
+          </div>
+
+          <div id="reqModalBody" style="display:grid; grid-template-columns:1fr 1fr; gap:10px 16px; font-size:13.5px; margin-bottom:16px;"></div>
+
+          <div style="margin-bottom:12px;">
+            <label style="display:block; margin-bottom:6px; font-size:13px; color:#94a3b8;">نص الطلب الكامل</label>
+            <div id="reqModalText" style="background:#1e293b; border-radius:8px; padding:12px; line-height:1.7; white-space:pre-wrap; word-break:break-word;"></div>
+          </div>
+
+          <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
+            <div style="flex:1 1 200px;">
+              <label style="display:block; margin-bottom:6px; font-size:13px; color:#94a3b8;">الحالة</label>
+              <select id="reqModalStatus" style="width:100%; background:#1e293b; color:#e2e8f0; border:1px solid #334155; border-radius:8px; padding:9px 12px; font-size:13.5px;">
+                <option value="pending">معلق</option>
+                <option value="in_progress">جاري المعالجة</option>
+                <option value="resolved">تم الحل</option>
+                <option value="cancelled">ملغي</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="margin-bottom:16px;">
+            <label style="display:block; margin-bottom:6px; font-size:13px; color:#94a3b8;">ملاحظات الإدارة</label>
+            <textarea id="reqModalNotes" rows="4" placeholder="سجّل ما تم بخصوص هذا الطلب..." style="width:100%; background:#1e293b; color:#e2e8f0; border:1px solid #334155; border-radius:8px; padding:10px 12px; font-size:13.5px; resize:vertical; font-family:inherit;"></textarea>
+          </div>
+
+          <div id="reqModalMsg" style="display:none; padding:9px 12px; border-radius:8px; margin-bottom:12px; font-size:13px;"></div>
+
+          <div style="display:flex; gap:10px; justify-content:flex-start;">
+            <button type="button" id="reqModalSave" onclick="saveRequestChanges()" style="background:#0f6b4f; color:#fff; border:none; padding:9px 20px; border-radius:8px; cursor:pointer; font-size:13.5px; font-weight:600;">حفظ التغييرات</button>
+            <button type="button" onclick="closeReqModal()" style="background:#334155; color:#e2e8f0; border:none; padding:9px 20px; border-radius:8px; cursor:pointer; font-size:13.5px;">إلغاء</button>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        // These talk to PUT /api/admin/ai/customer-requests/:id/status, which
+        // already existed and was simply never called from anywhere.
+        var _reqCurrentId = null;
+
+        function _reqMsg(text, isError) {
+          var box = document.getElementById('reqModalMsg');
+          box.textContent = text;
+          box.style.display = 'block';
+          box.style.background = isError ? 'rgba(239,68,68,.15)' : 'rgba(34,197,94,.15)';
+          box.style.color = isError ? '#fca5a5' : '#86efac';
+        }
+
+        function openReqModal(data) {
+          _reqCurrentId = data.id;
+          document.getElementById('reqModalId').textContent = data.request_id || '';
+          document.getElementById('reqModalText').textContent = data.request_text || '(لا يوجد نص)';
+          document.getElementById('reqModalStatus').value = data.status || 'pending';
+          document.getElementById('reqModalNotes').value = data.admin_notes || '';
+          document.getElementById('reqModalMsg').style.display = 'none';
+
+          var fields = [
+            ['العميل', data.customer_name],
+            ['الهاتف', data.phone],
+            ['الفئة', data.category],
+            ['الأولوية', data.priority],
+            ['رقم الطلب المرتبط', data.order_id],
+            ['المنتجات المطلوبة', data.requested_products],
+            ['الكمية', data.quantity],
+            ['الميزانية', data.budget],
+            ['ملاحظات نجم', data.najm_notes],
+            ['التاريخ', data.created_at]
+          ];
+          var html = '';
+          fields.forEach(function (f) {
+            if (f[1] === undefined || f[1] === null || f[1] === '') return;
+            html += '<div><span style="color:#94a3b8;">' + f[0] + ':</span> <strong style="word-break:break-word;">' +
+                    String(f[1]).replace(/</g, '&lt;') + '</strong></div>';
+          });
+          document.getElementById('reqModalBody').innerHTML = html || '<div style="color:#94a3b8;">لا توجد بيانات إضافية.</div>';
+
+          var m = document.getElementById('reqModal');
+          m.style.display = 'flex';
+        }
+
+        function closeReqModal() {
+          document.getElementById('reqModal').style.display = 'none';
+          _reqCurrentId = null;
+        }
+
+        async function _putRequestStatus(id, status, adminNotes) {
+          var res = await fetch('/api/admin/ai/customer-requests/' + encodeURIComponent(id) + '/status', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-csrf-token': (window._CSRF || '')
+            },
+            body: JSON.stringify({ status: status, adminNotes: adminNotes })
+          });
+          var data = await res.json().catch(function () { return {}; });
+          if (!res.ok || data.success === false) {
+            throw new Error((data && (data.error || data.message)) || ('فشل الحفظ (HTTP ' + res.status + ')'));
+          }
+          return data;
+        }
+
+        // This is the function the "حل الطلب" button has always called and
+        // which never existed, so the button did nothing at all.
+        async function updateRequestStatus(id, status) {
+          try {
+            await _putRequestStatus(id, status, undefined);
+            location.reload();
+          } catch (err) {
+            alert('تعذر تحديث حالة الطلب: ' + err.message);
+          }
+        }
+
+        async function saveRequestChanges() {
+          if (!_reqCurrentId) return;
+          var btn = document.getElementById('reqModalSave');
+          btn.disabled = true;
+          btn.textContent = 'جارٍ الحفظ...';
+          try {
+            await _putRequestStatus(
+              _reqCurrentId,
+              document.getElementById('reqModalStatus').value,
+              document.getElementById('reqModalNotes').value
+            );
+            _reqMsg('تم حفظ التغييرات بنجاح.', false);
+            setTimeout(function () { location.reload(); }, 700);
+          } catch (err) {
+            _reqMsg(err.message, true);
+            btn.disabled = false;
+            btn.textContent = 'حفظ التغييرات';
+          }
+        }
+
+        document.addEventListener('click', function (e) {
+          var btn = e.target.closest('.req-view-btn');
+          if (btn) {
+            try { openReqModal(JSON.parse(btn.getAttribute('data-req'))); }
+            catch (err) { alert('تعذر قراءة بيانات الطلب.'); }
+          }
+          if (e.target.id === 'reqModal') closeReqModal();
+        });
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape') closeReqModal();
+        });
+      </script>
+    <% } %>
+
+    <% if (view === 'conversations') { %>
+      <section class="ai-panel">
+        <div class="ai-panel-title"><h2>محادثات العملاء مع نجم</h2><span>سجل الجلسات والرسائل</span></div>
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse; text-align: right; font-size: 13.5px;">
+            <thead>
+              <tr style="background: rgba(0,0,0,0.03); border-bottom: 2px solid #e2e8f0;">
+                <th style="padding: 10px;">المعرف</th>
+                <th style="padding: 10px;">عنوان الجلسة</th>
+                <th style="padding: 10px;">عدد الرسائل</th>
+                <th style="padding: 10px;">آخر تحديث</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (!customerConversations || customerConversations.length === 0) { %>
+                <tr><td colspan="4" style="text-align: center; padding: 24px; color: #94a3b8;">لا توجد محادثات مسجلة حتى الآن.</td></tr>
+              <% } else { %>
+                <% customerConversations.forEach(c => { %>
+                  <tr style="border-bottom: 1px solid #e2e8f0;">
+                    <td style="padding: 10px; font-family: monospace; font-size: 12px;"><%= c.session_id %></td>
+                    <td style="padding: 10px; font-weight: 600;"><%= c.title %></td>
+                    <td style="padding: 10px;"><%= c.message_count %></td>
+                    <td style="padding: 10px; font-size: 12px; color: #64748b;"><%= c.updated_at %></td>
+                  </tr>
+                <% }) %>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    <% } %>
+
+    <% if (view === 'audits') { %>
+      <section class="ai-panel">
+        <div class="ai-panel-title"><h2>سجل العمليات الحساسة (Audit Log)</h2><span>توثيق عمليات الإضافة للسلة وتأكيد الطلبات والتتبع</span></div>
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse; text-align: right; font-size: 13px;">
+            <thead>
+              <tr style="background: rgba(0,0,0,0.03); border-bottom: 2px solid #e2e8f0;">
+                <th style="padding: 8px;">العملية</th>
+                <th style="padding: 8px;">الهدف</th>
+                <th style="padding: 8px;">النتيجة</th>
+                <th style="padding: 8px;">البيانات المرفقة</th>
+                <th style="padding: 8px;">التاريخ</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (!actionAudits || actionAudits.length === 0) { %>
+                <tr><td colspan="5" style="text-align: center; padding: 24px; color: #94a3b8;">لا توجد عمليات مسجلة في سجل التدقيق.</td></tr>
+              <% } else { %>
+                <% actionAudits.forEach(a => { %>
+                  <tr style="border-bottom: 1px solid #e2e8f0;">
+                    <td style="padding: 8px; font-weight: bold; color: #0f6b4f;"><%= a.action %></td>
+                    <td style="padding: 8px;"><%= a.target_type %>: <%= a.target_id || '-' %></td>
+                    <td style="padding: 8px;">
+                      <% if (a.result === 'success') { %><span style="color: #22c55e;">نجاح</span><% } else { %><span style="color: #ef4444;"><%= a.result %></span><% } %>
+                    </td>
+                    <td style="padding: 8px; font-family: monospace; font-size: 11px; max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><%= a.payload %></td>
+                    <td style="padding: 8px; font-size: 12px; color: #64748b;"><%= a.created_at %></td>
+                  </tr>
+                <% }) %>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    <% } %>
+  </div>
+
+  <div class="ai-modal" id="aiConfirmModal" hidden>
+    <div>
+      <h2>هل تريد تنفيذ هذا الإجراء؟</h2>
+      <dl id="aiConfirmDetails"></dl>
+      <button id="aiConfirmRun">تأكيد التنفيذ</button>
+      <button id="aiConfirmCancel">إلغاء</button>
+    </div>
+  </div>
+</main>
+<script>
+  window.ZFB_AI_BOOT = {
+    view: '<%= view %>',
+    csrf: '<%= typeof csrfToken !== "undefined" ? csrfToken : "" %>',
+    salesLabels: <%- JSON.stringify((insights.sales.daily || []).map(item => item.label)) %>,
+    salesValues: <%- JSON.stringify((insights.sales.daily || []).map(item => item.value)) %>
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="/admin-assets/js/ai-employee.js?v=1"></script>
+</div>
+</body>
+</html>

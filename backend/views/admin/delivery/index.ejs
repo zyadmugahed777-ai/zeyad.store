@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <%- include('../../partials/head', { title: typeof title !== 'undefined' ? title : 'سياسات وأسعار التوصيل' }) %>
+  <style>
+    .badge-range { background: #e0e7ff; color: #3730a3; }
+    .badge-fixed { background: #fef3c7; color: #92400e; }
+    .badge-free { background: #dcfce7; color: #166534; }
+    .badge-quote { background: #f3e8ff; color: #6b21a8; }
+    .zone-pill { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
+    .zone-sana_a { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+    .zone-provinces { background: #f8fafc; color: #475569; border: 1px solid #e2e8f0; }
+  </style>
+</head>
+<body>
+  <div class="admin-layout">
+    <%- include('../../partials/sidebar', { active: 'delivery' }) %>
+    <main class="admin-main">
+      <header class="admin-header">
+        <div class="header-title">
+          <h1>سياسات وأسعار التوصيل</h1>
+          <p class="text-muted">إدارة نطاقات أسعار التوصيل والتركيب داخل صنعاء والمحافظات وتعيين سياسات المنتجات</p>
+        </div>
+        <div class="header-actions">
+          <a href="/delivery.html" target="_blank" class="btn btn-secondary">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            معاينة صفحة التوصيل العامة
+          </a>
+          <a href="/admin/delivery/create" class="btn btn-primary">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            إضافة سياسة جديدة
+          </a>
+        </div>
+      </header>
+
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon" style="background: #e0e7ff; color: #4338ca;">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+          </div>
+          <div class="stat-info">
+            <span class="stat-label">إجمالي السياسات</span>
+            <strong class="stat-value"><%= stats.totalPolicies %></strong>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon" style="background: #dcfce7; color: #15803d;">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+          </div>
+          <div class="stat-info">
+            <span class="stat-label">السياسات النشطة</span>
+            <strong class="stat-value"><%= stats.activePolicies %></strong>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon" style="background: #fef3c7; color: #b45309;">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+          </div>
+          <div class="stat-info">
+            <span class="stat-label">المحافظات المغطاة</span>
+            <strong class="stat-value"><%= stats.activeProvinces %> / <%= stats.totalProvinces %></strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content Card -->
+      <div class="card" style="margin-top: 1.5rem;">
+        <div class="card-header" style="display:flex; justify-content:space-between; align-items:center;">
+          <h2 class="card-title">سياسات التوصيل المعتمدة</h2>
+          <span class="text-muted" style="font-size:0.85rem;">يتم تطبيق السياسات ديناميكياً على السلة والدفع وصفحات المتجر ونجم AI فور التعديل</span>
+        </div>
+        <div class="card-body table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>السياسة والرمز</th>
+                <th>النطاق الجغرافي</th>
+                <th>القسم والخدمة</th>
+                <th>نوع التسعير</th>
+                <th>النطاق السعري (ر.ي)</th>
+                <th>المعادل (ر.س)</th>
+                <th>الحالة</th>
+                <th>إجراءات</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (policies && policies.length > 0) { %>
+                <% policies.forEach(pol => { %>
+                  <tr>
+                    <td>
+                      <strong><%= pol.name_ar %></strong>
+                      <div class="text-muted" style="font-size:0.75rem; font-family:monospace;"><%= pol.code %></div>
+                      <% if (pol.notes) { %><small style="color:var(--muted);"><%= pol.notes %></small><% } %>
+                    </td>
+                    <td>
+                      <% if (pol.zone_scope === 'sana_a') { %>
+                        <span class="zone-pill zone-sana_a">داخل صنعاء</span>
+                      <% } else if (pol.zone_scope === 'provinces') { %>
+                        <span class="zone-pill zone-provinces">المحافظات</span>
+                      <% } else { %>
+                        <span class="zone-pill" style="background:#e0f2fe; color:#0369a1;">شامل الكل</span>
+                      <% } %>
+                    </td>
+                    <td>
+                      <div>
+                        <% if (pol.category_scope === 'household') { %>الأدوات المنزلية والعروض
+                        <% } else if (pol.category_scope === 'bedroom_furniture') { %>غرف النوم والأثاث
+                        <% } else if (pol.category_scope === 'solar') { %>منظومات الطاقة
+                        <% } else { %>عام لكافة المنتجات<% } %>
+                      </div>
+                      <small style="color:var(--muted);">
+                        <% if (pol.service_type === 'delivery_and_installation') { %>توصيل + تركيب منزلي
+                        <% } else if (pol.service_type === 'showroom_pickup') { %>استلام من المعرض
+                        <% } else { %>توصيل فقط<% } %>
+                      </small>
+                    </td>
+                    <td>
+                      <% if (pol.pricing_type === 'range') { %>
+                        <span class="badge badge-range">تقديري (نطاق)</span>
+                      <% } else if (pol.pricing_type === 'fixed') { %>
+                        <span class="badge badge-fixed">سعر محدد</span>
+                      <% } else if (pol.pricing_type === 'free') { %>
+                        <span class="badge badge-free">مجاني</span>
+                      <% } else { %>
+                        <span class="badge badge-quote">يحدد بعد التأكيد</span>
+                      <% } %>
+                    </td>
+                    <td>
+                      <% if (pol.pricing_type === 'range') { %>
+                        <strong><%= Number(pol.min_price_yer).toLocaleString('ar-SA') %></strong> — <strong><%= Number(pol.max_price_yer).toLocaleString('ar-SA') %></strong> ر.ي
+                      <% } else if (pol.pricing_type === 'fixed') { %>
+                        <strong><%= Number(pol.fixed_price_yer).toLocaleString('ar-SA') %></strong> ر.ي
+                      <% } else if (pol.pricing_type === 'free') { %>
+                        <span style="color:#16a34a; font-weight:700;">مجاناً (0 ر.ي)</span>
+                      <% } else { %>
+                        <span style="color:#7c3aed;">يحدد بعد التواصل</span>
+                      <% } %>
+                    </td>
+                    <td>
+                      <% if (pol.pricing_type === 'range') { %>
+                        <span class="text-muted"><%= Number(pol.min_price_sar).toFixed(1) %> — <%= Number(pol.max_price_sar).toFixed(1) %> ر.س</span>
+                      <% } else if (pol.pricing_type === 'fixed') { %>
+                        <span class="text-muted"><%= Number(pol.fixed_price_sar).toFixed(1) %> ر.س</span>
+                      <% } else { %>
+                        -
+                      <% } %>
+                    </td>
+                    <td>
+                      <form action="/admin/delivery/<%= pol.id %>/toggle" method="POST" style="display:inline;">
+                        <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+                        <button type="submit" class="badge <%= pol.is_active ? 'badge-success' : 'badge-danger' %>" style="cursor:pointer; border:none;">
+                          <%= pol.is_active ? 'نشط' : 'معطل' %>
+                        </button>
+                      </form>
+                    </td>
+                    <td>
+                      <div class="action-buttons">
+                        <a href="/admin/delivery/<%= pol.id %>/edit" class="btn-icon" title="تعديل النطاق والبيانات">
+                          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                <% }) %>
+              <% } else { %>
+                <tr>
+                  <td colspan="8" class="text-center py-4">لا توجد سياسات توصيل مسجلة</td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Provinces Coverage Card -->
+      <div class="card" id="provinces" style="margin-top: 1.5rem;">
+        <div class="card-header" style="display:flex; justify-content:space-between; align-items:center;">
+          <h2 class="card-title">المحافظات والمناطق اليمنية المغطاة</h2>
+          <span class="text-muted" style="font-size:0.85rem;">تحديد وتفعيل المحافظات ومدة التوصيل التقديرية</span>
+        </div>
+        <div class="card-body table-responsive">
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem;">
+            <% provinces.forEach(prov => { %>
+              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1rem; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <div style="font-weight: 700; color: #1e293b;"><%= prov.name_ar %></div>
+                  <div style="font-size: 0.8rem; color: #64748b;"><%= prov.estimated_days %></div>
+                </div>
+                <form action="/admin/delivery/provinces/<%= prov.id %>/toggle" method="POST">
+                  <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+                  <button type="submit" class="badge <%= prov.is_active ? 'badge-success' : 'badge-danger' %>" style="border:none; cursor:pointer;">
+                    <%= prov.is_active ? 'مفعل' : 'معطل' %>
+                  </button>
+                </form>
+              </div>
+            <% }) %>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,1232 @@
+<html lang="ar" dir="rtl"><head></head><body id="top" class="kitchens-page">﻿
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مطابخ مودرن | زياد ستور</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <script src="assets/js/core/theme-engine.js?v=20260830-v2327"></script>
+    <style>
+        .kitchens-page {
+            background: #f7f3ed;
+        }
+        .kitchens-main {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding-bottom: 18px;
+        }
+        .kitchens-section {
+            padding-inline: var(--container-px, 20px);
+        }
+
+        .kitchens-hero {
+            position: relative;
+            min-height: 292px;
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            overflow: hidden;
+            background: #091015;
+            color: #fff;
+            border-radius: 0;
+        }
+        .kitchens-hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(to left, rgba(8,12,16,.08) 0%, rgba(8,12,16,.18) 30%, rgba(8,12,16,.78) 64%, rgba(8,12,16,.94) 100%),
+                radial-gradient(circle at 82% 24%, rgba(214,165,62,.18), transparent 20%);
+            pointer-events: none;
+        }
+        .kitchens-hero-copy,
+        .kitchens-hero-visual {
+            position: relative;
+            z-index: 1;
+        }
+        .kitchens-hero-copy {
+            padding: 36px 28px 24px 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .kitchens-hero-copy h1 {
+            margin: 0 0 10px;
+            font-size: clamp(2.2rem, 4vw, 3.9rem);
+            line-height: 1.08;
+            color: #fff;
+        }
+        .kitchens-hero-copy h1 span {
+            color: var(--gold, #d6a53e);
+        }
+        .kitchens-hero-copy p {
+            margin: 0 0 18px;
+            color: rgba(250,245,236,.84);
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+        .kitchens-hero-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .kitchens-hero-actions .btn-hero-primary,
+        .kitchens-hero-actions .btn-hero-secondary {
+            min-width: 168px;
+            justify-content: center;
+        }
+        .kitchens-hero-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            color: rgba(250,245,236,.82);
+            font-size: .8rem;
+        }
+        .kitchens-hero-features span {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .kitchens-hero-features i {
+            color: var(--gold, #d6a53e);
+            font-size: .95rem;
+        }
+        .kitchens-hero-visual {
+            min-height: 292px;
+            background:
+                linear-gradient(to left, rgba(7,16,21,.08), rgba(7,16,21,.12)),
+                url('assets/offers-hero.jpg') center/cover no-repeat;
+            filter: brightness(.72) sepia(.22);
+        }
+
+        .kitchens-row-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 8px;
+            padding-inline: 2px;
+        }
+        .kitchens-row-head h2 {
+            margin: 0;
+            color: var(--ink, #1a1a1a);
+            font-size: 1.45rem;
+        }
+        .kitchens-row-head a {
+            text-decoration: none;
+            color: #b97b21;
+            font-size: .88rem;
+            font-weight: 600;
+        }
+
+        .kitchen-categories-grid {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            gap: 12px;
+        }
+        .kitchen-category-card {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            background-color: var(--surface);
+            border: 1px solid #eadfd3;
+            border-radius: 14px;
+            overflow: hidden;
+            min-width: 0;
+            box-shadow: 0 1px 0 rgba(0,0,0,.02);
+        }
+        .kitchen-category-image {
+            height: 84px;
+            background: #ddd url('assets/offers-hero.jpg') center/cover no-repeat;
+            filter: brightness(.9) sepia(.18);
+        }
+        .kitchen-category-content {
+            padding: 10px 10px 12px;
+            text-align: center;
+        }
+        .kitchen-category-content strong {
+            display: block;
+            font-size: .86rem;
+            line-height: 1.35;
+            color: var(--ink, #1a1a1a);
+            margin-bottom: 2px;
+        }
+        .kitchen-category-content span {
+            display: block;
+            font-size: .72rem;
+            color: var(--muted, #777);
+            line-height: 1.35;
+        }
+
+        .kitchen-promo-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+        }
+        .kitchen-promo-card {
+            position: relative;
+            min-height: 96px;
+            border-radius: 16px;
+            overflow: hidden;
+            padding: 18px 18px 16px;
+            color: var(--cream, #faf5ec);
+            background:
+                linear-gradient(to left, rgba(11,14,17,.14), rgba(11,14,17,.78) 54%, rgba(11,14,17,.94) 100%),
+                url('assets/offers-hero.jpg') center/cover no-repeat;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            text-decoration: none;
+        }
+        .kitchen-promo-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 80% 20%, rgba(214,165,62,.22), transparent 24%);
+            pointer-events: none;
+        }
+        .kitchen-promo-card > * {
+            position: relative;
+            z-index: 1;
+        }
+        .kitchen-promo-card h3 {
+            margin: 0 0 6px;
+            color: var(--gold, #d6a53e);
+            font-size: 1.55rem;
+            line-height: 1.08;
+        }
+        .kitchen-promo-card p {
+            margin: 0;
+            color: rgba(250,245,236,.82);
+            font-size: .82rem;
+            line-height: 1.55;
+        }
+        .kitchen-promo-card .btn-checkout,
+        .kitchen-promo-card .btn-hero-primary,
+        .kitchen-promo-card .btn-hero-secondary {
+            width: fit-content;
+            min-width: 120px;
+            justify-content: center;
+        }
+        .kitchen-promo-card .countdown-box {
+            justify-content: center;
+            gap: 8px;
+            margin-top: 6px;
+        }
+        .kitchen-promo-card .countdown-unit {
+            min-width: 44px;
+            padding: 5px 4px;
+            border-radius: 9px;
+            background: rgba(255,255,255,.08);
+            border: 1px solid rgba(255,255,255,.08);
+        }
+        .kitchen-promo-card .countdown-unit .num {
+            font-size: .95rem;
+        }
+
+        .kitchen-products-grid {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            gap: 12px;
+        }
+        .kitchen-product-card {
+            background-color: var(--surface);
+            border: 1px solid #eadfd3;
+            border-radius: 14px;
+            overflow: hidden;
+            min-width: 0;
+            position: relative;
+        }
+        .kitchen-product-photo {
+            display: block;
+            height: 118px;
+            background: #ddd url('assets/offers-hero.jpg') center/cover no-repeat;
+            filter: brightness(.92) sepia(.18);
+        }
+        .kitchen-product-body {
+            padding: 10px 10px 10px;
+        }
+        .kitchen-product-body h3 {
+            margin: 0 0 5px;
+            min-height: 38px;
+            font-size: .86rem;
+            line-height: 1.35;
+            color: var(--ink, #1a1a1a);
+        }
+        .kitchen-product-body .product-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 6px;
+            font-size: .72rem;
+            color: var(--muted, #777);
+        }
+        .kitchen-product-body .product-price {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+        .kitchen-product-body .product-price strong {
+            font-size: 1rem;
+            color: #b97b21;
+        }
+        .kitchen-product-body .product-price del {
+            color: #999;
+            font-size: .76rem;
+        }
+        .kitchen-product-body .btn-checkout {
+            width: 100%;
+            min-height: 34px;
+            font-size: .75rem;
+            justify-content: center;
+        }
+        .small-note {
+            font-size: .7rem;
+            color: var(--muted, #777);
+        }
+
+        .why-zeyad-strip {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            gap: 0;
+            background: #0b1117;
+            border-radius: 14px;
+            overflow: hidden;
+        }
+        .why-zeyad-item {
+            min-height: 76px;
+            padding: 12px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border-left: 1px solid rgba(214,165,62,.12);
+            text-align: center;
+            color: rgba(250,245,236,.84);
+            font-size: .76rem;
+        }
+        .why-zeyad-item:last-child {
+            border-left: 0;
+        }
+        .why-zeyad-item i {
+            color: var(--gold, #d6a53e);
+            font-size: 1rem;
+        }
+        .why-zeyad-item strong {
+            display: block;
+            color: var(--gold, #d6a53e);
+            font-size: .8rem;
+            margin-bottom: 2px;
+        }
+
+        .faq-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .faq-column,
+        .faq-side-card {
+            background-color: var(--surface);
+            border: 1px solid #eadfd3;
+            border-radius: 14px;
+            padding: 14px;
+        }
+        .faq-column h3,
+        .faq-side-card h3 {
+            margin: 0 0 10px;
+            font-size: 1rem;
+            color: var(--ink, #1a1a1a);
+        }
+        .faq-list {
+            display: grid;
+            gap: 10px;
+        }
+        .faq-item {
+            border: 1px solid #f0e6dc;
+            border-radius: 12px;
+            background: #fbf8f4;
+            padding: 12px 14px;
+        }
+        .faq-item summary {
+            list-style: none;
+            cursor: pointer;
+            font-size: .84rem;
+            font-weight: 600;
+            color: var(--ink, #1a1a1a);
+        }
+        .faq-item p {
+            margin: 10px 0 0;
+            color: var(--muted, #777);
+            font-size: .77rem;
+            line-height: 1.7;
+        }
+        .faq-side-card p {
+            margin: 0 0 12px;
+            color: var(--muted, #777);
+            font-size: .8rem;
+            line-height: 1.7;
+        }
+        .faq-side-card input {
+            width: 100%;
+            min-height: 40px;
+            border-radius: 10px;
+            border: 1px solid #eadfd3;
+            background: #fcfaf7;
+            padding: 0 12px;
+            font: inherit;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 1199px) {
+            .kitchens-hero {
+                grid-template-columns: 1fr;
+            }
+            .kitchens-hero-wrap,
+            .kitchen-promo-row,
+            .faq-grid {
+                grid-template-columns: 1fr;
+            }
+            .kitchen-categories-grid,
+            .kitchen-products-grid,
+            .why-zeyad-strip {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+            .why-zeyad-item:nth-child(3n) {
+                border-left: 0;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .kitchens-main {
+                gap: 10px;
+            }
+            .kitchens-hero-copy {
+                padding: 26px 18px 18px;
+            }
+            .kitchens-hero-actions {
+                width: 100%;
+            }
+            .kitchens-hero-actions .btn-hero-primary,
+            .kitchens-hero-actions .btn-hero-secondary {
+                flex: 1 1 100%;
+            }
+            .kitchen-categories-grid,
+            .kitchen-products-grid,
+            .why-zeyad-strip {
+                grid-template-columns: 1fr 1fr;
+            }
+            .kitchen-category-image {
+                height: 78px;
+            }
+            .kitchen-product-photo {
+                height: 112px;
+            }
+            .why-zeyad-item {
+                border-left: 0;
+                border-bottom: 1px solid rgba(214,165,62,.12);
+            }
+            .why-zeyad-item:last-child {
+                border-bottom: 0;
+            }
+            .kitchen-categories-grid,
+            .kitchen-products-grid,
+            .why-zeyad-strip,
+            .faq-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    
+    /* ------------------------------------------------------------------
+       Two product columns on a phone, not one.
+
+       The grids above step down to a single column below 768px, which makes
+       every card the full width of the screen: one product fills the
+       viewport and the shopper scrolls a whole screen per item. Wider
+       breakpoints keep three or more, so one was the outlier.
+
+       Overrides the product grids by name only. The same rule above also
+       covers FAQ, trust and promo strips, which are meant to be full width
+       and are deliberately left alone.
+       ------------------------------------------------------------------ */
+    @media (max-width: 767px) {
+      .kitchen-categories-grid,
+      .kitchen-products-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+    }
+  </style>
+
+      <link rel="stylesheet" href="styles.css?v=20260830-v2327">
+  <link rel="stylesheet" href="production-polish.css?v=20260830-v2327">
+  <link rel="stylesheet" href="responsive-pro.css?v=20260830-v2327">
+  <link rel="stylesheet" href="mobile-first.css?v=20260830-v2327">
+  <link rel="stylesheet" href="assets/css/storefront-2026.css?v=a6bef9ab1d2b033c">
+
+  <!-- ZFB Core UX Systems -->
+    <script src="assets/js/core/translations.js?v=20260830-v2327"></script>
+    <script src="assets/js/core/i18n.js?v=20260830-v2327"></script>
+    <script src="assets/js/core/theme.js?v=48c1790c"></script>
+    <script src="assets/js/core/currency.js?v=1a885696"></script>
+    <script src="assets/js/core/global-ux.js?v=20260830-v2327"></script>
+  <meta name="description" content="تصاميم حديثة تستغل كل زاوية.">
+
+    <link rel="canonical" href="https://zeyad.store/kitchens-modern.html">
+    <meta property="og:title" content="مطابخ مودرن | زياد ستور | زياد ستور">
+    <meta property="og:description" content="تصاميم حديثة تستغل كل زاوية.">
+    <meta property="og:url" content="https://zeyad.store/kitchens-modern.html">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://zeyad.store/assets/placeholder-logo.webp">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="مطابخ مودرن | زياد ستور | زياد ستور">
+    <meta name="twitter:description" content="تصاميم حديثة تستغل كل زاوية.">
+    
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "الرئيسية",
+      "item": "https://zeyad.store"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "مطابخ مودرن | زياد ستور",
+      "item": "https://zeyad.store/kitchens-modern.html"
+    }
+  ]
+}
+    </script>
+
+
+    <div class="shop-shell">
+        <header class="top-note" data-vid="v-4f162f45">
+            <span data-vid="v-bf40fed3">توصيل بأسعار رمزية داخل المدن الرئيسية</span>
+            <span data-vid="v-3f4f1216">ضمان 10 سنوات على الخشب والهياكل</span>
+            <span data-vid="v-f6446fd6">تصميم حسب ذوقك ومساحتك</span>
+        </header>
+
+        <nav class="main-nav" aria-label="التنقل الرئيسي" data-vid="v-0f0e5f24">
+            <a class="brand" href="index.html" data-vid="v-7fa5e6e7">
+          <span class="brand-content" data-vid="v-16f37e4a-new">
+            <span class="brand-mark" data-vid="v-70aede90">ز</span>
+                <span data-vid="v-32cd9e0b">
+                    <strong data-vid="v-7bccc07b">زياد ستور</strong>
+                    <small data-vid="v-9985d1c5">للأثاث والمفروشات</small>
+                </span>
+          </span>
+        </a>
+            <form class="search" role="search" aria-label="البحث في المتجر" name="site-search" action="search.html" method="get">
+                <button type="submit" aria-label="بحث" data-vid="v-3358a4c8">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.3-4.3M10.8 18a7.2 7.2 0 1 1 0-14.4 7.2 7.2 0 0 1 0 14.4Z"></path></svg>
+                </button>
+                <input name="q" type="search" aria-label="ابحث في المتجر" placeholder="ابحث عن مطبخ، دولاب، إكسسوارات..." id="q-1" autocomplete="off" maxlength="120">
+            </form>
+            <div class="nav-actions">
+          <a class="nav-account-btn" href="account.html" aria-label="حسابي" data-vid="v-1afef8ef">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <span data-vid="v-ac2c7ba5">حسابي</span>
+          </a>
+                <a href="index.html" data-vid="v-abd44c80">الرئيسية</a>
+                <a href="majalis.html" data-vid="v-576b0d92">المجالس</a>
+                <a href="kitchens.html" style="color: var(--gold); font-weight: 600;" data-vid="v-e9c59a82">المطابخ</a>
+                <a href="bedrooms.html" data-vid="v-7b1b0c9d">غرف النوم</a>
+                <a href="appliances.html" data-vid="v-dc6290f9">الأجهزة الكهربائية</a>
+                <a href="offers.html" data-vid="v-5929aa1e">العروض</a>
+            </div>
+        </nav>
+
+        <main class="kitchens-main">
+            <section class="kitchens-hero" aria-label="المطابخ" data-vid="v-34d70f40">
+                <div class="kitchens-hero-copy">
+                    <h1 data-vid="v-edb99971">مطابخ مودرن</h1>
+                    <p data-vid="v-2b8df875">تصاميم حديثة تستغل كل زاوية.</p>
+                    <div class="kitchens-hero-actions">
+                        <a href="#top" class="btn-hero-primary" data-vid="v-1956dd1a">استكشف المطابخ</a>
+                        <a href="#calculator-section" class="btn-hero-secondary" data-vid="v-bd01a6c1">احسب تكلفة مطبخك</a>
+                    </div>
+                    <div class="kitchens-hero-features">
+                        <span data-vid="v-f8b3ecd2"><i class="ri-ruler-line"></i> تفصيل حسب مقاسك</span>
+                        <span data-vid="v-7dd1197e"><i class="ri-shield-check-line"></i> ضمان 10 سنوات</span>
+                        <span data-vid="v-67d60505"><i class="ri-truck-line"></i> توصيل وتركيب</span>
+                        <span data-vid="v-24f7d64b"><i class="ri-timer-flash-line"></i> تنفيذ سريع</span>
+                    </div>
+                </div>
+                <div class="kitchens-hero-visual" aria-hidden="true"></div>
+            </section>
+<section class="calculator-section" id="calculator-section" style="padding: 40px 20px; background: var(--surface); margin: 20px 0; border-radius: 12px; border: 1px solid  var(--line);" data-vid="v-bde2fbeb">
+    <h2 style="margin-bottom: 20px; text-align: center;" data-vid="v-859f82ab">احسب تكلفة مطبخك</h2>
+    <form action="/api/calculate-kitchen" method="POST" style="max-width: 600px; margin: 0 auto; display: grid; gap: 15px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+            <div>
+                <label data-vid="v-092bebe8">نوع المطبخ</label>
+                <select name="type" required="" style="width: 100%; padding: 10px; border: 1px solid  var(--line); border-radius: 6px;">
+                    <option value="l_shape">حرف L</option>
+                    <option value="u_shape">حرف U</option>
+                    <option value="straight">مستقيم</option>
+                </select>
+            </div>
+            <div>
+                <label data-vid="v-6804bc31">نوع الخامة</label>
+                <select name="material" required="" style="width: 100%; padding: 10px; border: 1px solid  var(--line); border-radius: 6px;">
+                    <option value="aluminumStandard">ألمنيوم عادي</option>
+                    <option value="aluminumPremium">ألمنيوم فاخر</option>
+                    <option value="woodMDF">خشب MDF</option>
+                    <option value="woodOak">خشب بلوط</option>
+                </select>
+            </div>
+            <div>
+                <label data-vid="v-3b82f634">اللون</label>
+                <input type="text" name="color" placeholder="مثال: بني غامق" required="" style="width: 100%; padding: 10px; border: 1px solid  var(--line); border-radius: 6px;">
+            </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div>
+                <label data-vid="v-922d5266">الطول (متر)</label>
+                <input type="number" name="length" step="0.1" required="" style="width: 100%; padding: 10px; border: 1px solid  var(--line); border-radius: 6px;">
+            </div>
+            <div>
+                <label data-vid="v-778dbd14">العرض (متر)</label>
+                <input type="number" name="width" step="0.1" required="" style="width: 100%; padding: 10px; border: 1px solid  var(--line); border-radius: 6px;">
+            </div>
+        </div>
+        
+        <button type="submit" class="btn-primary" style="padding: 12px; border-radius: 6px; cursor: pointer;" data-vid="v-a04a9115">احسب التكلفة</button>
+    </form>
+</section>
+
+
+            <section class="kitchens-section" id="categories" aria-label="تسوق حسب النوع" data-vid="v-acb4d253">
+                <div class="kitchens-row-head">
+                    <a href="kitchens-catalog.html" data-vid="v-d31da46c">عرض الكل</a>
+                    <h2 data-vid="v-3be56b26">تسوق حسب النوع</h2>
+                </div>
+                <div class="kitchen-categories-grid">
+                    <a href="collections.html" class="kitchen-category-card" data-vid="v-3a8544df"><div class="kitchen-category-image"></div><div class="kitchen-category-content"><strong data-vid="v-a9e32c50">مطابخ حديثة</strong><span data-vid="v-3a664486">تصاميم عصرية</span></div></a>
+                    <a href="kitchens-classic.html" class="kitchen-category-card" data-vid="v-534f9c9a"><div class="kitchen-category-image" style="filter:brightness(1.05) sepia(.1);"></div><div class="kitchen-category-content"><strong data-vid="v-1ce59a22">مطابخ كلاسيكية</strong><span data-vid="v-eecfdcf7">فخامة لا تنتهي</span></div></a>
+                    <a href="kitchens-modern.html" class="kitchen-category-card" data-vid="v-2ef0763f"><div class="kitchen-category-image" style="filter:contrast(1.04) sepia(.2);"></div><div class="kitchen-category-content"><strong data-vid="v-53fbca59">مطابخ مودرن</strong><span data-vid="v-b04aa0db">عملية ومرتبة</span></div></a>
+                    <a href="collections.html" class="kitchen-category-card" data-vid="v-7bcbe79d"><div class="kitchen-category-image" style="filter:brightness(.95) sepia(.18);"></div><div class="kitchen-category-content"><strong data-vid="v-10665243">مطبخ حسب الطلب</strong><span data-vid="v-a01f57a3">تفصيل كامل</span></div></a>
+                    <a href="appliances.html" class="kitchen-category-card" data-vid="v-37c9b0dd"><div class="kitchen-category-image" style="filter:brightness(1.04) sepia(.06);"></div><div class="kitchen-category-content"><strong data-vid="v-fc357922">باقات متكاملة</strong><span data-vid="v-01aacd94">أجهزة وتشطيبات</span></div></a>
+                    <a href="kitchen-accessories.html" class="kitchen-category-card" data-vid="v-d5fa1a7c"><div class="kitchen-category-image" style="filter:brightness(.88) sepia(.16);"></div><div class="kitchen-category-content"><strong data-vid="v-afae894b">إكسسوارات المطابخ</strong><span data-vid="v-22f61116">تنظيم وراحة</span></div></a>
+                </div>
+            </section>
+
+            <section class="kitchens-section" aria-label="عروض المطبخ الترويجية" data-vid="v-3460e1fc">
+                <div class="kitchen-promo-row">
+                    <article class="kitchen-promo-card" id="cost-calc" data-vid="v-234b6c26">
+                        <div>
+                            <h3 data-vid="v-5643e10d">احسب تكلفة مطبخك</h3>
+                            <p data-vid="v-866b49ff">8 خطوات بسيطة<br>واحصل على تقدير فوري</p>
+                        </div>
+                        <a href="collections.html" class="btn-hero-primary" data-vid="v-c039eb97">ابدأ الآن</a>
+                    </article>
+                    <article class="kitchen-promo-card" style="filter:brightness(.95) sepia(.08);" data-vid="v-fc655b3e">
+                        <div>
+                            <h3 data-vid="v-920aae28">تصميم 3D مجاني</h3>
+                            <p data-vid="v-47c1b9d1">شاهد مطبخك قبل التنفيذ<br>بدقة ووضوح</p>
+                        </div>
+                        <a href="design-request.html" class="btn-hero-secondary" data-vid="v-0dd87fda">اطلب التصميم</a>
+                    </article>
+                    <article class="kitchen-promo-card" style="filter:brightness(.84) sepia(.18);" data-vid="v-a53fa1fa">
+                        <div>
+                            <h3 data-vid="v-99e30c8d">باقات توفر تصل إلى 25%</h3>
+                            <p data-vid="v-ac7b790a">على بعض المنتجات المختارة</p>
+                        </div>
+                        <a href="collections.html" class="btn-hero-primary" data-vid="v-f31c1ff7">استكشف الباقات</a>
+                    </article>
+                </div>
+            </section>
+
+            <section class="kitchens-section" aria-label="المطابخ المميزة" data-vid="v-302b8141">
+                <div class="kitchens-row-head">
+                    <a href="kitchens-catalog.html" data-vid="v-9220b466">عرض الكل</a>
+                    <h2 data-vid="v-8c3e914d">المطابخ المميزة</h2>
+                </div>
+                <div class="kitchen-products-grid">
+                    <article class="product-card" data-product-id="kit-0055" data-category="kit" data-stock="in-stock" data-price="5950" data-brand="سامسونج" data-subcategory="general" data-sku="ZFB-KIT-0055-6533" data-vid="v-6faa0c92">
+  <a href="product.html?id=kit-0055" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-d91260bc" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="مطبخ مودرن هادئ" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-f0c6218f">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-6608038f">مطبخ مودرن هادئ</h3>
+    
+    <div class="price">
+      <strong data-vid="v-e9e89032">5,950 ر.س</strong>
+      <del>6,990</del>
+      <span class="discount-tag tag-gold" style="position:static; display:inline-block; margin-right:8px;" data-vid="v-9dca4da3">مميز</span>
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-e1bf997e">تصميم عصري</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-82b1dc69"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-c42bd1f0"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" onclick="window.location.href='cart.html'" data-vid="v-d4b0374b">عرض التفاصيل</button>
+      </div>
+    </div>
+  </div>
+</article>
+                    <article class="product-card" data-product-id="kit-0056" data-category="kit" data-stock="in-stock" data-price="6750" data-brand="زياد هوم" data-subcategory="general" data-sku="ZFB-KIT-0056-9852" data-vid="v-72a2e101">
+  <a href="product.html?id=kit-0056" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-b9715d10" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="مطبخ أبيض خشبي" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-2a017b9d">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-c9ade78c">مطبخ أبيض خشبي</h3>
+    
+    <div class="price">
+      <strong data-vid="v-329a0425">6,750 ر.س</strong>
+      <del>7,850</del>
+      <span class="discount-tag tag-gold" style="position:static; display:inline-block; margin-right:8px;" data-vid="v-5896c864">حصري</span>
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-3ea58864">خامات فاخرة</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-70fc8fca"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-bb90cedf"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" onclick="window.location.href='cart.html'" data-vid="v-2367bbc2">عرض التفاصيل</button>
+      </div>
+    </div>
+  </div>
+</article>
+                    <article class="product-card" data-product-id="kit-0057" data-category="kit" data-stock="in-stock" data-price="7950" data-brand="شارپ" data-subcategory="general" data-sku="ZFB-KIT-0057-4515" data-vid="v-694cff9f">
+  <a href="product.html?id=kit-0057" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-5e7b084a" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="مطبخ كلاسيك دافئ" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-19e91272">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-95de5ff0">مطبخ كلاسيك دافئ</h3>
+    
+    <div class="price">
+      <strong data-vid="v-b8c531dc">7,950 ر.س</strong>
+      <del>8,950</del>
+      <span class="discount-tag tag-gold" style="position:static; display:inline-block; margin-right:8px;" data-vid="v-a12dcdc7">الأكثر طلباً</span>
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-62ea590d">تشطيب راقٍ</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-f0248984"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-d9530cd7"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" onclick="window.location.href='cart.html'" data-vid="v-e75bf120">عرض التفاصيل</button>
+      </div>
+    </div>
+  </div>
+</article>
+                    <article class="product-card" data-product-id="kit-0058" data-category="kit" data-stock="in-stock" data-price="4950" data-brand="ديلونجي" data-subcategory="general" data-sku="ZFB-KIT-0058-6997" data-vid="v-ece93915">
+  <a href="product.html?id=kit-0058" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-6667b292" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="مطبخ زاوية عملي" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-d8f4e161">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-093272a2">مطبخ زاوية عملي</h3>
+    
+    <div class="price">
+      <strong data-vid="v-4dd03ce1">4,950 ر.س</strong>
+      <del>5,550</del>
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-0f9a2ec8">استغلال المساحة</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-f59033af"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-30c9990d"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" onclick="window.location.href='cart.html'" data-vid="v-20249380">عرض التفاصيل</button>
+      </div>
+    </div>
+  </div>
+</article>
+                    <article class="product-card" data-product-id="kit-0059" data-category="kit" data-stock="in-stock" data-price="6250" data-brand="باناسونيك" data-subcategory="general" data-sku="ZFB-KIT-0059-7914" data-vid="v-9e1a365e">
+  <a href="product.html?id=kit-0059" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-87878277" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="مطبخ رمادي خشبي" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-74e59aef">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-71111b80">مطبخ رمادي خشبي</h3>
+    
+    <div class="price">
+      <strong data-vid="v-3cafcf49">6,250 ر.س</strong>
+      <del>7,050</del>
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-2728a09a">واجهة متينة</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-14104b01"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-2d1b8623"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" onclick="window.location.href='cart.html'" data-vid="v-f31864d2">عرض التفاصيل</button>
+      </div>
+    </div>
+  </div>
+</article>
+                    <article class="product-card" data-product-id="kit-0060" data-category="kit" data-stock="in-stock" data-price="8950" data-brand="زياد هوم" data-subcategory="general" data-sku="ZFB-KIT-0060-7198" data-vid="v-f4706fe8">
+  <a href="product.html?id=kit-0060" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-ece9be94" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="مطبخ أبيض فاخر" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-76b8f7be">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-371a8354">مطبخ أبيض فاخر</h3>
+    
+    <div class="price">
+      <strong data-vid="v-004998ea">8,950 ر.س</strong>
+      <del>9,990</del>
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-854ea451">سطوح أنيقة</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-ce768fcd"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-1e30ddbc"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" onclick="window.location.href='cart.html'" data-vid="v-efbe7ff1">عرض التفاصيل</button>
+      </div>
+    </div>
+  </div>
+</article>
+                </div>
+            </section>
+
+            <section class="kitchens-section" aria-label="الأكثر مبيعاً" data-vid="v-4e59734b">
+                <div class="kitchens-row-head">
+                    <a href="kitchens-catalog.html" data-vid="v-2fb88a9f">عرض الكل</a>
+                    <h2 data-vid="v-20a1a64f">الأكثر مبيعاً</h2>
+                </div>
+                <div class="kitchen-products-grid">
+                    <article class="product-card" data-product-id="kit-0061" data-category="kit" data-stock="in-stock" data-price="1250" data-brand="باناسونيك" data-subcategory="general" data-sku="ZFB-KIT-0061-1287" data-vid="v-2f0cf4a7">
+  <a href="product.html?id=kit-0061" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-38ec500e" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="خزانة علوية مفصلة" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-109f0f9c">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-788332d2">خزانة علوية مفصلة</h3>
+    
+    <div class="price">
+      <strong data-vid="v-7ad0d714">1,250 ر.س</strong>
+      <del>1,420</del>
+      <span class="discount-tag tag-gold" style="position:static; display:inline-block; margin-right:8px;" data-vid="v-d252f4a4">خصم 12%</span>
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-46f36efe">تنظيم مريح</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-757526ac"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-5a684a0d"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" onclick="window.location.href='cart.html'" data-vid="v-f3511735">أضف للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+                    <article class="product-card" data-product-id="kit-0062" data-category="kit" data-stock="in-stock" data-price="390" data-brand="هاير" data-subcategory="general" data-sku="ZFB-KIT-0062-8532" data-vid="v-47501bfe">
+  <a href="product.html?id=kit-0062" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-cefc70cf" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="رخام مطبخ كوارتز" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-b3e208a0">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-57b10989">رخام مطبخ كوارتز</h3>
+    
+    <div class="price">
+      <strong data-vid="v-b8b157b1">390 ر.س</strong>
+      <del>470</del>
+      <span class="discount-tag tag-gold" style="position:static; display:inline-block; margin-right:8px;" data-vid="v-cd8a031c">خصم 18%</span>
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-4eb54cbe">للمتر</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-8ddf4301"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-ecfada43"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" onclick="window.location.href='cart.html'" data-vid="v-bfff0671">أضف للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+                    <article class="product-card" data-product-id="kit-0063" data-category="kit" data-stock="in-stock" data-price="95" data-brand="زياد هوم" data-subcategory="general" data-sku="ZFB-KIT-0063-4251" data-vid="v-b62d2ea0">
+  <a href="product.html?id=kit-0063" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-df24578d" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="إضاءة خزائن مخفية" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-fb39f284">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-e21f12ac">إضاءة خزائن مخفية</h3>
+    
+    <div class="price">
+      <strong data-vid="v-b493af3e">95 ر.س</strong>
+      <del>110</del>
+      <span class="discount-tag tag-gold" style="position:static; display:inline-block; margin-right:8px;" data-vid="v-88802af8">خصم 10%</span>
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-c7065da2">LED</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-76b9ffe9"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-f2f64595"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" onclick="window.location.href='cart.html'" data-vid="v-012fb4f7">أضف للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+                    <article class="product-card" data-product-id="kit-0064" data-category="kit" data-stock="in-stock" data-price="420" data-brand="LG" data-subcategory="general" data-sku="ZFB-KIT-0064-4938" data-vid="v-a2682fe0">
+  <a href="product.html?id=kit-0064" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-ea94eda0" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="حوض مطبخ ستانلس" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-b0407362">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-9fbf649b">حوض مطبخ ستانلس</h3>
+    
+    <div class="price">
+      <strong data-vid="v-c83ebe44">420 ر.س</strong>
+      <del>495</del>
+      <span class="discount-tag tag-gold" style="position:static; display:inline-block; margin-right:8px;" data-vid="v-3df119dd">خصم 15%</span>
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-a28db6a8">مقاس كبير</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-06338f03"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-7e0291fe"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" onclick="window.location.href='cart.html'" data-vid="v-f940bc95">أضف للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+                    <article class="product-card" data-product-id="kit-0065" data-category="kit" data-stock="in-stock" data-price="2950" data-brand="LG" data-subcategory="general" data-sku="ZFB-KIT-0065-6144" data-vid="v-c982030a">
+  <a href="product.html?id=kit-0065" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-d1225995" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="مطبخ صغير جاهز" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-b819360f">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-6a8fe3b1">مطبخ صغير جاهز</h3>
+    
+    <div class="price">
+      <strong data-vid="v-30d918f2">2,950 ر.س</strong>
+      <del>3,390</del>
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-9926c48c">للشقق</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-129d10d1"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-036beb79"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" onclick="window.location.href='cart.html'" data-vid="v-3e3097da">أضف للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+                    <article class="product-card" data-product-id="kit-0066" data-category="kit" data-stock="in-stock" data-price="1790" data-brand="كليكون" data-subcategory="general" data-sku="ZFB-KIT-0066-9101" data-vid="v-9c261706">
+  <a href="product.html?id=kit-0066" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-a2e62c98" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="طاولة جزيرة مطبخ" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-f7dbde5f">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-7e255981">طاولة جزيرة مطبخ</h3>
+    
+    <div class="price">
+      <strong data-vid="v-84df1132">1,790 ر.س</strong>
+      <del>2,050</del>
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-cbfea59f">عملية</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-4b748cb2"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-d259a7ba"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" onclick="window.location.href='cart.html'" data-vid="v-dfdbbb71">أضف للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+                </div>
+            </section>
+
+            <section class="kitchens-section" aria-label="أسطح العمل والإكسسوارات" data-vid="v-800da305">
+                <div class="kitchens-row-head">
+                    <a href="kitchens-catalog.html" data-vid="v-7808cf2d">عرض الكل</a>
+                    <h2 data-vid="v-f7445524">أسطح العمل والإكسسوارات</h2>
+                </div>
+                <div class="kitchen-products-grid">
+                    <article class="product-card" data-product-id="kit-0067" data-category="kit" data-stock="in-stock" data-price="540" data-brand="توشيبا" data-subcategory="general" data-sku="ZFB-KIT-0067-8128" data-vid="v-6c7cabd9">
+  <a href="product.html?id=kit-0067" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-c22c7334" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="رخام صناعي كوريان" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-0b76994c">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-8b45bd2a">رخام صناعي كوريان</h3>
+    
+    <div class="price">
+      <strong data-vid="v-ffeab3b5">540 ر.س</strong>
+      <del>620</del>
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-3ed40925">تشطيب ناعم</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-73cdfaa4"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-2be47ae5"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" onclick="window.location.href='cart.html'" data-vid="v-a0e0b8a9">أضف للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+                    <article class="product-card" data-product-id="kit-0068" data-category="kit" data-stock="in-stock" data-price="85" data-brand="زياد هوم" data-subcategory="general" data-sku="ZFB-KIT-0068-9335" data-vid="v-1ca9bc9e">
+  <a href="product.html?id=kit-0068" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-3bd3ccd5" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="رف توابل داخلي" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-2a6087c3">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-c3a25e6c">رف توابل داخلي</h3>
+    
+    <div class="price">
+      <strong data-vid="v-da089dd2">85 ر.س</strong>
+      <del>99</del>
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-69391d22">تنظيم</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-57987171"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-4a5edd0e"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" onclick="window.location.href='cart.html'" data-vid="v-e1bae53f">أضف للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+                    <article class="product-card" data-product-id="kit-0069" data-category="kit" data-stock="in-stock" data-price="165" data-brand="توشيبا" data-subcategory="general" data-sku="ZFB-KIT-0069-2015" data-vid="v-a2e284ec">
+  <a href="product.html?id=kit-0069" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-3456af89" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="سلة ركنية سحاب" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-1c1e020b">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-7decb8f0">سلة ركنية سحاب</h3>
+    
+    <div class="price">
+      <strong data-vid="v-df3e7711">165 ر.س</strong>
+      <del>195</del>
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-dba31704">استغلال ذكي</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-855a717d"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-315df28d"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" onclick="window.location.href='cart.html'" data-vid="v-ab66002f">أضف للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+                    <article class="product-card" data-product-id="kit-0070" data-category="kit" data-stock="in-stock" data-price="120" data-brand="هاير" data-subcategory="general" data-sku="ZFB-KIT-0070-6238" data-vid="v-8cf08355">
+  <a href="product.html?id=kit-0070" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-1ea7b468" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="خلاط مطبخ مرن" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-f0ed81eb">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-e5f6742c">خلاط مطبخ مرن</h3>
+    
+    <div class="price">
+      <strong data-vid="v-ec94d200">120 ر.س</strong>
+      <del>150</del>
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-94608223">ستانلس</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-4fab9a32"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-edaed23b"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" onclick="window.location.href='cart.html'" data-vid="v-1e09f681">أضف للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+                    <article class="product-card" data-product-id="kit-0071" data-category="kit" data-stock="in-stock" data-price="75" data-brand="LG" data-subcategory="general" data-sku="ZFB-KIT-0071-7312" data-vid="v-e798d93b">
+  <a href="product.html?id=kit-0071" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-0cc99660" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="مقابض خزائن ذهبية" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-e6bdeb04">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-1ab952fa">مقابض خزائن ذهبية</h3>
+    
+    <div class="price">
+      <strong data-vid="v-0025c680">75 ر.س</strong>
+      <del>95</del>
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-654dd350">طقم كامل</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-a55913f2"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-4333cb46"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" onclick="window.location.href='cart.html'" data-vid="v-9f358f0e">أضف للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+                    <article class="product-card" data-product-id="kit-0072" data-category="kit" data-stock="in-stock" data-price="110" data-brand="ديلونجي" data-subcategory="general" data-sku="ZFB-KIT-0072-3959" data-vid="v-aaf28545">
+  <a href="product.html?id=kit-0072" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-d4446ce5" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="إكسسوارات تنظيم أدراج" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-c64e36e3">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-6068aab4">إكسسوارات تنظيم أدراج</h3>
+    
+    <div class="price">
+      <strong data-vid="v-483da6e6">110 ر.س</strong>
+      <del>135</del>
+      
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-dc029652">مرتب وعملي</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-685e2d50"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-1c770c1e"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" onclick="window.location.href='cart.html'" data-vid="v-cde0f583">أضف للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+                </div>
+            </section>
+
+            <section class="kitchens-section" aria-label="عروض اليوم" data-vid="v-be66805b">
+                <div class="kitchens-row-head">
+                    <a href="kitchens-catalog.html" data-vid="v-68cf8713">عرض الكل</a>
+                    <h2 data-vid="v-597fb6b4">عروض اليوم</h2>
+                </div>
+                <div class="kitchen-promo-row">
+                    <article class="kitchen-promo-card" style="filter:brightness(.88) sepia(.12);" data-vid="v-5fbc6932">
+                        <div>
+                            <h3 data-vid="v-9c5601ab">خصومات حتى 25%</h3>
+                            <p data-vid="v-86abb157">على بعض المنتجات المختارة</p>
+                        </div>
+                        <div class="countdown-box light" id="kitchensCountdown">
+                            <div class="countdown-unit"><span class="num" data-vid="v-755a7f06">12</span><span class="label" data-vid="v-4f8b6ea1">ساعة</span></div>
+                            <div class="countdown-unit"><span class="num" data-vid="v-10ff9409">45</span><span class="label" data-vid="v-09b73436">دقيقة</span></div>
+                            <div class="countdown-unit"><span class="num" data-vid="v-b2483745">38</span><span class="label" data-vid="v-1ea6e104">ثانية</span></div>
+                        </div>
+                    </article>
+                    <article class="kitchen-promo-card" data-vid="v-b6ff937d">
+                        <div>
+                            <h3 data-vid="v-e5c9e140">استشارة مجانية</h3>
+                            <p data-vid="v-96cdf16c">قبل التنفيذ لترتيب الأنسب لمساحتك</p>
+                        </div>
+                        <a href="book-appointment.html" class="btn-hero-secondary" data-vid="v-43f4ad32">احجز الآن</a>
+                    </article>
+                    <article class="kitchen-promo-card" style="filter:brightness(.84) sepia(.18);" data-vid="v-470c1f27">
+                        <div>
+                            <h3 data-vid="v-e036582b">خدمة ما بعد البيع</h3>
+                            <p data-vid="v-3c1dd075">دعم كامل بعد التركيب والتسليم</p>
+                        </div>
+                        <a href="collections.html" class="btn-hero-primary" data-vid="v-f4a7be71">اعرف أكثر</a>
+                    </article>
+                </div>
+            </section>
+
+            <section class="kitchens-section" aria-label="لماذا تختار زياد" data-vid="v-2cbf0711">
+                <div class="why-zeyad-strip">
+                    <div class="why-zeyad-item"><i class="ri-shield-check-line"></i><div data-vid="v-1758d29c"><strong data-vid="v-9bf6cdfd">ضمان 10 سنوات</strong><br>على الخشب والهياكل</div></div>
+                    <div class="why-zeyad-item"><i class="ri-ruler-line"></i><div data-vid="v-de18d479"><strong data-vid="v-782071a2">تفصيل حسب المساحة</strong><br>بدقة عالية</div></div>
+                    <div class="why-zeyad-item"><i class="ri-palette-line"></i><div data-vid="v-0e4036d0"><strong data-vid="v-315defba">تصميم 3D</strong><br>قبل التنفيذ</div></div>
+                    <div class="why-zeyad-item"><i class="ri-truck-line"></i><div data-vid="v-96748c27"><strong data-vid="v-fc76ac0a">توصيل وتركيب</strong><br>داخل المدن الرئيسية</div></div>
+                    <div class="why-zeyad-item"><i class="ri-customer-service-2-line"></i><div data-vid="v-8a89ea49"><strong data-vid="v-c7bd9af0">استشارة مجانية</strong><br>قبل الشراء</div></div>
+                    <div class="why-zeyad-item"><i class="ri-service-line"></i><div data-vid="v-79c2ebaa"><strong data-vid="v-c70018ce">خدمة ما بعد البيع</strong><br>دعم دائم</div></div>
+                </div>
+            </section>
+
+            <section class="kitchens-section" aria-label="الأسئلة الشائعة" data-vid="v-f6781b85">
+                <div class="faq-grid">
+                    <div class="faq-column">
+                        <h3 data-vid="v-53391051">الأسئلة الشائعة</h3>
+                        <div class="faq-list">
+                            <details class="faq-item" open=""><summary>كيف أختار نوع المطبخ المناسب؟</summary><p data-vid="v-dafcc20c">يعتمد ذلك على المساحة والميزانية وطريقة الاستخدام اليومية، ونوفر لك استشارة مجانية لترتيب أفضل حل عملي وجمالي.</p></details>
+                            <details class="faq-item"><summary>هل تقدمون تصميم ثلاثي الأبعاد؟</summary><p data-vid="v-c06b7712">نعم، نوفر تصميم 3D لمساعدتك على رؤية النتيجة النهائية قبل التنفيذ واعتماد المقاسات والتفاصيل.</p></details>
+                            <details class="faq-item"><summary>ما مدة التنفيذ والتركيب؟</summary><p data-vid="v-dc8eb1c2">تختلف بحسب المقاس والخامات، لكننا نحرص على جدول واضح للتنفيذ مع متابعة دقيقة حتى التسليم.</p></details>
+                        </div>
+                    </div>
+                    <div style="display:grid;gap:12px;">
+                        <div class="faq-side-card">
+                            <h3 data-vid="v-dd05ffc3">اشترك لمعرفة العروض</h3>
+                            <p data-vid="v-abb3e9a4">احصل على أحدث عروض المطابخ والباقات الجديدة مباشرة إلى بريدك الإلكتروني.</p>
+                            <input name="email" type="email" placeholder="أدخل بريدك الإلكتروني" aria-label="البريد الإلكتروني" id="email-2" autocomplete="email" maxlength="120">
+                            <a href="product.html?id=kit-0072" class="btn-checkout" style="width:100%;justify-content:center;" data-vid="v-9b11510a">اشترك الآن</a>
+                        </div>
+                        <div class="faq-side-card">
+                            <h3 data-vid="v-0a1284e4">تواصل معنا</h3>
+                            <p data-vid="v-2e360eee">فريق المطابخ جاهز لمساعدتك في اختيار الخامات والمقاسات وترتيب الزيارة.</p>
+                            <div class="small-note" data-vid="v-6b77d233">800 123 4567</div>
+                            <div class="small-note" data-vid="v-c137a810">zeyad775010@gmail.com</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        
+
+<footer class="site-footer" data-vid="v-321bc332">
+    <div class="footer-top">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col brand-col">
+                    <h3 data-vid="store_name">زياد ستور</h3>
+                    <p data-vid="footer_about">وجهتك الأولى للتسوق الإلكتروني بمنتجات أصلية وتجربة تسوق لا تُنسى.</p>
+                    <div class="social-links">
+                        <a href="https://facebook.com" data-vid="social_facebook" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a>
+                        <a href="https://instagram.com" data-vid="social_instagram" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
+                        <a href="https://twitter.com" data-vid="social_twitter" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path></svg></a>
+                        <a href="https://tiktok.com" data-vid="social_tiktok" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 0h1.98c.144 2.58 1.97 4.776 4.54 5.24v3.132c-1.354-.044-2.612-.52-3.69-1.31v7.62a5.41 5.41 0 1 1-5.41-5.41c.42 0 .82.048 1.2.14v3.23a2.18 2.18 0 1 0 1.38 2.03V0z"></path></svg></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4 data-vid="v-de01e992">روابط سريعة</h4>
+                    <ul>
+                        <li data-vid="v-0dcd592f"><a href="offers.html" data-vid="v-61dbc627">العروض الخاصة</a></li>
+                        <li data-vid="v-ec236b89"><a href="search.html?q=الجديد" data-vid="v-9c50ccfd">أحدث المنتجات</a></li>
+                        <li data-vid="v-fdebfb48"><a href="search.html?q=الأكثر مبيعا" data-vid="v-0a5c6fea">الأكثر مبيعاً</a></li>
+                        <li data-vid="v-d8fb6065"><a href="/#categories" data-vid="v-1c6e6c59">تصفح الأقسام</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-vid="v-f4a83628">خدمة العملاء</h4>
+                    <ul>
+                        <li data-vid="v-ff58d0d6"><a href="track-order.html" data-vid="v-c589891d">تتبع الطلب</a></li>
+                        <li data-vid="v-220957cc"><a href="faq.html" data-vid="v-af43603f">الأسئلة الشائعة</a></li>
+                        <li data-vid="v-e9424c68"><a href="/terms.html" data-vid="v-a6cd04aa">سياسة الاسترجاع</a></li>
+                        <li data-vid="v-3768ba06"><a href="/shipping.html" data-vid="v-db2d83c3">معلومات الشحن</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col contact-col">
+                    <h4 data-vid="v-3a72fd0a">تواصل معنا</h4>
+                    <ul>
+                        <li data-vid="v-98b539bc">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                            <span data-vid="footer_phone">+967775010726</span>
+                        </li>
+                        <li data-vid="v-ba576c86">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                            <span data-vid="footer_email">zeyad775010@gmail.com</span>
+                        </li>
+                        <li data-vid="v-fbf6fe92">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                            <span data-vid="footer_address">صنعاء، شارع الزبيري</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <div class="container">
+            <div class="footer-bottom-flex">
+                <p class="copyright" data-vid="v-74442545">© 2026 جميع الحقوق محفوظة - <span data-vid="store_name">زياد ستور</span></p>
+                <div class="payment-methods">
+                    <svg viewBox="0 0 38 24" fill="none"><rect width="38" height="24" rx="4" fill="var(--surface-2)"></rect><path d="M12 7L14.5 16H17L19.5 7H17L15.75 12.5L14.5 7H12Z" fill="var(--ink)"></path></svg>
+                    <svg viewBox="0 0 38 24" fill="none"><rect width="38" height="24" rx="4" fill="var(--surface-2)"></rect><circle cx="15" cy="12" r="6" fill="#eb001b"></circle><circle cx="23" cy="12" r="6" fill="#f79e1b"></circle></svg>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+    </div>
+
+    <script>
+        (function() {
+            let totalSeconds = 12 * 3600 + 45 * 60 + 38;
+            const countdown = document.getElementById('kitchensCountdown');
+            if (!countdown) return;
+
+            function update() {
+                if (totalSeconds < 0) return;
+                const h = Math.floor(totalSeconds / 3600);
+                const m = Math.floor((totalSeconds % 3600) / 60);
+                const s = totalSeconds % 60;
+                const nums = countdown.querySelectorAll('.num');
+                if (nums[0]) nums[0].textContent = String(h).padStart(2, '0');
+                if (nums[1]) nums[1].textContent = String(m).padStart(2, '0');
+                if (nums[2]) nums[2].textContent = String(s).padStart(2, '0');
+                totalSeconds--;
+            }
+
+            update();
+            /* setInterval(update, 1000); disabled for Phase 1 placeholder */
+        })();
+    </script>
+  <script src="site.js?v=714c6eb3" defer=""></script>
+
+  <script src="zfb-config.js"></script>
+<script src="products_db.js"></script>
+<script src="zfb-core.js?v=cd21c70c" defer=""></script>
+  <script src="assets/js/core/premium-cards.js?v=f2491789"></script>
+  <script src="/search-manager.js?v=20260830-v2327"></script>\n  <script src="/wishlist-manager.js?v=20260830-v2327"></script>\n
+
+
+
+  <script src="assets/js/core/storefront-2026.js?v=a6bef9ab1d2b033c"></script>
+</body></html>

@@ -1,0 +1,464 @@
+<!DOCTYPE html><html lang="ar" dir="rtl" data-theme="light"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>منصاتنا الرسمية المعتمدة | زياد ستور</title>
+  <meta name="description" content="جميع قنوات ومنصات التواصل الرسمية والموثقة لمتجر زياد ستور — تواصل معنا مباشرة عبر واتساب، فيسبوك، انستغرام، وتيك توك.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=20260830-v2327">
+  <link rel="stylesheet" href="production-polish.css?v=20260830-v2327">
+  <link rel="stylesheet" href="responsive-pro.css?v=20260830-v2327">
+  <link rel="stylesheet" href="mobile-first.css?v=20260830-v2327">
+  <link rel="stylesheet" href="assets/css/storefront-2026.css?v=a6bef9ab1d2b033c">
+  <script src="zfb-config.js?v=20260818-v38"></script>
+  <script src="assets/js/core/translations.js?v=20260830-v2327"></script>
+  <script src="assets/js/core/i18n.js?v=20260830-v2327"></script>
+  <script src="assets/js/core/theme.js?v=48c1790c"></script>
+  <script src="assets/js/core/currency.js?v=1a885696"></script>
+  <script src="assets/js/core/global-ux.js?v=20260830-v2327"></script>
+  <style>
+    .platforms-page {
+      padding: 24px 16px 100px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .platforms-hero {
+      text-align: center;
+      margin-bottom: 32px;
+      padding: 24px 16px;
+      border: 1px solid rgba(198, 143, 49, 0.2);
+      border-radius: 24px;
+      background: var(--surface, #ffffff);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+    }
+    .platforms-hero .verified-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 14px;
+      background: rgba(47, 125, 78, 0.1);
+      color: #2f6b45;
+      border: 1px solid rgba(47, 125, 78, 0.25);
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+    .platforms-hero h1 {
+      font-size: clamp(1.5rem, 4vw, 2.3rem);
+      font-weight: 800;
+      color: var(--ink, #1c1813);
+      margin: 0 0 8px;
+      line-height: 1.3;
+    }
+    .platforms-hero p {
+      font-size: 0.92rem;
+      color: var(--muted, #6b7280);
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .platforms-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+    .platform-card {
+      display: flex;
+      flex-direction: column;
+      background: var(--surface, #ffffff);
+      border: 1.5px solid var(--line, rgba(0, 0, 0, 0.08));
+      border-radius: 20px;
+      padding: 20px 18px;
+      text-decoration: none;
+      color: inherit;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      position: relative;
+    }
+    .platform-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--gold, #c79a52);
+      box-shadow: 0 12px 30px rgba(199, 154, 82, 0.14);
+    }
+    .platform-card.is-active {
+      border-color: rgba(199, 154, 82, 0.3);
+    }
+    .platform-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+    .platform-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      color: #ffffff;
+    }
+    .platform-icon.whatsapp { background: linear-gradient(135deg, #25D366, #128C7E); }
+    .platform-icon.facebook { background: linear-gradient(135deg, #1877F2, #0d5bbd); }
+    .platform-icon.instagram { background: linear-gradient(135deg, #E1306C, #833AB4); }
+    .platform-icon.tiktok { background: linear-gradient(135deg, #000000, #25F4EE); }
+    .platform-icon.youtube { background: linear-gradient(135deg, #FF0000, #cc0000); }
+    .platform-icon.telegram { background: linear-gradient(135deg, #0088cc, #006699); }
+    .platform-icon.x { background: linear-gradient(135deg, #14171A, #000000); }
+    .platform-icon.snapchat { background: linear-gradient(135deg, #FFFC00, #e6e300); color: #000000; }
+    .platform-icon.phone { background: linear-gradient(135deg, #c79a52, #8a6124); }
+    .platform-icon.location { background: linear-gradient(135deg, #ea4335, #c5221f); }
+
+    .platform-icon svg {
+      width: 26px;
+      height: 26px;
+      fill: currentColor;
+    }
+    .platform-info h2 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      margin: 0 0 2px;
+      color: var(--ink, #1c1813);
+    }
+    .platform-info span {
+      font-size: 0.76rem;
+      color: var(--gold, #c79a52);
+      font-weight: 700;
+    }
+    .platform-desc {
+      font-size: 0.82rem;
+      color: var(--muted, #6b7280);
+      line-height: 1.5;
+      margin: 0 0 16px;
+      flex-grow: 1;
+    }
+    .platform-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: auto;
+    }
+    .btn-open {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 14px;
+      background: var(--surface-alt, #f7f5f0);
+      color: var(--ink, #1c1813);
+      border: 1px solid var(--line, rgba(0, 0, 0, 0.1));
+      border-radius: 12px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+    .platform-card.is-active .btn-open {
+      background: var(--gold, #c79a52);
+      color: #ffffff;
+      border-color: var(--gold, #c79a52);
+    }
+    .btn-open:hover {
+      opacity: 0.92;
+    }
+    .btn-copy {
+      padding: 8px 12px;
+      background: transparent;
+      border: 1px solid var(--line, rgba(0, 0, 0, 0.1));
+      border-radius: 12px;
+      color: var(--muted, #6b7280);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .btn-copy:hover {
+      color: var(--gold, #c79a52);
+      border-color: var(--gold, #c79a52);
+    }
+    .btn-copy svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    /* Warning Note */
+    .security-note {
+      background: rgba(199, 154, 82, 0.08);
+      border: 1px solid rgba(199, 154, 82, 0.22);
+      border-radius: 18px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-top: 24px;
+    }
+    .security-note svg {
+      width: 32px;
+      height: 32px;
+      stroke: var(--gold, #c79a52);
+      fill: none;
+      stroke-width: 1.8;
+      flex-shrink: 0;
+    }
+    .security-note strong {
+      display: block;
+      font-size: 0.88rem;
+      color: var(--ink, #1c1813);
+      margin-bottom: 2px;
+    }
+    .security-note p {
+      font-size: 0.78rem;
+      color: var(--muted, #6b7280);
+      margin: 0;
+      line-height: 1.45;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .platforms-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      .platforms-hero {
+        padding: 20px 14px;
+      }
+    }
+
+    /* Dark Mode */
+    [data-theme="dark"] .platforms-hero,
+    body.dark-mode .platforms-hero,
+    [data-theme="dark"] .platform-card,
+    body.dark-mode .platform-card {
+      background: #18201b !important;
+      border-color: rgba(226, 193, 128, 0.2) !important;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25) !important;
+    }
+    [data-theme="dark"] .platforms-hero h1,
+    body.dark-mode .platforms-hero h1,
+    [data-theme="dark"] .platform-info h2,
+    body.dark-mode .platform-info h2,
+    [data-theme="dark"] .security-note strong,
+    body.dark-mode .security-note strong {
+      color: #f7f5f0 !important;
+    }
+    [data-theme="dark"] .btn-open:not(.platform-card.is-active .btn-open) {
+      background: #121814 !important;
+      color: #f7f5f0 !important;
+      border-color: rgba(255, 255, 255, 0.1) !important;
+    }
+  </style>
+</head>
+<body id="top">
+  <div class="shop-shell">
+    <header class="top-note" data-vid="v-d88f055e">
+      <span data-vid="v-d81648dd">تواصل مباشر وموثق</span>
+      <span data-vid="v-bf588d61">روابط رسمية معتمدة لإدارة زياد</span>
+      <span data-vid="v-7c0ef894">خدمة عملاء على مدار الساعة</span>
+    </header>
+
+    <nav class="main-nav" aria-label="التنقل الرئيسي" data-vid="v-c8ea3d53">
+      <a class="brand" href="index.html" data-vid="v-823a997f">
+        <span class="brand-content" data-vid="v-f75d3365">
+          <span class="brand-mark" data-vid="v-d7d343ab">ز</span>
+          <span data-vid="v-eff99cad"><strong data-vid="v-675e853a">زياد ستور</strong><small data-vid="v-045a1595">منصة المنزل والطاقة</small></span>
+        </span>
+      </a>
+      <form class="search" role="search" aria-label="البحث في المتجر" name="site-search" action="search.html" method="get">
+        <button type="submit" aria-label="بحث" data-vid="v-48ca0603"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.3-4.3M10.8 18a7.2 7.2 0 1 1 0-14.4 7.2 7.2 0 0 1 0 14.4Z"></path></svg></button>
+        <input name="q" type="search" aria-label="ابحث في المتجر" placeholder="ابحث عن أثاث، أجهزة، طاقة شمسية..." id="q-1" autocomplete="off" maxlength="120">
+        <button class="search-filter" type="button" onclick="window.location.href='search.html'" data-vid="v-264bb564">بحث ذكي</button>
+      </form>
+      <div class="nav-actions">
+        <a href="category.html" data-vid="v-17bf6dcb">الأقسام</a>
+        <a href="offers.html" data-vid="v-3247ba34">العروض</a>
+        <a class="nav-account-btn" href="account.html" aria-label="حسابي" data-vid="v-36b9df80">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          <span data-vid="v-4c95d883">حسابي</span>
+        </a>
+        <a class="cart" href="cart.html" aria-label="السلة" data-vid="v-8efa5eb3"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8h14l-1.6 8.1a2 2 0 0 1-2 1.6H9.2a2 2 0 0 1-2-1.7L5.7 4H3"></path><path d="M9 21h.1M18 21h.1"></path></svg><b>0</b></a>
+      </div>
+    </nav>
+
+    <main class="platforms-page">
+      <header class="platforms-hero" data-vid="v-c897fa87">
+        <div class="verified-tag" data-vid="v-9a215fc2">✓ منصات رسمية وموثقة</div>
+        <h1 data-vid="v-b7d99e51">قنوات زياد ستور الرسمية</h1>
+        <p data-vid="v-029d8891">جميع القنوات والروابط المعتمدة للتواصل المباشر مع إدارة وخدمة عملاء متجر زياد ستور في اليمن — تجنب الحسابات غير الموثقة.</p>
+      </header>
+
+      <div class="platforms-grid">
+        <!-- 1. واتساب المباشر -->
+        <article class="platform-card is-active" data-vid="v-f8109a76">
+          <div class="platform-header">
+            <div class="platform-icon whatsapp">
+              <svg viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.698c.97.54 1.961.83 3.029.83h.005c3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.768-5.771z"></path></svg>
+            </div>
+            <div class="platform-info">
+              <h2 data-vid="v-d27e5b51">واتساب المبيعات والدعم</h2>
+              <span data-vid="v-704e85d4">قناة نشطة ومباشرة ⚡</span>
+            </div>
+          </div>
+          <p class="platform-desc" data-vid="v-15841e62">تواصل فوري مع فريق المبيعات، استشارات المقاسات، والطلب السريع عبر واتساب.</p>
+          <div class="platform-actions">
+            <a class="btn-open" href="https://wa.me/967775010726" target="_blank" rel="noopener noreferrer" data-vid="v-90b882df">فتح واتساب</a>
+            <button class="btn-copy" onclick="copyLink('https://wa.me/967775010726')" aria-label="نسخ الرابط" data-vid="v-e9e1c517"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>
+          </div>
+        </article>
+
+        <!-- 2. اتصال هاتفي -->
+        <article class="platform-card is-active" data-vid="v-503f6428">
+          <div class="platform-header">
+            <div class="platform-icon phone">
+              <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            </div>
+            <div class="platform-info">
+              <h2 data-vid="v-7e4304d1">الاتصال المباشر</h2>
+              <span data-vid="v-b5e05e66">+967 775 010 726</span>
+            </div>
+          </div>
+          <p class="platform-desc" data-vid="v-5fa8b8b8">اتصال هاتفي مباشر لخدمة العملاء ومتابعة الشحنات والطلبات الخاصة.</p>
+          <div class="platform-actions">
+            <a class="btn-open" href="tel:+967775010726" data-vid="v-d96e9fe7">اتصال الآن</a>
+            <button class="btn-copy" onclick="copyLink('+967775010726')" aria-label="نسخ الرقم" data-vid="v-ac2bc244"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>
+          </div>
+        </article>
+
+        <!-- 3. فيسبوك -->
+        <article class="platform-card" data-vid="v-cfe9d476">
+          <div class="platform-header">
+            <div class="platform-icon facebook">
+              <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+            </div>
+            <div class="platform-info">
+              <h2 data-vid="v-19d45a0b">صفحة فيسبوك</h2>
+              <span data-vid="v-3d49cb4f">الصفحة الرسمية</span>
+            </div>
+          </div>
+          <p class="platform-desc" data-vid="v-f74ae404">تابع أحدث العروض الأسبوعية وتغطيات معارضنا عبر فيسبوك.</p>
+          <div class="platform-actions">
+            <a class="btn-open" href="https://facebook.com" target="_blank" rel="noopener noreferrer" data-vid="v-f73f6634">زيارة الصفحة</a>
+            <button class="btn-copy" onclick="copyLink('https://facebook.com')" aria-label="نسخ الرابط" data-vid="v-c26689d8"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>
+          </div>
+        </article>
+
+        <!-- 4. انستغرام -->
+        <article class="platform-card" data-vid="v-e2e5eab7">
+          <div class="platform-header">
+            <div class="platform-icon instagram">
+              <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+            </div>
+            <div class="platform-info">
+              <h2 data-vid="v-b8d985b8">انستغرام المعرض</h2>
+              <span data-vid="v-7b20e8a3">صور وفيديوهات المنتجات</span>
+            </div>
+          </div>
+          <p class="platform-desc" data-vid="v-8263472b">كتالوج بصري عالي الدقة لديكورات المجالس، المطابخ، وغرف النوم.</p>
+          <div class="platform-actions">
+            <a class="btn-open" href="https://instagram.com" target="_blank" rel="noopener noreferrer" data-vid="v-2a6f0e8a">زيارة الحساب</a>
+            <button class="btn-copy" onclick="copyLink('https://instagram.com')" aria-label="نسخ الرابط" data-vid="v-b96aed54"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>
+          </div>
+        </article>
+
+        <!-- 5. تيك توك -->
+        <article class="platform-card" data-vid="v-cea09621">
+          <div class="platform-header">
+            <div class="platform-icon tiktok">
+              <svg viewBox="0 0 24 24"><path d="M9 0h1.98c.144 2.58 1.97 4.776 4.54 5.24v3.132c-1.354-.044-2.612-.52-3.69-1.31v7.62a5.41 5.41 0 1 1-5.41-5.41c.42 0 .82.048 1.2.14v3.23a2.18 2.18 0 1 0 1.38 2.03V0z"></path></svg>
+            </div>
+            <div class="platform-info">
+              <h2 data-vid="v-35913713">تيك توك زياد</h2>
+              <span data-vid="v-35ca5a4b">مقاطع وتجارب عملية</span>
+            </div>
+          </div>
+          <p class="platform-desc" data-vid="v-d017433b">فيديوهات مراجعات الأجهزة المنزلية وأنظمة الطاقة الشمسية بجودة عالية.</p>
+          <div class="platform-actions">
+            <a class="btn-open" href="https://tiktok.com" target="_blank" rel="noopener noreferrer" data-vid="v-b4cabeae">مشاهدة الفيديوهات</a>
+            <button class="btn-copy" onclick="copyLink('https://tiktok.com')" aria-label="نسخ الرابط" data-vid="v-727b3e68"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>
+          </div>
+        </article>
+
+        <!-- 6. موقع المعرض والفروع -->
+        <article class="platform-card" data-vid="v-8d09e77f">
+          <div class="platform-header">
+            <div class="platform-icon location">
+              <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            </div>
+            <div class="platform-info">
+              <h2 data-vid="v-f9c065da">معارضنا وفروعنا</h2>
+              <span data-vid="v-bda4605b">صنعاء، اليمن</span>
+            </div>
+          </div>
+          <p class="platform-desc" data-vid="v-f1c9966f">تعرف على مواقع صالات العرض الفعلية وأوقات العمل الرسمية.</p>
+          <div class="platform-actions">
+            <a class="btn-open" href="branches.html" data-vid="v-e6d25f52">عرض الفروع</a>
+            <button class="btn-copy" onclick="copyLink('صنعاء، اليمن')" aria-label="نسخ العنوان" data-vid="v-ebd99eb9"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>
+          </div>
+        </article>
+      </div>
+
+      <div class="security-note">
+        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        <div>
+          <strong data-vid="v-71168539">تنبيه أمان للمتسوقين</strong>
+          <p data-vid="v-bc51560a">متجر زياد ستور لا يطلب تحويلات بنكية لحسابات غير معتمدة. كافة قنواتنا ومراسلاتنا تتم حصرياً عبر الروابط الموضحة في هذه الصفحة الرسمية.</p>
+        </div>
+      </div>
+    </main>
+
+    <footer class="site-footer" data-vid="v-120822c7">
+      <div class="footer-top">
+        <div class="container">
+          <div class="footer-grid">
+            <div class="footer-col brand-col">
+              <h3 data-vid="v-0a9534b1">زياد ستور</h3>
+              <p data-vid="v-584e42f4">وجهتك الأولى للتسوق الإلكتروني بمنتجات أصلية وتجربة تسوق لا تُنسى.</p>
+            </div>
+            <div class="footer-col">
+              <h4 data-vid="v-62aefb10">روابط سريعة</h4>
+              <ul>
+                <li data-vid="v-cb4fe0d5"><a href="offers.html" data-vid="v-3fd1ebde">العروض الخاصة</a></li>
+                <li data-vid="v-6abde776"><a href="category.html" data-vid="v-947248bb">تصفح الأقسام</a></li>
+                <li data-vid="v-57d96d2c"><a href="track-order.html" data-vid="v-2b60c077">تتبع الطلب</a></li>
+              </ul>
+            </div>
+            <div class="footer-col contact-col">
+              <h4 data-vid="v-0b187267">تواصل معنا</h4>
+              <ul>
+                <li data-vid="v-f1476113"><span data-vid="v-0bc655a3">+967775010726</span></li>
+                <li data-vid="v-c1e06473"><span data-vid="v-98748b82">zeyad775010@gmail.com</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    function copyLink(text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          if (window.ZFB && window.ZFB.toast) {
+            window.ZFB.toast('تم نسخ الرابط بنجاح!');
+          } else {
+            alert('تم نسخ الرابط: ' + text);
+          }
+        });
+      } else {
+        alert('الرابط: ' + text);
+      }
+    }
+  </script>
+
+
+  <script src="assets/js/core/storefront-2026.js?v=a6bef9ab1d2b033c"></script>
+</body></html>

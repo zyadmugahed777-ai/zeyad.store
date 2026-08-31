@@ -1,0 +1,11 @@
+<% if (totalPages > 1) { %>
+<div class="pagination">
+  <% if (page > 1) { %>
+    <a href="?page=<%= page - 1 %>&limit=<%= limit %>" class="btn-page">السابق</a>
+  <% } %>
+  <span class="page-info">صفحة <%= page %> من <%= totalPages %></span>
+  <% if (page < totalPages) { %>
+    <a href="?page=<%= page + 1 %>&limit=<%= limit %>" class="btn-page">التالي</a>
+  <% } %>
+</div>
+<% } %>

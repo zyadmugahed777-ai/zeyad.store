@@ -1,0 +1,171 @@
+<%- include('../../partials/head', { title }) %>
+<%- include('../../partials/sidebar', { active }) %>
+<main class="admin-main">
+  <%- include('../../partials/topbar') %>
+  
+  <div class="admin-content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h1 class="page-title"><%= title %></h1>
+        <p class="page-description">إدارة المنتجات في المتجر وإضافة منتجات جديدة.</p>
+      </div>
+      <div class="admin-header-actions">
+        <a href="/admin/products/create" class="btn btn-primary">
+          <span class="material-symbols-rounded">add</span>
+          إضافة منتج جديد
+        </a>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="glass-card mb-4">
+      <form action="/admin/products" method="GET" class="d-flex gap-3 align-items-center">
+        <div style="flex: 1;">
+          <input type="text" name="q" class="form-control" placeholder="البحث برمز المنتج أو العنوان..." value="<%= search %>">
+        </div>
+        <div style="width: 200px;">
+          <select name="department" class="form-control">
+            <option value="">جميع الأقسام (الرئيسية)</option>
+            <% departments.forEach(dep => { %>
+              <option value="<%= dep.id %>"><%= dep.name_ar %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div style="width: 200px;">
+          <select name="category" class="form-control">
+            <option value="">جميع الفئات (الفرعية)</option>
+            <% categories.forEach(cat => { %>
+              <option value="<%= cat.id %>" <%= catId == cat.id ? 'selected' : '' %>><%= cat.name_ar %></option>
+            <% }) %>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-accent">
+          <span class="material-symbols-rounded">search</span> بحث
+        </button>
+        <% if(search || catId) { %>
+          <a href="/admin/products" class="btn btn-outline">إلغاء الفلترة</a>
+        <% } %>
+      </form>
+    </div>
+
+    <!-- Table -->
+    <div class="glass-card">
+      <div class="table-responsive">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th width="40"><input type="checkbox" id="selectAll"></th>
+              <th width="65">الصورة</th>
+              <th width="90">الكود</th>
+              <th>المنتج</th>
+              <th>التصنيف</th>
+              <th>السعر</th>
+              <th class="text-center">المخزون</th>
+              <th class="text-center">الحالة</th>
+              <th class="text-center" width="160">إجراءات</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (products.length === 0) { %>
+              <tr>
+                <td colspan="9" class="text-center py-5">لا توجد منتجات مسجلة.</td>
+              </tr>
+            <% } %>
+            <% products.forEach(product => { 
+                 const thumbSrc = product.main_image ? (product.main_image.startsWith('/') || product.main_image.startsWith('http') || product.main_image.startsWith('data:') ? product.main_image : '/' + product.main_image) : '/assets/placeholder.svg';
+            %>
+              <tr>
+                <td><input type="checkbox" class="row-checkbox" value="<%= product.id %>"></td>
+                <td>
+                  <a href="/admin/products/<%= product.id %>/edit" style="display: block; width: 48px; height: 48px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border-color, rgba(255,255,255,0.1)); background: #000;">
+                    <img src="<%= thumbSrc %>" onerror="this.onerror=null;this.src='/assets/placeholder.svg';" style="width: 100%; height: 100%; object-fit: cover;" alt="<%= product.title %>">
+                  </a>
+                </td>
+                <td dir="ltr"><code><%= product.product_id %></code></td>
+                <td>
+                  <a href="/admin/products/<%= product.id %>/edit" style="color: var(--text-main); font-weight: 600; text-decoration: none;">
+                    <%= product.title %>
+                  </a>
+                </td>
+                <td><span class="badge badge-info"><%= product.category_name || 'غير مصنف' %></span></td>
+                <td dir="ltr">
+                  <% if (product.old_price) { %>
+                    <small class="text-muted" style="text-decoration: line-through; margin-right: 5px;"><%= helpers.formatPrice(product.old_price) %></small>
+                  <% } %>
+                  <strong><%= helpers.formatPrice(product.price) %></strong>
+                </td>
+                <td class="text-center">
+                  <% if (product.stock_status === 'in_stock') { %>
+                    <span class="badge badge-success">متوفر</span>
+                  <% } else if (product.stock_status === 'out_of_stock') { %>
+                    <span class="badge badge-danger">نفذت الكمية</span>
+                  <% } else if (product.stock_status === 'pre_order') { %>
+                    <span class="badge badge-warning">طلب مسبق</span>
+                  <% } %>
+                </td>
+                <td class="text-center">
+                  <% if (product.is_active) { %>
+                    <span class="badge badge-success">نشط</span>
+                  <% } else { %>
+                    <span class="badge badge-danger">غير نشط</span>
+                  <% } %>
+                </td>
+                <td class="text-center">
+                  <div class="d-flex justify-content-center gap-2">
+                    <a href="/product.html?id=<%= product.product_id || product.id %>" target="_blank" class="btn-icon text-info" title="معاينة في المتجر">
+                      <span class="material-symbols-rounded">visibility</span>
+                    </a>
+                    <form action="/admin/products/<%= product.id %>/duplicate" method="POST" style="display:inline;" title="نسخ المنتج">
+                      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                      <button type="submit" class="btn-icon">
+                        <span class="material-symbols-rounded">content_copy</span>
+                      </button>
+                    </form>
+                    <a href="/admin/products/<%= product.id %>/edit" class="btn-icon" title="تعديل">
+                      <span class="material-symbols-rounded">edit</span>
+                    </a>
+                    <form action="/admin/products/<%= product.id %>/delete" method="POST" style="display:inline;" onsubmit="return confirm('تأكيد حذف هذا المنتج نهائياً؟');">
+                      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                      <button type="submit" class="btn-icon text-danger" title="حذف">
+                        <span class="material-symbols-rounded">delete</span>
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <% if (totalPages > 1) { %>
+        <div class="d-flex justify-content-between align-items-center mt-4">
+          <div class="text-muted" style="font-size: 13px;">
+            إجمالي المنتجات: <%= totalItems %>
+          </div>
+          <div class="d-flex gap-2">
+            <% if (page > 1) { %>
+              <a href="?page=<%= page - 1 %>&q=<%= search %>&category=<%= catId %>" class="btn btn-outline">السابق</a>
+            <% } %>
+            <% for(let i = 1; i <= totalPages; i++) { %>
+              <a href="?page=<%= i %>&q=<%= search %>&category=<%= catId %>" class="btn <%= page === i ? 'btn-primary' : 'btn-outline' %>"><%= i %></a>
+            <% } %>
+            <% if (page < totalPages) { %>
+              <a href="?page=<%= page + 1 %>&q=<%= search %>&category=<%= catId %>" class="btn btn-outline">التالي</a>
+            <% } %>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</main>
+<script>
+const selectAll = document.getElementById('selectAll');
+if (selectAll) {
+  selectAll.addEventListener('change', function(e) {
+    document.querySelectorAll('.row-checkbox').forEach(cb => cb.checked = e.target.checked);
+  });
+}
+</script>
+<%- include('../../partials/foot') %>

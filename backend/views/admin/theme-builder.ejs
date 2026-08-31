@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>محرر المظهر (Theme Builder) | ZFB Admin</title>
+  
+  <script>
+    // Standalone head (no partials/head.ejs), so the CSRF token has to be
+    // published here or the theme save is refused before it reaches the route.
+    window.ZFB_ADMIN_CSRF = '<%= typeof csrfToken !== "undefined" ? csrfToken : "" %>';
+  </script>
+  <script src="/admin-assets/js/csrf-fetch.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#c79a52', surface: '#181510', bg: '#120f0b' } } } }
+  </script>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.css"/>
+  <script src="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.js"></script>
+
+  <style>
+    body { background-color: #120f0b; color: #fff; font-family: system-ui, -apple-system, sans-serif; height: 100vh; overflow: hidden; }
+    .theme-layout { display: flex; height: 100vh; }
+    .sidebar { width: 340px; background: #181510; border-left: 1px solid #2a231b; display: flex; flex-direction: column; }
+    .sidebar-header { padding: 16px; border-bottom: 1px solid #2a231b; display: flex; justify-content: space-between; align-items: center; }
+    .sidebar-content { flex: 1; overflow-y: auto; padding: 16px; }
+    .sidebar-footer { padding: 16px; border-top: 1px solid #2a231b; display: flex; gap: 8px; flex-direction: column; }
+    
+    .preview-area { flex: 1; display: flex; flex-direction: column; background: #000; }
+    .preview-header { padding: 12px; border-bottom: 1px solid #2a231b; background: #181510; display: flex; justify-content: space-between; align-items: center; }
+    .iframe-wrapper { flex: 1; position: relative; }
+    iframe { width: 100%; height: 100%; border: none; }
+    
+    .panel-group { margin-bottom: 24px; border-bottom: 1px solid #2a231b; padding-bottom: 16px; }
+    .panel-group-title { font-weight: bold; margin-bottom: 12px; color: #c79a52; font-size: 1.1rem; }
+    
+    .form-group { margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
+    .form-group label { font-size: 0.9rem; color: #d6c2aa; flex: 1; }
+    
+    input[type="text"], input[type="number"], select {
+      background: #221d17;
+      border: 1px solid #3e342b;
+      color: #fff;
+      padding: 6px 8px;
+      border-radius: 4px;
+      width: 140px;
+      outline: none;
+      font-size: 0.9rem;
+    }
+    
+    .mode-toggle { display: flex; background: #221d17; border-radius: 6px; padding: 4px; margin-bottom: 16px; }
+    .mode-btn { flex: 1; text-align: center; padding: 6px; border-radius: 4px; cursor: pointer; font-size: 0.9rem; transition: 0.2s; }
+    .mode-btn.active { background: #c79a52; color: #000; font-weight: bold; }
+    
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+  </style>
+</head>
+<body>
+
+<div class="theme-layout">
+  
+  <!-- Right Sidebar (Controls) -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <h2 class="text-xl font-bold">Theme Builder</h2>
+      <a href="/admin" class="text-gray-400 hover:text-white"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg></a>
+    </div>
+    
+    <div class="sidebar-content">
+      <!-- Mode Toggle -->
+      <div class="mode-toggle">
+        <div class="mode-btn active" data-mode="light">☀️ فاتح</div>
+        <div class="mode-btn" data-mode="dark">🌙 داكن</div>
+      </div>
+      
+      <div class="panel-group">
+        <h3 class="panel-group-title">الألوان (Colors)</h3>
+        
+        <div id="colors-light" class="tab-content active">
+          <div class="form-group">
+            <label>اللون الأساسي</label>
+            <input type="text" class="color-field" data-path="colors.light.primary" value="#c79a52" data-coloris>
+          </div>
+          <div class="form-group">
+            <label>خلفية الصفحة</label>
+            <input type="text" class="color-field" data-path="colors.light.bg" value="#faf5ec" data-coloris>
+          </div>
+          <div class="form-group">
+            <label>خلفية الكروت</label>
+            <input type="text" class="color-field" data-path="colors.light.surface" value="#fffdf8" data-coloris>
+          </div>
+          <div class="form-group">
+            <label>لون النص</label>
+            <input type="text" class="color-field" data-path="colors.light.text" value="#1c1813" data-coloris>
+          </div>
+          <div class="form-group">
+            <label>لون الحدود</label>
+            <input type="text" class="color-field" data-path="colors.light.border" value="#e3d5c3" data-coloris>
+          </div>
+        </div>
+        
+        <div id="colors-dark" class="tab-content">
+          <div class="form-group">
+            <label>اللون الأساسي</label>
+            <input type="text" class="color-field" data-path="colors.dark.primary" value="#e2c180" data-coloris>
+          </div>
+          <div class="form-group">
+            <label>خلفية الصفحة</label>
+            <input type="text" class="color-field" data-path="colors.dark.bg" value="#181510" data-coloris>
+          </div>
+          <div class="form-group">
+            <label>خلفية الكروت</label>
+            <input type="text" class="color-field" data-path="colors.dark.surface" value="#221d17" data-coloris>
+          </div>
+          <div class="form-group">
+            <label>لون النص</label>
+            <input type="text" class="color-field" data-path="colors.dark.text" value="#e8e3dc" data-coloris>
+          </div>
+          <div class="form-group">
+            <label>لون الحدود</label>
+            <input type="text" class="color-field" data-path="colors.dark.border" value="#42392d" data-coloris>
+          </div>
+        </div>
+      </div>
+      
+      <div class="panel-group">
+        <h3 class="panel-group-title">الزوايا (Border Radius)</h3>
+        <div class="form-group">
+          <label>زوايا الأزرار</label>
+          <input type="text" class="token-field" data-path="radius.button" value="8px">
+        </div>
+        <div class="form-group">
+          <label>زوايا الكروت</label>
+          <input type="text" class="token-field" data-path="radius.card" value="16px">
+        </div>
+      </div>
+      
+      <div class="panel-group">
+        <h3 class="panel-group-title">الظلال (Shadows)</h3>
+        <div class="form-group">
+          <label>ظل خفيف (sm)</label>
+          <input type="text" class="token-field" data-path="shadows.sm" value="0 14px 36px rgba(55, 43, 31, 0.09)">
+        </div>
+        <div class="form-group">
+          <label>ظل الكروت (md)</label>
+          <input type="text" class="token-field" data-path="shadows.md" value="0 24px 62px rgba(55, 43, 31, 0.16)">
+        </div>
+      </div>
+      
+      <div class="panel-group">
+        <h3 class="panel-group-title">سرعة الحركة (Animation)</h3>
+        <div class="form-group">
+          <label>السرعة الافتراضية</label>
+          <select class="token-field" data-path="animation.speed">
+            <option value="100ms ease">سريع جداً (100ms)</option>
+            <option value="180ms ease">سريع (180ms)</option>
+            <option value="300ms ease">متوسط (300ms)</option>
+            <option value="500ms ease">بطيء (500ms)</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="panel-group">
+        <h3 class="panel-group-title">الخطوط (Typography)</h3>
+        <div class="form-group">
+          <label>الخط الأساسي</label>
+          <select class="token-field" data-path="fonts.primary">
+            <option value="IBM Plex Sans Arabic">IBM Plex Sans Arabic</option>
+            <option value="Tajawal">Tajawal</option>
+            <option value="Cairo">Cairo</option>
+            <option value="Almarai">Almarai</option>
+            <option value="system-ui">System Default</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="panel-group">
+        <h3 class="panel-group-title">الكثافة (Density)</h3>
+        <div class="form-group">
+          <label>كثافة الواجهة</label>
+          <select class="token-field" data-path="density.type">
+            <option value="comfortable">مريح (Comfortable)</option>
+            <option value="compact">مضغوط (Compact)</option>
+            <option value="spacious">واسع (Spacious)</option>
+          </select>
+        </div>
+      </div>
+
+    </div>
+    
+    <div class="sidebar-footer">
+      <div style="display: flex; gap: 8px;">
+        <button id="btn-save" class="bg-primary text-black font-bold py-2 px-4 rounded flex-1">حفظ ونشر</button>
+        <button id="btn-reset" class="bg-red-900/40 text-red-400 py-2 px-4 rounded border border-red-900/60" title="استعادة الافتراضي"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg></button>
+      </div>
+      <div style="display: flex; gap: 8px; margin-top: 8px;">
+        <button id="btn-backup" class="bg-gray-800 text-gray-300 py-1 px-3 rounded text-sm flex-1">نسخ احتياطي</button>
+        <button id="btn-restore" class="bg-gray-800 text-gray-300 py-1 px-3 rounded text-sm flex-1">استعادة</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Left Area (Preview) -->
+  <div class="preview-area">
+    <div class="preview-header">
+      <div class="flex items-center gap-4">
+        <span class="text-sm text-gray-400">المعاينة الحية:</span>
+        <select id="preview-url" class="bg-gray-800 border-gray-700 text-sm">
+          <option value="/">الرئيسية</option>
+          <option value="/products.html">المنتجات</option>
+          <option value="/product.html?id=gen-0001">تفاصيل المنتج</option>
+          <option value="/cart.html">السلة</option>
+          <option value="/checkout.html">الدفع</option>
+          <option value="/wishlist.html">المفضلة</option>
+        </select>
+      </div>
+    </div>
+    <div class="iframe-wrapper">
+      <iframe id="preview-frame" src="/"></iframe>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let themeData = <%- themeData || '{}' %>;
+  
+  if (!themeData.colors) {
+    themeData = {
+      colors: {
+        light: { primary: '#c79a52', bg: '#faf5ec', surface: '#fffdf8', text: '#1c1813', border: '#e3d5c3' },
+        dark: { primary: '#e2c180', bg: '#181510', surface: '#221d17', text: '#e8e3dc', border: '#42392d' }
+      },
+      radius: { button: '8px', card: '16px' },
+      shadows: { sm: '0 14px 36px rgba(55, 43, 31, 0.09)', md: '0 24px 62px rgba(55, 43, 31, 0.16)' },
+      animation: { speed: '180ms ease' },
+      density: { type: 'comfortable' }
+    };
+  }
+
+  function populateInputs() {
+    document.querySelectorAll('[data-path]').forEach(input => {
+      const path = input.getAttribute('data-path').split('.');
+      let val = themeData;
+      for (const p of path) {
+        if(val) val = val[p];
+      }
+      if (val !== undefined) input.value = val;
+    });
+  }
+
+  populateInputs();
+
+  Coloris({
+    el: '.color-field',
+    theme: 'polaroid',
+    themeMode: 'dark',
+    formatToggle: true,
+    alpha: true,
+    swatches: ['#c79a52', '#120f0b', '#ffffff', '#221d17', '#e8e3dc'],
+    onChange: (color, input) => { updateThemeData(input.getAttribute('data-path'), color); }
+  });
+
+  document.querySelectorAll('.token-field').forEach(input => {
+    input.addEventListener('input', (e) => {
+      updateThemeData(e.target.getAttribute('data-path'), e.target.value);
+    });
+  });
+
+  function updateThemeData(pathString, value) {
+    const path = pathString.split('.');
+    let obj = themeData;
+    for (let i = 0; i < path.length - 1; i++) {
+      if (!obj[path[i]]) obj[path[i]] = {};
+      obj = obj[path[i]];
+    }
+    obj[path[path.length - 1]] = value;
+    
+    // Convert Density to variables
+    if(themeData.density && themeData.density.type) {
+      if(themeData.density.type === 'compact') {
+        themeData.density.padding = '8px';
+        themeData.density.gap = '8px';
+      } else if(themeData.density.type === 'spacious') {
+        themeData.density.padding = '24px';
+        themeData.density.gap = '24px';
+      } else {
+        themeData.density.padding = '16px';
+        themeData.density.gap = '16px';
+      }
+    }
+    
+    const frame = document.getElementById('preview-frame');
+    if (frame && frame.contentWindow) {
+      frame.contentWindow.postMessage({ type: 'UPDATE_THEME_PREVIEW', theme: themeData }, '*');
+    }
+  }
+
+  document.querySelectorAll('.mode-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+      const mode = e.target.getAttribute('data-mode');
+      
+      document.getElementById('colors-light').classList.remove('active');
+      document.getElementById('colors-dark').classList.remove('active');
+      document.getElementById('colors-' + mode).classList.add('active');
+      
+      const frame = document.getElementById('preview-frame');
+      if (frame && frame.contentWindow && frame.contentWindow.ZFB_THEME) {
+          frame.contentWindow.ZFB_THEME.setTheme(mode);
+      }
+    });
+  });
+
+  document.getElementById('preview-url').addEventListener('change', (e) => {
+    document.getElementById('preview-frame').src = e.target.value;
+  });
+
+  document.getElementById('btn-save').addEventListener('click', () => {
+    const btn = document.getElementById('btn-save');
+    const oldText = btn.textContent;
+    btn.textContent = 'جاري الحفظ...';
+    
+    fetch('/admin/theme/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ themeData })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        btn.textContent = 'تم الحفظ!';
+        setTimeout(() => btn.textContent = oldText, 2000);
+      } else {
+        alert('خطأ: ' + data.message);
+        btn.textContent = oldText;
+      }
+    });
+  });
+
+  // Theme Backup / Restore
+  document.getElementById('btn-backup').addEventListener('click', () => {
+    localStorage.setItem('zfb_theme_backup', JSON.stringify(themeData));
+    alert('تم حفظ نسخة احتياطية من إعدادات المظهر بنجاح.');
+  });
+
+  document.getElementById('btn-restore').addEventListener('click', () => {
+    const backup = localStorage.getItem('zfb_theme_backup');
+    if (backup) {
+      themeData = JSON.parse(backup);
+      populateInputs();
+      document.getElementById('btn-save').click();
+    } else {
+      alert('لا توجد نسخة احتياطية محفوظة.');
+    }
+  });
+
+  document.getElementById('btn-reset').addEventListener('click', () => {
+    if (confirm('هل أنت متأكد أنك تريد استعادة مظهر النظام الافتراضي؟')) {
+      themeData = {
+        colors: {
+          light: { primary: '#c79a52', bg: '#faf5ec', surface: '#fffdf8', text: '#1c1813', border: '#e3d5c3' },
+          dark: { primary: '#e2c180', bg: '#181510', surface: '#221d17', text: '#e8e3dc', border: '#42392d' }
+        },
+        radius: { button: '8px', card: '16px' },
+        shadows: { sm: '0 14px 36px rgba(55, 43, 31, 0.09)', md: '0 24px 62px rgba(55, 43, 31, 0.16)' },
+        animation: { speed: '180ms ease' },
+        density: { type: 'comfortable' },
+        fonts: { primary: 'IBM Plex Sans Arabic' }
+      };
+      populateInputs();
+      document.getElementById('btn-save').click();
+    }
+  });
+</script>
+</body>
+</html>

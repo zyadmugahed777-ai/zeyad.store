@@ -1,0 +1,127 @@
+<%- include('../../partials/head', { title }) %>
+<%- include('../../partials/sidebar', { active }) %>
+<main class="admin-main">
+  <%- include('../../partials/topbar') %>
+  
+  <div class="admin-content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h1 class="page-title"><%= title %></h1>
+        <p class="page-description">إدارة محتوى الصفحات والمقاطع الثابتة في المتجر.</p>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="glass-card mb-4">
+      <form action="/admin/pages" method="GET" class="d-flex gap-3 align-items-center">
+        <div style="flex: 1;">
+          <input type="text" name="q" class="form-control" placeholder="البحث عن صفحة..." value="<%= search %>">
+        </div>
+        <div style="width: 200px;">
+          <select name="type" class="form-control">
+            <option value="">جميع الأنواع</option>
+            <option value="main" <%= type === 'main' ? 'selected' : '' %>>أساسية</option>
+            <option value="static" <%= type === 'static' ? 'selected' : '' %>>ثابتة</option>
+            <option value="department" <%= type === 'department' ? 'selected' : '' %>>قسم</option>
+            <option value="catalog" <%= type === 'catalog' ? 'selected' : '' %>>كتالوج</option>
+            <option value="template" <%= type === 'template' ? 'selected' : '' %>>قالب</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-accent">
+          <span class="material-symbols-rounded">search</span> بحث
+        </button>
+        <% if(search || type) { %>
+          <a href="/admin/pages" class="btn btn-outline">إلغاء الفلترة</a>
+        <% } %>
+      </form>
+    </div>
+
+    <!-- Table -->
+    <div class="glass-card">
+      <div class="table-responsive">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>عنوان الصفحة</th>
+              <th>الرابط (Slug)</th>
+              <th>النوع</th>
+              <th class="text-center">الحالة</th>
+              <th class="text-center">آخر تحديث</th>
+              <th class="text-center" width="200">إجراءات</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (pagesList.length === 0) { %>
+              <tr>
+                <td colspan="6" class="text-center py-5">لا توجد صفحات مسجلة.</td>
+              </tr>
+            <% } %>
+            <% pagesList.forEach(p => { %>
+              <tr>
+                <td>
+                  <strong><%= p.title_ar %></strong><br>
+                  <small class="text-muted" dir="ltr"><%= p.title_en || '' %></small>
+                </td>
+                <td><code dir="ltr"><%= p.slug %></code></td>
+                <td>
+                  <% 
+                    const types = {
+                      'main': { label: 'أساسية', color: 'info' },
+                      'static': { label: 'ثابتة', color: 'secondary' },
+                      'department': { label: 'قسم', color: 'primary' },
+                      'catalog': { label: 'كتالوج', color: 'warning' },
+                      'template': { label: 'قالب', color: 'danger' }
+                    };
+                    const typeInfo = types[p.page_type] || { label: p.page_type, color: 'secondary' };
+                  %>
+                  <span class="badge badge-<%= typeInfo.color %>"><%= typeInfo.label %></span>
+                </td>
+                <td class="text-center">
+                  <% if (p.is_active) { %>
+                    <span class="badge badge-success">نشط</span>
+                  <% } else { %>
+                    <span class="badge badge-danger">غير نشط</span>
+                  <% } %>
+                </td>
+                <td class="text-center" dir="ltr">
+                  <small><%= helpers.formatDate(p.updated_at) %></small>
+                </td>
+                <td class="text-center">
+                  <div class="d-flex justify-content-center gap-2">
+                    <a href="/admin/pages/<%= p.id %>/editor" class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;" title="المحرر المرئي">
+                      <span class="material-symbols-rounded" style="font-size: 16px;">brush</span> المحرر
+                    </a>
+                    <a href="/admin/pages/<%= p.id %>/settings" class="btn btn-outline" style="padding: 6px 12px; font-size: 12px;" title="إعدادات الصفحة">
+                      <span class="material-symbols-rounded" style="font-size: 16px;">settings</span>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <% if (totalPages > 1) { %>
+        <div class="d-flex justify-content-between align-items-center mt-4">
+          <div class="text-muted" style="font-size: 13px;">
+            إجمالي الصفحات: <%= totalItems %>
+          </div>
+          <div class="d-flex gap-2">
+            <% if (page > 1) { %>
+              <a href="?page=<%= page - 1 %>&q=<%= search %>&type=<%= type %>" class="btn btn-outline">السابق</a>
+            <% } %>
+            <% for(let i = 1; i <= totalPages; i++) { %>
+              <a href="?page=<%= i %>&q=<%= search %>&type=<%= type %>" class="btn <%= page === i ? 'btn-primary' : 'btn-outline' %>"><%= i %></a>
+            <% } %>
+            <% if (page < totalPages) { %>
+              <a href="?page=<%= page + 1 %>&q=<%= search %>&type=<%= type %>" class="btn btn-outline">التالي</a>
+            <% } %>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</main>
+<%- include('../../partials/foot') %>

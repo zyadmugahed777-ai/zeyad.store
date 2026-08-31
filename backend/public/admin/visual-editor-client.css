@@ -1,0 +1,28 @@
+/* Styles injected into the frontend for Visual CMS */
+.visual-cms-element {
+  position: relative;
+  transition: all 0.2s ease;
+  cursor: pointer !important;
+}
+
+.visual-cms-element::after {
+  content: '';
+  position: absolute;
+  top: -2px; left: -2px; right: -2px; bottom: -2px;
+  border: 2px dashed rgba(234, 179, 8, 0.5); /* Yellow */
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 9999;
+  border-radius: 4px;
+}
+
+.visual-cms-hover::after {
+  opacity: 1;
+}
+
+.visual-cms-active::after {
+  opacity: 1;
+  border: 2px solid #eab308; /* Solid Yellow */
+  background: rgba(234, 179, 8, 0.1);
+}

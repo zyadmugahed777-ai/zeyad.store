@@ -1,0 +1,1101 @@
+<%- include('../../partials/head', { title }) %>
+<%- include('../../partials/sidebar', { active }) %>
+<main class="admin-main">
+  <%- include('../../partials/topbar') %>
+  
+  <div class="admin-content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h1 class="page-title"><%= title %></h1>
+      </div>
+      <div class="admin-header-actions">
+        <a href="/admin/products" class="btn btn-outline">
+          <span class="material-symbols-rounded">arrow_forward</span>
+          العودة للقائمة
+        </a>
+      </div>
+    </div>
+
+    <form action="<%= product ? '/admin/products/' + product.id + '/edit?_csrf=' + csrfToken : '/admin/products/create?_csrf=' + csrfToken %>" method="POST" enctype="multipart/form-data">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      
+      <div class="row" style="display: flex; flex-wrap: wrap; margin: -12px;">
+        
+        <!-- MAIN CONTENT (Left Column) -->
+        <div style="flex: 0 0 66.66%; padding: 12px; box-sizing: border-box;">
+          
+          <!-- Basic Info -->
+          <div class="glass-card mb-4">
+            <h2 style="font-size: 1.1rem; margin-bottom: 20px; color: var(--primary-color);">المعلومات الأساسية</h2>
+            
+            <div class="form-group">
+              <label class="form-label">اسم المنتج <span class="text-danger">*</span></label>
+              <input type="text" name="title" class="form-control" value="<%= product ? product.title : '' %>" required>
+            </div>
+            
+            <div class="form-group mt-3">
+              <label class="form-label">وصف قصير (SEO / مقتطف)</label>
+              <textarea name="short_description" class="form-control" rows="2"><%= product ? product.short_description : '' %></textarea>
+            </div>
+
+            <div class="form-group mt-3">
+              <label class="form-label">الوصف الكامل التفصيلي</label>
+              <textarea name="description" class="form-control rich-editor" rows="6"><%= product ? product.description : '' %></textarea>
+            </div>
+          </div>
+
+          <!-- Pricing & Inventory -->
+          <div class="glass-card mb-4">
+            <h2 style="font-size: 1.1rem; margin-bottom: 20px; color: var(--primary-color);">التسعير والمخزون</h2>
+            
+            <div class="row" style="display: flex; flex-wrap: wrap; margin: 0 -8px;">
+              <div style="flex: 0 0 50%; padding: 0 8px; box-sizing: border-box;">
+                <label class="form-label">السعر الحالي (ر.س - ريال سعودي) <span class="text-danger">*</span></label>
+                <input type="number" step="0.01" name="price" class="form-control" value="<%= product ? product.price : '0' %>" required dir="ltr">
+              </div>
+              <div style="flex: 0 0 50%; padding: 0 8px; box-sizing: border-box;">
+                <label class="form-label">السعر القديم قبل الخصم (ر.س)</label>
+                <input type="number" step="0.01" name="old_price" class="form-control" value="<%= product && product.old_price ? product.old_price : '' %>" dir="ltr">
+              </div>
+            </div>
+
+            <div class="row mt-3" style="display: flex; flex-wrap: wrap; margin: 0 -8px;">
+              <div style="flex: 0 0 33.33%; padding: 0 8px; box-sizing: border-box;">
+                <label class="form-label">رمز المنتج (SKU)</label>
+                <input type="text" name="sku" class="form-control" value="<%= product ? product.sku : '' %>" dir="ltr">
+              </div>
+              <div style="flex: 0 0 33.33%; padding: 0 8px; box-sizing: border-box;">
+                <label class="form-label">الباركود (Barcode)</label>
+                <input type="text" name="barcode" class="form-control" value="<%= product ? product.barcode : '' %>" dir="ltr">
+              </div>
+              <div style="flex: 0 0 33.33%; padding: 0 8px; box-sizing: border-box;">
+                <label class="form-label">حالة المخزون</label>
+                <select name="stock_status" class="form-control">
+                  <option value="in_stock" <%= product && product.stock_status === 'in_stock' ? 'selected' : '' %>>متوفر</option>
+                  <option value="out_of_stock" <%= product && product.stock_status === 'out_of_stock' ? 'selected' : '' %>>نفذت الكمية</option>
+                  <option value="pre_order" <%= product && product.stock_status === 'pre_order' ? 'selected' : '' %>>طلب مسبق</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Images & Media Manager -->
+          <div class="glass-card mb-4">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+              <h2 style="font-size: 1.1rem; color: var(--primary-color); margin: 0;">الصور والوسائط</h2>
+              <span class="text-muted" style="font-size: 12px;">تحويل تلقائي فوري إلى WebP لتسريع التصفح</span>
+            </div>
+            
+            <% if (product && images && images.length > 0) { %>
+              <!-- Existing Product Images -->
+              <div class="mb-4 pb-3" style="border-bottom: 1px solid var(--border-color, rgba(255,255,255,0.08));">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                  <label class="form-label mb-0" style="font-weight: 600;">الصور الحالية للمنتج (<%= images.length %> صور)</label>
+                  <small class="text-muted">يمكنك حذف صور، تحديد الصورة الرئيسية، ورفع صور جديدة بنفس الوقت</small>
+                </div>
+                
+                <div class="product-images-grid" id="currentImagesGrid">
+                  <% images.forEach((img, idx) => { 
+                       const imgSrc = img.image_path ? (img.image_path.startsWith('/') || img.image_path.startsWith('http') || img.image_path.startsWith('data:') ? img.image_path : '/' + img.image_path) : '/assets/placeholder.svg';
+                       const isImgPrimary = (i) => i.is_primary === true || i.is_primary === 1;
+                       const isPrim = (isImgPrimary(img) || (!images.some(isImgPrimary) && idx === 0));
+                  %>
+                    <div class="image-manage-card <%= isPrim ? 'is-primary' : '' %>" id="img_card_<%= img.id %>">
+                      <img src="<%= imgSrc %>" onerror="this.onerror=null;this.src='/assets/placeholder.svg';" alt="صورة المنتج">
+                      
+                      <% if (isPrim) { %>
+                        <span class="primary-badge" id="badge_primary_<%= img.id %>">
+                          <span class="material-symbols-rounded" style="font-size: 13px;">star</span>
+                          الرئيسية
+                        </span>
+                      <% } %>
+
+                      <!-- Action Buttons -->
+                      <div class="card-actions">
+                        <label class="btn-card-action btn-star" title="تعيين كصورة رئيسية">
+                          <input type="radio" name="primary_image_id" value="<%= img.id %>" <%= isPrim ? 'checked' : '' %> style="display:none;" onchange="updatePrimaryImageDisplay(this, '<%= img.id %>')">
+                          <span class="material-symbols-rounded" style="font-size: 13px;">star</span>
+                          <span class="star-text"><%= isPrim ? 'الرئيسية' : 'رئيسية' %></span>
+                        </label>
+                        
+                        <button type="button" class="btn-card-action btn-del" onclick="toggleDeleteImage('<%= img.id %>')" title="تحديد لحذف هذه الصورة">
+                          <span class="material-symbols-rounded" style="font-size: 13px;">delete</span>
+                          حذف
+                        </button>
+                      </div>
+
+                      <!-- Which colour is this photo of?
+                           Leaving it blank keeps the image a general product
+                           photo, which is what every existing image is. -->
+                      <select name="image_color_<%= img.id %>" class="image-color-select"
+                              title="لون هذه الصورة"
+                              style="position:absolute; top:6px; left:6px; z-index:3; max-width:104px;
+                                     font-size:11px; padding:3px 6px; border-radius:6px;
+                                     background:rgba(0,0,0,.72); color:#fff; backdrop-filter:blur(4px);
+                                     border:1px solid rgba(255,255,255,.25);">
+                        <option value="">بلا لون</option>
+                        <% (colors || []).forEach(function (c) { %>
+                          <option value="<%= c.name %>" <%= (img.color_name === c.name) ? 'selected' : '' %>><%= c.name %></option>
+                        <% }) %>
+                      </select>
+
+                      <!-- Hidden checkbox for standard form submit -->
+                      <input type="checkbox" id="del_img_<%= img.id %>" name="delete_images[]" value="<%= img.id %>" style="display: none;">
+
+                      <!-- Deleted overlay -->
+                      <div class="deleted-overlay" id="overlay_<%= img.id %>" style="display: none;">
+                        <span class="material-symbols-rounded" style="font-size: 24px;">delete_sweep</span>
+                        <span>محددة للحذف</span>
+                        <button type="button" class="btn-card-action" style="margin-top: 4px;" onclick="toggleDeleteImage('<%= img.id %>')">
+                          <span class="material-symbols-rounded" style="font-size: 13px;">undo</span>
+                          تراجع
+                        </button>
+                      </div>
+                    </div>
+                  <% }) %>
+                </div>
+              </div>
+            <% } %>
+
+            <!-- Upload New Images -->
+            <div class="form-group">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <label class="form-label mb-0" style="font-weight: 600;">رفع صور جديدة (يمكنك تحديد حتى 20+ صورة دفعة واحدة)</label>
+                <span class="badge" style="background: rgba(199, 154, 82, 0.15); color: var(--primary-gold, #c79a52); font-size: 11px; padding: 4px 10px; border-radius: 6px;">
+                  دعم متعدد: JPG, PNG, WEBP
+                </span>
+              </div>
+
+              <!-- Drag & Drop / Multi-File Box -->
+              <div id="dropzoneContainer" style="border: 2px dashed var(--border-color, rgba(255,255,255,0.18)); border-radius: 12px; padding: 24px 16px; text-align: center; background: var(--surface-alt, rgba(255,255,255,0.02)); cursor: pointer; transition: all 0.2s;">
+                <input type="file" name="images" id="productFileInput" class="form-control" accept="image/jpeg,image/png,image/webp,image/jpg" multiple style="display: none;">
+                <input type="hidden" name="primary_new_image_index" id="primary_new_image_index" value="<%= (!product || !images || images.length === 0) ? '0' : '-1' %>">
+                
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                  <span class="material-symbols-rounded" style="font-size: 38px; color: var(--primary-gold, #c79a52);">add_photo_alternate</span>
+                  <div>
+                    <strong style="font-size: 15px; color: var(--text-main, #f8fafc); display: block;">اضغط لاختيار الصور أو اسحبها وأفلتها هنا</strong>
+                    <span class="text-muted" style="font-size: 12px;">يمكنك تحديد حتى 10-20 صورة دفعة واحدة وتحديد الصورة الرئيسية منها بسهولة</span>
+                  </div>
+                  <button type="button" class="btn btn-secondary" onclick="document.getElementById('productFileInput').click()" style="margin-top: 6px; padding: 6px 16px; font-size: 13px; border-radius: 8px;">
+                    <span class="material-symbols-rounded" style="font-size: 16px;">file_upload</span>
+                    استعراض الصور من جهازك
+                  </button>
+                </div>
+              </div>
+
+              <!-- New Selected Images Preview Grid -->
+              <div id="newImagesPreviewSection" style="display: none; margin-top: 16px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                  <label class="form-label mb-0" style="font-weight: 600; color: var(--primary-gold, #c79a52);">الصور المحددة للرفع (<span id="newFilesCount">0</span> صور)</label>
+                  <small class="text-muted">انقر على "رئيسية" لاختيار الصورة التي تظهر كغلاف أول للمنتج</small>
+                </div>
+                <div class="product-images-grid" id="newImagesPreviewGrid"></div>
+              </div>
+            </div>
+            
+            <!-- Product Video Section -->
+            <div class="mt-4 pt-3" style="border-top: 1px solid var(--border-color, rgba(255,255,255,0.08));">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <label class="form-label mb-0" style="font-weight: 600;">فيديو المنتج (استعراض 30 ثانية - اختياري)</label>
+                <span class="badge" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa; font-size: 11px; padding: 4px 8px; border-radius: 6px;">يعمل بسلاسة على الهواتف</span>
+              </div>
+
+              <% if (product && product.video) { 
+                   const vSrc = product.video.startsWith('http') || product.video.startsWith('/') ? product.video : '/' + product.video;
+                   const isDirectVideo = /\.(mp4|webm|mov|ogg)$/i.test(product.video) || product.video.includes('/uploads/videos/');
+              %>
+                <!-- Current Video Preview Card -->
+                <div class="p-3 mb-3" style="background: var(--bg-hover, rgba(255,255,255,0.03)); border: 1px solid var(--border-color, rgba(255,255,255,0.1)); border-radius: 10px;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <span style="font-size: 13px; font-weight: 500; color: var(--text-primary);">الفيديو الحالي للمنتج:</span>
+                    <label style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--danger, #ef4444); cursor: pointer;">
+                      <input type="checkbox" name="remove_video" value="1">
+                      حذف هذا الفيديو عند الحفظ
+                    </label>
+                  </div>
+
+                  <% if (isDirectVideo) { %>
+                    <div style="max-width: 320px; border-radius: 8px; overflow: hidden; background: #000;">
+                      <video controls playsinline preload="metadata" style="width: 100%; height: auto; max-height: 200px; display: block;">
+                        <source src="<%= vSrc %>">
+                        متصفحك لا يدعم تشغيل الفيديو
+                      </video>
+                    </div>
+                  <% } else { %>
+                    <div style="font-size: 12px; color: var(--text-muted); word-break: break-all;">
+                      رابط خارجي: <a href="<%= vSrc %>" target="_blank" style="color: #60a5fa;"><%= vSrc %></a>
+                    </div>
+                  <% } %>
+                </div>
+              <% } %>
+
+              <div class="row" style="display: flex; flex-wrap: wrap; margin: 0 -8px;">
+                <div style="flex: 0 0 50%; padding: 0 8px; box-sizing: border-box;">
+                  <label class="form-label" style="font-size: 12px;">رفع ملف فيديو مباشر من جهازك (MP4 / WebM / MOV)</label>
+                  <input type="file" name="video_file" id="productVideoFileInput" class="form-control" accept="video/mp4,video/webm,video/quicktime,video/ogg">
+                </div>
+                <div style="flex: 0 0 50%; padding: 0 8px; box-sizing: border-box;">
+                  <label class="form-label" style="font-size: 12px;">أو رابط فيديو خارجي (YouTube / رابط مباشر)</label>
+                  <input type="text" name="video" class="form-control" value="<%= product ? product.video : '' %>" dir="ltr" placeholder="https://... أو مسار الفيديو">
+                </div>
+              </div>
+              <small class="text-muted mt-1 d-block" style="font-size: 11px;">
+                💡 نصيحة: الفيديوهات القصيرة (15-30 ثانية) تزيد معدل التحويل وثقة العميل وتعمل بخفة فورية على هواتف 4G.
+              </small>
+            </div>
+          </div>
+
+          <!-- Delivery & Installation Policy -->
+          <div class="glass-card mb-4">
+            <h2 style="font-size: 1.1rem; margin-bottom: 20px; color: var(--primary-color);">سياسة التوصيل والتركيب الخاصة بالمنتج</h2>
+            
+            <div class="row" style="display: flex; flex-wrap: wrap; margin: 0 -8px;">
+              <div style="flex: 0 0 50%; padding: 0 8px; box-sizing: border-box;">
+                <label class="form-label">نوع سياسة التوصيل <span class="required">*</span></label>
+                <select name="delivery_policy_type" class="form-control" id="product_delivery_policy_type" onchange="toggleProductDeliveryFields(this.value)">
+                  <option value="default" <%= (product?.delivery_policy_type === 'default' || !product?.delivery_policy_type) ? 'selected' : '' %>>حسب سياسة المتجر العامة (تلقائي)</option>
+                  <option value="free_sana_a" <%= product?.delivery_policy_type === 'free_sana_a' ? 'selected' : '' %>>مجاني داخل صنعاء</option>
+                  <option value="quote_after_confirmation" <%= product?.delivery_policy_type === 'quote_after_confirmation' ? 'selected' : '' %>>سيتم إبلاغ العميل بالسعر بعد تأكيد الطلب</option>
+                  <option value="estimated" <%= product?.delivery_policy_type === 'estimated' ? 'selected' : '' %>>تقديري حسب المنطقة والمحافظة</option>
+                  <option value="fixed" <%= product?.delivery_policy_type === 'fixed' ? 'selected' : '' %>>سعر توصيل محدد وثابت</option>
+                </select>
+                <small class="text-muted" style="font-size: 11px;">تحديد سلوك احتساب التوصيل لهذا المنتج في السلة والدفع</small>
+              </div>
+
+              <div id="product_fixed_delivery_div" style="flex: 0 0 50%; padding: 0 8px; box-sizing: border-box; <%= product?.delivery_policy_type === 'fixed' ? 'display:block;' : 'display:none;' %>">
+                <label class="form-label">سعر التوصيل المحدد (بالريال السعودي)</label>
+                <input type="number" step="0.01" name="delivery_fixed_fee_sar" class="form-control" value="<%= product ? (product.delivery_fixed_fee_sar || 0) : 0 %>">
+              </div>
+            </div>
+
+            <div class="row mt-3" style="display: flex; flex-wrap: wrap; margin: 0 -8px;">
+              <div style="flex: 0 0 50%; padding: 0 8px; box-sizing: border-box;">
+                <label class="form-label">هل يتطلب المنتج تركيباً منزلياً؟</label>
+                <select name="requires_installation" class="form-control" id="product_requires_installation" onchange="toggleInstallationFeeField(this.value)">
+                  <option value="0" <%= (product?.requires_installation === 0 || !product?.requires_installation) ? 'selected' : '' %>>لا — لا يتطلب تركيباً</option>
+                  <option value="1" <%= product?.requires_installation === 1 ? 'selected' : '' %>>نعم — يتطلب تركيباً متخصصاً (مثل غرف النوم والأثاث)</option>
+                </select>
+              </div>
+
+              <div id="product_installation_fee_div" style="flex: 0 0 50%; padding: 0 8px; box-sizing: border-box; <%= String(product?.requires_installation) === '1' ? 'display:block;' : 'display:none;' %>">
+                <label class="form-label">رسوم التركيب المنفصلة (ر.س - اختياري إن لم تكن مشمولة)</label>
+                <input type="number" step="0.01" name="installation_fee_sar" class="form-control" value="<%= product ? (product.installation_fee_sar || 0) : 0 %>">
+              </div>
+            </div>
+          </div>
+
+          <!-- Shipping & SEO -->
+          <div class="glass-card mb-4">
+            <h2 style="font-size: 1.1rem; margin-bottom: 20px; color: var(--primary-color);">معلومات إضافية والتوصيل</h2>
+            
+            <div class="row" style="display: flex; flex-wrap: wrap; margin: 0 -8px;">
+              <div style="flex: 0 0 50%; padding: 0 8px; box-sizing: border-box;">
+                <label class="form-label">العلامة التجارية (Brand)</label>
+                <input type="text" name="brand" class="form-control" value="<%= product ? product.brand : '' %>">
+              </div>
+              <div style="flex: 0 0 50%; padding: 0 8px; box-sizing: border-box;">
+                <label class="form-label">بلد المنشأ (Origin)</label>
+                <input type="text" name="origin" class="form-control" value="<%= product ? product.origin : '' %>">
+              </div>
+            </div>
+
+            <!-- The shipping line shown on the product page had no field here at
+                 all, so 394 products were publicly promising "مجاني للمدن الرئيسية"
+                 with no way for anyone to change it -- while the delivery
+                 policies table charges between 7 and 214 SAR depending on
+                 category and zone. This is the control that was missing. -->
+            <div class="row mt-3" style="display: flex; flex-wrap: wrap; margin: 0 -8px;">
+              <div style="flex: 0 0 66.66%; padding: 0 8px; box-sizing: border-box;">
+                <label class="form-label">نص الشحن المعروض للزبون</label>
+                <input type="text" name="shipping" class="form-control"
+                       value="<%= product ? (product.shipping || '') : '' %>"
+                       placeholder="اتركه فارغاً ليأخذ سياسة التوصيل المسجّلة تلقائياً">
+                <small class="text-muted" style="font-size:11px; display:block; margin-top:4px; line-height:1.7;">
+                  يظهر في صفحة المنتج تحت أيقونة الشحن. إذا تركته فارغاً يُعرض ما تقوله
+                  سياسة التوصيل الحقيقية لفئة هذا المنتج بدل نص ثابت.
+                </small>
+              </div>
+              <div style="flex: 0 0 33.33%; padding: 0 8px; box-sizing: border-box;">
+                <label class="form-label">مدة التوصيل</label>
+                <input type="text" name="delivery_time" class="form-control"
+                       value="<%= product ? (product.delivery_time || '') : '' %>"
+                       placeholder="مثال: 24 إلى 48 ساعة">
+              </div>
+            </div>
+
+            <div class="row mt-3" style="display: flex; flex-wrap: wrap; margin: 0 -8px;">
+              <div style="flex: 0 0 33.33%; padding: 0 8px; box-sizing: border-box;">
+                <label class="form-label">الضمان (Warranty)</label>
+                <input type="text" name="warranty" class="form-control" value="<%= product ? product.warranty : '' %>" placeholder="مثال: سنتين">
+              </div>
+              <div style="flex: 0 0 33.33%; padding: 0 8px; box-sizing: border-box;">
+                <label class="form-label">الوزن الكلي (كجم)</label>
+                <input type="number" step="0.01" name="weight" class="form-control" value="<%= product ? product.weight : '' %>" dir="ltr">
+              </div>
+              <!-- "مدة التوصيل" used to appear a second time here. Two inputs
+                   with the same name post an array, which was stored verbatim,
+                   so the product page showed customers {"2","2"} where the
+                   delivery time should be. One field, one value. -->
+            </div>
+
+            <div class="form-group mt-3">
+              <label class="form-label">الكلمات المفتاحية SEO (Tags)</label>
+              <input type="text" name="tags" class="form-control" value="<%= product ? product.tags : '' %>" placeholder="افصل بين الكلمات بفاصلة (, )">
+            </div>
+          </div>
+
+          <!-- Colors & Variants Card -->
+          <div class="glass-card mb-4">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+              <h2 style="font-size: 1.1rem; margin: 0; color: var(--primary-color); display: flex; align-items: center; gap: 8px;">
+                <span class="material-symbols-rounded" style="color: var(--primary-gold, #c79a52);">palette</span>
+                ألوان وخيارات المنتج (Colors & Variants)
+              </h2>
+              <span class="badge" style="background: rgba(199, 154, 82, 0.15); color: var(--primary-gold, #c79a52); font-size: 11px; padding: 4px 8px; border-radius: 6px;">تظهر للزبون لاختيار لونه المفضل</span>
+            </div>
+
+            <div class="form-group mb-3">
+              <label class="form-label" style="font-weight: 600;">الألوان المتاحة للمنتج</label>
+              <%
+                let initialColorsStr = '';
+                if (typeof colors !== 'undefined' && Array.isArray(colors) && colors.length > 0) {
+                  initialColorsStr = colors.map(c => c.name || c).join('، ');
+                } else if (product && product.colors) {
+                  if (typeof product.colors === 'string') {
+                    try {
+                      const parsed = JSON.parse(product.colors);
+                      if (Array.isArray(parsed)) {
+                        initialColorsStr = parsed.map(c => typeof c === 'object' ? c.name : c).join('، ');
+                      } else {
+                        initialColorsStr = product.colors;
+                      }
+                    } catch (_) {
+                      initialColorsStr = product.colors;
+                    }
+                  } else if (Array.isArray(product.colors)) {
+                    initialColorsStr = product.colors.map(c => typeof c === 'object' ? c.name : c).join('، ');
+                  }
+                }
+              %>
+              <input type="text" name="colors_input" id="colors_input" class="form-control" 
+                value="<%= initialColorsStr %>" 
+                placeholder="اكتب أسماء الألوان مفصولة بفواصل، مثال: أبيض، رمادي، أسود، خشبي، بيج">
+              <small class="text-muted" style="font-size: 11px; display: block; margin-top: 4px;">
+                💡 يمكنك كتابة أسماء الألوان مباشرة، أو الضغط على الألوان السريعة أدناه لإضافتها فوراً:
+              </small>
+            </div>
+
+            <!-- Quick Color Presets -->
+            <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px;">
+              <% 
+                const colorPresets = [
+                  { name: 'أبيض', hex: '#FFFFFF', border: '#ccc' },
+                  { name: 'أسود', hex: '#1A1A1A' },
+                  { name: 'رمادي', hex: '#808080' },
+                  { name: 'فضي', hex: '#C0C0C0' },
+                  { name: 'ذهبي', hex: '#D4AF37' },
+                  { name: 'خشبي', hex: '#8D6E63' },
+                  { name: 'بيج', hex: '#D2B48C' },
+                  { name: 'بني', hex: '#5D4037' },
+                  { name: 'كحلي', hex: '#0D2B45' },
+                  { name: 'أزرق', hex: '#1976D2' },
+                  { name: 'أخضر', hex: '#2E7D32' },
+                  { name: 'أحمر', hex: '#C62828' }
+                ];
+              %>
+              <% colorPresets.forEach(preset => { %>
+                <button type="button" class="btn btn-outline" style="padding: 4px 10px; font-size: 12px; display: inline-flex; align-items: center; gap: 6px; border-radius: 20px; cursor: pointer;" onclick="toggleColorPreset('<%= preset.name %>')">
+                  <span style="width: 12px; height: 12px; border-radius: 50%; background: <%= preset.hex %>; <%= preset.border ? 'border: 1px solid ' + preset.border + ';' : '' %> display: inline-block;"></span>
+                  <%= preset.name %>
+                </button>
+              <% }) %>
+            </div>
+
+            <!-- Selected Colors Tags Display -->
+            <div id="selected_colors_badges" style="display: flex; flex-wrap: wrap; gap: 6px;"></div>
+
+            <p class="text-muted" style="font-size:11px; margin:10px 0 0;">
+              كل لون تكتبه هنا يظهر فوراً في قائمة «لون هذه الصورة» أعلى كل صورة في قسم «الصور والوسائط».
+              حدّد لون كل صورة ثم احفظ، فيرى الزبون صورة اللون الذي يختاره.
+              (الصور التي ترفعها الآن تحتاج حفظاً أولاً حتى يظهر لها اختيار اللون.)
+            </p>
+          </div>
+
+          <!-- Sizes, each with its own price -->
+          <div class="glass-card mb-4">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+              <h2 style="font-size:1.1rem; margin:0; color:var(--primary-color); display:flex; align-items:center; gap:8px;">
+                <span class="material-symbols-rounded" style="color:var(--primary-gold,#c79a52);">straighten</span>
+                الأحجام وأسعارها (اختياري)
+              </h2>
+              <span class="badge" style="background:rgba(199,154,82,.15); color:var(--primary-gold,#c79a52); font-size:11px; padding:4px 8px; border-radius:6px;">
+                يختار الزبون الحجم فيتغير السعر
+              </span>
+            </div>
+
+            <p class="text-muted" style="font-size:12px; margin-top:0;">
+              اترك هذا القسم فارغاً إذا كان المنتج بسعر واحد — لن يظهر للزبون أي اختيار حجم.
+              أضف حجماً وسعره الكامل (لا فرق السعر) مثل: <strong>6 كيلو → 1200</strong> و<strong>7 كيلو → 1450</strong>.
+            </p>
+
+            <div id="sizes_rows">
+              <% (sizes || []).forEach(function (s) { %>
+                <div class="size-row" style="display:grid; grid-template-columns:1fr 150px 40px; gap:8px; margin-bottom:8px;">
+                  <input type="text" name="size_label[]" class="form-control" value="<%= s.label %>" placeholder="اسم الحجم، مثل: 7 كيلو">
+                  <input type="number" name="size_price[]" class="form-control" value="<%= s.price %>" min="0" step="0.01" placeholder="السعر" dir="ltr">
+                  <button type="button" class="btn btn-outline" onclick="removeSizeRow(this)" title="حذف هذا الحجم" style="padding:6px;">
+                    <span class="material-symbols-rounded" style="font-size:18px;">delete</span>
+                  </button>
+                </div>
+              <% }) %>
+            </div>
+
+            <button type="button" class="btn btn-outline" onclick="addSizeRow()" style="margin-top:6px;">
+              <span class="material-symbols-rounded" style="font-size:18px;">add</span>
+              إضافة حجم
+            </button>
+          </div>
+
+          <!-- Specifications the operator writes themselves -->
+          <div class="glass-card mb-4">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+              <h2 style="font-size:1.1rem; margin:0; color:var(--primary-color); display:flex; align-items:center; gap:8px;">
+                <span class="material-symbols-rounded" style="color:var(--primary-gold,#c79a52);">checklist</span>
+                المواصفات (اختياري)
+              </h2>
+              <span class="badge" style="background:rgba(199,154,82,.15); color:var(--primary-gold,#c79a52); font-size:11px; padding:4px 8px; border-radius:6px;">
+                تظهر في صفحة المنتج
+              </span>
+            </div>
+
+            <p class="text-muted" style="font-size:12px; margin-top:0;">
+              اكتب العنوان وقيمته بنفسك — مثل <strong>الاستهلاك</strong> → <strong>تستهلك 50 وات فقط</strong>،
+              أو <strong>الخشب</strong> → <strong>خشب ماليزي درجة أولى</strong>.
+              اتركه فارغاً ولن تظهر أي مواصفات للمنتج.
+            </p>
+
+            <div id="specs_rows">
+              <% (specs || []).forEach(function (sp) { %>
+                <div class="spec-row" style="display:grid; grid-template-columns:1fr 1.6fr 40px; gap:8px; margin-bottom:8px;">
+                  <input type="text" name="spec_label[]" class="form-control" value="<%= sp.label %>" placeholder="العنوان، مثل: الاستهلاك">
+                  <input type="text" name="spec_value[]" class="form-control" value="<%= sp.value %>" placeholder="القيمة، مثل: تستهلك 50 وات فقط">
+                  <button type="button" class="btn btn-outline" onclick="removeSpecRow(this)" title="حذف هذه المواصفة" style="padding:6px;">
+                    <span class="material-symbols-rounded" style="font-size:18px;">delete</span>
+                  </button>
+                </div>
+              <% }) %>
+            </div>
+
+            <button type="button" class="btn btn-outline" onclick="addSpecRow()" style="margin-top:6px;">
+              <span class="material-symbols-rounded" style="font-size:18px;">add</span>
+              إضافة مواصفة
+            </button>
+          </div>
+
+        </div>
+
+        <!-- SIDEBAR (Right Column) -->
+        <div style="flex: 0 0 33.33%; padding: 12px; box-sizing: border-box;">
+
+          <!-- Live Preview Card -->
+          <div class="glass-card mb-4" style="background: var(--bg-body);">
+            <h2 style="font-size: 1.1rem; margin-bottom: 20px; color: var(--primary-color);">معاينة حية للمنتج (Live Preview)</h2>
+            
+            <div style="background: var(--bg-card); border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); display: flex; flex-direction: column; max-width: 300px; margin: 0 auto;">
+              <!-- Image Placeholder -->
+              <div style="width: 100%; aspect-ratio: 4/5; background: #eee; position: relative; overflow: hidden;" id="preview_image_container">
+                <% 
+                  let initialPreviewSrc = '/assets/placeholder.svg';
+                  if (typeof images !== 'undefined' && Array.isArray(images) && images.length > 0 && images[0] && images[0].image_path) {
+                    const p = images[0].image_path.trim();
+                    initialPreviewSrc = (p.startsWith('/') || p.startsWith('http') || p.startsWith('data:')) ? p : '/' + p;
+                  }
+                %>
+                <img id="preview_image" src="<%= initialPreviewSrc %>" onerror="this.onerror=null;this.src='/assets/placeholder.svg';" style="width: 100%; height: 100%; object-fit: cover;" alt="معاينة صورة المنتج">
+                
+                <!-- Badges -->
+                <div style="position: absolute; top: 10px; right: 10px; display: flex; flex-direction: column; gap: 5px;">
+                  <span id="preview_badge_new" style="background: var(--primary-gold); color: #000; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 4px; display: none;">جديد</span>
+                  <span id="preview_badge_best" style="background: #111; color: #fff; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 4px; display: none;">الأكثر مبيعاً</span>
+                </div>
+              </div>
+              
+              <!-- Content Placeholder -->
+              <div style="padding: 15px; text-align: right;">
+                <h3 id="preview_title" style="font-size: 16px; font-weight: 600; margin-bottom: 8px; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><%= product ? product.title : 'اسم المنتج' %></h3>
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-direction: row-reverse;">
+                  <div style="display: flex; flex-direction: column; align-items: flex-end;">
+                    <span id="preview_price" style="font-size: 18px; font-weight: 700; color: var(--text-main);"><%= product ? helpers.formatPrice(product.price) : '0 ر.س' %></span>
+                    <span id="preview_old_price" style="font-size: 13px; color: var(--text-muted); text-decoration: line-through; display: <%= (product && product.old_price) ? 'inline' : 'none' %>;"><%= (product && product.old_price) ? helpers.formatPrice(product.old_price) : '' %></span>
+                  </div>
+                  <button type="button" class="btn-primary" style="padding: 6px 12px; font-size: 13px; border-radius: 6px;"><span class="material-symbols-rounded" style="font-size: 18px;">shopping_cart</span></button>
+                </div>
+              </div>
+            </div>
+            <p class="text-muted mt-3 text-center" style="font-size: 11px;">تتحدث المعاينة تلقائياً أثناء كتابتك للتفاصيل</p>
+          </div>
+          
+          <!-- Organization -->
+          <div class="glass-card mb-4">
+            <h2 style="font-size: 1.1rem; margin-bottom: 20px; color: var(--primary-color);">التصنيف والتنظيم</h2>
+            
+            <div class="form-group">
+              <label class="form-label">رقم المنتج التعريفي (الداخلي)</label>
+              <input type="text" name="product_id" class="form-control" value="<%= product ? product.product_id : ('P-' + Date.now().toString().slice(-6)) %>" dir="ltr" required>
+            </div>
+
+            <div class="form-group mt-3">
+              <label class="form-label">القسم الرئيسي</label>
+              <select name="department_id" class="form-control">
+                <option value="">اختر القسم...</option>
+                <% departments.forEach(dep => { %>
+                  <option value="<%= dep.id %>" <%= product && product.department_id === dep.id ? 'selected' : '' %>><%= dep.name_ar %></option>
+                <% }) %>
+              </select>
+            </div>
+
+            <div class="form-group mt-3">
+              <label class="form-label">الفئة الفرعية</label>
+              <select name="category_id" class="form-control">
+                <option value="">اختر الفئة...</option>
+                <% categories.forEach(cat => { %>
+                  <option value="<%= cat.id %>" <%= product && product.category_id === cat.id ? 'selected' : '' %>><%= cat.name_ar %></option>
+                <% }) %>
+              </select>
+            </div>
+          </div>
+
+          <!-- Visibility & Badges -->
+          <div class="glass-card mb-4">
+            <h2 style="font-size: 1.1rem; margin-bottom: 20px; color: var(--primary-color);">الحالة والشارات</h2>
+
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+              <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 12px; background: var(--bg-tertiary); border-radius: 8px;">
+                <input type="checkbox" name="is_active" <%= (!product || product.is_active) ? 'checked' : '' %> style="width: 18px; height: 18px;">
+                <span style="font-weight: 600;">منتج نشط ومرئي</span>
+              </label>
+
+              <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                <input type="checkbox" name="is_new" <%= (product && product.is_new) ? 'checked' : '' %> style="width: 18px; height: 18px;">
+                <span>إظهار كـ "وصل حديثاً" (New)</span>
+              </label>
+
+              <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                <input type="checkbox" name="is_best_seller" <%= (product && product.is_best_seller) ? 'checked' : '' %> style="width: 18px; height: 18px;">
+                <span>إظهار كـ "الأكثر مبيعاً" (Best Seller)</span>
+              </label>
+
+              <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                <input type="checkbox" name="installation" <%= (product && product.installation) ? 'checked' : '' %> style="width: 18px; height: 18px;">
+                <span>يشمل التركيب المجاني</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Publish Action -->
+          <div class="glass-card mb-4" style="text-align: center;">
+            <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 14px; font-size: 16px;">
+              <span class="material-symbols-rounded">save</span>
+              حفظ بيانات المنتج
+            </button>
+            <% if (product) { %>
+            <a href="/product.html?id=<%= product.product_id || product.id %>" target="_blank" class="btn btn-outline mt-3" style="width: 100%; justify-content: center; padding: 14px; font-size: 16px; display: inline-flex; align-items: center; gap: 6px;">
+              <span class="material-symbols-rounded">visibility</span>
+              معاينة المنتج في المتجر
+            </a>
+            <% } %>
+            <p class="text-muted mt-3" style="font-size: 12px;">الألوان والأحجام والمواصفات تُدار من الأقسام أدناه في هذه الصفحة نفسها.</p>
+          </div>
+
+        </div>
+      </div>
+    </form>
+  </div>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const departmentSelect = document.querySelector('select[name="department_id"]');
+  const categorySelect = document.querySelector('select[name="category_id"]');
+  
+  if (departmentSelect && categorySelect) {
+    departmentSelect.addEventListener('change', async function() {
+      const deptId = this.value;
+      
+      // Clear current options
+      categorySelect.innerHTML = '<option value="">جاري التحميل...</option>';
+      
+      if (!deptId) {
+        categorySelect.innerHTML = '<option value="">اختر القسم أولاً...</option>';
+        return;
+      }
+      
+      try {
+        const response = await fetch(`/admin/categories/api/by-department/${deptId}`);
+        const result = await response.json();
+        
+        if (result.success) {
+          if (result.data.length === 0) {
+            categorySelect.innerHTML = '<option value="">لا توجد فئات لهذا القسم</option>';
+          } else {
+            categorySelect.innerHTML = '<option value="">اختر الفئة...</option>';
+            result.data.forEach(cat => {
+              const option = document.createElement('option');
+              option.value = cat.id;
+              option.textContent = cat.name_ar;
+              categorySelect.appendChild(option);
+            });
+          }
+        } else {
+          categorySelect.innerHTML = '<option value="">حدث خطأ</option>';
+        }
+      } catch (err) {
+        console.error(err);
+        categorySelect.innerHTML = '<option value="">حدث خطأ في الاتصال</option>';
+      }
+    });
+  }
+
+  // ==== LIVE PREVIEW SCRIPT ====
+  const titleInput = document.querySelector('input[name="title"]');
+  const priceInput = document.querySelector('input[name="price"]');
+  const oldPriceInput = document.querySelector('input[name="old_price"]');
+  const imageInput = document.querySelector('input[name="images"]');
+  const isNewCheckbox = document.querySelector('input[name="is_new"]');
+  const isBestCheckbox = document.querySelector('input[name="is_best_seller"]');
+  
+  const previewTitle = document.getElementById('preview_title');
+  const previewPrice = document.getElementById('preview_price');
+  const previewOldPrice = document.getElementById('preview_old_price');
+  const previewImage = document.getElementById('preview_image');
+  const previewBadgeNew = document.getElementById('preview_badge_new');
+  const previewBadgeBest = document.getElementById('preview_badge_best');
+  
+  // Format Price Function
+  const formatLivePrice = (val) => {
+    const num = parseFloat(val);
+    if (isNaN(num)) return '0 ر.س';
+    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 0 }).format(num) + ' ر.س';
+  };
+
+  if (titleInput) {
+    titleInput.addEventListener('input', (e) => {
+      previewTitle.textContent = e.target.value || 'اسم المنتج';
+    });
+    // Trigger initial
+    if (titleInput.value) previewTitle.textContent = titleInput.value;
+  }
+
+  if (priceInput) {
+    priceInput.addEventListener('input', (e) => {
+      previewPrice.textContent = formatLivePrice(e.target.value);
+    });
+    // Trigger initial
+    if (priceInput.value) previewPrice.textContent = formatLivePrice(priceInput.value);
+  }
+
+  if (oldPriceInput) {
+    oldPriceInput.addEventListener('input', (e) => {
+      if (e.target.value && parseFloat(e.target.value) > 0) {
+        previewOldPrice.style.display = 'inline';
+        previewOldPrice.textContent = formatLivePrice(e.target.value);
+      } else {
+        previewOldPrice.style.display = 'none';
+      }
+    });
+    // Trigger initial
+    if (oldPriceInput.value && parseFloat(oldPriceInput.value) > 0) {
+      previewOldPrice.style.display = 'inline';
+      previewOldPrice.textContent = formatLivePrice(oldPriceInput.value);
+    }
+  }
+});
+
+// Multi-Image Upload & Management
+let newFilesDataTransfer = new DataTransfer();
+
+function handleProductFilesSelected(files) {
+  if (!files || files.length === 0) return;
+
+  const validExts = ['.jpg', '.jpeg', '.png', '.webp'];
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    const ext = file.name ? file.name.substring(file.name.lastIndexOf('.')).toLowerCase() : '';
+    if ((file.type && file.type.startsWith('image/')) || validExts.includes(ext)) {
+      newFilesDataTransfer.items.add(file);
+    }
+  }
+
+  const fileInput = document.getElementById('productFileInput');
+  if (fileInput) fileInput.files = newFilesDataTransfer.files;
+
+  renderNewImagesGrid();
+}
+
+function renderNewImagesGrid() {
+  const section = document.getElementById('newImagesPreviewSection');
+  const grid = document.getElementById('newImagesPreviewGrid');
+  const countEl = document.getElementById('newFilesCount');
+  const primaryIdxInput = document.getElementById('primary_new_image_index');
+  const files = newFilesDataTransfer.files;
+
+  if (!section || !grid) return;
+
+  if (files.length === 0) {
+    section.style.display = 'none';
+    grid.innerHTML = '';
+    if (countEl) countEl.textContent = '0';
+    return;
+  }
+
+  section.style.display = 'block';
+  if (countEl) countEl.textContent = files.length;
+
+  let currentPrimaryIdx = parseInt(primaryIdxInput?.value || '-1', 10);
+  const existingGrid = document.getElementById('currentImagesGrid');
+  const hasExisting = existingGrid && existingGrid.querySelectorAll('.image-manage-card:not(.is-deleted)').length > 0;
+  if (!hasExisting && (isNaN(currentPrimaryIdx) || currentPrimaryIdx < 0 || currentPrimaryIdx >= files.length)) {
+    currentPrimaryIdx = 0;
+    if (primaryIdxInput) primaryIdxInput.value = '0';
+  }
+
+  grid.innerHTML = '';
+
+  Array.from(files).forEach((file, idx) => {
+    const isPrim = (idx === currentPrimaryIdx);
+    const card = document.createElement('div');
+    card.className = 'image-manage-card ' + (isPrim ? 'is-primary' : '');
+    card.id = 'new_img_card_' + idx;
+
+    const imgUrl = URL.createObjectURL(file);
+
+    card.innerHTML = `
+      <img src="${imgUrl}" alt="صورة مرفوعة">
+      ${isPrim ? `
+        <span class="primary-badge" id="badge_primary_new_${idx}">
+          <span class="material-symbols-rounded" style="font-size: 13px;">star</span>
+          الرئيسية
+        </span>
+      ` : ''}
+      <div class="card-actions">
+        <label class="btn-card-action btn-star" title="تعيين كصورة رئيسية" onclick="setNewPrimaryImage(${idx})">
+          <input type="radio" name="primary_selector" value="new_${idx}" ${isPrim ? 'checked' : ''} style="display:none;">
+          <span class="material-symbols-rounded" style="font-size: 13px;">star</span>
+          <span class="star-text">${isPrim ? 'الرئيسية' : 'رئيسية'}</span>
+        </label>
+        <button type="button" class="btn-card-action btn-del" onclick="removeNewFile(${idx})" title="إلغاء هذه الصورة من الرفع">
+          <span class="material-symbols-rounded" style="font-size: 13px;">delete</span>
+          حذف
+        </button>
+      </div>
+    `;
+
+    grid.appendChild(card);
+
+    if (isPrim) {
+      const previewImg = document.getElementById('preview_image');
+      if (previewImg) previewImg.src = imgUrl;
+    }
+  });
+}
+
+function removeNewFile(idxToRemove) {
+  const dt = new DataTransfer();
+  const files = newFilesDataTransfer.files;
+  const primaryIdxInput = document.getElementById('primary_new_image_index');
+  let currentPrimary = parseInt(primaryIdxInput?.value || '-1', 10);
+
+  for (let i = 0; i < files.length; i++) {
+    if (i !== idxToRemove) {
+      dt.items.add(files[i]);
+    }
+  }
+
+  newFilesDataTransfer = dt;
+  const fileInput = document.getElementById('productFileInput');
+  if (fileInput) fileInput.files = newFilesDataTransfer.files;
+
+  if (currentPrimary === idxToRemove) {
+    if (newFilesDataTransfer.files.length > 0) {
+      if (primaryIdxInput) primaryIdxInput.value = '0';
+    } else {
+      if (primaryIdxInput) primaryIdxInput.value = '-1';
+    }
+  } else if (currentPrimary > idxToRemove) {
+    if (primaryIdxInput) primaryIdxInput.value = String(currentPrimary - 1);
+  }
+
+  renderNewImagesGrid();
+}
+
+function setNewPrimaryImage(newIdx) {
+  const primaryIdxInput = document.getElementById('primary_new_image_index');
+  if (primaryIdxInput) primaryIdxInput.value = String(newIdx);
+
+  // Uncheck all existing primary images
+  const existingGrid = document.getElementById('currentImagesGrid');
+  if (existingGrid) {
+    existingGrid.querySelectorAll('.image-manage-card').forEach(c => {
+      c.classList.remove('is-primary');
+      const badge = c.querySelector('.primary-badge');
+      if (badge) badge.remove();
+      const starText = c.querySelector('.star-text');
+      if (starText) starText.textContent = 'رئيسية';
+      const rad = c.querySelector('input[type="radio"]');
+      if (rad) rad.checked = false;
+    });
+  }
+
+  renderNewImagesGrid();
+}
+
+// Drag & Drop Init
+document.addEventListener('DOMContentLoaded', () => {
+  const dropzone = document.getElementById('dropzoneContainer');
+  const fileInput = document.getElementById('productFileInput');
+
+  if (dropzone && fileInput) {
+    ['dragenter', 'dragover'].forEach(name => {
+      dropzone.addEventListener(name, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropzone.style.borderColor = 'var(--primary-gold, #c79a52)';
+        dropzone.style.background = 'rgba(199, 154, 82, 0.08)';
+      });
+    });
+
+    ['dragleave', 'drop'].forEach(name => {
+      dropzone.addEventListener(name, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropzone.style.borderColor = 'var(--border-color, rgba(255,255,255,0.18))';
+        dropzone.style.background = 'var(--surface-alt, rgba(255,255,255,0.02))';
+      });
+    });
+
+    dropzone.addEventListener('drop', (e) => {
+      if (e.dataTransfer && e.dataTransfer.files) {
+        handleProductFilesSelected(e.dataTransfer.files);
+      }
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files) {
+        handleProductFilesSelected(e.target.files);
+      }
+    });
+  }
+});
+
+// Interactive Image Card Functions for Existing Images
+function toggleDeleteImage(imgId) {
+  const chk = document.getElementById('del_img_' + imgId);
+  const card = document.getElementById('img_card_' + imgId);
+  const overlay = document.getElementById('overlay_' + imgId);
+  if (!chk || !card || !overlay) return;
+
+  chk.checked = !chk.checked;
+  if (chk.checked) {
+    card.classList.add('is-deleted');
+    overlay.style.display = 'flex';
+  } else {
+    card.classList.remove('is-deleted');
+    overlay.style.display = 'none';
+  }
+}
+
+function updatePrimaryImageDisplay(radio, imgId) {
+  const primaryIdxInput = document.getElementById('primary_new_image_index');
+  if (primaryIdxInput) primaryIdxInput.value = '-1';
+
+  // Unmark new image previews as primary
+  const newGrid = document.getElementById('newImagesPreviewGrid');
+  if (newGrid) {
+    newGrid.querySelectorAll('.image-manage-card').forEach(c => {
+      c.classList.remove('is-primary');
+      const badge = c.querySelector('.primary-badge');
+      if (badge) badge.remove();
+      const starText = c.querySelector('.star-text');
+      if (starText) starText.textContent = 'رئيسية';
+      const rad = c.querySelector('input[type="radio"]');
+      if (rad) rad.checked = false;
+    });
+  }
+
+  const grid = document.getElementById('currentImagesGrid');
+  if (!grid) return;
+
+  // Clear previous primary styles and badges
+  grid.querySelectorAll('.image-manage-card').forEach(c => {
+    c.classList.remove('is-primary');
+    const badge = c.querySelector('.primary-badge');
+    if (badge) badge.remove();
+    const starText = c.querySelector('.star-text');
+    if (starText) starText.textContent = 'رئيسية';
+  });
+
+  const card = document.getElementById('img_card_' + imgId);
+  if (card) {
+    card.classList.add('is-primary');
+    
+    // Add badge
+    const badge = document.createElement('span');
+    badge.className = 'primary-badge';
+    badge.id = 'badge_primary_' + imgId;
+    badge.innerHTML = '<span class="material-symbols-rounded" style="font-size: 13px;">star</span> الرئيسية';
+    card.prepend(badge);
+
+    const starText = card.querySelector('.star-text');
+    if (starText) starText.textContent = 'الرئيسية';
+
+    // Update live preview image
+    const imgEl = card.querySelector('img');
+    const previewImg = document.getElementById('preview_image');
+    if (imgEl && previewImg) {
+      previewImg.src = imgEl.src;
+    }
+  }
+}
+
+// Colors Management Helper Functions
+function renderColorBadges() {
+  const input = document.getElementById('colors_input');
+  const container = document.getElementById('selected_colors_badges');
+  if (!input || !container) return;
+  const raw = input.value || '';
+  const colors = raw.split(/[,،]+/).map(c => c.trim()).filter(Boolean);
+  container.innerHTML = colors.map(name => `
+    <span class="badge" style="background: rgba(199, 154, 82, 0.2); color: var(--primary-gold, #c79a52); padding: 4px 10px; border-radius: 12px; font-size: 12px; display: inline-flex; align-items: center; gap: 6px;">
+      ${name}
+      <button type="button" onclick="removeColorTag('${name.replace(/'/g, "\\'")}')" style="background:none; border:none; color: inherit; cursor:pointer; padding:0; line-height:1; font-weight:bold; font-size: 14px;">×</button>
+    </span>
+  `).join('');
+  syncImageColorOptions(colors);
+}
+
+/*
+ * Keep the "which colour is this photo of?" dropdown above each image in step
+ * with the colours being typed above.
+ *
+ * The options used to be rendered once, server-side, from the colours already
+ * saved on the product. So an operator adding colours and tagging photos in the
+ * same visit saw nothing but "بلا لون" in every dropdown and concluded a photo
+ * could not be tied to a colour at all. It could -- but only after saving once
+ * and coming back. Now the list follows what is typed, and a tag already chosen
+ * survives as long as its colour is still in the list.
+ */
+function syncImageColorOptions(colors) {
+  document.querySelectorAll('select.image-color-select').forEach(function (select) {
+    const current = select.value;
+    select.innerHTML = '<option value="">بلا لون</option>';
+    colors.forEach(function (name) {
+      const opt = document.createElement('option');
+      opt.value = name;
+      opt.textContent = name;
+      select.appendChild(opt);
+    });
+    // Only re-select a colour that still exists; otherwise the photo falls back
+    // to being a general product photo rather than pointing at a deleted colour.
+    select.value = colors.indexOf(current) >= 0 ? current : '';
+  });
+}
+
+function addSpecRow() {
+  const box = document.getElementById('specs_rows');
+  if (!box) return;
+  const row = document.createElement('div');
+  row.className = 'spec-row';
+  row.style.cssText = 'display:grid; grid-template-columns:1fr 1.6fr 40px; gap:8px; margin-bottom:8px;';
+  row.innerHTML =
+    '<input type="text" name="spec_label[]" class="form-control" placeholder="العنوان، مثل: الاستهلاك">' +
+    '<input type="text" name="spec_value[]" class="form-control" placeholder="القيمة، مثل: تستهلك 50 وات فقط">' +
+    '<button type="button" class="btn btn-outline" onclick="removeSpecRow(this)" title="حذف هذه المواصفة" style="padding:6px;">' +
+      '<span class="material-symbols-rounded" style="font-size:18px;">delete</span></button>';
+  box.appendChild(row);
+  row.querySelector('input').focus();
+}
+
+function removeSpecRow(btn) {
+  const row = btn.closest('.spec-row');
+  if (row) row.remove();
+}
+
+function addSizeRow(label, price) {
+  const box = document.getElementById('sizes_rows');
+  if (!box) return;
+  const row = document.createElement('div');
+  row.className = 'size-row';
+  row.style.cssText = 'display:grid; grid-template-columns:1fr 150px 40px; gap:8px; margin-bottom:8px;';
+  row.innerHTML =
+    '<input type="text" name="size_label[]" class="form-control" placeholder="اسم الحجم، مثل: 7 كيلو">' +
+    '<input type="number" name="size_price[]" class="form-control" min="0" step="0.01" placeholder="السعر" dir="ltr">' +
+    '<button type="button" class="btn btn-outline" onclick="removeSizeRow(this)" title="حذف هذا الحجم" style="padding:6px;">' +
+      '<span class="material-symbols-rounded" style="font-size:18px;">delete</span></button>';
+  box.appendChild(row);
+  if (label) row.querySelector('input[name="size_label[]"]').value = label;
+  if (price != null) row.querySelector('input[name="size_price[]"]').value = price;
+  row.querySelector('input').focus();
+}
+
+function removeSizeRow(btn) {
+  const row = btn.closest('.size-row');
+  if (row) row.remove();
+}
+
+function toggleColorPreset(colorName) {
+  const input = document.getElementById('colors_input');
+  if (!input) return;
+  let colors = (input.value || '').split(/[,،]+/).map(c => c.trim()).filter(Boolean);
+  const idx = colors.indexOf(colorName);
+  if (idx >= 0) {
+    colors.splice(idx, 1);
+  } else {
+    colors.push(colorName);
+  }
+  input.value = colors.join('، ');
+  renderColorBadges();
+}
+
+function removeColorTag(colorName) {
+  const input = document.getElementById('colors_input');
+  if (!input) return;
+  let colors = (input.value || '').split(/[,،]+/).map(c => c.trim()).filter(Boolean);
+  colors = colors.filter(c => c !== colorName);
+  input.value = colors.join('، ');
+  renderColorBadges();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', () => {
+  renderColorBadges();
+  const input = document.getElementById('colors_input');
+  if (input) {
+    input.addEventListener('input', renderColorBadges);
+  }
+});
+</script>
+<%- include('../../partials/foot') %>
+
+<script>
+  // Both of these are called by the selects above and were never defined, so
+  // the dependent fields never reacted to a change.
+  function toggleProductDeliveryFields(value) {
+    var box = document.getElementById('product_fixed_delivery_div');
+    if (box) box.style.display = (value === 'fixed') ? 'block' : 'none';
+  }
+
+  function toggleInstallationFeeField(value) {
+    var box = document.getElementById('product_installation_fee_div');
+    if (box) box.style.display = (String(value) === '1') ? 'block' : 'none';
+  }
+
+  // Apply the saved product's own values on load, so opening an existing
+  // product shows the right fields without waiting for a change event.
+  document.addEventListener('DOMContentLoaded', function () {
+    var d = document.getElementById('product_delivery_policy_type');
+    if (d) toggleProductDeliveryFields(d.value);
+    var i = document.getElementById('product_requires_installation');
+    if (i) toggleInstallationFeeField(i.value);
+  });
+</script>

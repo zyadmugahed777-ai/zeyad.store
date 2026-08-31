@@ -1,0 +1,803 @@
+<html lang="ar" dir="rtl"><head></head><body id="top">﻿
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الطاقة الشمسية | زياد ستور</title>
+  <meta name="description" content="حلول طاقة شمسية متكاملة للمنازل والمشاريع التجارية. ألواح شمسية، بطاريات، إنفرترات، وأنظمة جاهزة بضمان حتى ٢٥ سنة.">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <script src="assets/js/core/theme-engine.js?v=20260830-v2327"></script>
+    <style>
+    /* ── Solar Calculator ── */
+    .solar-calculator {
+      background: rgba(250, 245, 236, 0.95);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 40px 32px;
+      color: var(--ink);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-lift);
+    }
+    .solar-calculator h2 {
+      font-size: 1.5rem;
+      margin: 0 0 8px;
+      color: var(--ink);
+    }
+    .solar-calculator > p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin: 0 0 24px;
+    }
+    .calc-field { margin-bottom: 20px; }
+    .calc-field > label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--ink);
+    }
+    .calc-radio-group {
+      display: flex;
+      gap: 8px;
+    }
+    .calc-radio-group label {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .calc-radio-group input { display: none; }
+    .calc-radio-group label:has(input:checked) {
+      background: var(--olive-deep);
+      color: var(--cream);
+      border-color: var(--olive-deep);
+    }
+    .calc-input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      font-size: 1rem;
+      font-family: inherit;
+      background: var(--surface);
+      transition: border-color 0.25s ease;
+      box-sizing: border-box;
+    }
+    .calc-input:focus {
+      outline: none;
+      border-color: var(--olive);
+    }
+    .calc-checkboxes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .calc-checkboxes label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .calc-checkboxes label:has(input:checked) {
+      background: rgba(90, 109, 78, 0.08);
+      border-color: var(--olive);
+    }
+    .calc-note {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 12px;
+    }
+    .calc-result {
+      display: none;
+      margin-top: 24px;
+      padding: 24px;
+      background: var(--surface-2);
+      border-radius: 12px;
+      animation: fadeInUp 0.4s ease;
+    }
+    .calc-result.active { display: block; }
+    .result-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+      font-size: 0.9rem;
+    }
+    .result-item:last-of-type { border-bottom: none; }
+    .result-item strong { color: var(--olive); }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Solar Packages Grid ── */
+    .solar-packages-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 767px) {
+      .solar-calculator { padding: 24px 20px; }
+      .calc-checkboxes { grid-template-columns: 1fr; }
+      .solar-packages-grid { grid-template-columns: 1fr; }
+    }
+    @media (min-width: 768px) and (max-width: 991px) {
+      .solar-packages-grid { grid-template-columns: 1fr; }
+    }
+    @media (min-width: 992px) and (max-width: 1199px) {
+      .solar-packages-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+
+      <link rel="stylesheet" href="styles.css?v=20260830-v2327">
+  <link rel="stylesheet" href="production-polish.css?v=20260830-v2327">
+  <link rel="stylesheet" href="responsive-pro.css?v=20260830-v2327">
+  <link rel="stylesheet" href="mobile-first.css?v=20260830-v2327">
+  <link rel="stylesheet" href="assets/css/storefront-2026.css?v=a6bef9ab1d2b033c">
+
+  <!-- ZFB Core UX Systems -->
+    <script src="assets/js/core/translations.js?v=20260830-v2327"></script>
+    <script src="assets/js/core/i18n.js?v=20260830-v2327"></script>
+    <script src="assets/js/core/theme.js?v=48c1790c"></script>
+    <script src="assets/js/core/currency.js?v=1a885696"></script>
+    <script src="assets/js/core/global-ux.js?v=20260830-v2327"></script>
+  
+    <link rel="canonical" href="https://zeyad.store/solar-solutions.html">
+    <meta property="og:title" content="الطاقة الشمسية — زياد ستور | زياد ستور">
+    <meta property="og:description" content="حلول طاقة شمسية متكاملة للمنازل والمشاريع التجارية. ألواح شمسية، بطاريات، إنفرترات، وأنظمة جاهزة بضمان حتى ٢٥ سنة.">
+    <meta property="og:url" content="https://zeyad.store/solar-solutions.html">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://zeyad.store/assets/placeholder-logo.webp">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="الطاقة الشمسية — زياد ستور | زياد ستور">
+    <meta name="twitter:description" content="حلول طاقة شمسية متكاملة للمنازل والمشاريع التجارية. ألواح شمسية، بطاريات، إنفرترات، وأنظمة جاهزة بضمان حتى ٢٥ سنة.">
+    
+
+
+<!-- ══ Top Note ══ -->
+<div class="top-note">
+  <span data-vid="v-762cd367">خدمة ما بعد البيع والصيانة</span>
+  <span data-vid="v-2cd2f7b5">ضمان يصل إلى ٢٥ سنة على الألواح</span>
+  <span data-vid="v-3f9d885f">توصيل وتركيب جميع المناطق</span>
+</div>
+
+<!-- ══ Navigation ══ -->
+<nav class="main-nav" aria-label="التنقل الرئيسي" data-vid="v-c60e9405">
+  <a class="brand" href="index.html" data-vid="v-caa63f13">
+          <span class="brand-content" data-vid="v-afd975e3-new">
+            <span class="brand-mark" data-vid="v-818d4b90">ز</span>
+    <span data-vid="v-71fc3214"><strong data-vid="v-59a1edd8">زياد ستور</strong><small data-vid="v-7ef5db19">منصة المنزل والطاقة</small></span>
+          </span>
+        </a>
+  <form class="search" role="search" aria-label="البحث في المتجر" name="site-search" action="search.html" method="get">
+    <button type="submit" aria-label="بحث" data-vid="v-45ea0e80">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.3-4.3M10.8 18a7.2 7.2 0 1 1 0-14.4 7.2 7.2 0 0 1 0 14.4Z"></path></svg>
+    </button>
+    <input name="q" type="search" aria-label="ابحث في المتجر" placeholder="ابحث عن منتجات الطاقة الشمسية..." id="q-1" autocomplete="off" maxlength="120">
+  </form>
+  <div class="nav-actions">
+    <a href="solar-solutions.html" style="color: var(--olive); font-weight: 600;" data-vid="v-a5b82170">الطاقة الشمسية</a>
+    <a href="offers.html" data-vid="v-394632e1">العروض</a>
+    <a class="nav-account-btn" href="account.html" aria-label="حسابي" data-vid="v-49bfb70f">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <span data-vid="v-6e34662b">حسابي</span>
+          </a>
+    <a class="nav-icon-btn" href="wishlist.html" aria-label="المفضلة" data-vid="v-28546146">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg>
+    </a>
+                    <a class="nav-icon-btn" href="compare.html" aria-label="المقارنة" title="المقارنة" data-vid="v-381399b3">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16 3h5v5M4 21v-7M20 8l-7 7M4 14l7-7M4 3h5v5M20 21v-7"></path></svg>
+          </a>
+          <div class="dropdown-wrapper">
+            <button class="nav-icon-btn more-menu-btn" aria-expanded="false" aria-label="المزيد" data-vid="v-3d6bae57">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1.5"></circle><circle cx="12" cy="5" r="1.5"></circle><circle cx="12" cy="19" r="1.5"></circle></svg>
+            </button>
+            <div class="more-dropdown">
+              <a href="compare.html" data-vid="v-86403682"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16 3h5v5M4 21v-7M20 8l-7 7M4 14l7-7M4 3h5v5M20 21v-7"></path></svg> المقارنة</a>
+              <a href="search.html?q=%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF" data-vid="v-26359349"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg> الجديد</a>
+              <a href="track-order.html" data-vid="v-6928a171"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> تتبع الطلب</a>
+              <a href="contact.html" data-vid="v-5c2ef1aa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg> تواصل معنا</a>
+              <a href="privacy.html" data-vid="v-7136c5e2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg> سياسة الخصوصية</a>
+              <a href="terms.html" data-vid="v-c744da16"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg> الشروط والأحكام</a>
+              <a href="/returns.html" data-vid="v-a40c5a6e"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg> سياسة الإرجاع</a>
+              <a href="faq.html" data-vid="v-062d9f69"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg> الأسئلة الشائعة</a>
+              <a href="about.html" data-vid="v-9d41a3a1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg> من نحن</a>
+            </div>
+          </div>
+    <a class="cart" href="cart.html" aria-label="السلة" data-vid="v-244fd56a">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8h14l-1.6 8.1a2 2 0 0 1-2 1.6H9.2a2 2 0 0 1-2-1.7L5.7 4H3"></path><path d="M9 21h.1M18 21h.1"></path></svg>
+      <b>٠</b>
+    </a>
+  </div>
+</nav>
+
+<!-- ══ HERO — Split Layout ══ -->
+<section class="section-hero-split" aria-label="الطاقة الشمسية" data-vid="v-8e66a584">
+  <div class="hero-bg-img" style="background-image: url('assets/solar-hero.jpg');" data-vid="v-a3ab0c71"></div>
+
+  <!-- Text Side -->
+  <div class="hero-text">
+    <h1 data-vid="v-9115baf9">طاقة نظيفة لمستقبل أفضل</h1>
+    <p data-vid="v-277e36a1">حلول طاقة شمسية متكاملة لكفاءة عالية وتوفير أكبر. تركيب احترافي وضمان طويل الأمد.</p>
+    <div class="hero-cta-row">
+      <a href="#top" class="btn-hero-primary" data-vid="v-cdfe0cc1">
+        استكشف الحلول
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
+      </a>
+      <a href="#calculator-section" class="btn-hero-secondary" data-vid="v-ef272af5">
+        احسب نظامك
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+      </a>
+    </div>
+    <div class="hero-features-row">
+      <div class="hero-feature-item" data-vid="v-e9baae95">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+        توفير كبير في فواتير الكهرباء
+      </div>
+      <div class="hero-feature-item" data-vid="v-1f4afb8f">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+        طاقة نظيفة صديقة للبيئة
+      </div>
+      <div class="hero-feature-item" data-vid="v-26ed1acd">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+        ضمان طويل الأمد حتى ٢٥ سنة
+      </div>
+      <div class="hero-feature-item" data-vid="v-0ea5082c">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+        تركيب احترافي بفريق متخصص
+      </div>
+    </div>
+  </div>
+
+  <!-- Calculator Side -->
+  <div class="hero-side-panel" id="solarCalc">
+    <div class="solar-calculator">
+      <h2 data-vid="v-107970f0">احسب نظامك الشمسي</h2>
+      <p data-vid="v-635bbeda">احصل على تقدير لحجم النظام المناسب لاستهلاكك خلال دقائق</p>
+
+      <div class="calc-field">
+        <label data-vid="v-16cf3840">احصل على</label>
+        <div class="calc-radio-group">
+          <label data-vid="v-a805d2c5"><input type="radio" name="calc-type" value="monthly" checked="" id="calc-type-2" aria-label="calc type"><span data-vid="v-f5f5c9dd">شهري</span></label>
+          <label data-vid="v-45c72ba9"><input type="radio" name="calc-type" value="daily" id="calc-type-3" aria-label="calc type"><span data-vid="v-2a0fb29d">يومي</span></label>
+          <label data-vid="v-90af2d82"><input type="radio" name="calc-type" value="power" id="calc-type-4" aria-label="calc type"><span data-vid="v-9ffd2501">القدرة</span></label>
+        </div>
+      </div>
+
+      <div class="calc-field">
+        <label for="consumption" data-vid="v-0751923c">حدد استهلاكك</label>
+        <input name="consumption" type="number" id="consumption" class="calc-input" placeholder="مثال: ٥٠٠ كيلووات/شهر" min="0" autocomplete="on" required="">
+      </div>
+
+      <div class="calc-field">
+        <label data-vid="v-1d43cbf7">اختر الأجهزة</label>
+        <div class="calc-checkboxes">
+          <label data-vid="v-853b2f62"><input name="filters[]" type="checkbox" value="lighting" id="filters--6" aria-label="filters[]"> إنارة</label>
+          <label data-vid="v-257db4f2"><input name="filters[]" type="checkbox" value="ac" id="filters--7" aria-label="filters[]"> مكيف</label>
+          <label data-vid="v-02e389de"><input name="filters[]" type="checkbox" value="fridge" id="filters--8" aria-label="filters[]"> ثلاجة</label>
+          <label data-vid="v-63088a5f"><input name="filters[]" type="checkbox" value="washer" id="filters--9" aria-label="filters[]"> غسالة</label>
+        </div>
+      </div>
+
+      <button type="button" class="btn-hero-primary" style="width:100%;justify-content:center;" onclick="calculateSolar()" data-vid="v-355e9430">ابدأ الآن</button>
+      <p class="calc-note" data-vid="v-5a6d9369">مجاني وسهل الاستخدام</p>
+
+      <div class="calc-result" id="calcResult">
+        <div class="result-item"><span data-vid="v-6056583e">حجم النظام المقترح</span><strong id="resSize" data-vid="v-9a21d4cb">-</strong></div>
+        <div class="result-item"><span data-vid="v-f523bdc2">عدد الألواح</span><strong id="resPanels" data-vid="v-9ca26552">-</strong></div>
+        <div class="result-item"><span data-vid="v-1326a328">سعة البطاريات</span><strong id="resBattery" data-vid="v-a783c782">-</strong></div>
+        <div class="result-item"><span data-vid="v-0c0448d6">المحول المناسب</span><strong id="resInverter" data-vid="v-6e6df4d0">-</strong></div>
+        <div class="result-item"><span data-vid="v-3c14dbc4">الإنتاج اليومي التقديري</span><strong id="resDaily" data-vid="v-79a7b38b">-</strong></div>
+        <a href="contact.html" class="btn-hero-primary" style="width:100%;justify-content:center;margin-top:16px;background:var(--olive);color:#fff;" data-vid="v-9e1e8056">
+          اطلب دراسة فنية مجانية
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="calculator-section" id="calculator-section" style="padding: 40px 20px; background: var(--surface); margin: 20px 0; border-radius: 12px; border: 1px solid  var(--line);" data-vid="v-22cbaeb4">
+    <h2 style="margin-bottom: 20px; text-align: center;" data-vid="v-3270381d">احسب نظامك الشمسي</h2>
+    <form action="/api/calculate-solar" method="POST" style="max-width: 600px; margin: 0 auto; display: grid; gap: 15px;">
+        <label data-vid="v-c48dfa77">إجمالي الأجهزة المنزلية (وات)</label>
+        <input type="number" name="power" placeholder="مثال: 1500" required="" style="padding: 10px; border: 1px solid  var(--line); border-radius: 6px;">
+        
+        <label data-vid="v-d1a1fca8">ساعات التشغيل اليومية التقريبية</label>
+        <input type="number" name="hours" placeholder="مثال: 8" required="" style="padding: 10px; border: 1px solid  var(--line); border-radius: 6px;">
+        
+        <input type="hidden" name="appliances" value="1">
+        
+        <button type="submit" class="btn-primary" style="padding: 12px; border-radius: 6px; cursor: pointer;" data-vid="v-5a4fbad0">احسب الآن</button>
+    </form>
+</section>
+
+
+<!-- ══ Categories ══ -->
+<section class="section-block" aria-label="تسوق حسب الفئة" data-vid="v-371305f6">
+  <div class="section-head">
+    <div>
+      <p class="overline" data-vid="v-204f37a0">الفئات</p>
+      <h2 data-vid="v-7f46e2ef">تسوق حسب الفئة</h2>
+    </div>
+    <a href="solar-catalog.html" data-vid="v-8c8352ca">عرض الكل</a>
+  </div>
+
+  <div class="category-icons-grid">
+    <!-- 1 -->
+    <a href="solar.html" class="category-icon-card" data-vid="v-e625feb1">
+      <div class="icon-circle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+      </div>
+      <span data-vid="v-27da99c0">ألواح شمسية</span>
+    </a>
+    <!-- 2 -->
+    <a href="solar.html" class="category-icon-card" data-vid="v-59e5eefd">
+      <div class="icon-circle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="7" width="12" height="14" rx="2"></rect><path d="M10 3h4v4h-4z"></path><path d="M10 14h4M12 12v4"></path></svg>
+      </div>
+      <span data-vid="v-4c8dd50f">بطاريات تخزين الطاقة</span>
+    </a>
+    <!-- 3 -->
+    <a href="collections.html" class="category-icon-card" data-vid="v-a7a73927">
+      <div class="icon-circle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+      </div>
+      <span data-vid="v-80e514a0">الإنفرترات (محولات)</span>
+    </a>
+    <!-- 4 -->
+    <a href="collections.html" class="category-icon-card" data-vid="v-d28eb74f">
+      <div class="icon-circle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+      </div>
+      <span data-vid="v-53a8be9a">منظمات الشحن</span>
+    </a>
+    <!-- 5 -->
+    <a href="installation-service.html" class="category-icon-card" data-vid="v-b1cf31a6">
+      <div class="icon-circle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+      </div>
+      <span data-vid="v-689f8f18">تركيبات وهياكل</span>
+    </a>
+    <!-- 6 -->
+    <a href="collections.html" class="category-icon-card" data-vid="v-11b75930">
+      <div class="icon-circle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h16M4 15h16M10 3 8 21M16 3l-2 18"></path></svg>
+      </div>
+      <span data-vid="v-6f3f31e6">كابلات وملحقات</span>
+    </a>
+    <!-- 7 -->
+    <a href="solar.html" class="category-icon-card" data-vid="v-ea1ab33f">
+      <div class="icon-circle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+      </div>
+      <span data-vid="v-b374b296">مضخات المياه الشمسية</span>
+    </a>
+    <!-- 8 -->
+    <a href="collections.html" class="category-icon-card" data-vid="v-7020ecaf">
+      <div class="icon-circle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"></path></svg>
+      </div>
+      <span data-vid="v-db7edfb5">حلول الري</span>
+    </a>
+  </div>
+</section>
+
+<!-- ══ Solar Offers ══ -->
+<section class="section-block" id="solar-offers" aria-label="عروض الطاقة الشمسية" data-vid="v-4e6ec175">
+  <div class="section-head">
+    <div>
+      <p class="overline" data-vid="v-98c07bba">عروض حصرية</p>
+      <h2 data-vid="v-6636f5f5">عروض الطاقة الشمسية</h2>
+    </div>
+    <div class="countdown-inline">
+      <span class="countdown-label" data-vid="v-e47c9e8d">ينتهي العرض خلال</span>
+      <div class="countdown-box" id="solarCountdown">
+        <div class="countdown-unit"><span class="num" data-hours="" data-vid="v-e8ca8130">12</span><span class="label" data-vid="v-0280669c">ساعة</span></div>
+        <div class="countdown-unit"><span class="num" data-minutes="" data-vid="v-8e7a272d">45</span><span class="label" data-vid="v-7e9fe328">دقيقة</span></div>
+        <div class="countdown-unit"><span class="num" data-seconds="" data-vid="v-d374b59f">38</span><span class="label" data-vid="v-ce1d4615">ثانية</span></div>
+      </div>
+      <a href="solar-catalog.html" data-vid="v-75a00589">عرض الكل</a>
+    </div>
+  </div>
+
+  <div class="offers-grid-with-sidebar">
+    <!-- Products -->
+    <div class="products-area">
+      <!-- Card 1 -->
+      <article class="product-card" data-product-id="sol-0037" data-category="sol" data-stock="in-stock" data-price="٨٩٩٩" data-brand="سامسونج" data-subcategory="solar-solution" data-sku="ZFB-SOL-0037-2964" data-vid="v-d2b92e39">
+  <a href="product.html?id=sol-0037" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-75331042" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="نظام منزلي ٥ كيلو واط" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-18468ac5">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-e2b9d6c1">نظام منزلي ٥ كيلو واط</h3>
+    <p class="product-desc" data-vid="v-0c8d259f">5.12kWh LiFePO4 — ألواح + بطاريات + إنفرتر</p>
+    <div class="price">
+      <strong data-vid="v-8c4cb551">٨,٩٩٩ ر.س</strong>
+      <del>١٢,٨٩٩ ر.س</del>
+      <span class="discount-tag tag-gold" style="position:static; display:inline-block; margin-right:8px;" data-vid="v-d28d9476">خصم محدود</span>
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-9cebce1d">زياد سولار</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-12172131"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-238e538f"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-09370baf">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+      <!-- Card 2 -->
+      <article class="product-card" data-product-id="sol-0038" data-category="sol" data-stock="in-stock" data-price="١٤٤٩٩" data-brand="سامسونج" data-subcategory="solar-solution" data-sku="ZFB-SOL-0038-2453" data-vid="v-8e2caa2f">
+  <a href="product.html?id=sol-0038" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-06946ee8" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="نظام منزلي ١٠ كيلو واط" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-32243b1f">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-2587c05b">نظام منزلي ١٠ كيلو واط</h3>
+    <p class="product-desc" data-vid="v-11d21740">10.24kWh LiFePO4 — نظام متكامل للمنازل المتوسطة</p>
+    <div class="price">
+      <strong data-vid="v-e701aa7a">١٤,٤٩٩ ر.س</strong>
+      <del>١٩,٤٩٩ ر.س</del>
+      <span class="discount-tag tag-gold" style="position:static; display:inline-block; margin-right:8px;" data-vid="v-7e121716">خصم موسمي</span>
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-fcfff6b5">زياد سولار</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-bccde8e9"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-d93199bf"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-96e52fbc">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+      <!-- Card 3 -->
+      <article class="product-card" data-product-id="sol-0039" data-category="sol" data-stock="in-stock" data-price="١٤٩٩٩" data-brand="بوش" data-subcategory="solar-solution" data-sku="ZFB-SOL-0039-8150" data-vid="v-1afa3bb0">
+  <a href="product.html?id=sol-0039" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-1fc54b8e" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="نظام هجين ١٥ كيلو واط" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-fbe8c8ec">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-d5b24911">نظام هجين ١٥ كيلو واط</h3>
+    <p class="product-desc" data-vid="v-7bd54312">15.36kWh LiFePO4 — نظام هجين عالي الكفاءة</p>
+    <div class="price">
+      <strong data-vid="v-d241b341">١٤,٩٩٩ ر.س</strong>
+      <del>١٨,٤٩٩ ر.س</del>
+      <span class="discount-tag tag-gold" style="position:static; display:inline-block; margin-right:8px;" data-vid="v-ad2ab674">خصم كبير</span>
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-772fabc6">زياد سولار</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-b8f28d50"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-d214a092"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-dc4e1bae">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+      <!-- Card 4 -->
+      <article class="product-card" data-product-id="sol-0040" data-category="sol" data-stock="in-stock" data-price="٣٩٩٩٩" data-brand="شارپ" data-subcategory="solar-solution" data-sku="ZFB-SOL-0040-1633" data-vid="v-a29eedf7">
+  <a href="product.html?id=sol-0040" class="product-photo-link" style="display:block; width:100%; aspect-ratio:4/5; flex-shrink:0; overflow:hidden;" data-vid="v-967a36be" aria-label="product-photo-link">
+    <img src="assets/premium-shopping-hero.png" srcset="assets/premium-shopping-hero-320.png 320w, assets/premium-shopping-hero-640.png 640w, assets/premium-shopping-hero-960.png 960w, assets/premium-shopping-hero.png 1716w" sizes="(max-width: 768px) 100vw, 340px" alt="نظام تجاري ٣٠ كيلو واط" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" data-vid="v-2d66a24e">
+  </a>
+  <div class="product-body">
+    <h3 data-vid="v-874d505b">نظام تجاري ٣٠ كيلو واط</h3>
+    <p class="product-desc" data-vid="v-d9ac2166">30kWh LiFePO4 — للمشاريع التجارية والمنازل الكبيرة</p>
+    <div class="price">
+      <strong data-vid="v-90cfdc44">٣٩,٩٩٩ ر.س</strong>
+      <del>٤٦,٤٩٩ ر.س</del>
+      <span class="discount-tag tag-gold" style="position:static; display:inline-block; margin-right:8px;" data-vid="v-9f68ebf7">خصم خاص</span>
+    </div>
+    <div class="stock" style="margin-top:auto;">
+      <span data-vid="v-36fe3d62">زياد سولار</span>
+      <div style="display:flex; gap:8px;"><button type="button" class="btn-compare" aria-label="المقارنة" style="position:static; margin-left: 8px; background:none; border:none; cursor:pointer;" onclick="window.ZFB &amp;&amp; window.ZFB.Compare &amp;&amp; window.ZFB.Compare.toggle(window.productFromElement ? window.productFromElement(this) : {id: $(this).closest('[data-product-id]').attr('data-product-id')})" data-vid="v-3e7b46a2"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 21h5v-5M21 3l-7 7M3 21l7-7"></path></svg></button>
+        <button type="button" class="wish" aria-label="المفضلة" style="position:static;" data-vid="v-42b9d36c"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg></button>
+        <button type="button" class="btn-primary btn-add-cart-mini" onclick="addToCart(this, event)" data-vid="v-9a6042b0">إضافة للسلة</button>
+      </div>
+    </div>
+  </div>
+</article>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="offers-sidebar-banner" data-vid="v-43545f4d">
+      <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--gold);margin-bottom:12px;"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+      <h3 data-vid="v-23e0fadb">عروض الموسم</h3>
+      <div class="big-discount" data-vid="v-1d7d876b">40%</div>
+      <p data-vid="v-bda7f4ae">خصومات تصل إلى</p>
+      <p data-vid="v-70f542a0">على جميع منتجات الطاقة الشمسية</p>
+      <a href="collections.html" class="btn-hero-primary" style="width:100%;justify-content:center;" data-vid="v-7fd8431d">تسوق الآن</a>
+    </aside>
+  </div>
+</section>
+
+<!-- ══ Trust Bar ══ -->
+<section class="section-block" aria-label="مزايا الخدمة" data-vid="v-c282a693">
+  <div class="trust-bar">
+    <div class="trust-bar-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg>
+      <strong data-vid="v-f4edfbbc">استشارات مجانية</strong>
+      <span data-vid="v-9b02a95a">نساعدك تختار النظام</span>
+    </div>
+    <div class="trust-bar-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11H4a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1h-5"></path><path d="m9 7 3-3 3 3"></path><path d="M12 4v12"></path></svg>
+      <strong data-vid="v-cbfbf268">دراسة فنية مجانية</strong>
+      <span data-vid="v-fc551bfb">نحسب احتياجاتك</span>
+    </div>
+    <div class="trust-bar-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+      <strong data-vid="v-de28bafb">تركيب احترافي</strong>
+      <span data-vid="v-5e2e477c">فريق أيدينا لبينا</span>
+    </div>
+    <div class="trust-bar-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M3 21v-5h5"></path></svg>
+      <strong data-vid="v-1066c00b">صيانة دورية</strong>
+      <span data-vid="v-6d5b2542">لأداء الأفضل</span>
+    </div>
+    <div class="trust-bar-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+      <strong data-vid="v-cdb72484">عمر افتراضي طويل</strong>
+      <span data-vid="v-e1f944cb">حتى ٢٥ سنة من الألواح الشمسية</span>
+    </div>
+    <div class="trust-bar-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+      <strong data-vid="v-64f4c53b">دعم فني ٢٤/٧</strong>
+      <span data-vid="v-708f9365">نحن معك دائماً</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ Solar Packages ══ -->
+<section class="section-block" aria-label="الباقات الجاهزة" data-vid="v-aaccefee">
+  <div class="section-head">
+    <div>
+      <p class="overline" data-vid="v-29878eb1">باقات متكاملة</p>
+      <h2 data-vid="v-4b159989">الباقات الجاهزة</h2>
+    </div>
+    <a href="solar-catalog.html" data-vid="v-0f95901b">عرض الكل</a>
+  </div>
+
+  <div class="solar-packages-grid">
+    <!-- Package 1 -->
+    <div class="solar-package-card">
+      <div class="package-badge" data-vid="v-11ac54c5">الأكثر طلباً</div>
+      <h3 data-vid="v-c017ba77">باقة المنزل الأساسية</h3>
+      <p class="package-subtitle" data-vid="v-de602c53">مثالية للمنازل الصغيرة والشقق</p>
+      <ul class="package-features">
+        <li data-vid="v-160edc53">ألواح شمسية ٥ كيلو واط</li>
+        <li data-vid="v-f6473cc5">بطارية ليثيوم 5kWh</li>
+        <li data-vid="v-c9a7b73a">إنفرتر هجين ٦ كيلو</li>
+        <li data-vid="v-43cd336e">هيكل تركيب كامل</li>
+        <li data-vid="v-ed030bfc">كابلات وملحقات التوصيل</li>
+        <li data-vid="v-ff1737cf">تركيب وتشغيل مجاني</li>
+      </ul>
+      <a href="contact.html" class="btn-checkout" style="width:100%;text-align:center;" data-vid="v-e23d8889">احجز استشارتك المجانية</a>
+    </div>
+    <!-- Package 2 -->
+    <div class="solar-package-card featured">
+      <div class="package-badge" data-vid="v-bae2c322">الأفضل قيمة</div>
+      <h3 data-vid="v-9767ef3f">باقة المنزل المتقدمة</h3>
+      <p class="package-subtitle" data-vid="v-c303705c">مثالية للمنازل المتوسطة والكبيرة</p>
+      <ul class="package-features">
+        <li data-vid="v-cdcaef86">ألواح شمسية ١٠ كيلو واط</li>
+        <li data-vid="v-6ac1bc4b">بطارية ليثيوم 10kWh</li>
+        <li data-vid="v-2f610dba">إنفرتر هجين ١٢ كيلو</li>
+        <li data-vid="v-fdd8e624">هيكل تركيب مزدوج</li>
+        <li data-vid="v-bca357b6">نظام مراقبة ذكي WiFi</li>
+        <li data-vid="v-579f1242">تركيب وتشغيل + ضمان ممتد</li>
+      </ul>
+      <a href="contact.html" class="btn-checkout" style="width:100%;text-align:center;" data-vid="v-e77a89a9">احجز استشارتك المجانية</a>
+    </div>
+    <!-- Package 3 -->
+    <div class="solar-package-card">
+      <div class="package-badge" data-vid="v-bdc3c75e">للمشاريع</div>
+      <h3 data-vid="v-c6f66628">باقة تجارية مخصصة</h3>
+      <p class="package-subtitle" data-vid="v-719a6330">حلول مخصصة للمشاريع التجارية</p>
+      <ul class="package-features">
+        <li data-vid="v-6295e357">تصميم نظام حسب الاحتياج</li>
+        <li data-vid="v-c84c7ee4">ألواح شمسية عالية الكفاءة</li>
+        <li data-vid="v-0918f43d">بطاريات صناعية متعددة</li>
+        <li data-vid="v-d4c8dc66">إنفرتر صناعي ثلاثي الأطوار</li>
+        <li data-vid="v-24e67a3e">نظام مراقبة وتحكم عن بعد</li>
+        <li data-vid="v-4e242551">صيانة دورية لمدة ٣ سنوات</li>
+      </ul>
+      <a href="contact.html" class="btn-checkout" style="width:100%;text-align:center;" data-vid="v-68778961">اطلب دراسة فنية</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ Footer ══ -->
+
+
+<footer class="site-footer" data-vid="v-22904e03">
+    <div class="footer-top">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col brand-col">
+                    <h3 data-vid="store_name">زياد ستور</h3>
+                    <p data-vid="footer_about">وجهتك الأولى للتسوق الإلكتروني بمنتجات أصلية وتجربة تسوق لا تُنسى.</p>
+                    <div class="social-links">
+                        <a href="https://facebook.com" data-vid="social_facebook" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a>
+                        <a href="https://instagram.com" data-vid="social_instagram" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
+                        <a href="https://twitter.com" data-vid="social_twitter" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path></svg></a>
+                        <a href="https://tiktok.com" data-vid="social_tiktok" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 0h1.98c.144 2.58 1.97 4.776 4.54 5.24v3.132c-1.354-.044-2.612-.52-3.69-1.31v7.62a5.41 5.41 0 1 1-5.41-5.41c.42 0 .82.048 1.2.14v3.23a2.18 2.18 0 1 0 1.38 2.03V0z"></path></svg></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4 data-vid="v-f2ff9234">روابط سريعة</h4>
+                    <ul>
+                        <li data-vid="v-a89996e7"><a href="offers.html" data-vid="v-0e14fac4">العروض الخاصة</a></li>
+                        <li data-vid="v-ea1fe33a"><a href="search.html?q=الجديد" data-vid="v-f7cf96ac">أحدث المنتجات</a></li>
+                        <li data-vid="v-0c2ed41c"><a href="search.html?q=الأكثر مبيعا" data-vid="v-02469b60">الأكثر مبيعاً</a></li>
+                        <li data-vid="v-bc6c428d"><a href="/#categories" data-vid="v-31627243">تصفح الأقسام</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-vid="v-e0285452">خدمة العملاء</h4>
+                    <ul>
+                        <li data-vid="v-338e1e6e"><a href="track-order.html" data-vid="v-f7aace6d">تتبع الطلب</a></li>
+                        <li data-vid="v-f1a1b137"><a href="faq.html" data-vid="v-e7becb86">الأسئلة الشائعة</a></li>
+                        <li data-vid="v-efb56ff2"><a href="/terms.html" data-vid="v-8a770ebc">سياسة الاسترجاع</a></li>
+                        <li data-vid="v-cd87d8f4"><a href="/shipping.html" data-vid="v-318728da">معلومات الشحن</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col contact-col">
+                    <h4 data-vid="v-b6184d45">تواصل معنا</h4>
+                    <ul>
+                        <li data-vid="v-77de9eaa">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                            <span data-vid="footer_phone">+967775010726</span>
+                        </li>
+                        <li data-vid="v-ba4fb3e8">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                            <span data-vid="footer_email">zeyad775010@gmail.com</span>
+                        </li>
+                        <li data-vid="v-deae4ee6">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                            <span data-vid="footer_address">صنعاء، شارع الزبيري</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <div class="container">
+            <div class="footer-bottom-flex">
+                <p class="copyright" data-vid="v-16313eab">© 2026 جميع الحقوق محفوظة - <span data-vid="store_name">زياد ستور</span></p>
+                <div class="payment-methods">
+                    <svg viewBox="0 0 38 24" fill="none"><rect width="38" height="24" rx="4" fill="var(--surface-2)"></rect><path d="M12 7L14.5 16H17L19.5 7H17L15.75 12.5L14.5 7H12Z" fill="var(--ink)"></path></svg>
+                    <svg viewBox="0 0 38 24" fill="none"><rect width="38" height="24" rx="4" fill="var(--surface-2)"></rect><circle cx="15" cy="12" r="6" fill="#eb001b"></circle><circle cx="23" cy="12" r="6" fill="#f79e1b"></circle></svg>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+<!-- ══ Scripts ══ -->
+<script>
+  // Solar Calculator
+  function calculateSolar() {
+    const consumptionInput = document.getElementById('consumption');
+    const val = parseFloat(consumptionInput.value);
+    if (!val || val <= 0) {
+      consumptionInput.focus();
+      return;
+    }
+
+    // Determine if monthly or daily
+    const calcType = document.querySelector('input[name="calc-type"]:checked').value;
+    let dailyConsumption;
+    if (calcType === 'monthly') {
+      dailyConsumption = val / 30;
+    } else if (calcType === 'daily') {
+      dailyConsumption = val;
+    } else {
+      // power mode — assume kW, convert to daily kWh (avg 8hrs)
+      dailyConsumption = val * 8;
+    }
+
+    const systemSize = Math.round(dailyConsumption / 4.5 * 2) / 2; // nearest 0.5
+    const panels = Math.ceil(systemSize * 2);
+    const battery = Math.round(systemSize * 2.5);
+    const inverter = Math.ceil(systemSize * 1.2 / 0.5) * 0.5;
+    const daily = (systemSize * 4.2).toFixed(1);
+
+    document.getElementById('resSize').textContent = systemSize + ' كيلوواط';
+    document.getElementById('resPanels').textContent = panels + ' لوح';
+    document.getElementById('resBattery').textContent = battery + ' كيلوواط ساعة';
+    document.getElementById('resInverter').textContent = inverter + ' كيلوواط';
+    document.getElementById('resDaily').textContent = daily + ' كيلوواط ساعة/يوم';
+
+    document.getElementById('calcResult').classList.add('active');
+  }
+
+  // Countdown Timer
+  (function() {
+    let totalSeconds = 12 * 3600 + 45 * 60 + 38;
+    const countdown = document.getElementById('solarCountdown');
+    if (!countdown) return;
+
+    function update() {
+      if (totalSeconds <= 0) return;
+      totalSeconds--;
+
+      const h = Math.floor(totalSeconds / 3600);
+      const m = Math.floor((totalSeconds % 3600) / 60);
+      const s = totalSeconds % 60;
+
+      const nums = countdown.querySelectorAll('.num');
+      if (nums[0]) nums[0].textContent = String(h).padStart(2, '0');
+      if (nums[1]) nums[1].textContent = String(m).padStart(2, '0');
+      if (nums[2]) nums[2].textContent = String(s).padStart(2, '0');
+    }
+
+    /* setInterval(update, 1000); disabled for Phase 1 placeholder */
+  })();
+</script>
+
+
+
+
+
+<!-- FLOATING CART INJECTION -->
+<div id="floating-cart" style="position: fixed; bottom: 24px; left: 24px; z-index: 99999; display: flex; align-items: center; justify-content: center; width: 64px; height: 64px; background-color: var(--gold, #c38c35); border-radius: 50%; box-shadow: 0 4px 16px rgba(0,0,0,0.25); cursor: pointer; transition: transform 0.3s ease, background-color 0.3s ease;" onclick="window.location.href='cart.html'">
+    <svg viewBox="0 0 24 24" style="width: 28px; height: 28px; fill: none; stroke: #fff; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+    <span id="floating-cart-count" style="position: absolute; top: -4px; right: -4px; background: #dc2626; color: #fff; font-size: 0.85rem; font-weight: bold; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" data-vid="v-97c76c5d">0</span>
+</div>
+
+<style>
+.btn-add-cart-mini {
+    background-color: var(--gold, #c38c35);
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-family: inherit;
+    font-size: 0.95rem;
+}
+.btn-add-cart-mini:hover {
+    background-color: var(--gold-dark, #a8762a);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(195, 140, 53, 0.2);
+}
+#floating-cart:hover {
+    background-color: var(--gold-dark, #a8762a);
+    transform: translateY(-4px) scale(1.05);
+}
+</style>
+
+<!-- Inline addToCart removed to allow global site.js?v=20260830-v2327 logic -->
+<!-- END FLOATING CART INJECTION -->
+  <script src="site.js?v=714c6eb3" defer=""></script>
+
+
+  <script src="zfb-config.js"></script>
+<script src="products_db.js"></script>
+<script src="zfb-core.js?v=cd21c70c" defer=""></script>
+  <script src="assets/js/core/premium-cards.js?v=f2491789"></script>
+  <script src="/search-manager.js?v=20260830-v2327"></script>\n  <script src="/wishlist-manager.js?v=20260830-v2327"></script>\n
+
+
+
+  <script src="assets/js/core/storefront-2026.js?v=a6bef9ab1d2b033c"></script>
+</body></html>

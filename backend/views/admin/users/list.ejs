@@ -1,0 +1,104 @@
+<%- include('../../partials/head', { title }) %>
+<%- include('../../partials/sidebar', { active }) %>
+<main class="admin-main">
+  <%- include('../../partials/topbar') %>
+  <div class="admin-content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="page-title"><%= title %></h1>
+      <a href="/admin/users/create" class="btn btn-primary">
+        <span class="material-symbols-rounded">person_add</span> مستخدم جديد
+      </a>
+    </div>
+
+    <div class="glass-card mb-4">
+      <form method="GET" action="/admin/users" class="d-flex gap-3 align-items-center">
+        <div style="flex: 1;">
+          <input type="text" name="q" class="form-control" placeholder="البحث بالاسم أو البريد..." value="<%= search %>">
+        </div>
+        <div style="width: 200px;">
+          <select name="role_id" class="form-control">
+            <option value="">كل الصلاحيات</option>
+            <% if (typeof roles !== 'undefined' && roles) { %>
+              <% roles.forEach(role => { %>
+                <option value="<%= role.id %>" <%= typeof roleId !== 'undefined' && roleId == role.id ? 'selected' : '' %>><%= role.name %></option>
+              <% }) %>
+            <% } %>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-accent">
+          <span class="material-symbols-rounded">search</span> بحث
+        </button>
+        <% if(search || (typeof roleId !== 'undefined' && roleId)) { %>
+          <a href="/admin/users" class="btn btn-outline">إلغاء</a>
+        <% } %>
+      </form>
+    </div>
+
+    <div class="glass-card">
+      <div class="table-responsive">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>المستخدم</th>
+              <th>البريد</th>
+              <th class="text-center">الصلاحية</th>
+              <th class="text-center">الحالة</th>
+              <th>آخر دخول</th>
+              <th class="text-center" width="120">إجراءات</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (!users || users.length === 0) { %>
+              <tr><td colspan="6" class="text-center py-5">لا يوجد مستخدمون.</td></tr>
+            <% } %>
+            <% if (users) users.forEach(user => { %>
+              <tr>
+                <td>
+                  <strong><%= user.full_name || user.username %></strong>
+                  <div style="font-size: 12px; color: var(--text-muted);" dir="ltr"><%= user.username %></div>
+                </td>
+                <td dir="ltr"><%= user.email || '-' %></td>
+                <td class="text-center"><span class="badge badge-info"><%= user.role_name || user.role %></span></td>
+                <td class="text-center">
+                  <span class="badge <%= user.is_active ? 'badge-success' : 'badge-danger' %>"><%= user.is_active ? 'نشط' : 'معطل' %></span>
+                </td>
+                <td dir="ltr"><%= user.last_login ? helpers.formatDateTime(user.last_login) : '-' %></td>
+                <td class="text-center">
+                  <div class="d-flex justify-content-center gap-2">
+                    <a href="/admin/users/<%= user.id %>/edit" class="btn-icon" title="تعديل">
+                      <span class="material-symbols-rounded">edit</span>
+                    </a>
+                    <form action="/admin/users/<%= user.id %>/delete" method="POST" style="display:inline;" onsubmit="return confirm('تأكيد حذف المستخدم؟');">
+                      <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+                      <button type="submit" class="btn-icon text-danger" title="حذف">
+                        <span class="material-symbols-rounded">delete</span>
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+
+      <% if (typeof totalPages !== 'undefined' && totalPages > 1) { %>
+        <div class="d-flex justify-content-between align-items-center mt-4">
+          <div class="text-muted" style="font-size: 13px;">إجمالي المستخدمين: <%= typeof totalItems !== 'undefined' ? totalItems : users.length %></div>
+          <div class="d-flex gap-2">
+            <% if (page > 1) { %>
+              <a href="?page=<%= page - 1 %>&q=<%= search %>" class="btn btn-outline">السابق</a>
+            <% } %>
+            <% for(let i = 1; i <= totalPages; i++) { %>
+              <a href="?page=<%= i %>&q=<%= search %>" class="btn <%= page === i ? 'btn-primary' : 'btn-outline' %>"><%= i %></a>
+            <% } %>
+            <% if (page < totalPages) { %>
+              <a href="?page=<%= page + 1 %>&q=<%= search %>" class="btn btn-outline">التالي</a>
+            <% } %>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</main>
+<%- include('../../partials/foot') %>

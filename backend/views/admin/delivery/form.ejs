@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <%- include('../../partials/head', { title: typeof title !== 'undefined' ? title : 'سياسات التوصيل' }) %>
+</head>
+<body>
+  <div class="admin-layout">
+    <%- include('../../partials/sidebar', { active: 'delivery' }) %>
+    <main class="admin-main">
+      <header class="admin-header">
+        <div class="header-title">
+          <h1><%= policy && policy.id ? 'تعديل سياسة التوصيل' : 'إضافة سياسة توصيل جديدة' %></h1>
+          <p class="text-muted">تحديد النطاقات والأسعار وتطبيقها تلقائياً على السلة وصفحات المتجر</p>
+        </div>
+        <div class="header-actions">
+          <a href="/admin/delivery" class="btn btn-secondary">العودة للسياسات</a>
+        </div>
+      </header>
+
+      <% if (typeof error !== 'undefined' && error) { %>
+        <div class="alert alert-danger" style="margin-bottom: 1.5rem;"><%= error %></div>
+      <% } %>
+
+      <div class="card">
+        <div class="card-body">
+          <form action="<%= policy && policy.id ? '/admin/delivery/' + policy.id + '/edit' : '/admin/delivery/create' %>" method="POST">
+            <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+            <div class="form-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+              
+              <!-- Code -->
+              <div class="form-group">
+                <label class="form-label" for="code">رمز السياسة (Code) <span class="required">*</span></label>
+                <input type="text" id="code" name="code" class="form-input" style="font-family:monospace;" value="<%= policy?.code || '' %>" required <%= policy?.id ? 'readonly' : '' %>>
+                <small class="text-muted">معرف فريد للسياسة (مثال: household_sana_a, bedroom_provinces)</small>
+              </div>
+
+              <!-- Name AR -->
+              <div class="form-group">
+                <label class="form-label" for="name_ar">اسم السياسة بالعربية <span class="required">*</span></label>
+                <input type="text" id="name_ar" name="name_ar" class="form-input" value="<%= policy?.name_ar || '' %>" required>
+              </div>
+
+              <!-- Name EN -->
+              <div class="form-group">
+                <label class="form-label" for="name_en">الاسم بالإنجليزية (اختياري)</label>
+                <input type="text" id="name_en" name="name_en" class="form-input" value="<%= policy?.name_en || '' %>">
+              </div>
+
+              <!-- Zone Scope -->
+              <div class="form-group">
+                <label class="form-label" for="zone_scope">النطاق الجغرافي <span class="required">*</span></label>
+                <select id="zone_scope" name="zone_scope" class="form-input">
+                  <option value="sana_a" <%= policy?.zone_scope === 'sana_a' ? 'selected' : '' %>>داخل أمانة العاصمة صنعاء</option>
+                  <option value="provinces" <%= policy?.zone_scope === 'provinces' ? 'selected' : '' %>>المحافظات اليمنية</option>
+                  <option value="all" <%= policy?.zone_scope === 'all' ? 'selected' : '' %>>شامل لجميع المناطق</option>
+                </select>
+              </div>
+
+              <!-- Category Scope -->
+              <div class="form-group">
+                <label class="form-label" for="category_scope">نوع القسم والمنتجات المشمولة</label>
+                <select id="category_scope" name="category_scope" class="form-input">
+                  <option value="all" <%= policy?.category_scope === 'all' ? 'selected' : '' %>>شامل لكافة المنتجات</option>
+                  <option value="household" <%= policy?.category_scope === 'household' ? 'selected' : '' %>>الأدوات المنزلية والعروض</option>
+                  <option value="bedroom_furniture" <%= policy?.category_scope === 'bedroom_furniture' ? 'selected' : '' %>>غرف النوم والأثاث</option>
+                  <option value="solar" <%= policy?.category_scope === 'solar' ? 'selected' : '' %>>منظومات الطاقة</option>
+                  <option value="appliances" <%= policy?.category_scope === 'appliances' ? 'selected' : '' %>>أجهزة كهربائية كبيرة</option>
+                </select>
+              </div>
+
+              <!-- Service Type -->
+              <div class="form-group">
+                <label class="form-label" for="service_type">نوع الخدمة المقدمة</label>
+                <select id="service_type" name="service_type" class="form-input">
+                  <option value="delivery" <%= policy?.service_type === 'delivery' ? 'selected' : '' %>>توصيل فقط</option>
+                  <option value="delivery_and_installation" <%= policy?.service_type === 'delivery_and_installation' ? 'selected' : '' %>>توصيل + تركيب منزلي</option>
+                  <option value="showroom_pickup" <%= policy?.service_type === 'showroom_pickup' ? 'selected' : '' %>>استلام مباشر من المعرض</option>
+                </select>
+              </div>
+
+              <!-- Pricing Type -->
+              <div class="form-group">
+                <label class="form-label" for="pricing_type">طريقة التسعير <span class="required">*</span></label>
+                <select id="pricing_type" name="pricing_type" class="form-input" onchange="togglePricingFields(this.value)">
+                  <option value="range" <%= policy?.pricing_type === 'range' ? 'selected' : '' %>>نطاق تقديري (Min — Max)</option>
+                  <option value="fixed" <%= policy?.pricing_type === 'fixed' ? 'selected' : '' %>>سعر توصيل ثابت ومحدد</option>
+                  <option value="free" <%= policy?.pricing_type === 'free' ? 'selected' : '' %>>توصيل مجاني بالكامل</option>
+                  <option value="quote" <%= policy?.pricing_type === 'quote' ? 'selected' : '' %>>يحدد بعد التواصل وتأكيد الطلب</option>
+                </select>
+              </div>
+
+              <!-- Min Price YER -->
+              <div class="form-group pricing-field-range">
+                <label class="form-label" for="min_price_yer">الحد الأدنى للسعر (بالريال اليمني)</label>
+                <input type="number" id="min_price_yer" name="min_price_yer" class="form-input" value="<%= policy?.min_price_yer ?? 1000 %>" min="0">
+              </div>
+
+              <!-- Max Price YER -->
+              <div class="form-group pricing-field-range">
+                <label class="form-label" for="max_price_yer">الحد الأقصى للسعر (بالريال اليمني)</label>
+                <input type="number" id="max_price_yer" name="max_price_yer" class="form-input" value="<%= policy?.max_price_yer ?? 2000 %>" min="0">
+              </div>
+
+              <!-- Fixed Price YER -->
+              <div class="form-group pricing-field-fixed" style="display:none;">
+                <label class="form-label" for="fixed_price_yer">السعر الثابت (بالريال اليمني)</label>
+                <input type="number" id="fixed_price_yer" name="fixed_price_yer" class="form-input" value="<%= policy?.fixed_price_yer ?? 0 %>" min="0">
+              </div>
+
+              <!-- Sort Order -->
+              <div class="form-group">
+                <label class="form-label" for="sort_order">ترتيب الظهور</label>
+                <input type="number" id="sort_order" name="sort_order" class="form-input" value="<%= policy?.sort_order ?? 0 %>">
+              </div>
+
+              <!-- Active Status -->
+              <div class="form-group">
+                <label class="form-label" for="is_active">حالة السياسة</label>
+                <select id="is_active" name="is_active" class="form-input">
+                  <option value="1" <%= policy?.is_active !== 0 ? 'selected' : '' %>>نشطة ومفعلة</option>
+                  <option value="0" <%= policy?.is_active === 0 ? 'selected' : '' %>>معطلة مؤقتاً</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Notes -->
+            <div class="form-group" style="margin-top: 1rem;">
+              <label class="form-label" for="notes">ملاحظات توضيحية للعميل والإدارة</label>
+              <textarea id="notes" name="notes" class="form-input" rows="3"><%= policy?.notes || '' %></textarea>
+            </div>
+
+            <div class="form-actions" style="margin-top: 2rem; display: flex; gap: 1rem;">
+              <button type="submit" class="btn btn-primary">حفظ السياسة</button>
+              <a href="/admin/delivery" class="btn btn-secondary">إلغاء</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    function togglePricingFields(type) {
+      const rangeFields = document.querySelectorAll('.pricing-field-range');
+      const fixedFields = document.querySelectorAll('.pricing-field-fixed');
+
+      if (type === 'range') {
+        rangeFields.forEach(el => el.style.display = 'block');
+        fixedFields.forEach(el => el.style.display = 'none');
+      } else if (type === 'fixed') {
+        rangeFields.forEach(el => el.style.display = 'none');
+        fixedFields.forEach(el => el.style.display = 'block');
+      } else {
+        rangeFields.forEach(el => el.style.display = 'none');
+        fixedFields.forEach(el => el.style.display = 'none');
+      }
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      const sel = document.getElementById('pricing_type');
+      if (sel) togglePricingFields(sel.value);
+    });
+  </script>
+</body>
+</html>

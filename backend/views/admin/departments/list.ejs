@@ -1,0 +1,140 @@
+<%- include('../../partials/head', { title }) %>
+<%- include('../../partials/sidebar', { active }) %>
+<main class="admin-main">
+  <%- include('../../partials/topbar') %>
+  
+  <div class="admin-content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h1 class="page-title"><%= title %></h1>
+        <p class="page-description">إدارة الأقسام الرئيسية في المتجر وتصنيفاتها.</p>
+      </div>
+      <div class="admin-header-actions">
+        <a href="/admin/ai-employee" class="btn btn-ai-employee">
+          <span class="material-symbols-rounded">neurology</span>
+          الموظف الذكي
+        </a>
+        <a href="/admin/departments/create" class="btn btn-primary">
+          <span class="material-symbols-rounded">add</span>
+          إضافة قسم جديد
+        </a>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="glass-card mb-4">
+      <form action="/admin/departments" method="GET" class="d-flex gap-3 align-items-center">
+        <div style="flex: 1;">
+          <input type="text" name="q" class="form-control" placeholder="البحث عن قسم (عربي، إنجليزي، رابط)..." value="<%= search %>">
+        </div>
+        <div style="width: 200px;">
+          <select name="status" class="form-control">
+            <option value="">جميع الحالات</option>
+            <option value="1" <%= status === '1' ? 'selected' : '' %>>نشط</option>
+            <option value="0" <%= status === '0' ? 'selected' : '' %>>غير نشط</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-accent">
+          <span class="material-symbols-rounded">search</span> بحث
+        </button>
+        <% if(search || status) { %>
+          <a href="/admin/departments" class="btn btn-outline">إلغاء الفلترة</a>
+        <% } %>
+      </form>
+    </div>
+
+    <!-- Table -->
+    <div class="glass-card">
+      <div class="table-responsive">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th width="60">صورة</th>
+              <th>الاسم (عربي)</th>
+              <th>الاسم (إنجليزي)</th>
+              <th>الرابط (Slug)</th>
+              <th class="text-center">الفئات الفرعية</th>
+              <th class="text-center">المنتجات</th>
+              <th class="text-center">الحالة</th>
+              <th class="text-center">الترتيب</th>
+              <th class="text-center" width="150">إجراءات</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (departments.length === 0) { %>
+              <tr>
+                <td colspan="9" class="text-center py-5">لا توجد أقسام مسجلة.</td>
+              </tr>
+            <% } %>
+            <% departments.forEach(dep => { %>
+              <tr>
+                <td>
+                  <% if (dep.image) { %>
+                    <img src="<%= dep.image %>" alt="<%= dep.name_ar %>" style="width: 40px; height: 40px; object-fit: cover; border-radius: 8px;">
+                  <% } else if (dep.icon) { %>
+                    <div style="width: 40px; height: 40px; border-radius: 8px; background: var(--bg-tertiary); display: flex; align-items: center; justify-content: center;">
+                      <span class="material-symbols-rounded"><%= dep.icon %></span>
+                    </div>
+                  <% } else { %>
+                    <div style="width: 40px; height: 40px; border-radius: 8px; background: var(--bg-tertiary);"></div>
+                  <% } %>
+                </td>
+                <td><strong><%= dep.name_ar %></strong></td>
+                <td><span class="text-muted" dir="ltr"><%= dep.name_en || '-' %></span></td>
+                <td><code dir="ltr"><%= dep.slug %></code></td>
+                <td class="text-center">
+                  <a href="/admin/categories?department_id=<%= dep.id %>" class="badge badge-info"><%= dep.subcats_count %> فئة</a>
+                </td>
+                <td class="text-center">
+                  <a href="/admin/products?department_id=<%= dep.id %>" class="badge badge-warning"><%= dep.products_count %> منتج</a>
+                </td>
+                <td class="text-center">
+                  <% if (dep.is_active) { %>
+                    <span class="badge badge-success">نشط</span>
+                  <% } else { %>
+                    <span class="badge badge-danger">غير نشط</span>
+                  <% } %>
+                </td>
+                <td class="text-center"><%= dep.sort_order %></td>
+                <td class="text-center">
+                  <div class="d-flex justify-content-center gap-2">
+                    <a href="/admin/departments/<%= dep.id %>/edit" class="btn-icon" title="تعديل">
+                      <span class="material-symbols-rounded">edit</span>
+                    </a>
+                    <form action="/admin/departments/<%= dep.id %>/delete" method="POST" class="delete-form" style="display:inline;">
+                      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                      <button type="submit" class="btn-icon text-danger" title="حذف" <%= (dep.subcats_count > 0 || dep.products_count > 0) ? 'disabled' : '' %>>
+                        <span class="material-symbols-rounded">delete</span>
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <% if (totalPages > 1) { %>
+        <div class="d-flex justify-content-between align-items-center mt-4">
+          <div class="text-muted" style="font-size: 13px;">
+            إجمالي الأقسام: <%= totalItems %>
+          </div>
+          <div class="d-flex gap-2">
+            <% if (page > 1) { %>
+              <a href="?page=<%= page - 1 %>&q=<%= search %>&status=<%= status %>" class="btn btn-outline">السابق</a>
+            <% } %>
+            <% for(let i = 1; i <= totalPages; i++) { %>
+              <a href="?page=<%= i %>&q=<%= search %>&status=<%= status %>" class="btn <%= page === i ? 'btn-primary' : 'btn-outline' %>"><%= i %></a>
+            <% } %>
+            <% if (page < totalPages) { %>
+              <a href="?page=<%= page + 1 %>&q=<%= search %>&status=<%= status %>" class="btn btn-outline">التالي</a>
+            <% } %>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</main>
+<%- include('../../partials/foot') %>

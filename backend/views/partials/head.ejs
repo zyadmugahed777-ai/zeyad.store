@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> - لوحة الإدارة | زياد ستور</title>
+  
+  <!-- IBM Plex Sans Arabic -->
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Material Symbols Rounded (Loaded locally in admin.css) -->
+  <!-- Admin Styles -->
+  <link rel="stylesheet" href="/admin-assets/admin.css?v=2">
+
+  <!-- Setup Theme Early to prevent flash -->
+  <script>
+    const savedTheme = localStorage.getItem('admin_theme') || 'dark'; // Make dark mode default as requested
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    window.ZFB_ADMIN_CSRF = '<%= typeof csrfToken !== "undefined" ? csrfToken : "" %>';
+  </script>
+  
+  <!-- TinyMCE, self-hosted. See the /vendor/tinymce mount in server.js. -->
+  <script src="/vendor/tinymce/tinymce.min.js"></script>
+  
+  <!-- Admin Scripts -->
+  <!-- Loaded before admin.js and without defer: it must wrap window.fetch
+       before any page script has a chance to call it. -->
+  <script src="/admin-assets/js/csrf-fetch.js"></script>
+  <script src="/admin-assets/js/admin.js" defer></script>
+</head>
+<body>
+<div class="admin-layout">

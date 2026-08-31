@@ -1,0 +1,174 @@
+<%- include('../../partials/head', { title }) %>
+<%- include('../../partials/sidebar', { active }) %>
+
+<main class="admin-main">
+  <%- include('../../partials/topbar') %>
+
+  <div class="admin-content">
+    
+    <!-- Header -->
+    <div class="page-header d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h1 class="page-title">مركز طلبات العملاء</h1>
+        <p class="text-muted">متابعة وإدارة طلبات الاتصال، الاستشارات، عروض الأسعار، والمواعيد في مكان واحد.</p>
+      </div>
+    </div>
+
+    <!-- Quick Stats Cards -->
+    <div class="row g-3 mb-4" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px;">
+      <div class="card p-3" style="border-right: 4px solid var(--primary-gold, #eab308);">
+        <span class="text-muted" style="font-size: 13px;">إجمالي الطلبات</span>
+        <h3 style="margin: 4px 0 0; font-weight: 700;"><%= stats.total %></h3>
+      </div>
+      <div class="card p-3" style="border-right: 4px solid var(--danger, #ef4444);">
+        <span class="text-muted" style="font-size: 13px;">طلبات جديدة</span>
+        <h3 style="margin: 4px 0 0; font-weight: 700; color: var(--danger, #ef4444);"><%= stats.new %></h3>
+      </div>
+      <div class="card p-3" style="border-right: 4px solid #3b82f6;">
+        <span class="text-muted" style="font-size: 13px;">تم التواصل</span>
+        <h3 style="margin: 4px 0 0; font-weight: 700; color: #3b82f6;"><%= stats.contacted %></h3>
+      </div>
+      <div class="card p-3" style="border-right: 4px solid #f59e0b;">
+        <span class="text-muted" style="font-size: 13px;">جاري المعالجة</span>
+        <h3 style="margin: 4px 0 0; font-weight: 700; color: #f59e0b;"><%= stats.in_progress %></h3>
+      </div>
+      <div class="card p-3" style="border-right: 4px solid var(--success, #16a34a);">
+        <span class="text-muted" style="font-size: 13px;">تم التنفيذ</span>
+        <h3 style="margin: 4px 0 0; font-weight: 700; color: var(--success, #16a34a);"><%= stats.completed %></h3>
+      </div>
+    </div>
+
+    <!-- Filters & Search -->
+    <div class="card p-3 mb-4">
+      <form action="/admin/requests" method="GET" class="d-flex gap-3 align-items-center flex-wrap" style="display: flex; gap: 12px; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 220px;">
+          <input type="text" name="q" value="<%= search %>" placeholder="بحث برقم الطلب، اسم العميل، الهاتف، أو الموضوع..." class="form-control" style="width: 100%;">
+        </div>
+        <div style="min-width: 150px;">
+          <select name="type" class="form-control">
+            <option value="">جميع أنواع الطلبات</option>
+            <% Object.entries(typeMap).forEach(([k, v]) => { %>
+              <option value="<%= k %>" <%= type === k ? 'selected' : '' %>><%= v %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div style="min-width: 140px;">
+          <select name="status" class="form-control">
+            <option value="">جميع الحالات</option>
+            <% Object.entries(statusMap).forEach(([k, v]) => { %>
+              <option value="<%= k %>" <%= status === k ? 'selected' : '' %>><%= v %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div style="min-width: 130px;">
+          <select name="priority" class="form-control">
+            <option value="">الأولوية</option>
+            <% Object.entries(priorityMap).forEach(([k, v]) => { %>
+              <option value="<%= k %>" <%= priority === k ? 'selected' : '' %>><%= v %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div>
+          <button type="submit" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 6px;">
+            <span class="material-symbols-rounded" style="font-size: 18px;">filter_list</span>
+            تصفية
+          </button>
+          <% if (search || status || type || priority) { %>
+            <a href="/admin/requests" class="btn btn-outline" style="margin-right: 6px;">إلغاء التصفية</a>
+          <% } %>
+        </div>
+      </form>
+    </div>
+
+    <!-- Data Table -->
+    <div class="card overflow-hidden">
+      <div class="table-responsive">
+        <table class="table" style="width: 100%; text-align: right; border-collapse: collapse;">
+          <thead>
+            <tr style="border-bottom: 1px solid var(--border-color, rgba(255,255,255,0.1));">
+              <th style="padding: 12px 16px;">رقم الطلب</th>
+              <th style="padding: 12px 16px;">العميل</th>
+              <th style="padding: 12px 16px;">نوع الطلب</th>
+              <th style="padding: 12px 16px;">الموضوع / التفاصيل</th>
+              <th style="padding: 12px 16px;">الأولوية</th>
+              <th style="padding: 12px 16px;">الحالة</th>
+              <th style="padding: 12px 16px;">التاريخ</th>
+              <th style="padding: 12px 16px; text-align: left;">الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (requests && requests.length > 0) { %>
+              <% requests.forEach(r => { %>
+                <tr style="border-bottom: 1px solid var(--border-color, rgba(255,255,255,0.05));">
+                  <td style="padding: 12px 16px;">
+                    <a href="/admin/requests/<%= r.id %>" style="font-weight: 700; color: var(--primary-gold, #eab308); text-decoration: none;">
+                      <%= r.request_id %>
+                    </a>
+                  </td>
+                  <td style="padding: 12px 16px;">
+                    <div style="font-weight: 600;"><%= r.customer_name %></div>
+                    <div style="font-size: 12px; color: var(--text-muted); direction: ltr; text-align: right;"><%= r.phone %></div>
+                  </td>
+                  <td style="padding: 12px 16px;">
+                    <span class="badge" style="background: rgba(255,255,255,0.08); padding: 4px 8px; border-radius: 6px; font-size: 12px;">
+                      <%= r.type_ar %>
+                    </span>
+                  </td>
+                  <td style="padding: 12px 16px; max-width: 260px;">
+                    <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 13px;">
+                      <%= r.subject || r.message || '—' %>
+                    </div>
+                    <% if (r.entity_type) { %>
+                      <small style="color: var(--primary-gold); font-size: 11px;">مرتبط بـ <%= r.entity_type === 'product' ? 'منتج' : (r.entity_type === 'order' ? 'طلب شراء' : r.entity_type) %></small>
+                    <% } %>
+                  </td>
+                  <td style="padding: 12px 16px;">
+                    <% if (r.priority === 'urgent') { %>
+                      <span class="badge" style="background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid #ef4444; padding: 3px 8px; border-radius: 6px; font-size: 11px;"><%= r.priority_ar %></span>
+                    <% } else if (r.priority === 'high') { %>
+                      <span class="badge" style="background: rgba(245, 158, 11, 0.2); color: #f59e0b; padding: 3px 8px; border-radius: 6px; font-size: 11px;"><%= r.priority_ar %></span>
+                    <% } else { %>
+                      <span class="badge" style="background: rgba(255, 255, 255, 0.06); color: var(--text-muted); padding: 3px 8px; border-radius: 6px; font-size: 11px;"><%= r.priority_ar %></span>
+                    <% } %>
+                  </td>
+                  <td style="padding: 12px 16px;">
+                    <% if (r.status === 'new') { %>
+                      <span class="badge" style="background: rgba(239, 68, 68, 0.15); color: #ef4444; padding: 4px 10px; border-radius: 6px; font-weight: 700;"><%= r.status_ar %></span>
+                    <% } else if (r.status === 'contacted') { %>
+                      <span class="badge" style="background: rgba(59, 130, 246, 0.15); color: #3b82f6; padding: 4px 10px; border-radius: 6px; font-weight: 700;"><%= r.status_ar %></span>
+                    <% } else if (r.status === 'in_progress' || r.status === 'in_review') { %>
+                      <span class="badge" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b; padding: 4px 10px; border-radius: 6px; font-weight: 700;"><%= r.status_ar %></span>
+                    <% } else if (r.status === 'completed') { %>
+                      <span class="badge" style="background: rgba(22, 163, 74, 0.15); color: #16a34a; padding: 4px 10px; border-radius: 6px; font-weight: 700;"><%= r.status_ar %></span>
+                    <% } else { %>
+                      <span class="badge" style="background: rgba(100, 116, 139, 0.15); color: #94a3b8; padding: 4px 10px; border-radius: 6px;"><%= r.status_ar %></span>
+                    <% } %>
+                  </td>
+                  <td style="padding: 12px 16px; font-size: 12px; color: var(--text-muted);">
+                    <%= new Date(r.created_at).toLocaleDateString('ar-YE') %>
+                  </td>
+                  <td style="padding: 12px 16px; text-align: left;">
+                    <a href="/admin/requests/<%= r.id %>" class="btn btn-sm btn-outline" style="padding: 4px 10px; font-size: 12px; display: inline-flex; align-items: center; gap: 4px;">
+                      <span class="material-symbols-rounded" style="font-size: 16px;">visibility</span>
+                      معاينة
+                    </a>
+                  </td>
+                </tr>
+              <% }) %>
+            <% } else { %>
+              <tr>
+                <td colspan="8" style="text-align: center; padding: 48px; color: var(--text-muted);">
+                  <span class="material-symbols-rounded" style="font-size: 48px; opacity: 0.5;">inbox</span>
+                  <p style="margin: 8px 0 0;">لا توجد طلبات مطابقة لمعايير البحث الحالية.</p>
+                </td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+
+      <%- include('../../partials/pagination', { page, totalPages, baseUrl: '/admin/requests' }) %>
+    </div>
+
+  </div>
+</main>

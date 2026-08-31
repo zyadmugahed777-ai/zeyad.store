@@ -1,0 +1,78 @@
+<%- include('../../partials/head', { title }) %>
+<%- include('../../partials/sidebar', { active }) %>
+<main class="admin-main">
+  <%- include('../../partials/topbar') %>
+  <div class="admin-content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="page-title"><%= title %></h1>
+    </div>
+
+    <div class="glass-card mb-4">
+      <form action="/admin/customers" method="GET" class="d-flex gap-3 align-items-center">
+        <div style="flex: 1;">
+          <input type="text" name="q" class="form-control" placeholder="البحث بالاسم أو رقم الهاتف..." value="<%= search %>">
+        </div>
+        <button type="submit" class="btn btn-accent">
+          <span class="material-symbols-rounded">search</span> بحث
+        </button>
+        <% if(search) { %>
+          <a href="/admin/customers" class="btn btn-outline">إلغاء</a>
+        <% } %>
+      </form>
+    </div>
+
+    <div class="glass-card">
+      <div class="table-responsive">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>الاسم</th>
+              <th>الهاتف</th>
+              <th>المدينة</th>
+              <th class="text-center">الطلبات</th>
+              <th>إجمالي المشتريات</th>
+              <th class="text-center">إجراءات</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (customers.length === 0) { %>
+              <tr><td colspan="6" class="text-center py-5">لا يوجد عملاء.</td></tr>
+            <% } %>
+            <% customers.forEach(c => { %>
+              <tr>
+                <td><strong><%= c.first_name %> <%= c.last_name || '' %></strong></td>
+                <td dir="ltr"><%= c.phone %></td>
+                <td><%= c.city || '-' %></td>
+                <td class="text-center"><span class="badge badge-info"><%= c.total_orders %></span></td>
+                <td><strong><%= helpers.formatPrice(c.total_spent) %></strong></td>
+                <td class="text-center">
+                  <a href="/admin/customers/<%= c.id %>" class="btn-icon" title="عرض التفاصيل">
+                    <span class="material-symbols-rounded">visibility</span>
+                  </a>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+
+      <% if (totalPages > 1) { %>
+        <div class="d-flex justify-content-between align-items-center mt-4">
+          <div class="text-muted" style="font-size: 13px;">إجمالي العملاء: <%= totalItems %></div>
+          <div class="d-flex gap-2">
+            <% if (page > 1) { %>
+              <a href="?page=<%= page - 1 %>&q=<%= search %>" class="btn btn-outline">السابق</a>
+            <% } %>
+            <% for(let i = 1; i <= totalPages; i++) { %>
+              <a href="?page=<%= i %>&q=<%= search %>" class="btn <%= page === i ? 'btn-primary' : 'btn-outline' %>"><%= i %></a>
+            <% } %>
+            <% if (page < totalPages) { %>
+              <a href="?page=<%= page + 1 %>&q=<%= search %>" class="btn btn-outline">التالي</a>
+            <% } %>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</main>
+<%- include('../../partials/foot') %>
