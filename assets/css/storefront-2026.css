@@ -1305,6 +1305,76 @@ body.dark-mode .drawer-dept {
 }
 
 
+/* --------------------------------------------------------------------------
+   SOLAR — the estimator in the hero
+   --------------------------------------------------------------------------
+   Measured live at 375px: the hero was 1,119px, 138% of the screen, and 449px
+   of that was three "steps" in a one-column grid. The two arrows between them
+   were 297px tall EACH -- a decorative "←" stretched to fill its grid row.
+
+   Three steps read as three steps when they sit in a row. The arrows are the
+   first thing to go: on a row of three, left-to-right already says "then".
+   -------------------------------------------------------------------------- */
+@media (max-width: 767px) {
+  .calc-step-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 6px !important;
+    align-items: stretch;
+  }
+  .calc-step-arrow { display: none !important; }
+  .calc-step {
+    min-height: 0 !important;
+    height: auto !important;
+    padding: 10px 6px !important;
+    font-size: .68rem !important;
+    line-height: 1.35;
+    text-align: center;
+    border-radius: 12px;
+  }
+  .calc-step svg,
+  .calc-step i { width: 18px !important; height: 18px !important; margin-bottom: 4px; }
+
+  .solar-calculator { padding: 14px !important; }
+  .solar-calculator h2 { font-size: 1.05rem !important; }
+  .solar-calculator > p { font-size: .78rem !important; margin-bottom: 10px !important; }
+  .calc-note-bottom { font-size: .68rem !important; line-height: 1.45; }
+  .btn-calc-start { height: 42px !important; font-size: .86rem !important; }
+
+  /* The photograph sits behind the whole hero; the panel should not add a
+     second full-height dark block on top of it. */
+  .hero-side-panel { margin-top: 12px; }
+}
+
+/* --------------------------------------------------------------------------
+   APPLIANCES — the hero's two actions
+   --------------------------------------------------------------------------
+   127px for two buttons, because they stacked. They are a pair of choices, so
+   they belong on one line.
+   -------------------------------------------------------------------------- */
+@media (max-width: 767px) {
+  .appliances-hero-actions {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 8px !important;
+    width: 100%;
+  }
+  .appliances-hero-actions > a,
+  .appliances-hero-actions > button {
+    flex: 1 1 0 !important;
+    width: auto !important;
+    min-width: 0;
+    height: 42px;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    padding: 0 10px !important;
+    margin: 0 !important;
+    font-size: .82rem !important;
+    white-space: nowrap;
+    border-radius: 12px;
+  }
+}
+
 /* --- Cart trust row -------------------------------------------------------
    Measured at 375px: four items, each 283x200, stacking to an 868px column --
    more than a whole phone screen spent on four reassurance lines. They are
