@@ -310,17 +310,15 @@ app.use('/vendor/tinymce', express.static(path.join(__dirname, 'node_modules', '
   maxAge: '30d',
   immutable: true
 }));
-// Serve uploads from the directory uploads are actually WRITTEN to.
-// middleware/upload.js resolves UPLOAD_DIR against the repository root (".env"
-// carries UPLOAD_DIR=./uploads), so files land in <repo>/uploads -- while this
-// mount pointed at backend/uploads, a directory that does not exist. It only
-// appeared to work because the repository-root static mount above happens to
-// catch /uploads/... first. Reorder those two lines, change UPLOAD_DIR, or move
-// the app, and every product image on the site would 404. Resolve it the same
-// way the writer does, so the two can no longer disagree.
-const UPLOAD_DIR = process.env.UPLOAD_DIR
-  ? path.resolve(__dirname, '..', process.env.UPLOAD_DIR)
-  : path.join(__dirname, '..', 'uploads');
+// Serve uploads from the one place that decides where uploads live.
+//
+// The comment that used to sit here claimed middleware/upload.js resolved this
+// the same way. It did not: that file is one directory deeper, so the identical
+// `path.resolve(__dirname, '..', UPLOAD_DIR)` gave it backend/uploads and gave
+// this line <repo>/uploads. Uploads were written to one and served from the
+// other, so every image an operator uploaded 404'd with no error anywhere.
+// Both sides now import the same resolved value.
+const { UPLOAD_DIR } = require('./config/paths');
 app.use('/uploads', express.static(UPLOAD_DIR));
 
 // View engine

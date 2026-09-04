@@ -15,6 +15,73 @@ function escHtml(value) {
 }
 
 /**
+ * Clean rich text that is MEANT to contain markup.
+ *
+ * The product description is written in the admin's rich-text editor, so it
+ * legitimately holds <h3>, <br>, <strong>, lists and so on. Escaping it -- which
+ * is what happened before -- turned an operator's formatted description into a
+ * wall of literal "<h3>...<br>" on the product page. Every product looked broken.
+ *
+ * Escaping was the wrong tool, not the wrong instinct: the text is operator
+ * input and must still not be able to run script. So the markup is kept and the
+ * dangerous parts are removed instead.
+ *
+ * Removed: script/style/iframe/object/embed/form/input and their contents; every
+ * on* event attribute; javascript: and data: URLs; and any tag not on the list
+ * below. What survives is formatting, and formatting cannot execute.
+ */
+function sanitizeRichText(value) {
+  const html = String(value == null ? '' : value);
+  if (!html) return '';
+
+  const ALLOWED = new Set([
+    'p', 'br', 'b', 'strong', 'i', 'em', 'u', 'span', 'div',
+    'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+    'ul', 'ol', 'li', 'blockquote', 'hr',
+    'table', 'thead', 'tbody', 'tr', 'th', 'td', 'a'
+  ]);
+
+  // Parsing rather than pattern-matching: the browser's own parser decides what
+  // a tag is, so there is no regex to slip past with a malformed attribute.
+  const doc = new DOMParser().parseFromString('<body>' + html + '</body>', 'text/html');
+
+  doc.body.querySelectorAll('script, style, iframe, object, embed, form, input, textarea, link, meta')
+    .forEach((el) => el.remove());
+
+  doc.body.querySelectorAll('*').forEach((el) => {
+    const tag = el.tagName.toLowerCase();
+
+    if (!ALLOWED.has(tag)) {
+      // Keep the words, drop the tag -- an unknown wrapper should not delete
+      // the sentence inside it.
+      el.replaceWith(...el.childNodes);
+      return;
+    }
+
+    for (const attr of Array.from(el.attributes)) {
+      const name = attr.name.toLowerCase();
+      const val = String(attr.value || '');
+      const isSafeHref = tag === 'a' && name === 'href' &&
+        /^(https?:|mailto:|tel:|\/|#)/i.test(val.trim());
+      if (name.startsWith('on') || (!isSafeHref && (name === 'href' || name === 'src'))) {
+        el.removeAttribute(attr.name);
+      } else if (!['href', 'title', 'dir', 'lang'].includes(name)) {
+        // No style, no class, no data-*: the page's own stylesheet decides how
+        // a description looks, not whatever the editor pasted in.
+        el.removeAttribute(attr.name);
+      }
+    }
+
+    if (tag === 'a') {
+      el.setAttribute('rel', 'nofollow noopener');
+      el.setAttribute('target', '_blank');
+    }
+  });
+
+  return doc.body.innerHTML;
+}
+
+/**
  * NAJM & ZFB PRODUCT ENGINE — V2.0 PRO MAX
  * Mobile-First, Authoritative Cart & Currency Synchronized
  */
@@ -643,7 +710,13 @@ function escHtml(value) {
   function renderTabs(product) {
     const descEl = qs("product-description");
     if (descEl) {
-      descEl.innerHTML = `<p>${escHtml(product.description || "أثاث وأجهزة عالية الجودة من متجر زياد ستور، مصنعة وفق أرقى المعايير العالمية مع ضمان موثق.")}</p>`;
+      /* The description is written in the admin's rich-text editor and is meant
+         to carry markup. Escaping it printed the operator's tags on the page as
+         literal text -- "<h3>...<br>" in front of the customer. It is cleaned
+         instead, so the formatting survives and script cannot. */
+      const clean = sanitizeRichText(product.description);
+      descEl.innerHTML = clean ||
+        "<p>أثاث وأجهزة عالية الجودة من متجر زياد ستور، مصنعة وفق أرقى المعايير العالمية مع ضمان موثق.</p>";
     }
 
     const specsTable = qs("product-specs-table");

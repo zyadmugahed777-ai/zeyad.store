@@ -2,18 +2,16 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-// Resolve to an absolute path regardless of the process's launch directory.
-// A relative UPLOAD_DIR in .env (e.g. "./uploads") used to resolve against
-// process.cwd(), which silently pointed at a different directory than this
-// file's hardcoded backend/uploads fallback depending on how the server was
-// started, producing two divergent upload trees on disk.
-const UPLOAD_DIR = process.env.UPLOAD_DIR
-  ? path.resolve(__dirname, '..', process.env.UPLOAD_DIR)
-  : path.join(__dirname, '..', 'uploads');
+// Where files are written comes from config/paths.js, which is also what
+// server.js serves /uploads from. This file used to resolve it itself with
+// `path.resolve(__dirname, '..', UPLOAD_DIR)` -- but __dirname here is
+// backend/middleware, one level deeper than server.js, so the identical
+// expression produced backend/uploads on this side and <repo>/uploads on the
+// other. Every uploaded image was written where nothing would ever serve it.
+const { UPLOAD_DIR, UPLOAD_SUBDIRS } = require('../config/paths');
 
 // Ensure upload directories exist
-const dirs = ['', 'products', 'videos', 'banners', 'offers', 'media', 'consultations', 'quotes', 'reports'];
-dirs.forEach(dir => {
+['', ...UPLOAD_SUBDIRS].forEach(dir => {
   const fullPath = path.join(UPLOAD_DIR, dir);
   if (!fs.existsSync(fullPath)) {
     fs.mkdirSync(fullPath, { recursive: true });
