@@ -82,6 +82,51 @@ const ALLOWED_ORIGINS = [
 // why. Match the stated intent: any loopback port, and only loopback.
 const LOOPBACK_ORIGIN = /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(:\d+)?$/;
 
+/*
+ * A rejected origin has to be identifiable in the log.
+ *
+ * The rejection below threw `new Error('حدث خطأ في الطلب')` and pm2 recorded
+ * exactly that: no origin, no path, no address. Bursts of a dozen identical
+ * anonymous lines several times a day read like the site was failing, and
+ * there was no way to tell from the log whether a customer or a scanner had
+ * produced them. (Measured on 5 September: 122 of 4,398 requests, every one
+ * from two addresses probing /graphql, /proxy, /fetch and /wp-json/batch/v1
+ * with rotating forged bot user-agents. Not one came from zeyad.store.)
+ *
+ * The origin goes to the SERVER log only. The client still gets the same
+ * opaque message -- telling a prober which origins are allowed is telling it
+ * what to forge next.
+ *
+ * Throttled per origin, because a sustained scan would otherwise write a line
+ * per request and bury everything else. The suppressed count is reported when
+ * the window closes, so the volume is never hidden, only summarised.
+ */
+const CORS_LOG_WINDOW_MS = 60000;
+const corsRejections = new Map();
+
+function noteRejectedOrigin(origin) {
+  const now = Date.now();
+  const seen = corsRejections.get(origin);
+
+  if (!seen || now - seen.firstAt >= CORS_LOG_WINDOW_MS) {
+    if (seen && seen.count > 1) {
+      console.warn('[cors] ' + (seen.count - 1) + ' further request(s) from ' + origin + ' in the previous minute');
+    }
+    corsRejections.set(origin, { firstAt: now, count: 1 });
+    console.warn('[cors] refused a cross-origin request from ' + origin);
+    return;
+  }
+
+  seen.count++;
+
+  // Unbounded growth is the failure mode of any map keyed on attacker input.
+  if (corsRejections.size > 200) {
+    for (const [key, val] of corsRejections) {
+      if (now - val.firstAt >= CORS_LOG_WINDOW_MS) corsRejections.delete(key);
+    }
+  }
+}
+
 app.use(cors({
   origin(origin, callback) {
     // No Origin header, or the literal opaque origin "null" (sandboxed
@@ -91,7 +136,9 @@ app.use(cors({
     if (ALLOWED_ORIGINS.includes(origin)) return callback(null, true);
     if (LOOPBACK_ORIGIN.test(origin)) return callback(null, true);
     // A real, specific, disallowed origin. Reject with a controlled error --
-    // never the raw origin string or a stack trace back to the client.
+    // never the raw origin string or a stack trace back to the client. The
+    // origin is recorded on this side only.
+    noteRejectedOrigin(origin);
     const err = new Error('حدث خطأ في الطلب');
     err.status = 403;
     return callback(err);
