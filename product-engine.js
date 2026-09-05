@@ -448,6 +448,40 @@ function sanitizeRichText(value) {
     if (warTrust) warTrust.innerHTML = `${product.warranty || "ضمان موثق"}<br><small>استبدال وصيانة</small>`;
   }
 
+  /**
+   * Give the gallery frame the shape of the photograph in it.
+   *
+   * The frame was a fixed square with the photo CONTAINed inside and a blurred
+   * copy of itself behind, to fill whatever space containment left over. That
+   * is right for a wide room shot in a square frame -- and wrong for a square
+   * photograph, which leaves no space at all: the backdrop then had nothing to
+   * fill and simply sat behind the picture at 50% opacity, greying it, while a
+   * 10px pad kept the photo from ever reaching the frame's edge.
+   *
+   * Sized to the image, the photo fills the frame exactly, so the backdrop is
+   * not needed and is switched off (.zs-exact). It stays on only when the ratio
+   * had to be clamped -- a panorama or a very tall shot -- which is the one case
+   * where there really is leftover space to fill.
+   */
+  var STAGE_MIN_RATIO = 0.75;   // 3:4
+  var STAGE_MAX_RATIO = 1.78;   // 16:9
+
+  function fitStageToImage(stage, src) {
+    if (!stage || !src) return;
+    var probe = new Image();
+    probe.decoding = "async";
+    probe.onload = function () {
+      var w = probe.naturalWidth, h = probe.naturalHeight;
+      if (!w || !h) return;
+      var r = w / h;
+      var clamped = Math.min(STAGE_MAX_RATIO, Math.max(STAGE_MIN_RATIO, r));
+      stage.style.setProperty("--zs-stage-ratio", clamped.toFixed(4));
+      // Within a hair of the frame's shape there is nothing left to fill.
+      stage.classList.toggle("zs-exact", Math.abs(clamped - r) < 0.02);
+    };
+    probe.src = src;
+  }
+
   function renderGalleryStage(index) {
     currentMediaIndex = index;
     const stage = qs("product-gallery-stage");
@@ -460,8 +494,10 @@ function sanitizeRichText(value) {
        deliberate mount instead of an empty box. See storefront-2026.css. */
     if (item.type === "image" || !item.type) {
       stage.style.setProperty("--card-img", `url("${String(item.src).replace(/"/g, '\\"')}")`);
+      fitStageToImage(stage, item.src);
     } else {
       stage.style.removeProperty("--card-img");
+      stage.classList.remove("zs-exact");
     }
 
     if (item.type === "video") {
