@@ -152,7 +152,10 @@ function injectCatalog($, slug, allProducts, categorySlug) {
   grid.attr('data-zs-catalog-grid', '');
 
   const inDepartment = (allProducts || []).filter(
-    (p) => p.departmentSlug && p.departmentSlug === spec.department
+    // showInDepartment is how an operator keeps a special-order or
+    // enquiry-only product out of the browsable catalogue without
+    // deactivating it -- its own page still opens from a direct link.
+    (p) => p.departmentSlug && p.departmentSlug === spec.department && p.showInDepartment !== false
   );
 
   // Filtering happens on the server so a category link works with no

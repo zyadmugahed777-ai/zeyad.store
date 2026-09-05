@@ -29,6 +29,7 @@ class PostgresProductRepo extends PostgresBaseRepository {
       FROM products p 
       LEFT JOIN categories c ON p.category_id = c.id
       WHERE p.is_active = 1 AND (p.is_archived = 0 OR p.is_archived IS NULL)
+        AND (p.show_in_search = 1 OR p.show_in_search IS NULL)
       ORDER BY p.sort_order ASC, p.id DESC
     `;
     return await this.db.prepare(query).all();
@@ -360,7 +361,9 @@ class PostgresProductRepo extends PostgresBaseRepository {
           brand, origin, warranty, shipping, delivery_time, installation,
           weight, video, is_new, is_best_seller, is_active, stock_status,
           stock_quantity, sort_order, delivery_policy_type, delivery_fixed_fee_sar,
-          requires_installation, installation_fee_sar, created_at, updated_at
+          requires_installation, installation_fee_sar,
+          show_in_department, show_on_home, show_in_search, show_in_najm, show_in_offers,
+          created_at, updated_at
         ) VALUES (
           @product_id, @category_id, @department_id, @subcategory_id,
           @title, @description, @short_description, @price, @old_price,
@@ -368,7 +371,9 @@ class PostgresProductRepo extends PostgresBaseRepository {
           @brand, @origin, @warranty, @shipping, @delivery_time, @installation,
           @weight, @video, @is_new, @is_best_seller, @is_active, @stock_status,
           @stock_quantity, @sort_order, @delivery_policy_type, @delivery_fixed_fee_sar,
-          @requires_installation, @installation_fee_sar, NOW(), NOW()
+          @requires_installation, @installation_fee_sar,
+          @show_in_department, @show_on_home, @show_in_search, @show_in_najm, @show_in_offers,
+          NOW(), NOW()
         )
       `);
 
@@ -394,7 +399,11 @@ class PostgresProductRepo extends PostgresBaseRepository {
         warranty: productData.warranty || '',
         shipping: productData.shipping || '',
         delivery_time: productData.delivery_time || '',
-        installation: productData.installation ? 1 : 0,
+        // installation is a TEXT column. Storing the number 0 in it produces
+        // the string '0', which every JavaScript reader treats as TRUE -- that
+        // is how unticking "free installation" turned it on. Store an empty
+        // string for false so falsehood is actually falsy.
+        installation: productData.installation ? '1' : '',
         weight: productData.weight || '',
         video: productData.video || '',
         is_new: productData.is_new ? 1 : 0,
@@ -406,7 +415,15 @@ class PostgresProductRepo extends PostgresBaseRepository {
         delivery_policy_type: productData.delivery_policy_type || 'default',
         delivery_fixed_fee_sar: Number(productData.delivery_fixed_fee_sar || 0),
         requires_installation: productData.requires_installation ? 1 : 0,
-        installation_fee_sar: Number(productData.installation_fee_sar || 0)
+        installation_fee_sar: Number(productData.installation_fee_sar || 0),
+        // Placement. Absent means "wherever products normally go", which is
+        // what a product created by any other code path (import, seed, the AI
+        // employee) should get.
+        show_in_department: productData.show_in_department === undefined ? 1 : (productData.show_in_department ? 1 : 0),
+        show_on_home: productData.show_on_home === undefined ? 1 : (productData.show_on_home ? 1 : 0),
+        show_in_search: productData.show_in_search === undefined ? 1 : (productData.show_in_search ? 1 : 0),
+        show_in_najm: productData.show_in_najm === undefined ? 1 : (productData.show_in_najm ? 1 : 0),
+        show_in_offers: productData.show_in_offers ? 1 : 0
       });
 
       const newId = res.lastInsertRowid;
@@ -503,6 +520,11 @@ class PostgresProductRepo extends PostgresBaseRepository {
           delivery_fixed_fee_sar = COALESCE(@delivery_fixed_fee_sar, delivery_fixed_fee_sar),
           requires_installation = COALESCE(@requires_installation, requires_installation),
           installation_fee_sar = COALESCE(@installation_fee_sar, installation_fee_sar),
+          show_in_department = COALESCE(@show_in_department, show_in_department),
+          show_on_home = COALESCE(@show_on_home, show_on_home),
+          show_in_search = COALESCE(@show_in_search, show_in_search),
+          show_in_najm = COALESCE(@show_in_najm, show_in_najm),
+          show_in_offers = COALESCE(@show_in_offers, show_in_offers),
           barcode = COALESCE(@barcode, barcode),
           tags = COALESCE(@tags, tags),
           keywords = COALESCE(@keywords, keywords),
@@ -529,7 +551,8 @@ class PostgresProductRepo extends PostgresBaseRepository {
         warranty: productData.warranty,
         shipping: productData.shipping,
         delivery_time: productData.delivery_time,
-        installation: productData.installation !== undefined ? (productData.installation ? 1 : 0) : undefined,
+        // '1' / '' rather than 1 / 0 -- see the note in create().
+        installation: productData.installation !== undefined ? (productData.installation ? '1' : '') : undefined,
         weight: productData.weight,
         video: productData.video,
         is_new: productData.is_new !== undefined ? (productData.is_new ? 1 : 0) : undefined,
@@ -542,6 +565,11 @@ class PostgresProductRepo extends PostgresBaseRepository {
         delivery_fixed_fee_sar: productData.delivery_fixed_fee_sar !== undefined ? Number(productData.delivery_fixed_fee_sar) : undefined,
         requires_installation: productData.requires_installation !== undefined ? (productData.requires_installation ? 1 : 0) : undefined,
         installation_fee_sar: productData.installation_fee_sar !== undefined ? Number(productData.installation_fee_sar) : undefined,
+        show_in_department: productData.show_in_department !== undefined ? (productData.show_in_department ? 1 : 0) : undefined,
+        show_on_home: productData.show_on_home !== undefined ? (productData.show_on_home ? 1 : 0) : undefined,
+        show_in_search: productData.show_in_search !== undefined ? (productData.show_in_search ? 1 : 0) : undefined,
+        show_in_najm: productData.show_in_najm !== undefined ? (productData.show_in_najm ? 1 : 0) : undefined,
+        show_in_offers: productData.show_in_offers !== undefined ? (productData.show_in_offers ? 1 : 0) : undefined,
         barcode: productData.barcode,
         tags: productData.tags,
         keywords: productData.keywords,
@@ -602,9 +630,15 @@ class PostgresProductRepo extends PostgresBaseRepository {
    * @param {number} [isPrimary=0]
    * @returns {import('better-sqlite3').RunResult}
    */
-  async addImage(productId, imagePath, sortOrder = 0, isPrimary = 0) {
-    return await this.db.prepare('INSERT INTO product_images (product_id, image_path, sort_order, is_primary) VALUES (?, ?, ?, ?)').run(
-      productId, imagePath, sortOrder, isPrimary ? 1 : 0
+  /**
+   * @param {string|null} colorName which colour this photo shows. Null keeps it
+   *   a general product photo -- the behaviour every caller had before the
+   *   parameter existed.
+   */
+  async addImage(productId, imagePath, sortOrder = 0, isPrimary = 0, colorName = null) {
+    const color = colorName == null ? null : (String(colorName).trim() || null);
+    return await this.db.prepare('INSERT INTO product_images (product_id, image_path, sort_order, is_primary, color_name) VALUES (?, ?, ?, ?, ?)').run(
+      productId, imagePath, sortOrder, isPrimary ? 1 : 0, color
     );
   }
 
@@ -1007,7 +1041,7 @@ class PostgresProductRepo extends PostgresBaseRepository {
         (SELECT image_path FROM product_images WHERE product_id = p.id ORDER BY is_primary DESC, sort_order ASC LIMIT 1) as main_image
       FROM products p
       LEFT JOIN categories c ON c.id = p.category_id
-      WHERE p.is_active = 1
+      WHERE p.is_active = 1 AND (p.show_in_najm = 1 OR p.show_in_najm IS NULL)
       ORDER BY p.is_best_seller DESC, p.reviews_count DESC, p.rating DESC, p.id DESC
       LIMIT ?
     `).all(limit);
@@ -1028,7 +1062,7 @@ class PostgresProductRepo extends PostgresBaseRepository {
         (SELECT image_path FROM product_images WHERE product_id = p.id ORDER BY is_primary DESC, sort_order ASC LIMIT 1) as main_image
       FROM products p
       LEFT JOIN categories c ON c.id = p.category_id
-      WHERE p.is_active = 1 AND (p.product_id != ? AND p.id != ?)
+      WHERE p.is_active = 1 AND (p.show_in_najm = 1 OR p.show_in_najm IS NULL) AND (p.product_id != ? AND p.id != ?)
     `;
     const params = [String(productId || ''), String(productId || '')];
 

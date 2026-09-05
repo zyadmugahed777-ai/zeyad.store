@@ -308,6 +308,19 @@ async function visualCmsMiddleware(req, res, next) {
           const activeCategory = String(req.query.category || '').trim();
           injectCatalog($, baseSlug, data.products, activeCategory);
 
+          /* The home page and the offers page were still shipping the demo
+             cards they were built with -- no product an operator created could
+             reach either of them. They are not department catalogues, so
+             injectCatalog does not cover them; they are filled from the
+             product's own placement flags instead. A page with nothing to show
+             is left untouched rather than blanked. */
+          try {
+            const { injectPlacementGrids } = require('../services/placement-render-service');
+            injectPlacementGrids($, baseSlug, data.products);
+          } catch (e) {
+            console.error('[placement grids] ' + baseSlug + ':', e.message);
+          }
+
           /* category.html drew six identical gold line-glyphs and none of them
              was editable. departments.image already exists and the admin already
              uploads to it; the storefront just never read it. */

@@ -122,6 +122,17 @@ function publicBanner(b) {
   };
 }
 
+/*
+ * A placement column read straight off the row can be true, false, or absent
+ * -- absent for a product written before the columns existed. Absent must mean
+ * "wherever products normally go", not "nowhere", or the migration itself
+ * would empty every page.
+ */
+function placement(value, fallback) {
+  if (value === undefined || value === null) return fallback;
+  return value === true || value === 1 || value === '1' || value === 't';
+}
+
 function publicProduct(p) {
   const images = (p.images || []).map((i) => i.image_path).filter(Boolean);
   return {
@@ -141,7 +152,14 @@ function publicProduct(p) {
     departmentId: p.resolved_department_id ?? null,
     departmentSlug: p.department_slug || null,
     departmentName: p.department_name || null,
-    subcategory: p.category_name || null
+    subcategory: p.category_name || null,
+    // Where the operator allowed this product to appear. Each page honours the
+    // one flag that concerns it; nothing here decides for them.
+    showInDepartment: placement(p.show_in_department, true),
+    showOnHome: placement(p.show_on_home, true),
+    showInSearch: placement(p.show_in_search, true),
+    showInNajm: placement(p.show_in_najm, true),
+    showInOffers: placement(p.show_in_offers, false)
   };
 }
 

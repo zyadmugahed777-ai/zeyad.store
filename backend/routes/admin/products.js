@@ -109,6 +109,84 @@ function firstText(value) {
   return String(value == null ? '' : value).trim();
 }
 
+/*
+ * An HTML checkbox posts nothing at all when it is unticked, and 'on' when it
+ * is ticked. A <select> posts its value. Both funnel through here so "off" is
+ * decided in one place -- and so the string '0', which JavaScript considers
+ * true, is decided to be false. Getting that wrong is what made "free
+ * installation" switch itself on for every product that was saved.
+ */
+function isOn(value) {
+  const v = Array.isArray(value) ? value[0] : value;
+  if (v === undefined || v === null) return false;
+  const s = String(v).trim().toLowerCase();
+  return s === '1' || s === 'on' || s === 'true' || s === 'yes';
+}
+
+/*
+ * A checkbox that was rendered on the form but left unticked posts nothing, so
+ * "absent" has to mean false -- otherwise no box could ever be turned off. The
+ * form carries a hidden marker naming every placement checkbox it drew;
+ * without that marker (an API client, the AI employee, an older form) the
+ * placements are left untouched rather than silently reset.
+ */
+const PLACEMENT_FIELDS = [
+  'show_in_department',
+  'show_on_home',
+  'show_in_search',
+  'show_in_najm',
+  'show_in_offers'
+];
+
+function readPlacements(body) {
+  if (!isOn(body.placements_submitted)) return {};
+  const out = {};
+  for (const field of PLACEMENT_FIELDS) out[field] = isOn(body[field]) ? 1 : 0;
+  return out;
+}
+
+/*
+ * The delivery and installation policy the operator chose. Every one of these
+ * four fields existed on the form, in the database and in the delivery
+ * calculation -- and none was ever read off the request, so choosing
+ * "customer is quoted after confirmation" saved nothing and the product kept
+ * the store default. Absent fields are returned absent, so a partial update
+ * from elsewhere cannot blank a policy it never asked about.
+ */
+function readDeliveryPolicy(body) {
+  const out = {};
+  const ALLOWED = ['default', 'free_sana_a', 'quote_after_confirmation', 'estimated', 'fixed'];
+  if (body.delivery_policy_type !== undefined) {
+    const t = firstText(body.delivery_policy_type);
+    out.delivery_policy_type = ALLOWED.includes(t) ? t : 'default';
+  }
+  if (body.delivery_fixed_fee_sar !== undefined) {
+    out.delivery_fixed_fee_sar = Math.max(0, parseFloat(body.delivery_fixed_fee_sar) || 0);
+  }
+  if (body.requires_installation !== undefined) {
+    out.requires_installation = isOn(body.requires_installation) ? 1 : 0;
+  }
+  if (body.installation_fee_sar !== undefined) {
+    out.installation_fee_sar = Math.max(0, parseFloat(body.installation_fee_sar) || 0);
+  }
+  return out;
+}
+
+/*
+ * Which colour each freshly uploaded photo shows.
+ *
+ * Existing images are tagged by id (image_color_<id>), which a photo being
+ * uploaded for the first time does not have yet -- so until now the only way
+ * to tie a photo to a colour was to save the product, reopen it, tag, and save
+ * again. The upload form now posts one new_image_color[] entry per selected
+ * file, in the same order the files are sent, so a photo can arrive already
+ * tagged.
+ */
+function readNewImageColors(body) {
+  const raw = [].concat(body['new_image_color[]'] || body.new_image_color || []);
+  return raw.map((v) => String(v == null ? '' : v).trim());
+}
+
 function formatColors(rawColors) {
   let colorList = [];
   if (typeof rawColors === 'string') {
@@ -249,12 +327,14 @@ router.post(['/create', '/new'], productUploadHandler, async (req, res, next) =>
       warranty: body.warranty || '',
       shipping: body.shipping || '',
       delivery_time: firstText(body.delivery_time),
-      installation: body.installation === 'on' || body.installation === '1' || body.installation === 1 ? 1 : 0,
+      installation: isOn(body.installation) ? 1 : 0,
       weight: body.weight || null,
       video: savedVideoPath || '',
-      is_new: body.is_new === 'on' || body.is_new === '1' || body.is_new === 1 ? 1 : 0,
-      is_best_seller: body.is_best_seller === 'on' || body.is_best_seller === '1' || body.is_best_seller === 1 ? 1 : 0,
-      is_active: body.is_active === 'on' || body.is_active === '1' || body.is_active === 1 || body.is_active === undefined ? 1 : 0,
+      is_new: isOn(body.is_new) ? 1 : 0,
+      is_best_seller: isOn(body.is_best_seller) ? 1 : 0,
+      is_active: body.is_active === undefined ? 1 : (isOn(body.is_active) ? 1 : 0),
+      ...readDeliveryPolicy(body),
+      ...readPlacements(body),
       stock_status: body.stock_status || 'in-stock',
       // stock_quantity was never read off the form, so it never reached the
       // repository and every product silently landed on the repo's default of
@@ -265,6 +345,31 @@ router.post(['/create', '/new'], productUploadHandler, async (req, res, next) =>
         ? Math.max(0, parseInt(body.stock_quantity, 10) || 0)
         : undefined
     }, imagePayload, [], [], colorsPayload);
+
+    /*
+     * Sizes, specifications and per-photo colours on the CREATE path.
+     *
+     * The edit form saved all three; the create form posted all three and the
+     * create route threw them away. So a product built in one sitting -- with
+     * its sizes, its specification table and its colour photos filled in --
+     * was saved without any of them, and the operator had to reopen it and
+     * enter everything a second time. That is the same complaint as "the size
+     * I added never appears", one step earlier in the journey.
+     */
+    const newImageColors = readNewImageColors(body);
+    if (newImageColors.some(Boolean)) {
+      const created = await productRepo.findImages(newProductId);
+      for (let i = 0; i < created.length && i < newImageColors.length; i++) {
+        const name = newImageColors[i];
+        if (!name) continue;
+        await productRepo.db.prepare(
+          'UPDATE product_images SET color_name = ? WHERE id = ? AND product_id = ?'
+        ).run(name, created[i].id, newProductId);
+      }
+    }
+
+    await variants.saveSizes(productRepo.db, newProductId, variants.parseSizes(body));
+    await variants.saveSpecs(productRepo.db, newProductId, variants.parseSpecs(body));
 
     // Invalidate API search cache immediately
     try { invalidateProductCache(); } catch (_) {}
@@ -439,12 +544,14 @@ router.post('/:id/edit', productUploadHandler, async (req, res) => {
       warranty: warranty !== undefined ? warranty : (existing.warranty || ''),
       shipping: shipping !== undefined ? shipping : (existing.shipping || ''),
       delivery_time: delivery_time !== undefined ? firstText(delivery_time) : (existing.delivery_time || ''),
-      installation: installation === 'on' || installation === '1' || installation === 1 ? 1 : 0,
+      installation: isOn(installation) ? 1 : 0,
       weight: weight !== undefined ? weight : (existing.weight || ''),
       video: finalVideoValue,
-      is_new: is_new === 'on' || is_new === '1' || is_new === 1 ? 1 : 0,
-      is_best_seller: is_best_seller === 'on' || is_best_seller === '1' || is_best_seller === 1 ? 1 : 0,
-      is_active: is_active === 'on' || is_active === '1' || is_active === 1 || is_active === undefined ? 1 : 0,
+      is_new: isOn(is_new) ? 1 : 0,
+      is_best_seller: isOn(is_best_seller) ? 1 : 0,
+      is_active: is_active === undefined ? 1 : (isOn(is_active) ? 1 : 0),
+      ...readDeliveryPolicy(req.body),
+      ...readPlacements(req.body),
       stock_status: stock_status || existing.stock_status || 'in-stock',
       // Same omission as the create path: the edit form posted a stock
       // quantity that was never destructured, so editing a product quietly
@@ -463,6 +570,7 @@ router.post('/:id/edit', productUploadHandler, async (req, res) => {
       const currentCount = existingImages.length;
       let newPrimaryImageId = null;
 
+      const newImageColors = readNewImageColors(req.body);
       for (let idx = 0; idx < processedWebpPaths.length; idx++) {
         const imgPath = processedWebpPaths[idx];
         // Never insert with is_primary=1 directly when replacing an existing
@@ -471,7 +579,7 @@ router.post('/:id/edit', productUploadHandler, async (req, res) => {
         // existing image would leave two images marked primary at once.
         // setPrimaryImage() below clears every other row first.
         const willBecomePrimary = (hasNewPrimary && idx === primaryNewIdx) || (!hasNewPrimary && currentCount === 0 && idx === 0);
-        const result = await productRepo.addImage(productId, imgPath, currentCount + idx, 0);
+        const result = await productRepo.addImage(productId, imgPath, currentCount + idx, 0, newImageColors[idx] || null);
         if (willBecomePrimary) {
           newPrimaryImageId = result.lastInsertRowid;
         }

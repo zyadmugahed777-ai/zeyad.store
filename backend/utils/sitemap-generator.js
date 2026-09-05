@@ -130,8 +130,10 @@ async function generateSitemapXml() {
   // This is a safety net for the sitemap only -- it changes no data and hides
   // nothing from the site itself. The rows themselves should be deleted; that
   // is a separate decision and it is flagged rather than taken here.
-  const LOOKS_LIKE_TEST = /^(TEST|CART-TEST|FIN-TEST|P2A-TEST|SEED)[-_]/i;
-  const TEST_TITLE = /(تجريبي|اختبار|test)/i;
+  // The heuristic lives in utils/test-data.js now, because the home page
+  // and the offers page need exactly the same judgement and two copies
+  // would drift.
+  const { looksLikeTestProduct } = require('./test-data');
 
   let productCount = 0;
   let excludedTest = 0;
@@ -140,7 +142,7 @@ async function generateSitemapXml() {
     if (Array.isArray(products)) {
       for (const p of products) {
         const prodId = String(p.product_id || p.id || '');
-        if (LOOKS_LIKE_TEST.test(prodId) || TEST_TITLE.test(String(p.title || ''))) {
+        if (looksLikeTestProduct(p)) {
           excludedTest++;
           continue;
         }

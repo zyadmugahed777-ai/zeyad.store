@@ -1,3 +1,33 @@
+<%
+/*
+ * A stored flag is not reliably a boolean.
+ *
+ * products.installation is a TEXT column, so saving the box unticked wrote the
+ * string '0' -- and "product.installation ? checked" re-ticked it,
+ * because '0' is a true string in JavaScript. The operator unticked "free
+ * installation", saved, and watched it tick itself back on.
+ *
+ * requires_installation has the opposite failure: it IS a real boolean, and
+ * the markup compared it to the number 1, which a boolean never equals -- so
+ * the answer always displayed as "no" no matter what was saved.
+ *
+ * One predicate, used for every flag, ends both.
+ */
+const on = (v) => {
+  if (v === true || v === 1) return true;
+  if (v === false || v === 0 || v === null || v === undefined) return false;
+  const s = String(v).trim().toLowerCase();
+  if (s === '') return false;
+  // The live column holds '0.0' and '1.0' -- NUMERIC round-trips of a flag
+  // that was never meant to be text. A numeric spelling is read as a number.
+  if (/^[0-9]+(\.[0-9]+)?$/.test(s)) return Number(s) !== 0;
+  return !['false', 'no', 'off', 'null', 'none', 'لا', 'لا يوجد', 'غير متوفر'].includes(s);
+};
+/* A placement absent from the row (a product created before the columns
+   existed) means "wherever products normally go" -- the same default the
+   migration gave every existing product. */
+const placed = (v, fallback) => (v === undefined || v === null ? fallback : on(v));
+%>
 <%- include('../../partials/head', { title }) %>
 <%- include('../../partials/sidebar', { active }) %>
 <main class="admin-main">
@@ -273,12 +303,12 @@
               <div style="flex: 0 0 50%; padding: 0 8px; box-sizing: border-box;">
                 <label class="form-label">هل يتطلب المنتج تركيباً منزلياً؟</label>
                 <select name="requires_installation" class="form-control" id="product_requires_installation" onchange="toggleInstallationFeeField(this.value)">
-                  <option value="0" <%= (product?.requires_installation === 0 || !product?.requires_installation) ? 'selected' : '' %>>لا — لا يتطلب تركيباً</option>
-                  <option value="1" <%= product?.requires_installation === 1 ? 'selected' : '' %>>نعم — يتطلب تركيباً متخصصاً (مثل غرف النوم والأثاث)</option>
+                  <option value="0" <%= on(product?.requires_installation) ? '' : 'selected' %>>لا — لا يتطلب تركيباً</option>
+                  <option value="1" <%= on(product?.requires_installation) ? 'selected' : '' %>>نعم — يتطلب تركيباً متخصصاً (مثل غرف النوم والأثاث)</option>
                 </select>
               </div>
 
-              <div id="product_installation_fee_div" style="flex: 0 0 50%; padding: 0 8px; box-sizing: border-box; <%= String(product?.requires_installation) === '1' ? 'display:block;' : 'display:none;' %>">
+              <div id="product_installation_fee_div" style="flex: 0 0 50%; padding: 0 8px; box-sizing: border-box; <%= on(product?.requires_installation) ? 'display:block;' : 'display:none;' %>">
                 <label class="form-label">رسوم التركيب المنفصلة (ر.س - اختياري إن لم تكن مشمولة)</label>
                 <input type="number" step="0.01" name="installation_fee_sar" class="form-control" value="<%= product ? (product.installation_fee_sar || 0) : 0 %>">
               </div>
@@ -418,7 +448,7 @@
             <p class="text-muted" style="font-size:11px; margin:10px 0 0;">
               كل لون تكتبه هنا يظهر فوراً في قائمة «لون هذه الصورة» أعلى كل صورة في قسم «الصور والوسائط».
               حدّد لون كل صورة ثم احفظ، فيرى الزبون صورة اللون الذي يختاره.
-              (الصور التي ترفعها الآن تحتاج حفظاً أولاً حتى يظهر لها اختيار اللون.)
+              يعمل هذا على الصور المحفوظة وعلى الصور التي تختارها الآن قبل الحفظ.
             </p>
           </div>
 
@@ -572,23 +602,81 @@
 
             <div style="display: flex; flex-direction: column; gap: 15px;">
               <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 12px; background: var(--bg-tertiary); border-radius: 8px;">
-                <input type="checkbox" name="is_active" <%= (!product || product.is_active) ? 'checked' : '' %> style="width: 18px; height: 18px;">
+                <input type="checkbox" name="is_active" <%= (!product || on(product.is_active)) ? 'checked' : '' %> style="width: 18px; height: 18px;">
                 <span style="font-weight: 600;">منتج نشط ومرئي</span>
               </label>
 
               <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                <input type="checkbox" name="is_new" <%= (product && product.is_new) ? 'checked' : '' %> style="width: 18px; height: 18px;">
+                <input type="checkbox" name="is_new" <%= (product && on(product.is_new)) ? 'checked' : '' %> style="width: 18px; height: 18px;">
                 <span>إظهار كـ "وصل حديثاً" (New)</span>
               </label>
 
               <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                <input type="checkbox" name="is_best_seller" <%= (product && product.is_best_seller) ? 'checked' : '' %> style="width: 18px; height: 18px;">
+                <input type="checkbox" name="is_best_seller" <%= (product && on(product.is_best_seller)) ? 'checked' : '' %> style="width: 18px; height: 18px;">
                 <span>إظهار كـ "الأكثر مبيعاً" (Best Seller)</span>
               </label>
 
               <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                <input type="checkbox" name="installation" <%= (product && product.installation) ? 'checked' : '' %> style="width: 18px; height: 18px;">
+                <input type="checkbox" name="installation" <%= (product && on(product.installation)) ? 'checked' : '' %> style="width: 18px; height: 18px;">
                 <span>يشمل التركيب المجاني</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Where this product is allowed to appear -->
+          <div class="glass-card mb-4">
+            <h2 style="font-size: 1.1rem; margin-bottom: 8px; color: var(--primary-color);">أين يظهر هذا المنتج؟</h2>
+            <p class="text-muted" style="font-size: 12px; margin-bottom: 16px; line-height: 1.7;">
+              كل خيار مستقل. إلغاء أي منها لا يحذف المنتج ولا يوقفه —
+              يبقى المنتج موجوداً ويمكن فتح صفحته من رابطها مباشرة.
+            </p>
+
+            <!-- Absent checkboxes post nothing, so the server needs to know the
+                 form actually drew them; without this marker it cannot tell
+                 "unticked" from "not asked". -->
+            <input type="hidden" name="placements_submitted" value="1">
+
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; padding: 12px; background: var(--bg-tertiary); border-radius: 8px;">
+                <input type="checkbox" name="show_in_department" value="1" <%= placed(product?.show_in_department, true) ? 'checked' : '' %> style="width: 18px; height: 18px; margin-top: 2px; flex-shrink: 0;">
+                <span>
+                  <strong style="display: block;">في صفحة قسمه</strong>
+                  <small class="text-muted" style="font-size: 11px;">مثل صفحة غرف النوم أو الأجهزة المنزلية</small>
+                </span>
+              </label>
+
+              <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; padding: 12px; background: var(--bg-tertiary); border-radius: 8px;">
+                <input type="checkbox" name="show_on_home" value="1" <%= placed(product?.show_on_home, true) ? 'checked' : '' %> style="width: 18px; height: 18px; margin-top: 2px; flex-shrink: 0;">
+                <span>
+                  <strong style="display: block;">في الصفحة الرئيسية</strong>
+                  <small class="text-muted" style="font-size: 11px;">شبكة المنتجات في الصفحة الأولى للمتجر</small>
+                </span>
+              </label>
+
+              <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; padding: 12px; background: var(--bg-tertiary); border-radius: 8px;">
+                <input type="checkbox" name="show_in_search" value="1" <%= placed(product?.show_in_search, true) ? 'checked' : '' %> style="width: 18px; height: 18px; margin-top: 2px; flex-shrink: 0;">
+                <span>
+                  <strong style="display: block;">في نتائج البحث</strong>
+                  <small class="text-muted" style="font-size: 11px;">صفحة البحث والاقتراحات الفورية</small>
+                </span>
+              </label>
+
+              <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; padding: 12px; background: var(--bg-tertiary); border-radius: 8px;">
+                <input type="checkbox" name="show_in_najm" value="1" <%= placed(product?.show_in_najm, true) ? 'checked' : '' %> style="width: 18px; height: 18px; margin-top: 2px; flex-shrink: 0;">
+                <span>
+                  <strong style="display: block;">في ترشيحات "نجم"</strong>
+                  <small class="text-muted" style="font-size: 11px;">مساعد المبيعات الذكي</small>
+                </span>
+              </label>
+
+              <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; padding: 12px; background: rgba(199, 154, 82, 0.10); border: 1px solid rgba(199, 154, 82, 0.35); border-radius: 8px;">
+                <input type="checkbox" name="show_in_offers" value="1" <%= placed(product?.show_in_offers, false) ? 'checked' : '' %> style="width: 18px; height: 18px; margin-top: 2px; flex-shrink: 0;">
+                <span>
+                  <strong style="display: block; color: var(--primary-gold, #c79a52);">في صفحة العروض</strong>
+                  <small class="text-muted" style="font-size: 11px;">
+                    ضع سعراً قديماً أعلى من السعر الحالي ليظهر مقدار الخصم على البطاقة.
+                  </small>
+                </span>
               </label>
             </div>
           </div>
@@ -715,6 +803,41 @@ document.addEventListener('DOMContentLoaded', function() {
 // Multi-Image Upload & Management
 let newFilesDataTransfer = new DataTransfer();
 
+/*
+ * The colour chosen for each not-yet-uploaded photo, parallel to
+ * newFilesDataTransfer.files.
+ *
+ * It has to live outside the DOM because the preview grid is rebuilt from
+ * scratch whenever a file is added or removed -- a choice stored only in the
+ * markup would be wiped by the next click. Removing a file removes its entry
+ * here too, so the two lists never drift apart; that alignment is the whole
+ * contract with the server, which reads new_image_color[] positionally
+ * against the files it receives.
+ */
+let newFileColors = [];
+
+/** The colours currently typed in the colours field, in order. */
+function currentColorNames() {
+  const input = document.getElementById('colors_input');
+  if (!input) return [];
+  return (input.value || '').split(/[,،]+/).map(function (c) { return c.trim(); }).filter(Boolean);
+}
+
+function colorOptionsHtml(selected) {
+  const esc = function (s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  };
+  let html = '<option value="">بلا لون</option>';
+  currentColorNames().forEach(function (name) {
+    html += '<option value="' + esc(name) + '"' + (name === selected ? ' selected' : '') + '>' + esc(name) + '</option>';
+  });
+  return html;
+}
+
+function setNewFileColor(idx, value) {
+  newFileColors[idx] = value;
+}
+
 function handleProductFilesSelected(files) {
   if (!files || files.length === 0) return;
 
@@ -770,8 +893,18 @@ function renderNewImagesGrid() {
 
     const imgUrl = URL.createObjectURL(file);
 
+    /* The same "which colour is this photo of?" control the saved images
+       carry. It posts new_image_color[] in file order, so a photo can be
+       tagged and uploaded in one go instead of needing a save, a reopen and a
+       second save -- which is what made colours look impossible to attach. */
     card.innerHTML = `
       <img src="${imgUrl}" alt="صورة مرفوعة">
+      <select name="new_image_color[]" class="image-color-select" title="لون هذه الصورة"
+              onchange="setNewFileColor(${idx}, this.value)"
+              style="position:absolute; top:6px; left:6px; z-index:3; max-width:104px;
+                     font-size:11px; padding:3px 6px; border-radius:6px;
+                     background:rgba(0,0,0,.72); color:#fff; backdrop-filter:blur(4px);
+                     border:1px solid rgba(255,255,255,.25);">${colorOptionsHtml(newFileColors[idx] || '')}</select>
       ${isPrim ? `
         <span class="primary-badge" id="badge_primary_new_${idx}">
           <span class="material-symbols-rounded" style="font-size: 13px;">star</span>
@@ -806,13 +939,16 @@ function removeNewFile(idxToRemove) {
   const primaryIdxInput = document.getElementById('primary_new_image_index');
   let currentPrimary = parseInt(primaryIdxInput?.value || '-1', 10);
 
+  const keptColors = [];
   for (let i = 0; i < files.length; i++) {
     if (i !== idxToRemove) {
       dt.items.add(files[i]);
+      keptColors.push(newFileColors[i] || '');
     }
   }
 
   newFilesDataTransfer = dt;
+  newFileColors = keptColors;
   const fileInput = document.getElementById('productFileInput');
   if (fileInput) fileInput.files = newFilesDataTransfer.files;
 
@@ -999,6 +1135,16 @@ function syncImageColorOptions(colors) {
     // to being a general product photo rather than pointing at a deleted colour.
     select.value = colors.indexOf(current) >= 0 ? current : '';
   });
+
+  /* A pending upload's colour lives in newFileColors, not in the DOM. Deleting
+     a colour from the list has to clear it there too, or the form would post a
+     colour the product no longer has and the photo would be tagged with a
+     name nothing matches. */
+  if (Array.isArray(newFileColors)) {
+    for (let i = 0; i < newFileColors.length; i++) {
+      if (newFileColors[i] && colors.indexOf(newFileColors[i]) < 0) newFileColors[i] = '';
+    }
+  }
 }
 
 function addSpecRow() {

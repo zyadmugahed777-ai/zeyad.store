@@ -15,6 +15,35 @@ function escHtml(value) {
 }
 
 /**
+ * What the installation line should say.
+ *
+ * products.installation is a TEXT column doing three jobs at once: a yes/no
+ * flag written by the admin checkbox, a NUMERIC round-trip from an older
+ * import ('0.0' / '1.0'), and free prose an operator may have typed. The old
+ * one-liner here asked `raw.installation ? ...`, and since '0.0' is a true
+ * string in JavaScript, 21 products told their customers that installation
+ * was, literally, "0.0".
+ *
+ * Numbers are read as numbers, the recognised words are read as words, and
+ * anything else is the operator's own sentence and is shown as written.
+ */
+function installationText(value) {
+  if (value === true || value === 1) return 'متوفر';
+  if (value === false || value === 0 || value == null) return 'غير متوفر';
+
+  const s = String(value).trim();
+  if (s === '') return 'غير متوفر';
+
+  if (/^[0-9]+(\.[0-9]+)?$/.test(s)) return Number(s) === 0 ? 'غير متوفر' : 'متوفر';
+
+  const word = s.toLowerCase();
+  if (['false', 'no', 'off', 'null', 'none', 'لا', 'لا يوجد'].indexOf(word) >= 0) return 'غير متوفر';
+  if (['true', 'yes', 'on', 'نعم'].indexOf(word) >= 0) return 'متوفر';
+
+  return s;
+}
+
+/**
  * Clean rich text that is MEANT to contain markup.
  *
  * The product description is written in the admin's rich-text editor, so it
@@ -1097,7 +1126,7 @@ function sanitizeRichText(value) {
               warranty: raw.warranty || '',
               shipping: raw.shipping || '',
               deliveryTime: raw.delivery_time || '',
-              installation: raw.installation ? (raw.installation === 1 || raw.installation === '1' ? 'متوفر' : raw.installation) : 'غير متوفر',
+              installation: installationText(raw.installation),
               weight: raw.weight || '',
               image: gallery[0],
               main_image: gallery[0],

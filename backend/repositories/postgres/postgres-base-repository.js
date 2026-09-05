@@ -17,11 +17,16 @@ function translateSqliteToPg(sql) {
   pgSql = pgSql.replace(/datetime\('now',\s*\?\)/gi, "NOW() + (?)::INTERVAL");
   pgSql = pgSql.replace(/\bexpired\s*([><]=?)\s*NOW\(\)/gi, 'expired::TIMESTAMPTZ $1 NOW()');
 
-  // 2. Translate boolean column comparisons (all 13 BOOLEAN columns in postgres-schema.sql)
+  // 2. Translate boolean column comparisons (every BOOLEAN column in
+  //    postgres-schema.sql). A column missing from this list is a live bug:
+  //    the query keeps `= 1`, PostgreSQL refuses to compare boolean to
+  //    integer, and the whole statement fails at runtime.
   const BOOLEAN_COLUMNS = [
     'is_active', 'is_archived', 'is_default', 'is_primary', 'is_visible',
     'is_confirmed', 'is_enabled', 'is_read', 'free_shipping', 'is_new',
-    'is_best_seller', 'requires_installation', 'editable'
+    'is_best_seller', 'requires_installation', 'editable',
+    'show_in_department', 'show_on_home', 'show_in_search', 'show_in_najm',
+    'show_in_offers'
   ];
   for (const col of BOOLEAN_COLUMNS) {
     const boundary = col.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');

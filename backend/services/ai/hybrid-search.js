@@ -240,6 +240,7 @@ async function searchProductsHybrid({
     FROM products p
     LEFT JOIN categories c ON c.id = p.category_id
     WHERE p.is_active = 1 AND (p.is_archived = 0 OR p.is_archived IS NULL)
+      AND (p.show_in_najm = 1 OR p.show_in_najm IS NULL)
   `;
 
   const params = [];
@@ -291,6 +292,7 @@ async function searchProductsHybrid({
       FROM products p
       LEFT JOIN categories c ON c.id = p.category_id
       WHERE p.is_active = 1 AND (p.is_archived = 0 OR p.is_archived IS NULL)
+        AND (p.show_in_najm = 1 OR p.show_in_najm IS NULL)
       ORDER BY p.is_best_seller DESC, p.reviews_count DESC LIMIT 100
     `;
     try {

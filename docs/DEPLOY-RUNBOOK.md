@@ -175,6 +175,25 @@ would silently point the deployment at the wrong database.
 (`middleware/upload.js`) and the `/uploads` static mount in `server.js`. Those
 two used to resolve it differently; keep them in step if either is edited.
 
+## Where a product appears is data, not markup
+
+Five columns on `products` decide it: `show_in_department`, `show_on_home`,
+`show_in_search`, `show_in_najm`, `show_in_offers`. The admin product form writes
+them; the department pages, the home page, the offers page, the search index and
+Najm each read the one that concerns them.
+
+All default to true except `show_in_offers`, which is opt-in: the offers page is
+editorial and must be filled deliberately. Until anything is flagged for it, it
+falls back to products carrying a **credible** discount -- between 5% and 90%
+off, with an old price no more than ten times the current one. Those bounds
+exist because the catalogue contains rows whose old price is twenty orders of
+magnitude out, and "deepest discount first" put one of them at the top of the
+page advertising 100% off.
+
+The home page and the offers page also skip anything `utils/test-data.js`
+recognises as a development leftover. That is a safety net, not a fix -- those
+rows should be deleted from the database.
+
 ## Development data must not reach production
 
 `db/postgres-seed.sql` contains only reference rows a database cannot function

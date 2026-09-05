@@ -1263,7 +1263,15 @@ CREATE TABLE IF NOT EXISTS "products" (
   "delivery_policy_type" TEXT DEFAULT 'default',
   "delivery_fixed_fee_sar" NUMERIC(20,2) DEFAULT 0,
   "requires_installation" BOOLEAN DEFAULT FALSE,
-  "installation_fee_sar" NUMERIC(20,2) DEFAULT 0
+  "installation_fee_sar" NUMERIC(20,2) DEFAULT 0,
+  -- Where this product is allowed to appear. See
+  -- migrations/2026-09-05-product-visibility.sql for why each default is what
+  -- it is: everything on by default, the offers page opt-in only.
+  "show_in_department" BOOLEAN DEFAULT TRUE,
+  "show_on_home" BOOLEAN DEFAULT TRUE,
+  "show_in_search" BOOLEAN DEFAULT TRUE,
+  "show_in_najm" BOOLEAN DEFAULT TRUE,
+  "show_in_offers" BOOLEAN DEFAULT FALSE
 );
 
 CREATE INDEX IF NOT EXISTS "idx_products_archived" ON "products" ("is_archived");
