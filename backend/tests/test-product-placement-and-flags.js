@@ -163,6 +163,14 @@ const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
       'specifications entered on the create form are discarded');
   });
 
+  await test('duplicating a product carries its placements across', () => {
+    const dup = route.slice(route.indexOf("router.post('/:id/duplicate'"));
+    for (const f of ['show_in_department', 'show_on_home', 'show_in_search', 'show_in_najm', 'show_in_offers']) {
+      assert.ok(dup.includes('original.' + f),
+        'a duplicate would land on different pages from its original (' + f + ')');
+    }
+  });
+
   // --- 5. Placement ---------------------------------------------------------
   const placement = require('../services/placement-render-service');
 

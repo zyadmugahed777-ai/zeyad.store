@@ -768,7 +768,14 @@ router.post('/:id/duplicate', async (req, res) => {
       delivery_policy_type: original.delivery_policy_type,
       delivery_fixed_fee_sar: original.delivery_fixed_fee_sar,
       requires_installation: original.requires_installation,
-      installation_fee_sar: original.installation_fee_sar
+      installation_fee_sar: original.installation_fee_sar,
+      // A duplicate that quietly landed on different pages from the product it
+      // was copied from would be a surprise nobody asked for.
+      show_in_department: original.show_in_department,
+      show_on_home: original.show_on_home,
+      show_in_search: original.show_in_search,
+      show_in_najm: original.show_in_najm,
+      show_in_offers: original.show_in_offers
     }, duplicatedImages, specs, faqs, colors);
 
     try { invalidateProductCache(); } catch (_) {}
