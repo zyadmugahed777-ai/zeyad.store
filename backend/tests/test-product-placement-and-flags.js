@@ -252,6 +252,42 @@ const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
     assert.strictEqual(res.rendered, 1, 'an explicit choice was overridden by the sanity bound');
   });
 
+  await test('a starved second grid does not keep its frozen cards', () => {
+    // The shop went live with five products. The first grid took all five and
+    // the second kept advertising gen-0030 at 4,200 — a price that exists
+    // nowhere in the database.
+    const products = Array.from({ length: 5 }, (_, i) => ({
+      id: 'p' + i, title: 'P' + i, price: 10, showOnHome: true
+    }));
+    const $ = require('cheerio').load(
+      '<section><div class="product-grid" id="main-product-grid"></div></section>' +
+      '<section class="product-section recommended"><h2>اختيارات تكمل بيتك</h2>' +
+      '<div class="product-grid"><article class="product-card" data-product-id="gen-0030">' +
+      '<strong>4200</strong></article></div></section>'
+    );
+    const res = placement.injectPlacementGrids($, 'index', products);
+    assert.strictEqual(res.rendered, 5);
+    const html = $.html();
+    assert.ok(!html.includes('data-product-id="gen-0030"'),
+      'a frozen snapshot survived below a rebuilt grid');
+    assert.ok(!html.includes('4200'), 'a price that exists nowhere is still on the page');
+  });
+
+  await test('a page where nothing was rebuilt keeps every card it had', () => {
+    // The distinction that matters: leftovers are only cleared when the page
+    // is ALREADY showing current data. A catalogue outage must not strip the
+    // page bare.
+    const $ = require('cheerio').load(
+      '<section><div class="product-grid" id="main-product-grid"></div></section>' +
+      '<section class="product-section recommended"><div class="product-grid">' +
+      '<article class="product-card" data-product-id="gen-0030"></article></div></section>'
+    );
+    const res = placement.injectPlacementGrids($, 'index', []);
+    assert.strictEqual(res, null);
+    assert.ok($.html().includes('data-product-id="gen-0030"'),
+      'an empty catalogue stripped the page instead of leaving it alone');
+  });
+
   await test('the home grid is capped so the whole catalogue cannot land on it', () => {
     const products = Array.from({ length: 100 }, (_, i) => ({
       id: 'p' + i, title: 'P' + i, price: 10, showOnHome: true

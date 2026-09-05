@@ -24,10 +24,14 @@
  *
  * The rules
  * ---------
- * - A grid is only rebuilt when there is something real to put in it. If no
- *   product qualifies, the page is left exactly as it was. Blanking a page
- *   that currently shows something is the worse failure, and it is the failure
- *   an operator cannot diagnose.
+ * - If NO product qualifies, the page is left exactly as it was. Blanking a
+ *   page that currently shows something is the worse failure, and it is the
+ *   one an operator cannot diagnose.
+ * - But once the first grid HAS been rebuilt, a later grid that runs out of
+ *   products is emptied and its section hidden rather than left holding its
+ *   frozen cards. The shop went live with five products; the first grid took
+ *   all five and the second kept advertising gen-0030 at 4,200 — a product at
+ *   a price that exists nowhere. An absent section is honest; that is not.
  * - Grids are capped. `show_on_home` defaults to true for every product, so
  *   without a cap the first page of the shop would be all 435 of them.
  * - Nothing here invents a discount, a badge or a price. It renders what the
@@ -36,6 +40,7 @@
 
 const { renderCard } = require('./catalog-render-service');
 const { looksLikeTestProduct } = require('../utils/test-data');
+const { hideEmptySections } = require('./empty-section-service');
 
 /**
  * Which grids each page owns, the flag that governs them, and how many cards
@@ -156,15 +161,19 @@ function injectPlacementGrids($, slug, products) {
   let cursor = 0;
   let rendered = 0;
   let gridsFilled = 0;
+  const starved = [];
 
   for (const g of spec.grids) {
     const grid = $(g.selector).first();
     if (!grid.length) continue;
 
     const slice = pool.slice(cursor, cursor + g.limit);
-    // A second grid with nothing left to put in it keeps the cards it has
-    // rather than becoming an empty frame under a live heading.
-    if (slice.length === 0) continue;
+    if (slice.length === 0) {
+      // Note it rather than skip it: what happens next depends on whether any
+      // OTHER grid on this page was rebuilt.
+      starved.push(g.selector);
+      continue;
+    }
 
     cursor += slice.length;
     grid.empty();
@@ -173,7 +182,25 @@ function injectPlacementGrids($, slug, products) {
     gridsFilled++;
   }
 
-  return gridsFilled > 0 ? { rendered, grids: gridsFilled } : null;
+  // Nothing was rebuilt at all -- the catalogue is empty or unreachable. Leave
+  // the page untouched; its own markup is the better failure.
+  if (gridsFilled === 0) return null;
+
+  /* Something WAS rebuilt, so the page is now a mix of current data and
+     whatever a starved grid is still holding. Those leftovers are snapshots,
+     not placeholders: real product names at prices the shop stopped honouring.
+     Empty them and let hideEmptySections take the heading down with them. */
+  let hidden = 0;
+  if (starved.length > 0) {
+    for (const selector of starved) {
+      const grid = $(selector).first();
+      if (grid.length) grid.empty();
+    }
+    const res = hideEmptySections($, starved, {});
+    hidden = (res && res.removed ? res.removed.length : 0);
+  }
+
+  return { rendered, grids: gridsFilled, hidden };
 }
 
 module.exports = { injectPlacementGrids, PLACEMENT_MAP, isCredibleDiscount };
