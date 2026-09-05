@@ -74,7 +74,24 @@ function createRateLimiter({ name, windowMs, maxPerIp, maxPerSubject, subject, m
 
     const checks = [hit(`${name}:ip:${ip}`, windowMs, maxPerIp)];
 
-    if (subject && maxPerSubject) {
+    /*
+     * Only look at the subject once the address itself is still within its
+     * limit.
+     *
+     * Both counters used to be incremented on every request, including
+     * requests that were already refused on the IP counter. The subject is
+     * attacker-chosen -- a username, a phone number -- so each distinct value
+     * allocated a map entry, and an address that had been blocked minutes ago
+     * could keep allocating them by varying the username. The sweeper reclaims
+     * expired entries every five minutes, which bounds it, but "bounded by how
+     * fast one blocked client can send requests for five minutes" is not a
+     * bound worth having when the check costs nothing.
+     *
+     * This does not weaken the per-account limit. A distributed attack still
+     * counts against the subject from every address that is under its own
+     * limit, which is exactly the case the subject counter exists for.
+     */
+    if (!checks[0].blocked && subject && maxPerSubject) {
       const subjectKey = subject(req);
       if (subjectKey) {
         checks.push(hit(`${name}:sub:${subjectKey}`, windowMs, maxPerSubject));

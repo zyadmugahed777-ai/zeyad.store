@@ -104,7 +104,16 @@ const LOOPBACK_ORIGIN = /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(:\d+)?$/;
 const CORS_LOG_WINDOW_MS = 60000;
 const corsRejections = new Map();
 
-function noteRejectedOrigin(origin) {
+function noteRejectedOrigin(rawOrigin) {
+  /*
+   * The Origin header is whatever the caller sent. Node's parser rejects a
+   * header carrying a bare CR or LF, so a forged log line is not reachable
+   * this way -- but the value can still be as long as the header limit allows,
+   * and it is used as a map key. Truncate it, and drop anything that is not
+   * printable ASCII, so neither the log nor the map can be steered by its
+   * shape rather than its content.
+   */
+  const origin = String(rawOrigin).replace(/[^\x20-\x7E]/g, '').slice(0, 128);
   const now = Date.now();
   const seen = corsRejections.get(origin);
 
