@@ -593,6 +593,47 @@
    empty strip with two dead arrows. */
 .product-gallery-thumbs-wrap[hidden] { display: none !important; }
 
+/* --- The photograph, at full strength ------------------------------------
+   production-polish.css puts `mix-blend-mode: multiply` on the gallery image in
+   light mode -- and only light mode, which is why the page looked fine in dark
+   and murky in light. Multiply paints the photograph THROUGH the beige surface
+   behind it: white turns beige, every colour loses value, and the whole picture
+   reads as dull. It was presumably meant to melt a white product cut-out into
+   the page, but the shop's photographs are full-bleed room shots, so all it did
+   was dim them.
+
+   The image fills its frame exactly now, so there is nothing to blend into.
+
+   The filter that replaces it is deliberately small: enough that the photograph
+   looks lit rather than flat, not so much that the furniture arrives a
+   different colour than it leaves the warehouse. A shop that flatters its
+   photographs sells returns.
+   ------------------------------------------------------------------------ */
+#product-gallery-stage img,
+.product-gallery-stage img,
+.product-card .media img,
+.product-card .product-photo-link img,
+.product-thumb img {
+  mix-blend-mode: normal !important;
+  filter: saturate(1.05) contrast(1.03) brightness(1.02);
+}
+
+/* The frame behind it stays out of the way: a plain white ground reflects the
+   photograph's own light instead of tinting it. */
+#product-gallery-main,
+.product-gallery-main { background: #fff; }
+#product-gallery-stage,
+.product-gallery-stage { background: #fff !important; }
+
+[data-theme="dark"] #product-gallery-main,
+[data-theme="dark"] .product-gallery-main,
+body.dark-mode #product-gallery-main,
+body.dark-mode .product-gallery-main { background: #0e1a14; }
+[data-theme="dark"] #product-gallery-stage,
+[data-theme="dark"] .product-gallery-stage,
+body.dark-mode #product-gallery-stage,
+body.dark-mode .product-gallery-stage { background: #0e1a14 !important; }
+
 /* Zoom: under the image, named, and quiet. */
 .product-gallery-bottom-action {
   position: static !important;
