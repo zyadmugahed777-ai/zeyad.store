@@ -539,6 +539,13 @@
 
 #product-gallery-stage,
 .product-gallery-stage {
+  /* mobile-first.css gives this `margin-inline: -14px` and
+     `width: calc(100% + 28px)` to bleed the photograph past the page gutter.
+     The width was overridden here but the margin was not, so the frame sat
+     14px off-centre inside a parent with overflow:hidden -- clipped on one
+     edge, gapped on the other. That is the image "leaning to the right".
+     The gallery is a rounded card now; it does not bleed. */
+  margin: 0 !important;
   position: relative;
   width: 100% !important;
   height: 100% !important;

@@ -1644,9 +1644,24 @@ function escHtml(value) {
       isInteracting = false;
     }, { passive: true });
 
-    // Prevent accidental link clicking only when the user intentionally dragged/swiped
+    /* Tell a tap apart from a swipe.
+     *
+     * The threshold was 6px, measured against a distance that accumulates every
+     * pointermove. A finger resting on a phone screen wanders further than that
+     * during an ordinary tap, so on mobile this cancelled the click almost every
+     * time: tapping a product in the strip simply did nothing, which is exactly
+     * what it did on the live site.
+     *
+     * A coarse pointer gets the room it actually needs. The distance is also
+     * cleared as soon as it has been judged, so a previous swipe can never
+     * silently block the next tap.
+     */
+    const DRAG_SLOP = (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) ? 14 : 6;
+
     track.addEventListener('click', (e) => {
-      if (dragDistance > 6) {
+      const moved = dragDistance;
+      dragDistance = 0;
+      if (moved > DRAG_SLOP) {
         e.preventDefault();
         e.stopPropagation();
       }
