@@ -62,7 +62,13 @@ function hit(key, windowMs, max) {
  *        applies.
  * @param {string} options.message Arabic, user-facing
  */
-function createRateLimiter({ name, windowMs, maxPerIp, maxPerSubject, subject, message }) {
+/**
+ * @param {function} [onBlocked] how to answer a blocked request. The default
+ *   sends JSON, which is right for the API. A form POST that renders HTML
+ *   needs to render its page back with an error instead -- showing an operator
+ *   a raw JSON body would read as the panel having crashed.
+ */
+function createRateLimiter({ name, windowMs, maxPerIp, maxPerSubject, subject, message, onBlocked }) {
   return function rateLimiter(req, res, next) {
     const ip = req.ip || req.connection?.remoteAddress || 'unknown';
 
@@ -78,6 +84,9 @@ function createRateLimiter({ name, windowMs, maxPerIp, maxPerSubject, subject, m
     const blocked = checks.find(c => c.blocked);
     if (blocked) {
       res.set('Retry-After', String(blocked.retryAfter));
+      if (typeof onBlocked === 'function') {
+        return onBlocked(req, res, { retryAfter: blocked.retryAfter, message });
+      }
       return res.status(429).json({
         success: false,
         code: 'RATE_LIMITED',

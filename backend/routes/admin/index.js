@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const { requireAuth, loginAdmin, setFlash } = require('../../middleware/auth');
 const csrfProtection = require('../../middleware/csrf');
+const { createRateLimiter } = require('../../middleware/rate-limit');
 const { formatPrice, formatDate, formatDateTime, toDateInput, toDateTimeInput, parsePagination, paginationInfo, statusLabel, statusColor,
   statusTint, paymentLabel, colorSwatch } = require('../../utils/helpers');
 
@@ -64,18 +65,64 @@ router.get('/login', (req, res) => {
   res.render('admin/login', { title: 'تسجيل الدخول', layout: false });
 });
 
+/*
+ * A brake on guessing the administrator's password.
+ *
+ * The customer login has had one since it was written. This form -- the one
+ * that hands over the entire shop: products, prices, orders, customer records
+ * -- had none, and answered unlimited attempts from anywhere on the internet.
+ * Until today it also answered them over plain HTTP on port 8000, so the
+ * password did not even need guessing; the firewall closed that, and this
+ * closes the rest.
+ *
+ * Counted two ways, because they fail differently: per address stops one
+ * machine spraying, per username stops a botnet converging on one account.
+ * Both are deliberately loose enough that a person who mistypes their password
+ * several times is never affected, and a successful login refunds its own
+ * attempt, so ordinary use never accumulates against the limit at all.
+ *
+ * This is a brake, not the defence. The password being strong is the defence.
+ */
+const adminLoginLimiter = createRateLimiter({
+  name: 'admin-login',
+  windowMs: 15 * 60 * 1000,
+  maxPerIp: 20,
+  maxPerSubject: 8,
+  subject: (req) => {
+    const u = req.body && req.body.username;
+    return u ? String(u).trim().toLowerCase() : null;
+  },
+  message: 'تم تجاوز عدد محاولات الدخول المسموح بها. انتظر قليلاً ثم حاول مرة أخرى.',
+  // The API's JSON answer would render as raw text in the operator's browser.
+  onBlocked: (req, res, info) => {
+    const minutes = Math.max(1, Math.ceil((info.retryAfter || 60) / 60));
+    return res.status(429).render('admin/login', {
+      title: 'تسجيل الدخول',
+      layout: false,
+      error: info.message + ' (حوالي ' + minutes + ' دقيقة)'
+    });
+  }
+});
+
 // POST /admin/login - Authenticate
-router.post('/login', async (req, res) => {
+router.post('/login', adminLoginLimiter, async (req, res) => {
   const { username, password } = req.body;
   const admin = await loginAdmin(username, password, req);
-  
+
   if (admin) {
+    // Refund the attempt: the limit exists to slow guessing, not to ration
+    // how often the shop's owner may sign in.
+    if (req.rateLimit && typeof req.rateLimit.forgive === 'function') req.rateLimit.forgive();
     req.session.admin = admin;
     const returnTo = req.session.returnTo || '/admin/dashboard';
     delete req.session.returnTo;
     res.redirect(returnTo);
   } else {
-    res.render('admin/login', { error: 'اسم المستخدم أو كلمة المرور غير صحيحة' });
+    res.render('admin/login', {
+      title: 'تسجيل الدخول',
+      layout: false,
+      error: 'اسم المستخدم أو كلمة المرور غير صحيحة'
+    });
   }
 });
 
