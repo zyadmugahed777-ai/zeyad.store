@@ -1529,19 +1529,40 @@ function escHtml(value) {
     const renderItems = (list) => {
       return list.map(p => {
         const title = p.title || p.name || 'منتج مميز';
-        const price = p.price ? (typeof p.price === 'number' ? p.price.toLocaleString('ar-YE') : p.price) : '0';
+
+        /* Plain digits, no thousands separators.
+           currency.js parses a price out of the text with
+           parseFloat(text.replace(/[^\d.]/g, '')), which KEEPS the dot. A
+           locale that groups with '.' would turn 1.350 into 1.35 and quietly
+           divide the price by a thousand. It formats the number for display
+           anyway, so there is nothing to gain by pre-formatting it here. */
+        const priceSar = Number(p.price) || 0;
+        const price = String(Math.round(priceSar));
         const img = window.ZFB && window.ZFB.normalizeImagePath 
           ? window.ZFB.normalizeImagePath(p.main_image || p.image || (p.images && p.images[0]))
           : (p.main_image || p.image || (p.images && p.images[0]) || '/assets/placeholder.svg');
         const link = `product.html?id=${p.product_id || p.id}`;
-        const discount = p.discount_percentage ? `خصم ${p.discount_percentage}%` : 'خصم 50%';
+        /* The real discount, or no badge at all.
+           This used to fall back to a hardcoded "خصم 50%" whenever
+           discount_percentage was absent -- and /api/products/frame-deals
+           returns 0 for every row, so EVERY product in the marquee advertised
+           fifty percent off. The two on screen are actually 18% and 21%. A
+           shop that promises a discount it does not give is a refund and a
+           complaint, so the number is computed from the two prices the
+           customer can see, and when there is no genuine discount the badge is
+           left off entirely. */
+        const oldSar = Number(p.old_price) || 0;
+        const pct = p.discount_percentage > 0
+          ? Math.round(p.discount_percentage)
+          : (oldSar > priceSar && priceSar > 0 ? Math.round((1 - priceSar / oldSar) * 100) : 0);
+        const discount = pct > 0 ? `خصم ${pct}%` : '';
 
         return `
           <a href="${link}" class="superdeals-item" draggable="false">
             <img src="${img}" alt="${title}" class="superdeals-item-img" loading="lazy" draggable="false" onerror="this.onerror=null;this.src='/assets/placeholder.svg';">
             <h4 class="superdeals-item-title">${title}</h4>
-            <div class="superdeals-item-price">${price} ر.ي</div>
-            <span class="superdeals-item-badge">${discount}</span>
+            <div class="superdeals-item-price">${price} ر.س</div>
+            ${discount ? `<span class="superdeals-item-badge">${discount}</span>` : ''}
           </a>
         `;
       }).join('');
