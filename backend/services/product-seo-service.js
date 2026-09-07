@@ -110,8 +110,9 @@ function buildProductSeo(product, currency = 'SAR') {
 
   // The title carries the product and the brand, because that is what a person
   // scanning a results page is looking for.
-  const titleParts = [product.title];
-  if (product.brand) titleParts.push(product.brand);
+  const tidy = (v) => String(v == null ? '' : v).replace(/s+/g, ' ').trim();
+  const titleParts = [tidy(product.title)];
+  if (product.brand) titleParts.push(tidy(product.brand));
   titleParts.push(BRAND_AR);
   const title = titleParts.filter(Boolean).join(' | ');
 
@@ -220,7 +221,7 @@ function buildCategorySeo(category, products, currency = 'SAR') {
 
   const key = category.slug || category.id;
   const url = `${SITE}/category.html?id=${encodeURIComponent(key)}`;
-  const name = category.name || category.name_ar || 'التصنيف';
+  const name = String(category.name || category.name_ar || 'التصنيف').replace(/s+/g, ' ').trim();
 
   const inCategory = (products || []).filter(
     (p) => p.categorySlug === category.slug || String(p.categoryId) === String(category.id)
