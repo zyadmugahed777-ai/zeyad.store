@@ -492,23 +492,71 @@ function sanitizeRichText(value) {
    * had to be clamped -- a panorama or a very tall shot -- which is the one case
    * where there really is leftover space to fill.
    */
-  var STAGE_MIN_RATIO = 0.75;   // 3:4
-  var STAGE_MAX_RATIO = 1.78;   // 16:9
+  /* The bounds exist only to stop the pathological: a 1:5 banner would push
+     the price, the buy button and everything else off the screen. Between
+     them the frame is the picture's own shape, exactly.
+
+     They used to be 3:4 and 16:9, which is a narrow window -- an ordinary
+     portrait product photo at 4:5 was fine, but anything taller was squared
+     off. The shop's photographs are studio banners in whatever shape the
+     supplier sent. */
+  var STAGE_MIN_RATIO = 0.5;    // 1:2, a tall portrait banner
+  var STAGE_MAX_RATIO = 2.5;    // 5:2, a wide room shot
+
+  /*
+   * The frame that changes shape is #product-gallery-main, not the stage.
+   *
+   * storefront-2026.css puts `aspect-ratio: var(--zs-stage-ratio, 1) / 1` on
+   * #product-gallery-main. This function used to set that variable on the
+   * STAGE, which is main's child -- and a CSS custom property inherits
+   * downwards, never up. So the frame never saw the value, fell back to the
+   * default of 1, and stayed square no matter what shape the photograph was.
+   * The photo then painted taller than the square that contained it and
+   * overflow:hidden cut the difference off. Measured on the live page: a
+   * 928x1152 photo, ratio 0.806, painted 325x403 inside a 327x327 frame -- a
+   * fifth of the picture clipped, on every product.
+   *
+   * Setting it on the frame fixes that, and because properties DO inherit
+   * downwards the stage still sees it too.
+   */
+  function stageFrame(stage) {
+    return document.getElementById("product-gallery-main") ||
+      (stage && stage.parentElement) || stage;
+  }
+
+  function applyStageRatio(stage, w, h) {
+    if (!stage || !w || !h) return;
+    var r = w / h;
+    if (!isFinite(r) || r <= 0) return;
+    var clamped = Math.min(STAGE_MAX_RATIO, Math.max(STAGE_MIN_RATIO, r));
+    stageFrame(stage).style.setProperty("--zs-stage-ratio", clamped.toFixed(4));
+    // Within a hair of the frame's shape there is nothing left to fill.
+    stage.classList.toggle("zs-exact", Math.abs(clamped - r) < 0.02);
+  }
 
   function fitStageToImage(stage, src) {
     if (!stage || !src) return;
     var probe = new Image();
     probe.decoding = "async";
     probe.onload = function () {
-      var w = probe.naturalWidth, h = probe.naturalHeight;
-      if (!w || !h) return;
-      var r = w / h;
-      var clamped = Math.min(STAGE_MAX_RATIO, Math.max(STAGE_MIN_RATIO, r));
-      stage.style.setProperty("--zs-stage-ratio", clamped.toFixed(4));
-      // Within a hair of the frame's shape there is nothing left to fill.
-      stage.classList.toggle("zs-exact", Math.abs(clamped - r) < 0.02);
+      applyStageRatio(stage, probe.naturalWidth, probe.naturalHeight);
     };
     probe.src = src;
+  }
+
+  /*
+   * A video gets the same treatment. Without this the frame kept whatever
+   * shape the last photograph had set, so the clip played letterboxed inside
+   * a picture-shaped box with black bands above and below -- which is what
+   * made it look frozen in place rather than part of the gallery.
+   *
+   * videoWidth/videoHeight are 0 until metadata arrives, so it waits for it.
+   */
+  function fitStageToVideo(stage, video) {
+    if (!stage || !video) return;
+    var apply = function () { applyStageRatio(stage, video.videoWidth, video.videoHeight); };
+    if (video.readyState >= 1 && video.videoWidth) apply();
+    else video.addEventListener("loadedmetadata", apply, { once: true });
   }
 
   function renderGalleryStage(index) {
@@ -531,6 +579,8 @@ function sanitizeRichText(value) {
 
     if (item.type === "video") {
       stage.innerHTML = `<video controls playsinline webkit-playsinline preload="metadata" style="width:100%;height:100%;object-fit:contain;background:#000;border-radius:inherit;"><source src="${item.src}">متصفحك لا يدعم تشغيل الفيديو</video>`;
+      // The frame takes the clip's shape once the browser knows it.
+      fitStageToVideo(stage, stage.querySelector("video"));
     } else {
       // The gallery image is the largest thing on the page and, for a visitor
       // arriving from an ad, the whole reason they clicked. It is the LCP

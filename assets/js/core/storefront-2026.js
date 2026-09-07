@@ -109,10 +109,23 @@
      between, the box is exactly the photograph's own shape, so it fills the
      frame edge to edge with nothing left over.
      --------------------------------------------------------------------- */
-  var MIN_RATIO = 0.75;   // 3:4, the tallest a card may get
-  var MAX_RATIO = 1.78;   // 16:9, the widest
+  /* Two sets of bounds, because a grid and a rail want different things.
 
-  function fitMediaToImage(media, img) {
+     A GRID card sits beside its neighbours in a row of two. Let one be twice
+     the height of the one next to it and the row reads as broken, so the
+     spread stays narrow: 3:4 at the tallest, 16:9 at the widest, which is the
+     range these have always used.
+
+     A RAIL card -- "قد يعجبك أيضاً" under a product -- scrolls horizontally
+     and lines up on its top edge. Nothing depends on them matching, so each
+     can take its picture's own shape. The bound there exists only to stop the
+     pathological: a 1:5 banner would be taller than the screen. */
+  var MIN_RATIO = 0.75;   // 3:4, the tallest a GRID card may get
+  var MAX_RATIO = 1.78;   // 16:9, the widest
+  var RAIL_MIN_RATIO = 0.5;   // 1:2, a tall supplier banner
+  var RAIL_MAX_RATIO = 2.5;   // 5:2, a wide room shot
+
+  function fitMediaToImage(media, img, min, max) {
     if (!img || !img.naturalWidth || !img.naturalHeight) return;
     /* A grid card is sized by the rhythm rules, not by its own picture -- a
        row of two must stay a row of two. Only cards free to size themselves
@@ -120,16 +133,33 @@
     if (media.dataset.zsRatio === '1') return;
     var r = img.naturalWidth / img.naturalHeight;
     if (!isFinite(r) || r <= 0) return;
-    r = Math.min(MAX_RATIO, Math.max(MIN_RATIO, r));
+    r = Math.min(max || MAX_RATIO, Math.max(min || MIN_RATIO, r));
     media.style.setProperty('--zs-media-ratio', r.toFixed(4));
     media.dataset.zsRatio = '1';
   }
 
-  function watchImageRatio(media) {
+  function watchImageRatio(media, min, max) {
     var img = media.querySelector('img');
     if (!img) return;
-    if (img.complete) fitMediaToImage(media, img);
-    else img.addEventListener('load', function () { fitMediaToImage(media, img); }, { once: true });
+    if (img.complete && img.naturalWidth) fitMediaToImage(media, img, min, max);
+    else img.addEventListener('load', function () { fitMediaToImage(media, img, min, max); }, { once: true });
+  }
+
+  /*
+   * The "you might also like" rail under a product.
+   *
+   * These are not .product-card and never went through normaliseCard, so they
+   * kept mobile-first.css's fixed square while every other card on the site
+   * had learned to follow its picture. They are rendered by product-engine.js
+   * after this file's first pass, and re-rendered when a related product is
+   * fetched, so this runs on an observer rather than once at startup.
+   */
+  function fitMiniCards(root) {
+    var scope = root && root.querySelectorAll ? root : document;
+    Array.prototype.forEach.call(
+      scope.querySelectorAll('.product-mini-card-media'),
+      function (media) { watchImageRatio(media, RAIL_MIN_RATIO, RAIL_MAX_RATIO); }
+    );
   }
 
   function applyImageTreatment(media, url) {
@@ -732,6 +762,7 @@
   function boot() {
     moveOffersBelowProducts();
     normaliseCards(document);
+    fitMiniCards(document);
     bindCategoryFiltering();
     try { initMajlisWizard(); } catch (e) { /* one page's widget must not break the rest */ }
     try { initEstimatorForms(); } catch (e) { /* same */ }
@@ -742,7 +773,11 @@
     function schedule() {
       if (pending) return;
       pending = true;
-      requestAnimationFrame(function () { pending = false; normaliseCards(document); });
+      requestAnimationFrame(function () {
+        pending = false;
+        normaliseCards(document);
+        fitMiniCards(document);
+      });
     }
 
     /* Two things must be caught: a grid being re-rendered (a .product-card is
@@ -757,6 +792,7 @@
           var n = added[j];
           if (n.nodeType !== 1) continue;
           if (n.classList.contains('product-card') || n.querySelector('.product-card')) { schedule(); return; }
+          if (n.classList.contains('product-mini-card-media') || n.querySelector('.product-mini-card-media')) { schedule(); return; }
         }
       }
     });
@@ -766,12 +802,15 @@
        than relying on the observer alone. */
     ['zfb-state-change', 'zfb-cart-updated', 'zfb-currency-change', 'zfb-products-rendered']
       .forEach(function (ev) {
-        window.addEventListener(ev, function () { normaliseCards(document); });
+        window.addEventListener(ev, function () {
+          normaliseCards(document);
+          fitMiniCards(document);
+        });
       });
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
 
-  window.ZS2026 = { normaliseCards: normaliseCards };
+  window.ZS2026 = { normaliseCards: normaliseCards, fitMiniCards: fitMiniCards };
 })();

@@ -519,11 +519,58 @@
   position: relative;
   min-height: 0 !important;
   /* Set from the photograph by product-engine.js: a square shot gets a square
-     frame, a wide one a wide frame. 1 until the image reports its size. */
-  aspect-ratio: var(--zs-stage-ratio, 1) / 1;
+     frame, a wide one a wide frame. 1 until the image reports its size.
+
+     !important is load-bearing. responsive-pro.css carries
+
+         .product-gallery-main,
+         .product-gallery-stage { aspect-ratio: 1 / 1 !important; }
+
+     inside a mobile media query. This stylesheet loads last, but load order
+     only breaks ties at equal weight -- an !important declaration outranks a
+     normal one from any later sheet. So the frame stayed square on every
+     phone, the photograph painted taller than the box that held it, and
+     overflow:hidden cut off the difference. Measured live: a 928x1152 photo
+     lost a fifth of its height; a 800x1400 supplier banner would lose 43%. */
+  aspect-ratio: var(--zs-stage-ratio, 1) / 1 !important;
   overflow: hidden;
   border-radius: 16px;
   background: var(--accent-gold-soft, #fbf5ea);
+}
+
+/* --------------------------------------------------------------------------
+   "قد يعجبك أيضاً" / "منتجات مشابهة" -- the mini cards under a product.
+
+   mobile-first.css locks every one of these to `aspect-ratio: 1/1 !important`,
+   so a portrait banner sat letterboxed in a square with a band of background
+   down each side and read as cropped. These cards are a horizontal rail, not a
+   grid: nothing depends on them all being the same height, so each can take
+   the shape of its own picture the way the catalogue cards already do.
+
+   --zs-media-ratio is set per card by assets/js/core/storefront-2026.js once
+   the image reports its size. Until then 1/1, which is what they were.
+   -------------------------------------------------------------------------- */
+.product-mini-card-media,
+.product-mini-card > a:first-child {
+  aspect-ratio: var(--zs-media-ratio, 1 / 1) !important;
+  height: auto !important;
+}
+
+/* Room for the taller ones: the rail sized itself to a square and clipped
+   anything that grew past it. */
+.product-mini-card,
+.product-mini-cards,
+.product-mini-card-rail {
+  height: auto !important;
+  align-items: flex-start;
+}
+
+/* The photograph is contained, never cut. The 8px pad mobile-first.css adds
+   is dropped here -- with the frame already the picture's own shape there is
+   nothing for the pad to protect, and it only shrinks the image. */
+.product-mini-card-media img {
+  padding: 0 !important;
+  object-fit: contain !important;
 }
 
 /* The photograph already fills the frame, so there is no leftover space to
