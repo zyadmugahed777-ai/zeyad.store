@@ -1,10 +1,10 @@
 /**
  * Zeyad For Business - Central Configuration (Simulated Database/Backend Payload)
- * Auto-generated from SQLite database settings on 2026-08-27T06:38:57.688Z
+ * Auto-generated from SQLite database settings on 2026-09-07T01:19:14.046Z
  */
 
 window.ZFB_CONFIG = {
-    storeName: "زياد ستور - المقر الرئيسي",
+    storeName: "زياد ستور",
     currency: "SAR",
     exchangeRate: 140,
     
