@@ -162,6 +162,25 @@
     );
   }
 
+  /*
+   * A sweep can only reach the cards that exist when it runs, and these are
+   * lazy images inside a rail that is rendered, re-rendered and appended to
+   * well after this file's first pass. Measured on the live page: four of five
+   * cards picked up their shape and the fifth, inserted a beat later, kept the
+   * default square.
+   *
+   * So the real trigger is the image itself finishing. A load event does not
+   * bubble, but it does capture, so one listener on the document catches every
+   * image in every rail, however late it arrived and whenever it decodes. The
+   * sweeps above stay for images already complete before this ran.
+   */
+  document.addEventListener('load', function (e) {
+    var img = e.target;
+    if (!img || img.tagName !== 'IMG') return;
+    var media = img.closest && img.closest('.product-mini-card-media');
+    if (media) fitMediaToImage(media, img, RAIL_MIN_RATIO, RAIL_MAX_RATIO);
+  }, true);
+
   function applyImageTreatment(media, url) {
     if (/\.svg(\?|#|$)/i.test(url)) { media.classList.add('zs-cutout'); return; }
     if (!mayBeTransparent(url)) return;
