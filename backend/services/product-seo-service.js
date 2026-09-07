@@ -230,11 +230,34 @@ function buildCategorySeo(category, products, currency = 'SAR') {
   const withImage = inCategory.find((p) => p.image);
   const image = withImage ? absoluteImage(withImage.image) : null;
 
+  /*
+   * Two things were wrong with the sentence this used to build.
+   *
+   * It published a product count -- "8 منتج متاح" -- straight into the meta
+   * description, which is the one place a count is hardest to retract: it goes
+   * to Google and sits in the results page. The shop does not disclose how many
+   * items it stocks anywhere on the site, and a search result announcing eight
+   * undoes that everywhere else.
+   *
+   * And it claimed "ضمان معتمد" on every category unconditionally. Some
+   * products carry a warranty and some do not; the column is per-product and
+   * frequently empty. Asserting one for a whole category is a claim the data
+   * does not support, and the kind of thing a customer quotes back at you.
+   *
+   * The count still decides WHICH sentence is used -- an empty category should
+   * not invite someone to shop a list with nothing in it -- but the number
+   * itself is never printed.
+   */
   const description = count > 0
-    ? plain(`تسوّق ${name} من ${BRAND_AR} — ${count} منتج متاح بأسعار تنافسية وضمان معتمد وتوصيل داخل المدن الرئيسية.`, 155)
+    ? plain(`تسوّق ${name} من ${BRAND_AR} بأسعار منافسة وتفاصيل واضحة لكل قطعة، مع خيارات توصيل داخل اليمن.`, 155)
     : plain(`${name} من ${BRAND_AR}. تصفّح التشكيلة واطلب بسهولة.`, 155);
 
-  const title = `${name} | ${BRAND_AR}`;
+  /* "في اليمن" matches how the search actually arrives -- "غرف نوم في صنعاء",
+     "أجهزة منزلية في اليمن" -- and only on categories that have something to
+     show, so an empty one is not advertised into the index. */
+  const title = count > 0
+    ? `${name} في اليمن | ${BRAND_AR}`
+    : `${name} | ${BRAND_AR}`;
 
   const tags = [
     `<title>${esc(title)}</title>`,

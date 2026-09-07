@@ -44,6 +44,7 @@ const SUITE = [
   { file: 'test-majlis-estimator.js', name: 'Majlis estimator: the inputs must reach the price', timeout: 60000 },
   { file: 'test-product-placement-and-flags.js', name: 'Placement, delivery policy and flag handling', timeout: 60000 },
   { file: 'test-product-form-roundtrip.js', name: 'Admin product form: post it, read the row back', timeout: 120000 },
+  { file: 'test-seo-metadata.js', name: 'SEO metadata, brand assets and indexability', timeout: 60000 },
   { file: 'test-customer-auth-security.js', name: 'Customer auth, isolation & IDOR (AUTH-01..21)', timeout: 300000 },
   { file: 'test-customer-auth-races.js', name: 'Customer auth races, legacy records & guest checkout', timeout: 300000 },
 ];

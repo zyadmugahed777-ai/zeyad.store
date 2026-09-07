@@ -457,7 +457,13 @@ async function visualCmsMiddleware(req, res, next) {
           const NOINDEX_PAGES = new Set([
             'cart', 'checkout', 'confirmation', 'account', 'account-profile',
             'account-reservations', 'account-reservation-detail', 'account-support',
-            'login', 'wishlist', 'compare', 'track-order'
+            'login', 'wishlist', 'compare', 'track-order',
+            /* A leftover from development that PAGE_MAP still fills with the
+               appliances catalogue, so it is a second, thinner copy of
+               appliances.html competing with it for the same searches. It is
+               not in the sitemap, but "not submitted" is not "not indexed" --
+               a single link from anywhere is enough. */
+            'appliances_test'
           ]);
           if (NOINDEX_PAGES.has(baseSlug)) {
             $('meta[name="robots"]').remove();

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="زياد ستور">
+  <!--
+    The site's own brand mark, not a new one: index.html has carried
+    a brand-mark span holding the letter on an olive disc since it was built,
+    and styles.css gives that disc linear-gradient(145deg, #5a6d4e, #23382e)
+    with a cream glyph (#f4eadc) and a highlight at 30% 22%. Those exact
+    values are reproduced here.
+
+    It replaces a rel="icon" pointing at assets/images/favicon.png, a file
+    which does not exist: a 404 on the one page that even declared an icon,
+    and 70 pages that declared none at all.
+
+    SVG so one file serves every size, from the 16px tab to the 512px install
+    icon, with no raster set to keep in step.
+  -->
+  <defs>
+    <linearGradient id="disc" x1="0" y1="0" x2="1" y2="1" gradientTransform="rotate(145 .5 .5)">
+      <stop offset="0" stop-color="#5a6d4e"/>
+      <stop offset="1" stop-color="#23382e"/>
+    </linearGradient>
+    <radialGradient id="sheen" cx="0.3" cy="0.22" r="0.5">
+      <stop offset="0" stop-color="#fff8ed" stop-opacity="0.24"/>
+      <stop offset="1" stop-color="#fff8ed" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <circle cx="32" cy="32" r="32" fill="url(#disc)"/>
+  <circle cx="32" cy="32" r="32" fill="url(#sheen)"/>
+  <text x="32" y="33" fill="#f4eadc"
+        font-family="'IBM Plex Sans Arabic','Segoe UI','Tahoma',sans-serif"
+        font-size="40" font-weight="700"
+        text-anchor="middle" dominant-baseline="central">ز</text>
+</svg>
