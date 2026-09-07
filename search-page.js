@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
                 
                 if (renderData.length > 0) {
-                    let html = '<h2 style="margin-bottom: 24px;">' + (isSuggestion ? 'لم نجد تطابق تام، هل تقصد هذه المنتجات؟' : 'نتائج البحث عن "'+escHtml(query)+'" ('+renderData.length+')') + '</h2><div class="search-results-grid">';
+                    let html = '<h2 style="margin-bottom: 24px;">' + (isSuggestion ? 'لم نجد تطابق تام، هل تقصد هذه المنتجات؟' : 'نتائج البحث عن "'+escHtml(query)+'"') + '</h2><div class="search-results-grid">';
                     
                     renderData.forEach(product => {
                         html += `

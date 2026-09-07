@@ -179,14 +179,14 @@ function injectCatalog($, slug, allProducts, categorySlug) {
   grid.empty();
   grid.append(products.map(renderCard).join(''));
 
-  // Keep any "N products" badge on the page honest.
-  const count = products.length;
-  $('.catalog-count, .catalog-count-badge, [data-product-count]').each((i, el) => {
-    const text = $(el).text();
-    if (/\d/.test(text)) $(el).text(text.replace(/\d[\d,]*/, String(count)));
-  });
+  /* The "N products" badge these pages ship is hidden rather than updated.
+     The shop does not display product totals anywhere, and a badge left
+     un-updated would be worse than absent: it would show the number that was
+     hardcoded into the HTML when the page was written. Hidden, not deleted,
+     because the visual editor keys saved edits on the element's data-vid. */
+  $('.catalog-count, .catalog-count-badge, [data-product-count]').attr('hidden', 'hidden');
 
-  return { rendered: count, department: spec.department };
+  return { rendered: products.length, department: spec.department };
 }
 
 module.exports = { injectCatalog, renderCard, PAGE_MAP };

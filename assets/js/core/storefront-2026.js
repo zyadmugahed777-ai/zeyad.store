@@ -258,14 +258,6 @@
     return (card.getAttribute('data-category') || '').trim();
   }
 
-  function countLabel(n) {
-    if (!n) return 'لا توجد منتجات';
-    if (n === 1) return 'منتج واحد';
-    if (n === 2) return 'منتجان';
-    if (n <= 10) return n + ' منتجات';
-    return n + ' منتج';
-  }
-
   function categoryName(slug) {
     if (!slug) return 'كل غرف النوم';
     var tile = document.querySelector('.zs-cat-tile[data-category="' + slug.replace(/"/g, '\\"') + '"] .zs-cat-label strong');
@@ -350,8 +342,6 @@
         }
         var bt = banner.querySelector('[data-zs-banner-title]');
         if (bt) bt.textContent = categoryName(slug);
-        var bc = banner.querySelector('[data-zs-banner-count]');
-        if (bc) bc.textContent = countLabel(shown);
         banner.hidden = false;
       } else {
         banner.hidden = true;
@@ -360,8 +350,9 @@
 
     var title = document.querySelector('[data-zs-results-title]');
     if (title) title.textContent = categoryName(slug);
-    var count = document.querySelector('[data-zs-results-count]');
-    if (count) count.textContent = countLabel(shown);
+    /* No product totals are shown anywhere in this shop, so there is no
+       count element to refresh here. `shown` still decides whether the empty
+       state appears -- that is a yes/no, not a number on screen. */
 
     if (push) {
       var url = new URL(window.location.href);

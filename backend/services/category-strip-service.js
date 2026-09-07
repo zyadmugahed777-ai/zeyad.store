@@ -66,12 +66,16 @@ const ACTIVE_STYLE = 'outline:2px solid var(--gold,#c79a52); outline-offset:2px;
  * Tiles come in two shapes: a <strong> headline with a <span> sub-label, or a
  * bare <span>. Both are handled so no page loses its look.
  */
-function setLabel($, node, name, sub) {
+function setLabel($, node, name) {
   const strong = node.find('strong').first();
   if (strong.length) {
     strong.text(name);
+    // The tile template carries a second line for the product count. The shop
+    // does not show counts, so the element is removed, not blanked -- an empty
+    // <span> still holds its line box and leaves the name floating high in a
+    // tile sized for two lines.
     const span = node.find('span').first();
-    if (span.length) span.text(sub);
+    if (span.length) span.remove();
     return;
   }
   const span = node.find('span').first();
@@ -164,14 +168,6 @@ function setTileImage($, node, c) {
   if (svg.length) svg.html(glyphFor(c && c.name));
 }
 
-function countLabel(n) {
-  if (!n) return 'لا توجد منتجات';
-  if (n === 1) return 'منتج واحد';
-  if (n === 2) return 'منتجان';
-  if (n <= 10) return `${n} منتجات`;
-  return `${n} منتج`;
-}
-
 /**
  * @param {CheerioAPI} $
  * @param {string} slug          page slug
@@ -206,7 +202,7 @@ function injectCategoryStrip($, slug, categories, activeSlug, gridSelector) {
     const all = $(template);
     all.attr('href', link(''));
     all.attr('data-category', '');
-    setLabel($, all, 'جميع الفئات', countLabel(categories.reduce((s, c) => s + (c.productCount || 0), 0)));
+    setLabel($, all, 'جميع الفئات');
     if (!activeSlug) all.attr('style', ((all.attr('style') || '') + ';' + ACTIVE_STYLE).replace(/^;/, ''));
     strip.append(all);
 
@@ -218,7 +214,7 @@ function injectCategoryStrip($, slug, categories, activeSlug, gridSelector) {
       // the template's id or edits would land on every tile at once.
       node.removeAttr('data-vid');
       node.find('[data-vid]').removeAttr('data-vid');
-      setLabel($, node, c.name, countLabel(c.productCount || 0));
+      setLabel($, node, c.name);
       setTileImage($, node, c);
       if (activeSlug && c.slug === activeSlug) {
         node.attr('style', ((node.attr('style') || '') + ';' + ACTIVE_STYLE).replace(/^;/, ''));
@@ -240,21 +236,19 @@ function injectCategoryStrip($, slug, categories, activeSlug, gridSelector) {
   // data-category is deliberately empty on the "all" chip: it is the absence of
   // a filter, not a category. Putting its label there made it look like a
   // category slug to anything reading the attribute.
-  const chip = (href, label, count, active) => `
+  const chip = (href, label, active) => `
       <a href="${esc(href)}" data-category=""
          style="display:inline-flex; flex-direction:column; gap:2px; padding:8px 16px; border-radius:999px;
                 border:1px solid var(--border-color,#e3d5c3); background:var(--bg-card,#fff);
                 color:var(--text-primary,#1c1813); text-decoration:none; font-size:.9rem; white-space:nowrap;
                 ${active ? ACTIVE_STYLE : ''}">
         <span style="font-weight:600;">${esc(label)}</span>
-        ${count !== null ? `<small style="color:var(--text-muted,#756b5f); font-size:.72rem;">${esc(countLabel(count))}</small>` : ''}
       </a>`;
 
-  const total = categories.reduce((s, c) => s + (c.productCount || 0), 0);
   const html = `
     <nav data-zfb-category-strip aria-label="تصفية حسب الفئة"
          style="display:flex; gap:10px; overflow-x:auto; padding:4px 2px 14px; margin-bottom:8px; -webkit-overflow-scrolling:touch;">
-      ${chip(link(''), 'جميع الفئات', total, !activeSlug)}
+      ${chip(link(''), 'جميع الفئات', !activeSlug)}
       ${categories.map((c) => `
       <a href="${esc(link(c.slug))}" data-category="${esc(c.slug || '')}"
          style="display:inline-flex; flex-direction:column; gap:2px; padding:8px 16px; border-radius:999px;
@@ -262,7 +256,6 @@ function injectCategoryStrip($, slug, categories, activeSlug, gridSelector) {
                 color:var(--text-primary,#1c1813); text-decoration:none; font-size:.9rem; white-space:nowrap;
                 ${activeSlug && c.slug === activeSlug ? ACTIVE_STYLE : ''}">
         <span style="font-weight:600;">${esc(c.name)}</span>
-        <small style="color:var(--text-muted,#756b5f); font-size:.72rem;">${esc(countLabel(c.productCount || 0))}</small>
       </a>`).join('')}
     </nav>`;
 
@@ -342,14 +335,11 @@ function renderCategoryTiles($, mount, categories, activeSlug, link) {
         </span>`}
         <span class="zs-cat-label">
           <strong>${esc(c.name)}</strong>
-          <small>${esc(countLabel(c.productCount || 0))}</small>
         </span>
       </a>`;
   });
 
-  // "الكل" is the absence of a filter, not a category: no image, no count of
-  // its own beyond the department total.
-  const total = categories.reduce((s, c) => s + (c.productCount || 0), 0);
+  // "الكل" is the absence of a filter, not a category, so it gets no image.
   const all = `
       <a class="zs-cat-tile zs-cat-tile-all${activeSlug ? '' : ' is-active'}"
          href="${esc(link(''))}" data-category=""
@@ -357,7 +347,6 @@ function renderCategoryTiles($, mount, categories, activeSlug, link) {
         ${presentation === 'pill' ? '' : '<span class="zs-cat-media"><span class="zs-cat-initial" aria-hidden="true">◇</span></span>'}
         <span class="zs-cat-label">
           <strong>كل الفئات</strong>
-          <small>${esc(countLabel(total))}</small>
         </span>
       </a>`;
 
@@ -406,7 +395,6 @@ function renderFilterBar($, slug, categories, activeSlug, link, gridSelector) {
         </span>
         <span class="zs-cat-banner-copy">
           <strong data-zs-banner-title>${active ? esc(active.name) : ''}</strong>
-          <small data-zs-banner-count>${active ? esc(countLabel(active.productCount || 0)) : ''}</small>
         </span>
         <a class="zs-cat-banner-clear" href="${esc(link(''))}" data-category="">عرض الكل</a>
       </div>`;
@@ -416,7 +404,6 @@ function renderFilterBar($, slug, categories, activeSlug, link, gridSelector) {
       ${banner}
       <div class="zs-filter-head">
         <h2 data-zs-results-title>${active ? esc(active.name) : 'كل غرف النوم'}</h2>
-        <span data-zs-results-count>${esc(countLabel(shown))}</span>
       </div>
       <nav class="zs-chip-row" aria-label="تصفية حسب الفئة">
         ${chip(link(''), '', 'الكل', !activeSlug)}

@@ -337,6 +337,72 @@ const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
       'the offers page must be opt-in, not opt-out');
   });
 
+  // --- 5b. No product totals anywhere -------------------------------------
+  //
+  // The shop does not publish how many products it has. A category rail that
+  // says "4 منتجات" under one tile and "لا توجد منتجات" under another tells
+  // every visitor the size of the inventory, which is the owner's to disclose
+  // and not the layout's.
+
+  await test('the category rail shows names only, never a product count', () => {
+    const { injectCategoryStrip } = require('../services/category-strip-service');
+    const cats = [
+      { id: 1, name: 'غرف نوم ماليزي', slug: 'maliz', productCount: 9, sortOrder: 1, displayStyle: 'card' },
+      { id: 2, name: 'غرف نوم تركي', slug: 'turki', productCount: 4, sortOrder: 2, displayStyle: 'card' },
+      { id: 3, name: 'غرف نوم ملكي', slug: 'malaki', productCount: 0, sortOrder: 3, displayStyle: 'card' }
+    ];
+    const $ = require('cheerio').load('<div class="product-grid bedrooms-dense-grid"></div>');
+    injectCategoryStrip($, 'bedrooms', cats, '', 'div.product-grid.bedrooms-dense-grid');
+    const html = $.html();
+
+    for (const c of cats) {
+      assert.ok(html.includes(c.name), c.name + ' is missing from the rail');
+    }
+
+    // Arabic-Indic digits count as digits here; the page renders in Arabic.
+    // "لا توجد منتجات في هذه الفئة بعد" is the empty-results explanation and is
+    // allowed -- the bare "لا توجد منتجات" label under a tile is not.
+    const counts = html.match(/[\u0660-\u0669\d]+\s*(?:منتج|منتجات)|منتج واحد|منتجان|لا توجد منتجات(?! في هذه)/g);
+    assert.strictEqual(counts, null, 'the rail printed a product count: ' + JSON.stringify(counts));
+  });
+
+  await test('a filtered rail still shows no count for the active category', () => {
+    const { injectCategoryStrip } = require('../services/category-strip-service');
+    const cats = [
+      { id: 1, name: 'غرف نوم تركي', slug: 'turki', productCount: 4, sortOrder: 1, displayStyle: 'card' }
+    ];
+    const $ = require('cheerio').load('<div class="product-grid bedrooms-dense-grid"></div>');
+    injectCategoryStrip($, 'bedrooms', cats, 'turki', 'div.product-grid.bedrooms-dense-grid');
+    const html = $.html();
+    const counts = html.match(/[\u0660-\u0669\d]+\s*(?:منتج|منتجات)|منتج واحد|منتجان/g);
+    assert.strictEqual(counts, null, 'the active-category banner printed a count: ' + JSON.stringify(counts));
+  });
+
+  await test('the catalogue page hides the baked-in "N products" badge', () => {
+    const { injectCatalog } = require('../services/catalog-render-service');
+    const $ = require('cheerio').load(
+      '<div class="catalog-count">120 منتج</div>' +
+      '<div class="product-grid bedrooms-dense-grid"></div>'
+    );
+    const res = injectCatalog($, 'bedrooms', [
+      { id: 'a', title: 'A', price: 1, departmentSlug: 'bedrooms', showInDepartment: true }
+    ]);
+    assert.strictEqual(res.rendered, 1);
+    // Hidden rather than rewritten: the number baked into the HTML is stale by
+    // definition, and hiding keeps the data-vid the visual editor saves against.
+    assert.ok($('.catalog-count').attr('hidden') !== undefined,
+      'the badge is still visible, showing whatever number was hardcoded');
+  });
+
+  await test('no count formatter survives in the client bundle either', () => {
+    const client = fs.readFileSync(
+      require('path').join(REPO, 'assets', 'js', 'core', 'storefront-2026.js'), 'utf8');
+    assert.ok(!/function countLabel/.test(client),
+      'storefront-2026.js still carries a count formatter, so filtering can reintroduce one');
+    assert.ok(!/data-zs-results-count|data-zs-banner-count/.test(client),
+      'the client still writes into a count element');
+  });
+
   // --- 6. Search and Najm honour their own flag ---------------------------
   await test('the search index excludes products hidden from search', () => {
     const repo = read('repositories/postgres/product-repo.js');
