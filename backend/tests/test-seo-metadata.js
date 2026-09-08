@@ -209,6 +209,96 @@ const read = (f) => fs.readFileSync(path.join(REPO, f), 'utf8');
     assert.strictEqual(tidy('غرف نوم سويدي '), 'غرف نوم سويدي');
   });
 
+  // --- What Search Console asked for, and what it will not get -----------
+  //
+  // Google reported five structured-data issues on this shop. Three are real
+  // omissions and are fixed. Two ask for review data that does not exist, and
+  // fabricating it would be a policy violation, so they stay reported.
+
+  const sampleProduct = () => ({
+    id: 'P-853157', product_id: 'P-853157',
+    // Deliberately the messy values the live rows actually carry.
+    title: 'غرف نوم خشب ماليزي (طوفان ) ',
+    brand: 'موديل تركي ',
+    categoryName: 'غرف نوم ماليزي (مودرن ) ',
+    departmentName: 'غرف النوم',
+    departmentSlug: 'bedrooms', categorySlug: 'maliz',
+    price: 1350, stock_status: 'in-stock',
+    main_image: '/uploads/products/prod-1788613139149-275008.webp',
+    description: 'غرفة نوم'
+  });
+
+  const productLd = (overrides) => {
+    const { buildProductSeo } = require('../services/product-seo-service');
+    const seo = buildProductSeo(Object.assign(sampleProduct(), overrides || {}));
+    const blocks = [...seo.jsonLd.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/g)]
+      .map((m) => JSON.parse(m[1]));
+    return blocks.find((b) => b['@type'] === 'Product');
+  };
+
+  await test('every JSON-LD block a product page emits is valid JSON', () => {
+    const { buildProductSeo } = require('../services/product-seo-service');
+    const seo = buildProductSeo(sampleProduct());
+    const blocks = [...seo.jsonLd.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/g)];
+    assert.ok(blocks.length >= 2, 'expected Product and BreadcrumbList');
+    for (const b of blocks) JSON.parse(b[1]);   // throws on malformed output
+  });
+
+  await test('the offer states the return policy the shop actually publishes', () => {
+    const p = productLd();
+    const r = p.offers.hasMerchantReturnPolicy;
+    assert.ok(r, 'hasMerchantReturnPolicy is missing -- Search Console flagged this');
+    assert.strictEqual(r.applicableCountry, 'YE');
+    // returns.html says seven days for a refund. The 14-day EXCHANGE window
+    // must not be published as the refund window.
+    assert.strictEqual(r.merchantReturnDays, 7,
+      'the published return window disagrees with returns.html');
+    assert.strictEqual(r.returnPolicyCategory,
+      'https://schema.org/MerchantReturnFiniteReturnWindow');
+    assert.ok(/returns\.html$/.test(r.merchantReturnLink));
+  });
+
+  await test('the offer states shipping the checkout would actually charge', () => {
+    const { DELIVERY_FALLBACK_SAR } = require('../config/constants');
+    const p = productLd();
+    const sd = p.offers.shippingDetails;
+    assert.ok(sd, 'shippingDetails is missing -- Search Console flagged this');
+    assert.strictEqual(sd.shippingDestination.addressCountry, 'YE');
+    // The published range must bracket what delivery-service.js charges, or a
+    // shopper sees one price in the search result and another at checkout.
+    assert.strictEqual(sd.shippingRate.minValue,
+      Math.min(DELIVERY_FALLBACK_SAR.sanaa.min, DELIVERY_FALLBACK_SAR.provinces.min));
+    assert.strictEqual(sd.shippingRate.maxValue,
+      Math.max(DELIVERY_FALLBACK_SAR.sanaa.max, DELIVERY_FALLBACK_SAR.provinces.max));
+    assert.strictEqual(sd.shippingRate.currency, 'SAR');
+    // No addressRegion: Yemen's subdivision code for "صنعاء" is ambiguous and
+    // a guess published as a shipping commitment is worse than a wider range.
+    assert.ok(!sd.shippingDestination.addressRegion,
+      'an ISO subdivision code is being guessed');
+  });
+
+  await test('shipping is not restated in a currency the checkout never quotes', () => {
+    const { buildProductSeo } = require('../services/product-seo-service');
+    const seo = buildProductSeo(sampleProduct(), 'YER');
+    const blocks = [...seo.jsonLd.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/g)].map((m) => JSON.parse(m[1]));
+    const p = blocks.find((b) => b['@type'] === 'Product');
+    assert.ok(!p.offers.shippingDetails,
+      'a SAR delivery range was published against a non-SAR offer');
+  });
+
+  await test('category is a path, and neither it nor the name carries stray spaces', () => {
+    const p = productLd();
+    assert.strictEqual(p.category, 'غرف النوم > غرف نوم ماليزي (مودرن )',
+      'category should be department > category, tidied');
+    assert.ok(!/^\s|\s$/.test(p.name), 'the product name has leading or trailing space');
+    assert.ok(!/^\s|\s$/.test(p.brand.name), 'the brand has leading or trailing space');
+  });
+
+  await test('a product with no department still gets a usable category', () => {
+    const p = productLd({ departmentName: null });
+    assert.strictEqual(p.category, 'غرف نوم ماليزي (مودرن )');
+  });
+
   await test('product structured data claims no rating without a reviews table', () => {
     const svc = fs.readFileSync(path.join(ROOT, 'services/product-seo-service.js'), 'utf8');
     assert.ok(!/aggregateRating/.test(svc.replace(/\/\*[\s\S]*?\*\//g, '')),

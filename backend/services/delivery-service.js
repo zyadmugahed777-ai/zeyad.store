@@ -7,6 +7,9 @@
 
 const { getRepositories } = require('../repositories');
 const { currencyService } = require('./currency-service');
+// The delivery figures the checkout charges when no policy row matches, shared
+// with the structured data so the two can never state different prices.
+const { DELIVERY_FALLBACK_SAR } = require('../config/constants');
 
 class DeliveryService {
   get repo() {
@@ -405,11 +408,17 @@ class DeliveryService {
 
     // Fallback to generic zone policy if specific code not found
     if (!matchedPolicy) {
+      /* The SAR figures come from config/constants.js so the Offer's
+         shippingDetails published to Google is the same number this charges.
+         They used to be written here only, which meant the two could disagree
+         and nobody would notice until a shopper compared the search result
+         with the checkout. */
+      const fb = DELIVERY_FALLBACK_SAR[zone === 'sana_a' ? 'sanaa' : 'provinces'];
       matchedPolicy = (await this.getPolicyByCode(zone === 'sana_a' ? 'general_sana_a' : 'general_provinces')) || {
         min_price_yer: zone === 'sana_a' ? 1000 : 3000,
         max_price_yer: zone === 'sana_a' ? 2000 : 6000,
-        min_price_sar: zone === 'sana_a' ? 7.14 : 21.43,
-        max_price_sar: zone === 'sana_a' ? 14.29 : 42.86,
+        min_price_sar: fb.min,
+        max_price_sar: fb.max,
         pricing_type: 'range'
       };
     }

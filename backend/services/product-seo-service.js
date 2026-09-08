@@ -39,7 +39,7 @@
 // stated in exactly one place. SITE was hardcoded here, which meant an
 // SITE_URL override applied everywhere except the product and category pages
 // -- the two that generate the most URLs.
-const { SITE_URL, BRAND_AR } = require('../config/constants');
+const { SITE_URL, BRAND_AR, RETURN_POLICY, DELIVERY_FALLBACK_SAR } = require('../config/constants');
 const SITE = SITE_URL;
 
 function esc(v) {
@@ -101,6 +101,52 @@ function availabilityUrl(stockStatus) {
  * Build every tag a product page needs.
  * @returns {{title,description,canonical,image,tags:string[],jsonLd:string}|null}
  */
+/**
+ * What delivery costs, as two destinations rather than one averaged number.
+ *
+ * The shop charges a different range inside Sana'a than to the governorates,
+ * and schema.org models that as one OfferShippingDetails per destination. A
+ * single blended figure would be wrong for both.
+ *
+ * No transit time is published. `deliveryTime` is a required-if-present field
+ * that expects real day counts, and nothing in this system records how long a
+ * delivery takes -- so claiming one would be a guess presented to shoppers as
+ * a commitment.
+ *
+ * Only emitted when the currency is the one the fallback is denominated in.
+ * Converting it here would restate a price the checkout never quotes.
+ */
+function shippingOffers(currency) {
+  if (currency !== DELIVERY_FALLBACK_SAR.currency) return undefined;
+
+  /* One destination -- the country -- carrying the full range, rather than a
+     leg per zone.
+
+     Splitting it needs `addressRegion`, and that field expects an ISO 3166-2
+     subdivision code. Yemen has two plausible codes for what the shop calls
+     "داخل صنعاء" (YE-AM for the capital municipality, YE-SA for the
+     surrounding governorate) and the shop's own zone detection does not
+     distinguish them. Publishing a guess as a shipping commitment is worse
+     than publishing the honest wider range: delivery inside Yemen costs
+     between the cheapest city rate and the dearest provincial one. */
+  const cheapest = Math.min(DELIVERY_FALLBACK_SAR.sanaa.min, DELIVERY_FALLBACK_SAR.provinces.min);
+  const dearest = Math.max(DELIVERY_FALLBACK_SAR.sanaa.max, DELIVERY_FALLBACK_SAR.provinces.max);
+
+  return {
+    '@type': 'OfferShippingDetails',
+    shippingRate: {
+      '@type': 'MonetaryAmount',
+      minValue: cheapest,
+      maxValue: dearest,
+      currency: DELIVERY_FALLBACK_SAR.currency
+    },
+    shippingDestination: {
+      '@type': 'DefinedRegion',
+      addressCountry: DELIVERY_FALLBACK_SAR.country
+    }
+  };
+}
+
 function buildProductSeo(product, currency = 'SAR') {
   if (!product || !product.id) return null;
 
@@ -150,14 +196,29 @@ function buildProductSeo(product, currency = 'SAR') {
   const ld = {
     '@context': 'https://schema.org/',
     '@type': 'Product',
-    name: product.title,
+    name: tidy(product.title),
     url
   };
   if (image) ld.image = [image];
   if (description) ld.description = description;
-  if (product.brand) ld.brand = { '@type': 'Brand', name: product.brand };
+  /* Trimmed. The category and brand come straight out of an operator-typed
+     column, and Search Console reported `category` as an invalid value: the
+     live products carry names like "غرف نوم ماليزي (مودرن )" and brands like
+     "موديل تركي " -- trailing spaces and the odd bidi mark pasted in from a
+     supplier's sheet. The title was already being tidied; the structured data
+     was not, so the two disagreed about the same product. */
+  const brandName = tidy(product.brand);
+  if (brandName) ld.brand = { '@type': 'Brand', name: brandName };
   if (product.sku) ld.sku = product.sku;
-  if (product.categoryName) ld.category = product.categoryName;
+
+  /* A category PATH rather than a bare leaf name. "الأثاث > غرف النوم" tells a
+     shopping crawler where the product sits; the leaf alone does not, and a
+     leaf that happens to be punctuated oddly is all Google had to work with. */
+  const categoryPath = [tidy(product.departmentName), tidy(product.categoryName)]
+    .filter(Boolean)
+    .filter((v, i, a) => a.indexOf(v) === i)
+    .join(' > ');
+  if (categoryPath) ld.category = categoryPath;
 
   if (Number(product.price) > 0) {
     ld.offers = {
@@ -170,24 +231,44 @@ function buildProductSeo(product, currency = 'SAR') {
       // Points at the one Organization node the site publishes site-wide, so
       // every offer resolves to the same seller instead of restating a name
       // that then has to be kept in sync by hand.
-      seller: { '@id': SITE + '/#organization' }
+      seller: { '@id': SITE + '/#organization' },
+
+      /* Search Console flagged both of these as missing on every product.
+         Neither is invented: the return terms are what returns.html tells
+         customers, and the delivery figures are the ones delivery-service.js
+         charges at checkout. Both are read from config/constants.js, so the
+         page, the checkout and the search result cannot state three different
+         policies. */
+      hasMerchantReturnPolicy: {
+        '@type': 'MerchantReturnPolicy',
+        applicableCountry: RETURN_POLICY.country,
+        returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
+        merchantReturnDays: RETURN_POLICY.days,
+        returnMethod: 'https://schema.org/ReturnByMail',
+        returnFees: RETURN_POLICY.feesAreCustomers
+          ? 'https://schema.org/ReturnFeesCustomerResponsibility'
+          : 'https://schema.org/FreeReturn',
+        merchantReturnLink: RETURN_POLICY.url
+      },
+
+      shippingDetails: shippingOffers(currency)
     };
   }
 
   // Breadcrumbs, built only from the taxonomy the product actually resolves to.
   const crumbs = [{ name: 'الرئيسية', item: SITE + '/' }];
   if (product.departmentName && product.departmentSlug) {
-    crumbs.push({ name: product.departmentName, item: `${SITE}/${product.departmentSlug}.html` });
+    crumbs.push({ name: tidy(product.departmentName), item: `${SITE}/${product.departmentSlug}.html` });
   }
   if (product.categoryName) {
     crumbs.push({
-      name: product.categoryName,
+      name: tidy(product.categoryName),
       item: product.departmentSlug && product.categorySlug
         ? `${SITE}/${product.departmentSlug}.html?category=${encodeURIComponent(product.categorySlug)}`
         : url
     });
   }
-  crumbs.push({ name: product.title, item: url });
+  crumbs.push({ name: tidy(product.title), item: url });
 
   const breadcrumbLd = {
     '@context': 'https://schema.org/',

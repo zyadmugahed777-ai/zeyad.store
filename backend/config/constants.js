@@ -58,5 +58,54 @@ module.exports = {
   TITLE_SUFFIX_AR: ' | ' + BRAND_AR,
 
   DEFAULT_OG_IMAGE: SITE_URL + '/assets/placeholder-logo.webp',
-  SITEMAP_URL: SITE_URL + '/sitemap.xml'
+  SITEMAP_URL: SITE_URL + '/sitemap.xml',
+
+  /**
+   * The shop's return terms, exactly as returns.html states them to customers.
+   *
+   * Published to Google as MerchantReturnPolicy. Search Console flagged
+   * hasMerchantReturnPolicy as missing on every product; this is the answer,
+   * and it is copied from the page rather than invented:
+   *
+   *   "يمكنك إرجاع المنتج خلال ٧ أيام من تاريخ الاستلام"
+   *   "يتحمل العميل تكلفة الشحن" for a change of mind
+   *
+   * The 14-day exchange window is deliberately NOT published here. Google's
+   * merchantReturnDays means the window for a REFUND, and conflating the two
+   * would tell shoppers they have fourteen days to get their money back when
+   * the shop's own page says seven.
+   *
+   * If the policy on the page changes, change it here in the same commit.
+   */
+  RETURN_POLICY: {
+    days: 7,
+    country: 'YE',
+    url: SITE_URL + '/returns.html',
+    // The customer pays return shipping unless the item was faulty or wrong,
+    // which is a per-case exception schema.org has no vocabulary for. The
+    // general rule is what gets published.
+    feesAreCustomers: true
+  },
+
+  /**
+   * What delivery actually costs, in SAR.
+   *
+   * These are not decorative: delivery-service.js charges exactly these
+   * figures at checkout whenever the delivery_policies table has no matching
+   * row -- and on production that table is EMPTY, so this is every order. The
+   * structured data reads the same constant, so what Google is told and what
+   * the customer is charged cannot drift apart.
+   *
+   * Fill delivery_policies from the admin and the checkout starts using those
+   * instead; this stays the floor.
+   */
+  DELIVERY_FALLBACK_SAR: {
+    sanaa: { min: 7.14, max: 14.29 },
+    provinces: { min: 21.43, max: 42.86 },
+    country: 'YE',
+    // Measured from the shop's own copy: "توصيل بأسعار رمزية داخل المدن
+    // الرئيسية". No transit-time claim is published, because nothing in the
+    // system records one.
+    currency: 'SAR'
+  }
 };
