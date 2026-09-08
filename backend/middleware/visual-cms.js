@@ -50,16 +50,25 @@ const {
  * business in Sana'a rather than to an anonymous domain.
  *
  * Every value here is read off the storefront, not invented. The phone is on
- * 63 of the 71 pages and watermarked into the product photographs; the street
- * is the one printed in the footer.
+ * 63 of the 71 pages and watermarked into the product photographs.
  *
- * Keep these identical to the Google Business Profile. Two records disagreeing
- * about a phone number is worse than one record saying nothing.
+ * No streetAddress. This is an online shop with several warehouses and visits
+ * are by appointment, so there is no single door to publish -- naming one
+ * would send a customer to the wrong building. The city stays, because the
+ * business is genuinely based in Sana'a, and areaServed carries the
+ * governorates the checkout will actually quote a delivery price for.
+ *
+ * OnlineStore rather than plain Organization: schema.org's own type for a shop
+ * that trades online, which is the accurate description here.
+ *
+ * Keep these identical to the Google Business Profile, and set that profile up
+ * as a SERVICE AREA business for the same reason. Two records disagreeing
+ * about an address is worse than one record saying nothing.
  */
 function buildOrganizationJsonLd() {
   return {
     '@context': 'https://schema.org',
-    '@type': 'Organization',
+    '@type': 'OnlineStore',
     '@id': SITE + '/#organization',
     name: BRAND_AR,
     alternateName: BRAND_ALTERNATES,
@@ -69,10 +78,13 @@ function buildOrganizationJsonLd() {
     telephone: BUSINESS.phone,
     address: {
       '@type': 'PostalAddress',
-      streetAddress: BUSINESS.street,
       addressLocality: BUSINESS.city,
       addressCountry: BUSINESS.country
     },
+    areaServed: BUSINESS.areaServed.map((name) => ({
+      '@type': 'AdministrativeArea',
+      name
+    })),
     contactPoint: {
       '@type': 'ContactPoint',
       telephone: BUSINESS.phone,

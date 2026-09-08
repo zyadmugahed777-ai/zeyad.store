@@ -81,9 +81,29 @@ module.exports = {
   BUSINESS: {
     phone: '+967775010726',
     whatsapp: '967775010726',
-    street: 'شارع الزبيري',
+    /* No streetAddress, deliberately.
+     *
+     * This is an online shop with several warehouses, and a customer visits by
+     * appointment so the right warehouse can be chosen for what they are
+     * buying. There is no single door to turn up at, so publishing one address
+     * as THE address would send someone to the wrong building -- and it is the
+     * kind of claim structured data is read as a promise.
+     *
+     * The city is still stated, because the business really is based in
+     * Sana'a, and that is what ties the domain to a place. Google's own model
+     * for this shape of business is a "service area business": no public
+     * street address, an explicit list of areas served instead. The Business
+     * Profile must be set up the same way or the two records disagree.
+     */
     city: 'صنعاء',
-    country: 'YE'
+    country: 'YE',
+    /* Where the shop actually delivers, from the zones address-service.js and
+       delivery-service.js already recognise. Not a marketing claim -- these
+       are the governorates the checkout will quote a price for. */
+    areaServed: [
+      'صنعاء', 'عدن', 'تعز', 'الحديدة', 'إب',
+      'ذمار', 'حضرموت', 'المكلا', 'حجة', 'صعدة'
+    ]
   },
   SITEMAP_URL: SITE_URL + '/sitemap.xml',
 
