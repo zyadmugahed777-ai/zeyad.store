@@ -97,13 +97,22 @@ module.exports = {
      */
     city: 'صنعاء',
     country: 'YE',
-    /* Where the shop actually delivers, from the zones address-service.js and
-       delivery-service.js already recognise. Not a marketing claim -- these
-       are the governorates the checkout will quote a price for. */
-    areaServed: [
-      'صنعاء', 'عدن', 'تعز', 'الحديدة', 'إب',
-      'ذمار', 'حضرموت', 'المكلا', 'حجة', 'صعدة'
-    ]
+    /* The whole country, stated as the country.
+     *
+     * This listed ten governorates, taken from the ten cities the geocoder
+     * happens to know. The owner has corrected that: the shop serves every
+     * governorate in Yemen, and delivery-service.js agrees -- it sorts an
+     * address into "صنعاء" or "المحافظات" and quotes a price either way, so
+     * nowhere in the country is refused.
+     *
+     * Naming ten of them was therefore both wrong and smaller than the truth.
+     * One Country is the accurate statement and the one Google reads cleanly.
+     */
+    areaServedCountry: 'اليمن',
+
+    /* Open all hours. Published as openingHours in the schema.org shorthand:
+       Mo-Su 00:00-23:59. */
+    opensAllHours: true
   },
   SITEMAP_URL: SITE_URL + '/sitemap.xml',
 

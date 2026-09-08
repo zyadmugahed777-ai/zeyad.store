@@ -55,8 +55,17 @@ const {
  * No streetAddress. This is an online shop with several warehouses and visits
  * are by appointment, so there is no single door to publish -- naming one
  * would send a customer to the wrong building. The city stays, because the
- * business is genuinely based in Sana'a, and areaServed carries the
- * governorates the checkout will actually quote a delivery price for.
+ * business is genuinely based in Sana'a.
+ *
+ * areaServed is the country, not a list of governorates. An earlier version
+ * named ten, copied from the ten cities the geocoder knows; the shop serves
+ * all of Yemen, and delivery-service.js quotes a price for any address by
+ * sorting it into "صنعاء" or "المحافظات". Naming ten was both inaccurate and
+ * narrower than the truth.
+ *
+ * openingHours says 24/7 because the shop answers on WhatsApp around the
+ * clock. It is a claim about reachability, which is what the field means for a
+ * business with no counter to stand behind.
  *
  * OnlineStore rather than plain Organization: schema.org's own type for a shop
  * that trades online, which is the accurate description here.
@@ -81,16 +90,43 @@ function buildOrganizationJsonLd() {
       addressLocality: BUSINESS.city,
       addressCountry: BUSINESS.country
     },
-    areaServed: BUSINESS.areaServed.map((name) => ({
-      '@type': 'AdministrativeArea',
-      name
-    })),
+    areaServed: { '@type': 'Country', name: BUSINESS.areaServedCountry },
+    openingHoursSpecification: {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+      opens: '00:00',
+      closes: '23:59'
+    },
     contactPoint: {
       '@type': 'ContactPoint',
       telephone: BUSINESS.phone,
       contactType: 'customer service',
       areaServed: BUSINESS.country,
-      availableLanguage: ['ar']
+      availableLanguage: ['ar'],
+      /* The same number takes WhatsApp and calls, and it is answered at any
+         hour -- so the contact point says so rather than leaving a shopper to
+         guess whether anyone is there at 11pm. */
+      hoursAvailable: {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+        opens: '00:00',
+        closes: '23:59'
+      }
+    },
+    /* The appointment page is how a customer arranges to visit, since which
+       warehouse they should come to depends on what they are buying. Declaring
+       it lets Google offer it directly. */
+    potentialAction: {
+      '@type': 'ReserveAction',
+      name: 'حجز موعد زيارة',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: SITE + '/book-appointment.html',
+        actionPlatform: [
+          'http://schema.org/DesktopWebPlatform',
+          'http://schema.org/MobileWebPlatform'
+        ]
+      }
     }
   };
 }
