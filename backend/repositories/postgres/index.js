@@ -12,6 +12,7 @@ const PostgresSettingsRepo = require('./settings-repo');
 const PostgresCategoryRepo = require('./category-repo');
 const PostgresDepartmentRepo = require('./department-repo');
 const PostgresProductRepo = require('./product-repo');
+const PostgresReviewRepo = require('./review-repo');
 const PostgresCustomerRepo = require('./customer-repo');
 const PostgresOrderRepo = require('./order-repo');
 const PostgresCartRepo = require('./cart-repo');
@@ -54,6 +55,7 @@ function buildRepoBundle(poolOrClient) {
     categories: new PostgresCategoryRepo(poolOrClient),
     departments: new PostgresDepartmentRepo(poolOrClient),
     products: new PostgresProductRepo(poolOrClient),
+    reviews: new PostgresReviewRepo(poolOrClient),
     customers: new PostgresCustomerRepo(poolOrClient),
     orders: new PostgresOrderRepo(poolOrClient),
     carts: new PostgresCartRepo(poolOrClient),

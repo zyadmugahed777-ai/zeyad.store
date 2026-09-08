@@ -481,7 +481,35 @@ async function visualCmsMiddleware(req, res, next) {
               (p) => String(p.id) === String(req.query.id)
             );
             if (product) {
-              const seo = buildProductSeo(product);
+              /* Approved reviews, so the page can publish a real rating. A
+                 product with none publishes no rating at all -- see
+                 product-seo-service.js for why that is not negotiable. A
+                 failure here must not cost the page its title and canonical,
+                 so it degrades to "no reviews" rather than throwing. */
+              let reviews = null;
+              try {
+                const repos = require('../repositories').getRepositories();
+                const numericId = product.dbId || product.id;
+                const [aggregate, items] = await Promise.all([
+                  repos.reviews.aggregate(numericId),
+                  repos.reviews.findApproved(numericId, 5)
+                ]);
+                if (aggregate) {
+                  reviews = {
+                    aggregate,
+                    items: items.map((r) => ({
+                      author: r.author_name,
+                      rating: Number(r.rating),
+                      body: r.body,
+                      createdAt: r.created_at
+                    }))
+                  };
+                }
+              } catch (e) {
+                console.error('[reviews] structured data skipped:', e.message);
+              }
+
+              const seo = buildProductSeo(product, 'SAR', reviews);
               if (seo) {
                 // Remove the placeholders first: two titles or two canonicals
                 // on a page leaves the crawler to pick one arbitrarily.

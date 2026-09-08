@@ -436,6 +436,9 @@ app.use((req, res, next) => {
 // API ROUTES (Public - No auth required)
 // =============================================
 app.use('/api/products', require('./routes/api/products'));
+// Reviews hang off a product: /api/products/:id/reviews. Mounted after the
+// product router so its own /:id route cannot swallow the path.
+app.use('/api/products', require('./routes/api/reviews'));
 app.use('/api/categories', require('./routes/api/categories'));
 app.use('/api/orders', require('./routes/api/orders'));
 app.use('/api/appointments', require('./routes/api/appointments'));

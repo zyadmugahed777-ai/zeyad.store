@@ -1,0 +1,128 @@
+<%- include('../../partials/head', { title }) %>
+<%- include('../../partials/sidebar', { active }) %>
+<main class="admin-main">
+  <%- include('../../partials/topbar') %>
+
+  <div class="admin-content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h1 class="page-title"><%= title %></h1>
+        <p class="page-description">
+          كل تقييم يكتبه زبون يصل هنا أولاً ولا يظهر في المتجر حتى تعتمده أنت.
+        </p>
+      </div>
+    </div>
+
+    <!-- Queue tabs. The pending count is the one that matters day to day. -->
+    <div class="glass-card mb-4">
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <% const tabs = [
+             ['pending',  'بانتظار المراجعة', counts.pending],
+             ['approved', 'منشورة',           counts.approved],
+             ['rejected', 'مرفوضة',           counts.rejected]
+           ]; %>
+        <% tabs.forEach(function (t) { %>
+          <a href="/admin/reviews?status=<%= t[0] %>"
+             class="btn <%= status === t[0] ? 'btn-primary' : 'btn-outline' %>"
+             style="display:inline-flex; align-items:center; gap:8px;">
+            <%= t[1] %>
+            <span class="badge" style="background:rgba(255,255,255,.18); padding:2px 8px; border-radius:999px;"><%= t[2] %></span>
+          </a>
+        <% }) %>
+      </div>
+    </div>
+
+    <% if (!reviews.length) { %>
+      <div class="glass-card" style="text-align:center; padding:48px 20px;">
+        <span class="material-symbols-rounded" style="font-size:44px; color:var(--text-muted);">reviews</span>
+        <p style="margin-top:12px; color:var(--text-muted);">
+          <% if (status === 'pending') { %>
+            لا توجد تقييمات بانتظار المراجعة.
+          <% } else if (status === 'approved') { %>
+            لم تعتمد أي تقييم بعد. التقييمات المعتمدة هي وحدها التي تظهر للزبائن وفي نتائج البحث.
+          <% } else { %>
+            لا توجد تقييمات مرفوضة.
+          <% } %>
+        </p>
+      </div>
+    <% } else { %>
+      <% reviews.forEach(function (r) { %>
+        <div class="glass-card mb-3">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap;">
+            <div style="flex:1; min-width:260px;">
+
+              <!-- The stars, as a number too: five glyphs are hard to count at a glance. -->
+              <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px;">
+                <span style="color:#f0b429; letter-spacing:2px; font-size:16px;">
+                  <%= '★'.repeat(r.rating) %><span style="opacity:.28;"><%= '★'.repeat(5 - r.rating) %></span>
+                </span>
+                <strong style="font-size:14px;"><%= r.rating %>/5</strong>
+                <% if (r.is_verified_purchase) { %>
+                  <span class="badge" style="background:rgba(34,197,94,.15); color:#22c55e; font-size:11px; padding:3px 9px; border-radius:6px;">
+                    مشترٍ موثّق
+                  </span>
+                <% } %>
+              </div>
+
+              <div style="font-size:13px; color:var(--text-muted); margin-bottom:10px;">
+                <strong style="color:var(--text-primary);"><%= r.author_name %></strong>
+                &nbsp;·&nbsp;
+                <% if (r.product_title) { %>
+                  <a href="/product.html?id=<%= r.product_code || r.product_id %>" target="_blank" style="color:#60a5fa;"><%= r.product_title %></a>
+                <% } else { %>
+                  <span>منتج محذوف (#<%= r.product_id %>)</span>
+                <% } %>
+                &nbsp;·&nbsp;
+                <%= helpers.formatDate ? helpers.formatDate(r.created_at) : r.created_at %>
+              </div>
+
+              <p style="margin:0; line-height:1.8; white-space:pre-wrap;"><%= r.body %></p>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:8px; min-width:150px;">
+              <% if (r.status !== 'approved') { %>
+                <form action="/admin/reviews/<%= r.id %>/approve?_csrf=<%= csrfToken %>" method="POST" style="margin:0;">
+                  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                  <input type="hidden" name="back" value="<%= status %>">
+                  <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">
+                    <span class="material-symbols-rounded">check</span> اعتماد ونشر
+                  </button>
+                </form>
+              <% } %>
+
+              <% if (r.status !== 'rejected') { %>
+                <form action="/admin/reviews/<%= r.id %>/reject?_csrf=<%= csrfToken %>" method="POST" style="margin:0;">
+                  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                  <input type="hidden" name="back" value="<%= status %>">
+                  <button type="submit" class="btn btn-outline" style="width:100%; justify-content:center;"
+                          title="يُخفى عن الزبائن ويبقى محفوظاً، فلا يستطيع الزبون إعادة إرسال نفس النص">
+                    <span class="material-symbols-rounded">block</span> رفض
+                  </button>
+                </form>
+              <% } %>
+
+              <form action="/admin/reviews/<%= r.id %>/delete?_csrf=<%= csrfToken %>" method="POST" style="margin:0;"
+                    onsubmit="return confirm('حذف نهائي لهذا التقييم؟ سيتمكن الزبون من كتابة تقييم جديد بعده.');">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <input type="hidden" name="back" value="<%= status %>">
+                <button type="submit" class="btn btn-outline" style="width:100%; justify-content:center; color:var(--danger,#ef4444); border-color:rgba(239,68,68,.35);"
+                        title="يُحذف من قاعدة البيانات نهائياً — للمحتوى المسيء أو الذي يحوي بيانات شخصية">
+                  <span class="material-symbols-rounded">delete</span> حذف نهائي
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    <% } %>
+
+    <div class="glass-card" style="margin-top:8px; font-size:12px; color:var(--text-muted); line-height:1.9;">
+      <strong style="color:var(--text-primary);">الفرق بين الرفض والحذف</strong><br>
+      <strong>رفض</strong> — يخفي التقييم عن الزبائن ويبقيه محفوظاً، فلا يستطيع نفس الزبون إرسال النص ذاته مرة أخرى.
+      هذا هو الخيار المعتاد لتعليق لا صلة له بالمنتج.<br>
+      <strong>حذف نهائي</strong> — يمحوه من قاعدة البيانات، ويتيح لذلك الزبون كتابة تقييم جديد.
+      استخدمه للمحتوى المسيء أو الذي يحوي رقم هاتف أو بيانات شخص آخر.
+    </div>
+  </div>
+</main>
+<%- include('../../partials/foot') %>

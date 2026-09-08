@@ -299,10 +299,28 @@ const read = (f) => fs.readFileSync(path.join(REPO, f), 'utf8');
     assert.strictEqual(p.category, 'غرف نوم ماليزي (مودرن )');
   });
 
-  await test('product structured data claims no rating without a reviews table', () => {
-    const svc = fs.readFileSync(path.join(ROOT, 'services/product-seo-service.js'), 'utf8');
-    assert.ok(!/aggregateRating/.test(svc.replace(/\/\*[\s\S]*?\*\//g, '')),
-      'aggregateRating is emitted, but nothing in the schema stores real reviews');
+  await test('a rating is published only from reviews a customer actually wrote', () => {
+    /* This assertion used to be "aggregateRating is never emitted", which was
+       right while no reviews table existed. One exists now
+       (migrations/2026-09-07-product-reviews.sql) and approved rows in it DO
+       get published -- that is the whole point of building it.
+
+       What must never come back is the shortcut: products.rating and
+       products.reviews_count hold values seeded at catalogue import that no
+       customer wrote, and publishing those is review fraud as Google defines
+       it. So the rule is now about the SOURCE, not about the field. The
+       behaviour itself -- no reviews means no rating, not a zero -- is proved
+       against a live database in test-product-reviews.js. */
+    const code = fs.readFileSync(path.join(ROOT, 'services/product-seo-service.js'), 'utf8')
+      .replace(/\/\*[\s\S]*?\*\//g, '')
+      .replace(/\/\/.*$/gm, '');
+
+    assert.ok(!/product\.rating|reviews_count/.test(code),
+      'the SEO service reads the seeded rating columns instead of real reviews');
+
+    // And the rating must sit behind a check that real reviews exist.
+    assert.ok(/reviews\s*&&\s*reviews\.aggregate\s*&&\s*reviews\.aggregate\.count\s*>\s*0/.test(code),
+      'aggregateRating is emitted without first proving there are approved reviews');
   });
 
   // --- 7. Live pages, when a server is up ---------------------------------

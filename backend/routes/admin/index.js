@@ -160,6 +160,9 @@ router.use((req, res, next) => {
 router.use('/', require('./dashboard'));
 router.use('/dashboard', require('./dashboard'));
 router.use('/products', checkPermission('products:view'), require('./products'));
+// Reviews are product content, so they ride on products:view rather than
+// inventing an RBAC permission no existing role has been granted.
+router.use('/reviews', checkPermission('products:view'), require('./reviews'));
 router.use('/frame-products', checkPermission('frame-products:view'), require('./frame-products'));
 router.use('/departments', checkPermission('departments:view'), require('./departments'));
 router.use('/categories', checkPermission('categories:view'), require('./categories'));

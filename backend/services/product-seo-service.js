@@ -26,13 +26,16 @@
  * Only fields backed by a real column with a real value:
  *   name, image, description, brand, sku, price, priceCurrency, availability
  *
- * aggregateRating is NOT emitted. products.rating and products.reviews_count
- * hold numbers, but there is no reviews table anywhere in the schema -- they
- * are seeded values with nothing behind them. Marking up ratings that no
- * customer left violates Google's structured data policy and risks a manual
- * action against the whole domain. The numbers still render on the page as
- * they always have; they simply are not claimed to search engines as review
- * data.
+ * aggregateRating is emitted ONLY from the product_reviews table, and only
+ * from rows an operator has approved. It is never taken from products.rating
+ * or products.reviews_count: those two columns hold values seeded when the
+ * catalogue was imported, which no customer ever wrote. Marking those up would
+ * be review fraud as Google defines it, and the penalty is a manual action
+ * against the whole domain.
+ *
+ * So a product with no approved reviews publishes no rating at all -- not a
+ * zero, not a default of five. "Not yet rated" is the truth, and the stars
+ * appear the day a real customer leaves one.
  */
 
 // Both come from config/constants.js so the canonical host and the brand are
@@ -147,7 +150,13 @@ function shippingOffers(currency) {
   };
 }
 
-function buildProductSeo(product, currency = 'SAR') {
+/**
+ * @param {object} product
+ * @param {string} currency
+ * @param {{aggregate:{count:number,average:number}|null, items:Array}} [reviews]
+ *        Real, approved reviews. Omitted or empty means nothing is published.
+ */
+function buildProductSeo(product, currency = 'SAR', reviews = null) {
   if (!product || !product.id) return null;
 
   const url = `${SITE}/product.html?id=${encodeURIComponent(product.id)}`;
@@ -253,6 +262,35 @@ function buildProductSeo(product, currency = 'SAR') {
 
       shippingDetails: shippingOffers(currency)
     };
+  }
+
+  /* Ratings and reviews, from the moderation queue and nowhere else.
+     `aggregate` is null until at least one review is approved, and this block
+     is skipped entirely in that case -- Google would rather see no rating than
+     an invented one, and so would a shopper. */
+  if (reviews && reviews.aggregate && reviews.aggregate.count > 0) {
+    ld.aggregateRating = {
+      '@type': 'AggregateRating',
+      ratingValue: reviews.aggregate.average,
+      reviewCount: reviews.aggregate.count,
+      bestRating: 5,
+      worstRating: 1
+    };
+
+    /* A handful of the actual reviews alongside the average. Google asks for
+       `review` as well as `aggregateRating`, and an average with no reviews
+       behind it is exactly the shape a fabricated rating has. Five is enough
+       to satisfy the requirement without bloating every product page. */
+    const items = (reviews.items || []).slice(0, 5).filter((r) => r && r.body && r.rating);
+    if (items.length) {
+      ld.review = items.map((r) => ({
+        '@type': 'Review',
+        reviewRating: { '@type': 'Rating', ratingValue: Number(r.rating), bestRating: 5, worstRating: 1 },
+        author: { '@type': 'Person', name: String(r.author || 'عميل') },
+        reviewBody: String(r.body).slice(0, 500),
+        datePublished: r.createdAt ? new Date(r.createdAt).toISOString().slice(0, 10) : undefined
+      }));
+    }
   }
 
   // Breadcrumbs, built only from the taxonomy the product actually resolves to.

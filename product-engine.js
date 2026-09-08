@@ -379,11 +379,15 @@ function sanitizeRichText(value) {
     const warrantyEl = qs("product-warranty");
     if (warrantyEl) warrantyEl.textContent = product.warranty || "ضمان الوكيل المعتمد";
 
-    const ratingVal = qs("product-rating-value");
-    if (ratingVal) ratingVal.textContent = product.rating || "4.8";
+    /* The rating beside the title used to read `product.rating || "4.8"` and
+       `reviewsCount || 18`. Both columns were seeded when the catalogue was
+       imported and no customer ever wrote them, so every product in the shop
+       advertised 4.8 stars from 18 reviews that did not exist.
 
-    const revCount = qs("product-reviews-count");
-    if (revCount) revCount.textContent = `(${Number(product.reviewsCount || product.reviews_count || 18).toLocaleString("ar-SA")})`;
+       They are now filled by loadReviews() from approved reviews only, and
+       stay hidden until there is something real to show. */
+    const ratingBlock = qs("product-rating-inline");
+    if (ratingBlock) ratingBlock.hidden = true;
 
     const curPriceEl = qs("product-current-price");
     if (curPriceEl) curPriceEl.textContent = formatPrice(product.price);
@@ -557,6 +561,150 @@ function sanitizeRichText(value) {
     var apply = function () { applyStageRatio(stage, video.videoWidth, video.videoHeight); };
     if (video.readyState >= 1 && video.videoWidth) apply();
     else video.addEventListener("loadedmetadata", apply, { once: true });
+  }
+
+  /**
+   * Real customer reviews for this product, and the form to add one.
+   *
+   * Everything here comes from /api/products/:id/reviews, which returns
+   * APPROVED reviews only. A product nobody has reviewed shows an honest
+   * invitation rather than a manufactured average.
+   *
+   * The form appears only for a signed-in customer, because the API only
+   * accepts one from a signed-in customer -- showing it to a stranger would
+   * be an invitation to type three paragraphs and then be told to log in.
+   */
+  function starsHtml(n) {
+    var full = Math.round(Number(n) || 0);
+    return '<span class="zs-stars" aria-label="' + full + ' من 5">' +
+      '<span class="zs-stars-on">' + "★".repeat(Math.max(0, Math.min(5, full))) + '</span>' +
+      '<span class="zs-stars-off">' + "★".repeat(Math.max(0, 5 - full)) + '</span></span>';
+  }
+
+  async function loadReviews(product) {
+    var panel = qs("product-reviews-placeholder");
+    if (!panel) return;
+    var pid = product.id || product.product_id;
+    if (!pid) return;
+
+    panel.innerHTML = '<p class="zs-reviews-loading">جارٍ تحميل التقييمات…</p>';
+
+    var payload;
+    try {
+      var res = await fetch("/api/products/" + encodeURIComponent(pid) + "/reviews", { credentials: "same-origin" });
+      payload = await res.json();
+      if (!payload || !payload.success) throw new Error("bad payload");
+    } catch (e) {
+      // A failed load must not leave a spinner on the page forever.
+      panel.innerHTML = '<p class="zs-reviews-empty">تعذّر تحميل التقييمات حالياً.</p>';
+      return;
+    }
+
+    var agg = payload.aggregate;
+    var list = payload.data || [];
+    var viewer = payload.viewer || {};
+    var html = "";
+
+    // --- the average, only when it exists ---------------------------
+    if (agg && agg.count > 0) {
+      html += '<div class="zs-reviews-summary">' +
+        '<strong class="zs-reviews-avg">' + agg.average + '</strong>' +
+        '<span>من 5</span>' + starsHtml(agg.average) +
+        '<span class="zs-reviews-count">' + agg.count + (agg.count === 1 ? " تقييم" : " تقييمات") + '</span>' +
+        '</div>';
+
+      // Mirror it beside the product title, which is hidden until now.
+      var block = qs("product-rating-inline");
+      var val = qs("product-rating-value");
+      var cnt = qs("product-reviews-count");
+      if (val) val.textContent = agg.average;
+      if (cnt) cnt.textContent = "(" + agg.count + ")";
+      if (block) block.hidden = false;
+    } else {
+      html += '<p class="zs-reviews-empty">لا توجد تقييمات لهذا المنتج بعد. كن أول من يشاركنا رأيه.</p>';
+    }
+
+    // --- the reviews themselves --------------------------------------
+    if (list.length) {
+      html += '<ul class="zs-reviews-list">';
+      list.forEach(function (r) {
+        html += '<li class="zs-review">' +
+          '<div class="zs-review-head">' + starsHtml(r.rating) +
+            '<strong>' + escHtml(r.author) + '</strong>' +
+            (r.verifiedPurchase ? '<span class="zs-review-verified">مشترٍ موثّق</span>' : "") +
+          '</div>' +
+          '<p class="zs-review-body">' + escHtml(r.body) + '</p>' +
+        '</li>';
+      });
+      html += '</ul>';
+    }
+
+    // --- writing one --------------------------------------------------
+    if (!viewer.signedIn) {
+      html += '<div class="zs-review-cta"><p>سجّل الدخول لتتمكن من تقييم هذا المنتج.</p>' +
+        '<a class="btn-primary" href="login.html?return=' + encodeURIComponent(location.pathname + location.search) + '">تسجيل الدخول</a></div>';
+    } else if (viewer.myReview) {
+      html += '<div class="zs-review-cta"><p>' +
+        (viewer.myReview.status === "pending"
+          ? "شكراً لك — تقييمك قيد المراجعة وسيظهر بعد اعتماده."
+          : "لقد قيّمت هذا المنتج من قبل.") +
+        '</p></div>';
+    } else {
+      html += '<form class="zs-review-form" id="zs-review-form" novalidate>' +
+        '<h4>شاركنا رأيك في هذا المنتج</h4>' +
+        '<div class="zs-review-stars" role="radiogroup" aria-label="التقييم">';
+      for (var i = 1; i <= 5; i++) {
+        html += '<label class="zs-star-pick"><input type="radio" name="rating" value="' + i + '" required>' +
+                '<span aria-hidden="true">★</span><span class="sr-only">' + i + '</span></label>';
+      }
+      html += '</div>' +
+        '<textarea name="body" rows="4" maxlength="1500" minlength="10" required ' +
+          'placeholder="ما الذي أعجبك أو لم يعجبك؟ اكتب تجربتك الحقيقية مع المنتج."></textarea>' +
+        '<p class="zs-review-note">يظهر تقييمك بعد مراجعته من فريق المتجر.</p>' +
+        '<button type="submit" class="btn-primary">إرسال التقييم</button>' +
+        '<p class="zs-review-msg" role="status"></p>' +
+      '</form>';
+    }
+
+    panel.innerHTML = html;
+
+    var form = qs("zs-review-form");
+    if (form) {
+      form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+        var msg = form.querySelector(".zs-review-msg");
+        var btn = form.querySelector("button[type=submit]");
+        var picked = form.querySelector("input[name=rating]:checked");
+        var body = (form.querySelector("textarea[name=body]").value || "").trim();
+
+        if (!picked) { msg.textContent = "اختر عدد النجوم أولاً."; return; }
+        if (body.length < 10) { msg.textContent = "اكتب رأيك في 10 أحرف على الأقل."; return; }
+
+        btn.disabled = true;
+        msg.textContent = "جارٍ الإرسال…";
+        try {
+          var r = await fetch("/api/products/" + encodeURIComponent(pid) + "/reviews", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "same-origin",
+            body: JSON.stringify({ rating: Number(picked.value), body: body })
+          });
+          var j = await r.json();
+          if (r.ok && j.success) {
+            // Re-read from the server rather than optimistically drawing the
+            // review: it is pending, so the honest result is the "under
+            // review" note, and that is what a reload will show too.
+            loadReviews(product);
+          } else {
+            msg.textContent = (j && j.error) || "تعذّر إرسال التقييم.";
+            btn.disabled = false;
+          }
+        } catch (err) {
+          msg.textContent = "تعذّر إرسال التقييم. تحقق من اتصالك.";
+          btn.disabled = false;
+        }
+      });
+    }
   }
 
   function renderGalleryStage(index) {
@@ -849,13 +997,11 @@ function sanitizeRichText(value) {
         .join("");
     }
 
-    const revPlace = qs("product-reviews-placeholder");
-    if (revPlace) {
-      revPlace.innerHTML = `
-        <p>تقييم المنتج <strong>${product.rating || "4.8"}</strong> من أصل 5 بناءً على <strong>${Number(product.reviewsCount || 18).toLocaleString("ar-SA")}</strong> تقييم عملاء موثق.</p>
-        <p>جميع التقييمات من مشترين حقيقيين داخل اليمن والمملكة العربية السعودية.</p>
-      `;
-    }
+    /* The panel used to print a fixed 4.8/5 from 18 reviews and the sentence
+       "جميع التقييمات من مشترين حقيقيين" underneath it -- a claim about
+       customers who had never written anything. It now shows what the
+       moderation queue has approved, and nothing when that is empty. */
+    loadReviews(product);
 
     const faqList = qs("product-faq-list");
     if (faqList) {
@@ -911,7 +1057,11 @@ function sanitizeRichText(value) {
             ${discount > 0 ? `<del>${formatPrice(product.oldPrice || product.old_price)}</del>` : ""}
           </div>
           <div class="product-mini-card-foot">
-            <span class="product-mini-card-rating">★ ${product.rating || "4.8"}</span>
+            ${/* No star here. It read `product.rating || "4.8"` and the API
+                  behind this rail carries no review data at all, so every card
+                  in "قد يعجبك أيضاً" showed 4.8 out of 5 for a product with no
+                  reviews. A rating belongs on the product's own page, where it
+                  is read from approved reviews. */ ""}
             <button class="product-mini-card-add" type="button" data-mini-add="${pid}">أضف</button>
           </div>
         </div>
@@ -1168,8 +1318,13 @@ function sanitizeRichText(value) {
               title: raw.title,
               price: raw.price,
               oldPrice: raw.old_price,
-              rating: String(raw.rating || '4.8'),
-              reviewsCount: raw.reviews_count || 18,
+              /* Null, not a default. These two columns were seeded at import
+                 and no customer wrote them; defaulting them to 4.8 and 18 is
+                 how the whole shop came to advertise a rating it had not
+                 earned. The real numbers arrive from
+                 /api/products/:id/reviews, which reads approved reviews only. */
+              rating: raw.rating != null ? String(raw.rating) : null,
+              reviewsCount: raw.reviews_count != null ? Number(raw.reviews_count) : null,
               brand: raw.brand || '',
               origin: raw.origin || '',
               sku: raw.sku || raw.product_id,
