@@ -189,6 +189,26 @@ const read = (f) => fs.readFileSync(path.join(REPO, f), 'utf8');
       'the category description still claims a warranty for every category');
   });
 
+  await test('the title tidier squeezes whitespace, not the letter s', () => {
+    // It shipped as replace(/s+/g, ' ') -- the backslash lost in transit -- so
+    // it replaced runs of the LETTER s. "Samsung Smart TV" became
+    // "Sam ung Smart TV" in the title and the meta description. The category
+    // call only looked correct because the .trim() after it did the visible
+    // work on a trailing space.
+    const svc = fs.readFileSync(path.join(ROOT, 'services/product-seo-service.js'), 'utf8');
+    assert.ok(!svc.includes("replace(/s+/g"),
+      'the tidier matches the letter s instead of whitespace');
+
+    const m = svc.match(/const tidy = ([^;]+);/);
+    assert.ok(m, 'could not find the tidy helper');
+    // eslint-disable-next-line no-new-func
+    const tidy = new Function('return ' + m[1])();
+    assert.strictEqual(tidy('Samsung Smart TV'), 'Samsung Smart TV',
+      'an English product name is being corrupted');
+    assert.strictEqual(tidy('غرفه نوم ملكي  (N)'), 'غرفه نوم ملكي (N)');
+    assert.strictEqual(tidy('غرف نوم سويدي '), 'غرف نوم سويدي');
+  });
+
   await test('product structured data claims no rating without a reviews table', () => {
     const svc = fs.readFileSync(path.join(ROOT, 'services/product-seo-service.js'), 'utf8');
     assert.ok(!/aggregateRating/.test(svc.replace(/\/\*[\s\S]*?\*\//g, '')),
