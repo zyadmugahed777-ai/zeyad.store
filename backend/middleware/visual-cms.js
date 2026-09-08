@@ -17,7 +17,7 @@ const { injectCatalog } = require('../services/catalog-render-service');
 const { injectCategoryStrip } = require('../services/category-strip-service');
 const { buildProductSeo, buildCategorySeo, SITE } = require('../services/product-seo-service');
 const {
-  BRAND_AR, BRAND_ALTERNATES, DEFAULT_OG_IMAGE
+  BRAND_AR, BRAND_ALTERNATES, DEFAULT_OG_IMAGE, BRAND_LOGO, BUSINESS
 } = require('../config/constants');
 
 /**
@@ -39,6 +39,23 @@ const {
  * Google prints. Site names and snippets are chosen by the engine. This
  * supplies correct signals; it does not control the result.
  */
+/**
+ * The one Organization node the whole site points at.
+ *
+ * It used to declare /assets/placeholder-logo.webp as both logo and image --
+ * a file that returns 404 and always has -- so the single picture Google
+ * associates with this business did not exist. And it carried no phone and no
+ * address, which for a shop selling in one city is the most useful thing it
+ * could say: those two fields are what let Google tie zeyad.store to a real
+ * business in Sana'a rather than to an anonymous domain.
+ *
+ * Every value here is read off the storefront, not invented. The phone is on
+ * 63 of the 71 pages and watermarked into the product photographs; the street
+ * is the one printed in the footer.
+ *
+ * Keep these identical to the Google Business Profile. Two records disagreeing
+ * about a phone number is worse than one record saying nothing.
+ */
 function buildOrganizationJsonLd() {
   return {
     '@context': 'https://schema.org',
@@ -47,8 +64,22 @@ function buildOrganizationJsonLd() {
     name: BRAND_AR,
     alternateName: BRAND_ALTERNATES,
     url: SITE + '/',
-    logo: DEFAULT_OG_IMAGE,
-    image: DEFAULT_OG_IMAGE
+    logo: BRAND_LOGO,
+    image: DEFAULT_OG_IMAGE,
+    telephone: BUSINESS.phone,
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: BUSINESS.street,
+      addressLocality: BUSINESS.city,
+      addressCountry: BUSINESS.country
+    },
+    contactPoint: {
+      '@type': 'ContactPoint',
+      telephone: BUSINESS.phone,
+      contactType: 'customer service',
+      areaServed: BUSINESS.country,
+      availableLanguage: ['ar']
+    }
   };
 }
 

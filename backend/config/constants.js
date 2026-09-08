@@ -57,7 +57,34 @@ module.exports = {
   // site rather than 71 files disagreeing.
   TITLE_SUFFIX_AR: ' | ' + BRAND_AR,
 
-  DEFAULT_OG_IMAGE: SITE_URL + '/assets/placeholder-logo.webp',
+  /* This pointed at /assets/placeholder-logo.webp, which returns 404 and
+     always has. The Organization structured data declared it as the business's
+     logo AND its image, so the one picture Google associates with this
+     business was a missing file. og-default.png is 1200x630 and exists. */
+  DEFAULT_OG_IMAGE: SITE_URL + '/assets/brand/og-default.png',
+
+  /* The square mark, for Organization.logo. Google wants a logo it can render
+     beside the business name; a 1200x630 social card is the wrong shape for
+     that, so the 512x512 icon is used instead. */
+  BRAND_LOGO: SITE_URL + '/assets/brand/icon-512.png',
+
+  /**
+   * How to reach the shop. Read off the storefront rather than invented:
+   * +967 775 010 726 appears on 63 of the 71 pages and is watermarked into the
+   * product photographs; "صنعاء، شارع الزبيري" is the address in the footer.
+   *
+   * Published as Organization.telephone and Organization.address, which is
+   * what lets Google connect zeyad.store to a real business in Sana'a -- the
+   * same details that must match the Google Business Profile exactly, or the
+   * two records compete instead of reinforcing each other.
+   */
+  BUSINESS: {
+    phone: '+967775010726',
+    whatsapp: '967775010726',
+    street: 'شارع الزبيري',
+    city: 'صنعاء',
+    country: 'YE'
+  },
   SITEMAP_URL: SITE_URL + '/sitemap.xml',
 
   /**
