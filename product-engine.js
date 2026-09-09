@@ -1069,12 +1069,96 @@ function sanitizeRichText(value) {
     `;
   }
 
+  /*
+   * A small deterministic shuffle.
+   *
+   * Seeded from the product's own id, so the order is stable: the same product
+   * page shows the same neighbours on every visit and on every device, which
+   * matters because a rail that reshuffles on each render reads as a bug. Two
+   * DIFFERENT products get different orders, which is the point -- without it
+   * every page in the shop recommends the same first ten rows of the catalogue.
+   *
+   * mulberry32: small, fast, and good enough to spread a list of fifty.
+   */
+  function seedFrom(text) {
+    var h = 2166136261;
+    var s = String(text);
+    for (var i = 0; i < s.length; i++) {
+      h ^= s.charCodeAt(i);
+      h = Math.imul(h, 16777619);
+    }
+    return h >>> 0;
+  }
+
+  function stableShuffle(list, seed) {
+    var a = list.slice();
+    var t = seed >>> 0;
+    var rand = function () {
+      t += 0x6D2B79F5;
+      var x = t;
+      x = Math.imul(x ^ (x >>> 15), x | 1);
+      x ^= x + Math.imul(x ^ (x >>> 7), x | 61);
+      return ((x ^ (x >>> 14)) >>> 0) / 4294967296;
+    };
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(rand() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+
+  /**
+   * The three rails under a product, with nothing repeated between them.
+   *
+   * The previous version filtered the catalogue three times -- same category,
+   * same brand, best-seller-or-new -- and took the first ten of each. On this
+   * shop's actual data that produced three copies of one list: all 57 products
+   * sit in a single category, 49 of them share one brand, and every row is
+   * flagged best seller or new. So each filter matched almost everything, and
+   * .slice(0, 10) then took the same ten rows from the top of the same array.
+   *
+   * Three fixes, and the first is what actually matters:
+   *
+   *   1. A product used by one rail is excluded from the rest. Whatever the
+   *      filters match, the rails cannot overlap.
+   *   2. The order is a per-product shuffle rather than catalogue order, so
+   *      the tenth product's page does not recommend the same rows as the
+   *      first's.
+   *   3. A rail that cannot fill itself from its own rule falls through to the
+   *      remaining stock instead of showing three items beside two that show
+   *      ten -- a half-empty rail looks broken, and "you might also like"
+   *      carries no promise about how the choice was made.
+   */
   function getRelatedProducts(product) {
     const db = window.PRODUCTS_DB || [];
+    const sameId = (a, b) => String(a) === String(b);
+    const pool = db.filter((item) => !sameId(item.id, product.id) && !sameId(item.product_id, product.product_id));
+
+    const ordered = stableShuffle(pool, seedFrom(product.product_id || product.id));
+    const used = Object.create(null);
+
+    /* Take up to n products the other rails have not taken. A null rule means
+       "anything left", which is what the fallbacks use. */
+    const take = (rule, n) => {
+      const out = [];
+      for (let i = 0; i < ordered.length && out.length < n; i++) {
+        const item = ordered[i];
+        const key = String(item.product_id || item.id);
+        if (used[key]) continue;
+        if (rule && !rule(item)) continue;
+        used[key] = true;
+        out.push(item);
+      }
+      return out;
+    };
+
+    const fill = (list, n) => (list.length >= n ? list : list.concat(take(null, n - list.length)));
+
     const category = getCategoryCode(product);
-    const sameCategory = db.filter((item) => item.id !== product.id && getCategoryCode(item) === category).slice(0, 10);
-    const similar = db.filter((item) => item.id !== product.id && item.brand === product.brand).slice(0, 10);
-    const mayLike = db.filter((item) => item.id !== product.id && (item.isBestSeller || item.isNew || item.is_best_seller)).slice(0, 10);
+    const sameCategory = fill(take((i) => getCategoryCode(i) === category, 10), 10);
+    const similar = fill(take((i) => i.brand && i.brand === product.brand, 10), 10);
+    const mayLike = fill(take((i) => i.isBestSeller || i.is_best_seller || i.isNew, 10), 10);
+
     return { sameCategory, similar, mayLike };
   }
 

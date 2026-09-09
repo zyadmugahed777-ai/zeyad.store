@@ -403,6 +403,87 @@ const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
       'the client still writes into a count element');
   });
 
+  // --- 5c. The rails under a product must not be three copies of one list --
+
+  /** Lift the shipped functions out of product-engine.js and run them. */
+  function relatedFor(db, product) {
+    const src = fs.readFileSync(path.join(REPO, 'product-engine.js'), 'utf8').split('\r\n').join('\n');
+    const grab = (name) => {
+      const i = src.indexOf('function ' + name + '(');
+      assert.ok(i >= 0, name + '() is missing from product-engine.js');
+      const j = src.indexOf('\n  }', i);
+      return src.slice(i, j + 4);
+    };
+    const code = [grab('seedFrom'), grab('stableShuffle'), grab('getRelatedProducts')].join('\n');
+    const getCategoryCode = (p) => String(p.categoryCode || p.categorySlug || p.category || '');
+    const win = { PRODUCTS_DB: db };
+    // eslint-disable-next-line no-new-func
+    const fn = new Function('getCategoryCode', 'window', code + '; return getRelatedProducts;')(getCategoryCode, win);
+    return fn(product);
+  }
+
+  /* A catalogue shaped like this shop's actual one: every product in a single
+     category, almost all sharing a brand, everything flagged best seller. That
+     is what made the three filters return the same list. */
+  const uniformCatalogue = Array.from({ length: 40 }, (_, i) => ({
+    id: i + 1,
+    product_id: 'P-' + (1000 + i),
+    title: 'غرفة نوم ' + (i + 1),
+    categoryCode: 'CAT-BED',
+    brand: i < 35 ? 'موديل تركي' : 'موديل سويدي',
+    isBestSeller: true,
+    price: 1000 + i
+  }));
+
+  await test('the three product rails never show the same product twice', () => {
+    for (const p of uniformCatalogue.slice(0, 6)) {
+      const r = relatedFor(uniformCatalogue, p);
+      const ids = (list) => list.map((x) => String(x.product_id));
+      const all = [...ids(r.sameCategory), ...ids(r.similar), ...ids(r.mayLike)];
+      const unique = new Set(all);
+      assert.strictEqual(unique.size, all.length,
+        p.product_id + ': a product appears in more than one rail');
+      assert.ok(!all.includes(p.product_id),
+        p.product_id + ' recommends itself');
+    }
+  });
+
+  await test('every rail fills, even when its own rule cannot', () => {
+    // Only 5 products carry the second brand, so the "same brand" rail would
+    // come up short for them. A half-empty rail beside two full ones reads as
+    // broken, and "قد يعجبك أيضاً" promises nothing about how it chose.
+    const swedish = uniformCatalogue.find((p) => p.brand === 'موديل سويدي');
+    const r = relatedFor(uniformCatalogue, swedish);
+    assert.strictEqual(r.sameCategory.length, 10);
+    assert.strictEqual(r.similar.length, 10, 'the brand rail did not fall back to remaining stock');
+    assert.strictEqual(r.mayLike.length, 10);
+  });
+
+  await test('two different products do not recommend the same ten', () => {
+    /* Before: every filter matched nearly the whole catalogue and each took
+       .slice(0, 10) from the top, so all 57 product pages recommended the same
+       first ten rows. */
+    const a = relatedFor(uniformCatalogue, uniformCatalogue[0]);
+    const b = relatedFor(uniformCatalogue, uniformCatalogue[9]);
+    const setA = new Set(a.sameCategory.map((x) => x.product_id));
+    const shared = b.sameCategory.filter((x) => setA.has(x.product_id)).length;
+    assert.ok(shared <= 5, 'two products share ' + shared + '/10 recommendations');
+  });
+
+  await test('the order is stable, so a rail does not reshuffle on every render', () => {
+    const first = relatedFor(uniformCatalogue, uniformCatalogue[3]).sameCategory.map((x) => x.product_id);
+    const again = relatedFor(uniformCatalogue, uniformCatalogue[3]).sameCategory.map((x) => x.product_id);
+    assert.deepStrictEqual(again, first, 'the same product page returned a different order');
+  });
+
+  await test('a catalogue too small to fill a rail does not break it', () => {
+    const tiny = uniformCatalogue.slice(0, 4);
+    const r = relatedFor(tiny, tiny[0]);
+    const all = [...r.sameCategory, ...r.similar, ...r.mayLike].map((x) => x.product_id);
+    assert.strictEqual(new Set(all).size, all.length, 'a duplicate appeared when stock ran out');
+    assert.ok(all.length <= 3, 'more products were shown than exist beside the one being viewed');
+  });
+
   // --- 6. Search and Najm honour their own flag ---------------------------
   await test('the search index excludes products hidden from search', () => {
     const repo = read('repositories/postgres/product-repo.js');
