@@ -263,6 +263,35 @@ class PostgresProductRepo extends PostgresBaseRepository {
   }
 
   /**
+   * Whether the extra-categories table exists yet.
+   *
+   * Code and migrations do not land at the same instant. The documented deploy
+   * runs migrate.js before the restart, but a rollback, a replica, or a box
+   * that pulled and restarted without migrating would otherwise have every
+   * admin save and every storefront rebuild fail on a missing table -- a much
+   * worse outcome than a feature that is not available yet.
+   *
+   * Probed once and remembered; a missing table does not become present while
+   * the process runs, and this sits on the catalogue rebuild path.
+   */
+  async _hasExtraCategories() {
+    if (this.__hasExtraCategories === undefined) {
+      try {
+        const row = await this.db.prepare(
+          "SELECT to_regclass('public.product_categories') AS t"
+        ).get();
+        this.__hasExtraCategories = !!(row && row.t);
+      } catch (_) {
+        this.__hasExtraCategories = false;
+      }
+      if (!this.__hasExtraCategories) {
+        console.warn('[products] product_categories is missing — additional categories are unavailable until 2026-09-09-product-extra-categories.sql is applied.');
+      }
+    }
+    return this.__hasExtraCategories;
+  }
+
+  /**
    * The additional categories a product is listed in, beyond its own.
    *
    * products.category_id remains the primary category -- the one the breadcrumb
@@ -274,6 +303,7 @@ class PostgresProductRepo extends PostgresBaseRepository {
    */
   async findExtraCategoryIds(productId) {
     if (!productId) return [];
+    if (!(await this._hasExtraCategories())) return [];
     const rows = await this.db.prepare(
       'SELECT category_id FROM product_categories WHERE product_id = ? ORDER BY category_id'
     ).all(productId);
@@ -297,6 +327,7 @@ class PostgresProductRepo extends PostgresBaseRepository {
    */
   async setExtraCategories(productId, categoryIds, primaryCategoryId = null) {
     if (!productId) return;
+    if (!(await this._hasExtraCategories())) return;
 
     const primary = primaryCategoryId === null || primaryCategoryId === undefined
       ? null
@@ -344,6 +375,7 @@ class PostgresProductRepo extends PostgresBaseRepository {
    * @returns {Map<number, Array<number>>}
    */
   async allExtraCategories() {
+    if (!(await this._hasExtraCategories())) return new Map();
     const rows = await this.db.prepare(
       'SELECT product_id, category_id FROM product_categories'
     ).all();

@@ -348,6 +348,29 @@ async function postForm(base, url, fields) {
         'an unknown category id was stored or lost the whole set');
     });
 
+    await test('the code survives a database where the migration has not run', async () => {
+      /* Code and migrations do not land at the same instant. A box that pulled
+         and restarted without migrating -- or a rollback, or a replica -- must
+         degrade to "the feature is unavailable", not to every admin save and
+         every storefront rebuild failing on a missing table. */
+      const repo = repos.products;
+      const realProbe = repo.__hasExtraCategories;
+      repo.__hasExtraCategories = false;
+      try {
+        assert.deepStrictEqual(await repo.findExtraCategoryIds(1), [],
+          'reading extras threw or returned rows without the table');
+        assert.strictEqual((await repo.allExtraCategories()).size, 0,
+          'the catalogue-wide lookup did not degrade cleanly');
+        await repo.setExtraCategories(1, [2], 1); // must not throw
+
+        const ok = await require('../utils/sync-frontend').syncFrontendUnsafe();
+        assert.strictEqual(ok, true,
+          'the storefront rebuild fails on a database without the table');
+      } finally {
+        repo.__hasExtraCategories = realProbe;
+      }
+    });
+
     await test('deleting a product takes its placements with it', async () => {
       const row = await rowByCode(CODE_PLAIN);
       await repos.products.setExtraCategories(row.id, [SIBLING.id], PRIMARY.id);
