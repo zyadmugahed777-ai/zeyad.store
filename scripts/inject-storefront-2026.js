@@ -131,6 +131,23 @@ for (const file of files) {
     html = stampAsset(html, asset, hash(asset));
   }
 
+  /* The social card, which stampAsset cannot reach.
+   *
+   * og:image is a content= attribute holding an ABSOLUTE url, and stampAsset
+   * anchors on href/src with a relative path -- deliberately, because matching
+   * the bare filename anywhere once destroyed an element by running past a
+   * comment that merely named a file.
+   *
+   * This one asset is worth a second pass. Facebook, WhatsApp and TikTok each
+   * cache an og:image keyed on its URL, and every visitor to this shop arrives
+   * from one of those, so a share posted before a rebrand would otherwise keep
+   * showing the old card for as long as the platform kept its copy. */
+  const cardHash = hash('assets/brand/og-default.png');
+  html = html.replace(
+    /(content\s*=\s*")([^"]*\/assets\/brand\/og-default\.png)(?:\?v=[^"]*)?(")/g,
+    (_m, a, url, z) => a + url + '?v=' + cardHash + z
+  );
+
   if (html !== before) {
     fs.writeFileSync(abs, html, 'utf8');
     changed++;
