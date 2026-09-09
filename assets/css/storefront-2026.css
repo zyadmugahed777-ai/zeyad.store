@@ -3065,3 +3065,41 @@ body.dark-mode .zfb-mobile-cart-count { box-shadow: 0 0 0 1.5px #141d18; }
 [data-theme="dark"] .zs-review-cta,
 [data-theme="dark"] .zs-review-form { background: rgba(255, 255, 255, .03); }
 [data-theme="dark"] .zs-review-verified { background: rgba(34, 197, 94, .18); color: #4ade80; }
+
+/* --------------------------------------------------------------------------
+   One mark, everywhere.
+
+   The header carried a gold rounded square with a WHITE letter while
+   assets/brand/favicon.svg carried a gold disc with a DARK letter. Two
+   drawings of the same thing, and the difference is visible the moment a
+   browser tab sits above the page showing both.
+
+   These values are the icon's, exactly: the same three gradient stops and the
+   same #3a2a12 glyph. White on this gold measures about 2.3:1; the dark brown
+   measures 5.4:1, which is also why the icon uses it.
+
+   Loaded last, and with !important, because responsive-pro.css restates
+   .zfb-mobile-brand-mark and .main-nav .brand-mark inside media queries and an
+   !important there outranks a normal rule from any later sheet.
+   -------------------------------------------------------------------------- */
+.zfb-mobile-brand-mark,
+.main-nav .brand-mark,
+.mobile-drawer-brand .brand-mark,
+.brand-mark {
+  background:
+    radial-gradient(circle at 30% 22%, rgba(255, 248, 237, .34), transparent 55%),
+    linear-gradient(135deg, #e8c67d 0%, #c79a52 55%, #a87c38 100%) !important;
+  color: #3a2a12 !important;
+  /* A Latin Z wants a Latin face; the Arabic stack rendered it with the wrong
+     proportions. 900 is what makes it read as a mark rather than a letter. */
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif !important;
+  font-weight: 900 !important;
+  letter-spacing: 0 !important;
+}
+
+/* The drawer and desktop marks are discs; the compact header mark is a
+   rounded square. Both are the shop's mark, so neither shape is changed --
+   only the colour and the glyph, which is what "unified" has to mean when one
+   sits in a 36px bar and the other in a 44px one. */
+.main-nav .brand-mark::before,
+.mobile-drawer-brand .brand-mark::before { display: none !important; }

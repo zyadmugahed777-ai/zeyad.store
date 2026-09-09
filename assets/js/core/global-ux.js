@@ -486,7 +486,7 @@
       <div class="mobile-drawer" role="dialog" aria-modal="true" aria-label="القائمة الجانبية وخريطة الموقع">
         <div class="mobile-drawer-header">
           <a href="index.html" class="mobile-drawer-brand">
-            <span class="brand-mark">ز</span>
+            <span class="brand-mark">Z</span>
             <div style="display:flex; flex-direction:column; line-height:1.2;">
               <strong style="font-size:1.05rem;">زياد للتجارة</strong>
               <small style="font-size:0.72rem; color:var(--gold, #c79a52); font-weight:600;">خريطة الموقع والأقسام</small>
