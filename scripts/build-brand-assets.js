@@ -110,7 +110,12 @@ function cardSvg() {
     console.log('  ' + name.padEnd(24) + px + 'x' + px);
   }
 
+  /* Rendered at density 300 so the text is crisp, then resized DOWN to the
+     exact 1200x630 the platforms ask for. Without the resize the card came out
+     5000x2625: still correct, but four times the bytes for a scraper to fetch
+     before it can render a link preview, on connections where that matters. */
   await sharp(Buffer.from(cardSvg()), { density: 300 })
+    .resize(1200, 630)
     .png({ compressionLevel: 9 })
     .toFile(path.join(BRAND, 'og-default.png'));
   console.log('  og-default.png          1200x630');
