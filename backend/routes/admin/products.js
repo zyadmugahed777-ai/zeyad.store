@@ -214,8 +214,22 @@ router.get('/', async (req, res, next) => {
     const { products: productRepo, categories: categoryRepo, departments: departmentRepo } = getRepositories();
     const { page, limit, offset } = parsePagination(req.query);
     const search = req.query.q || '';
-    const catId = req.query.category || '';
-    const deptId = req.query.department || '';
+
+    /* Two spellings reach this route and only one used to be read.
+     *
+     * The filter form on this page submits `category` and `department`, but
+     * every link INTO the page from elsewhere in the panel uses the column
+     * names -- /admin/products?department_id=2 from the departments list, and
+     * the same from a department's detail card. Those arrived, matched
+     * nothing, and the page answered with the unfiltered catalogue: pick
+     * "bedrooms" and get all 57 products back, which is exactly what it looks
+     * like when a filter is broken.
+     *
+     * Accept both rather than renaming one. The links are the older spelling
+     * and they are correct about the column; the form is what a person sees.
+     */
+    const catId = req.query.category || req.query.category_id || '';
+    const deptId = req.query.department || req.query.department_id || '';
 
     const filters = { search, category: catId, department: deptId };
     const totalItems = await productRepo.countAdminList(filters);

@@ -27,7 +27,10 @@
           <select name="department" class="form-control">
             <option value="">جميع الأقسام (الرئيسية)</option>
             <% departments.forEach(dep => { %>
-              <option value="<%= dep.id %>"><%= dep.name_ar %></option>
+              <%# Without this the control snapped back to "all departments"
+                  after a successful filter, so a working filter still looked
+                  broken. The category select below always had it. %>
+              <option value="<%= dep.id %>" <%= deptId == dep.id ? 'selected' : '' %>><%= dep.name_ar %></option>
             <% }) %>
           </select>
         </div>
@@ -42,7 +45,7 @@
         <button type="submit" class="btn btn-accent">
           <span class="material-symbols-rounded">search</span> بحث
         </button>
-        <% if(search || catId) { %>
+        <% if(search || catId || deptId) { %>
           <a href="/admin/products" class="btn btn-outline">إلغاء الفلترة</a>
         <% } %>
       </form>
@@ -145,14 +148,19 @@
             إجمالي المنتجات: <%= totalItems %>
           </div>
           <div class="d-flex gap-2">
+            <%# Every one of these used to carry q and category but not
+                department, so filtering to one department and then clicking
+                page 2 silently dropped back to the whole catalogue -- the same
+                "it shows me everything" symptom, one click later. %>
+            <% const qs = 'q=' + encodeURIComponent(search) + '&category=' + encodeURIComponent(catId) + '&department=' + encodeURIComponent(deptId); %>
             <% if (page > 1) { %>
-              <a href="?page=<%= page - 1 %>&q=<%= search %>&category=<%= catId %>" class="btn btn-outline">السابق</a>
+              <a href="?page=<%= page - 1 %>&<%= qs %>" class="btn btn-outline">السابق</a>
             <% } %>
             <% for(let i = 1; i <= totalPages; i++) { %>
-              <a href="?page=<%= i %>&q=<%= search %>&category=<%= catId %>" class="btn <%= page === i ? 'btn-primary' : 'btn-outline' %>"><%= i %></a>
+              <a href="?page=<%= i %>&<%= qs %>" class="btn <%= page === i ? 'btn-primary' : 'btn-outline' %>"><%= i %></a>
             <% } %>
             <% if (page < totalPages) { %>
-              <a href="?page=<%= page + 1 %>&q=<%= search %>&category=<%= catId %>" class="btn btn-outline">التالي</a>
+              <a href="?page=<%= page + 1 %>&<%= qs %>" class="btn btn-outline">التالي</a>
             <% } %>
           </div>
         </div>
