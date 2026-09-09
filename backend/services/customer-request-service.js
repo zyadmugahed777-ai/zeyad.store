@@ -111,11 +111,24 @@ class CustomerRequestService {
     const safeName = sanitize(customerName || '');
     const safePhone = normalizePhone(phone);
 
+    /* These two are the CALLER's mistake, not the server's, so they carry a
+       status and middleware/error.js returns 400 with the message intact.
+       Thrown bare, they became a 500 reading "حدث خطأ" -- a customer who
+       mistyped one digit of their phone was told the site was broken and had
+       no idea which field to correct. For a shop whose visitors arrive from
+       paid ads, that is the last click before the money is spent.
+
+       The message itself is already written for a customer to read; only the
+       status was missing. */
     if (!safeName) {
-      throw new Error('الاسم مطلوب لتسجيل الطلب');
+      const e = new Error('الاسم مطلوب لتسجيل الطلب');
+      e.status = 400;
+      throw e;
     }
     if (!safePhone || safePhone.length < 8) {
-      throw new Error('رقم الهاتف مطلوب وصحيح للتواصل وتأكيد الطلب');
+      const e = new Error('رقم الهاتف غير صحيح. اكتبه بالصيغة 7XXXXXXXX');
+      e.status = 400;
+      throw e;
     }
 
     const safeType = REQUEST_TYPE_MAP[requestType] ? requestType : 'contact';

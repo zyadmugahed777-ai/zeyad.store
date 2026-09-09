@@ -3,6 +3,54 @@ const { getRepositories } = require('../../repositories');
 const { customerRequestService } = require('../../services/customer-request-service');
 const { sanitize, normalizePhone } = require('../../utils/helpers');
 
+/**
+ * The form posts slugs; the operator has to read the result.
+ *
+ * A booking arrived in the admin panel reading
+ *
+ *     الفرع: furniture
+ *     الوقت المفضل: morning
+ *     نوع الزيارة: buy
+ *
+ * so whoever answers the phone had to translate the shop's own form back into
+ * Arabic before they could call the customer. The labels below are lifted from
+ * book-appointment.html verbatim -- the same words the customer read when they
+ * chose -- so the request says what they actually asked for.
+ *
+ * An unrecognised value falls through unchanged rather than being dropped: a
+ * new option added to the form must show up in the request even before anyone
+ * remembers to add it here.
+ */
+const BRANCH_AR = {
+  furniture: 'محل الأثاث',
+  majalis: 'محل المجالس',
+  kitchens: 'محل المطابخ',
+  bedrooms: 'محل غرف النوم',
+  appliances: 'محل الأجهزة',
+  solar: 'محل الطاقة الشمسية'
+};
+
+const TIME_AR = {
+  morning: 'صباحاً (9 ص - 12 م)',
+  afternoon: 'عصراً (4 م - 6 م)',
+  evening: 'مساءً (6 م - 10 م)'
+};
+
+const VISIT_AR = {
+  buy: 'شراء أثاث أو أجهزة',
+  design: 'تصميم أو تفصيل حسب الطلب',
+  consultation: 'استشارة',
+  other: 'أخرى'
+};
+
+const CITY_AR = {
+  sanaa: 'صنعاء', aden: 'عدن', taiz: 'تعز', ibb: 'إب',
+  hodeidah: 'الحديدة', dhamar: 'ذمار', hadramout: 'حضرموت',
+  mukalla: 'المكلا', hajjah: 'حجة', saada: 'صعدة', other: 'أخرى'
+};
+
+const label = (map, v) => (v ? (map[String(v).trim()] || v) : '');
+
 router.post('/', async (req, res, next) => {
   try {
     const { fullName, phone, email, branch, date, time, visitType, city, notes } = req.body;
@@ -11,11 +59,15 @@ router.post('/', async (req, res, next) => {
       return res.status(400).json({ success: false, error: 'الاسم ورقم الهاتف مطلوبان' });
     }
 
+    const branchAr = label(BRANCH_AR, branch);
+    const cityAr = label(CITY_AR, city);
+
     const message = [
-      branch ? `الفرع: ${branch}` : '',
+      branchAr ? `الفرع المطلوب: ${branchAr}` : '',
       date ? `التاريخ المفضل: ${date}` : '',
-      time ? `الوقت المفضل: ${time}` : '',
-      visitType ? `نوع الزيارة: ${visitType}` : '',
+      time ? `الوقت المفضل: ${label(TIME_AR, time)}` : '',
+      visitType ? `نوع الزيارة: ${label(VISIT_AR, visitType)}` : '',
+      cityAr ? `المدينة: ${cityAr}` : '',
       notes ? `ملاحظات إضافية:\n${notes}` : ''
     ].filter(Boolean).join('\n');
 
@@ -25,8 +77,8 @@ router.post('/', async (req, res, next) => {
       customerName: fullName,
       phone,
       email,
-      city,
-      subject: `حجز موعد زيارة ${branch ? '— ' + branch : ''}`,
+      city: cityAr || city,
+      subject: `حجز موعد زيارة${branchAr ? ' — ' + branchAr : ''}`,
       message,
       source: 'web',
       pageUrl: req.headers.referer || '/appointment.html',
