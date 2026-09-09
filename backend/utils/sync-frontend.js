@@ -19,8 +19,45 @@ async function syncFrontend() {
     
     // 1. QUERY PRODUCTS VIA REPOSITORY
     const products = (await repos.products.findAllActiveForSync()) || [];
-    
+
+    /* The additional categories a product is listed in, resolved to slugs.
+     *
+     * Two lookups for the whole catalogue rather than two queries per product:
+     * this runs on every admin save, and a query per product is how a rebuild
+     * that takes a second starts taking a minute.
+     */
+    const extraCategoryMap = await repos.products.allExtraCategories();
+    const allCategories = (await repos.categories.findAll()) || [];
+    const departmentSlugById = new Map(
+      ((await repos.departments.findAll()) || []).map((d) => [Number(d.id), d.slug || null])
+    );
+    const categoryById = new Map(allCategories.map((c) => [Number(c.id), c]));
+
     const formattedProducts = products.map(p => {
+      const extraIds = extraCategoryMap.get(Number(p.id)) || [];
+      const extraCats = extraIds.map((cid) => categoryById.get(Number(cid))).filter(Boolean);
+
+      /* Every category this product should be listed under, its own first.
+         categorySlug still holds the primary on its own -- the breadcrumb and
+         the product page read it and must not start seeing a list. */
+      const categorySlugs = [...new Set(
+        [p.category_slug || null]
+          .concat(extraCats.map((c) => c.slug || null))
+          .filter(Boolean)
+      )];
+
+      /* And every department those categories live under. An extra category
+         may belong to a different department than the product's own -- the
+         request was "قسم او فىه اضافيه", a department OR a category -- and a
+         catalogue page gates on the department before it ever looks at the
+         category, so without this a cross-department placement would be
+         filtered out before its category was considered. */
+      const departmentSlugs = [...new Set(
+        [p.department_slug || null]
+          .concat(extraCats.map((c) => departmentSlugById.get(Number(c.department_id)) || null))
+          .filter(Boolean)
+      )];
+
       const images = p.images || [];
       const specs = p.specs || [];
       const faq = p.faq || [];
@@ -49,10 +86,15 @@ async function syncFrontend() {
         //     undefined because nothing ever wrote them
         categoryId: p.category_id ?? null,
         categorySlug: p.category_slug || null,
+        // Its own category plus any it was additionally placed in. Category
+        // pages filter on this; everything else still reads categorySlug.
+        categorySlugs,
         categoryName: p.category_name || null,
         categoryCode: p.category_code || null,
         departmentId: p.resolved_department_id ?? null,
         departmentSlug: p.department_slug || null,
+        // Its own department plus any reached through an extra category.
+        departmentSlugs,
         departmentName: p.department_name || null,
         category: p.department_name || null,
         subcategory: p.category_name || null,

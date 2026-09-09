@@ -151,17 +151,35 @@ function injectCatalog($, slug, allProducts, categorySlug) {
      which, and it costs one attribute. */
   grid.attr('data-zs-catalog-grid', '');
 
+  /* A product reaches a department through its own, or through a category it
+     was additionally placed in that lives under a different one. departmentSlugs
+     always contains its own, so a product with no extra placements is
+     unaffected; the fallback covers a cache written by an older build. */
+  const inThisDepartment = (p) => (Array.isArray(p.departmentSlugs) && p.departmentSlugs.length
+    ? p.departmentSlugs.includes(spec.department)
+    : p.departmentSlug === spec.department);
+
   const inDepartment = (allProducts || []).filter(
     // showInDepartment is how an operator keeps a special-order or
     // enquiry-only product out of the browsable catalogue without
     // deactivating it -- its own page still opens from a direct link.
-    (p) => p.departmentSlug && p.departmentSlug === spec.department && p.showInDepartment !== false
+    (p) => inThisDepartment(p) && p.showInDepartment !== false
   );
 
   // Filtering happens on the server so a category link works with no
   // JavaScript at all -- which matters when most visits are on a phone.
+  /* A product may be listed in categories beyond its own -- a wardrobe that
+     honestly belongs in both "غرف ماليزي" and "غرف سويدي" -- so this matches
+     against every category it was placed in, not only its primary one.
+     categorySlugs always contains the primary, so a product with no extra
+     placements behaves exactly as before. The fallback covers a cache written
+     by an older build, which has no categorySlugs at all. */
+  const isInCategory = (p) => (Array.isArray(p.categorySlugs) && p.categorySlugs.length
+    ? p.categorySlugs.includes(categorySlug)
+    : p.categorySlug === categorySlug);
+
   const products = categorySlug
-    ? inDepartment.filter((p) => p.categorySlug === categorySlug)
+    ? inDepartment.filter(isInCategory)
     : inDepartment;
 
   // With no filter, an empty result must never blank a page that currently

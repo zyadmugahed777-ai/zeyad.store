@@ -182,6 +182,26 @@ function readDeliveryPolicy(body) {
  * file, in the same order the files are sent, so a photo can arrive already
  * tagged.
  */
+/*
+ * The additional categories a product should also be listed in.
+ *
+ * Unticked checkboxes post nothing, so "no boxes ticked" and "this request
+ * never drew the control" look identical on the wire -- and treating the
+ * second as the first would silently wipe an operator's placements every time
+ * the AI employee or an API client saved a product. The form posts a hidden
+ * marker naming that it drew the control; without the marker the placements
+ * are left alone. The same shape readPlacements() uses, for the same reason.
+ *
+ * Returns null for "do not touch", or an array (possibly empty) to set.
+ */
+function readExtraCategoryIds(body) {
+  if (!isOn(body.extra_categories_submitted)) return null;
+  const raw = [].concat(body['extra_category_ids[]'] || body.extra_category_ids || []);
+  return raw
+    .map((v) => parseInt(v, 10))
+    .filter((v) => Number.isInteger(v) && v > 0);
+}
+
 function readNewImageColors(body) {
   const raw = [].concat(body['new_image_color[]'] || body.new_image_color || []);
   return raw.map((v) => String(v == null ? '' : v).trim());
@@ -280,6 +300,7 @@ router.get(['/new', '/create'], async (req, res, next) => {
       categories,
       departments,
       registered,
+      extraCategoryIds: [],
       product: null,
       images: [],
       specs: [],
@@ -392,6 +413,15 @@ router.post(['/create', '/new'], productUploadHandler, async (req, res, next) =>
     await variants.saveSizes(productRepo.db, newProductId, variants.parseSizes(body));
     await variants.saveSpecs(productRepo.db, newProductId, variants.parseSpecs(body));
 
+    // Any additional categories the operator ticked. null means the request
+    // never drew the control, so there is nothing to set.
+    const extraCategories = readExtraCategoryIds(body);
+    if (extraCategories !== null) {
+      await productRepo.setExtraCategories(
+        newProductId, extraCategories, body.category_id ? parseInt(body.category_id, 10) : null
+      );
+    }
+
     // Invalidate API search cache immediately
     try { invalidateProductCache(); } catch (_) {}
 
@@ -451,11 +481,13 @@ router.get('/:id/edit', async (req, res, next) => {
     const categories = await categoryRepo.findAll();
     const departments = await departmentRepo.listSimple();
     const registered = await productRepo.countRegistered();
+    const extraCategoryIds = await productRepo.findExtraCategoryIds(product.id);
 
     res.render('admin/products/form', {
       title: 'تعديل المنتج',
       active: 'products',
       registered,
+      extraCategoryIds,
       product,
       images,
       specs,
@@ -583,6 +615,18 @@ router.post('/:id/edit', productUploadHandler, async (req, res) => {
         ? Math.max(0, parseInt(stock_quantity, 10) || 0)
         : undefined
     }, null, null, null, colorsPayload);
+
+    /* Additional categories. Read AFTER the update so the primary excluded
+       here is the one just saved, not the one the row used to hold -- moving a
+       product's primary category and ticking its old one in the same save
+       should leave it listed in both, not silently drop the extra. */
+    const extraCategories = readExtraCategoryIds(req.body);
+    if (extraCategories !== null) {
+      const saved = await productRepo.findRawById(productId);
+      await productRepo.setExtraCategories(
+        productId, extraCategories, saved ? saved.category_id : null
+      );
+    }
 
     // 5. Handle newly uploaded images
     const primaryNewIdx = parseInt(req.body.primary_new_image_index, 10);

@@ -45,6 +45,7 @@ const SUITE = [
   { file: 'test-product-placement-and-flags.js', name: 'Placement, delivery policy and flag handling', timeout: 60000 },
   { file: 'test-product-form-roundtrip.js', name: 'Admin product form: post it, read the row back', timeout: 120000 },
   { file: 'test-admin-list-filters.js', name: 'Admin list filters: does the department narrow the list', timeout: 120000 },
+  { file: 'test-product-extra-categories.js', name: 'A product listed in more than one category', timeout: 180000 },
   { file: 'test-seo-metadata.js', name: 'SEO metadata, brand assets and indexability', timeout: 60000 },
   { file: 'test-product-reviews.js', name: 'Customer reviews: earned ratings, never invented ones', timeout: 120000 },
   { file: 'test-customer-auth-security.js', name: 'Customer auth, isolation & IDOR (AUTH-01..21)', timeout: 300000 },

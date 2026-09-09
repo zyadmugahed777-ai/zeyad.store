@@ -605,6 +605,49 @@ const placed = (v, fallback) => (v === undefined || v === null ? fallback : on(v
                 <% }) %>
               </select>
             </div>
+
+            <%# A product may also be listed in categories that are not its own.
+                Asked for by example: a wardrobe that honestly belongs in both
+                "غرف ماليزي" and "غرف سويدي". Optional -- tick nothing and the
+                product behaves exactly as it always has.
+
+                Every category is offered, not just those under the chosen
+                department, because the request was "قسم او فىه اضافيه" and a
+                piece can cross departments.
+
+                The hidden marker below is what lets "none" mean none: unticked
+                checkboxes post nothing at all, so without it there would be no
+                way to tell "the operator cleared them" from "this request never
+                drew the control". %>
+            <div class="form-group mt-3">
+              <label class="form-label">
+                فئات إضافية <span class="text-muted" style="font-weight: 400;">(اختياري)</span>
+              </label>
+              <p class="text-muted" style="font-size: 12px; margin: 0 0 8px;">
+                يظهر المنتج أيضاً في الفئات المختارة هنا، بدون تكرار المنتج. الفئة الرئيسية أعلاه تبقى فئته الأساسية.
+              </p>
+              <input type="hidden" name="extra_categories_submitted" value="1">
+              <div style="max-height: 220px; overflow-y: auto; padding: 10px; background: var(--bg-tertiary); border-radius: 8px;">
+                <% const extras = (typeof extraCategoryIds !== 'undefined' && extraCategoryIds) ? extraCategoryIds.map(Number) : []; %>
+                <% departments.forEach(dep => { %>
+                  <% const inDep = categories.filter(c => Number(c.department_id) === Number(dep.id)); %>
+                  <% if (inDep.length) { %>
+                    <div style="margin-bottom: 10px;">
+                      <div class="text-muted" style="font-size: 12px; font-weight: 700; margin-bottom: 4px;"><%= dep.name_ar %></div>
+                      <div style="display: flex; flex-wrap: wrap; gap: 8px 16px;">
+                        <% inDep.forEach(cat => { %>
+                          <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px;">
+                            <input type="checkbox" name="extra_category_ids[]" value="<%= cat.id %>"
+                              <%= extras.includes(Number(cat.id)) ? 'checked' : '' %>>
+                            <span><%= cat.name_ar %></span>
+                          </label>
+                        <% }) %>
+                      </div>
+                    </div>
+                  <% } %>
+                <% }) %>
+              </div>
+            </div>
           </div>
 
           <!-- Visibility & Badges -->

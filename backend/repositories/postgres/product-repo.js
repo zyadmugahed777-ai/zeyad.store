@@ -263,6 +263,100 @@ class PostgresProductRepo extends PostgresBaseRepository {
   }
 
   /**
+   * The additional categories a product is listed in, beyond its own.
+   *
+   * products.category_id remains the primary category -- the one the breadcrumb
+   * and the product page name. These are the extras, and a product with none
+   * has no rows, which is what "optional" should cost.
+   *
+   * @param {number} productId  the numeric primary key, not the product code
+   * @returns {Array<number>}
+   */
+  async findExtraCategoryIds(productId) {
+    if (!productId) return [];
+    const rows = await this.db.prepare(
+      'SELECT category_id FROM product_categories WHERE product_id = ? ORDER BY category_id'
+    ).all(productId);
+    return rows.map((r) => Number(r.category_id));
+  }
+
+  /**
+   * Replace a product's additional categories with exactly this set.
+   *
+   * Delete-then-insert rather than a diff: the form posts the complete list of
+   * ticked boxes, so the posted set IS the answer, and a diff would only add a
+   * way for the two to disagree.
+   *
+   * The primary category is filtered out. Storing it here as well would give
+   * two places the same answer and let them drift -- and a product would then
+   * appear twice in its own category listing.
+   *
+   * @param {number} productId
+   * @param {Array<number|string>} categoryIds
+   * @param {number|string|null} primaryCategoryId  excluded from the set
+   */
+  async setExtraCategories(productId, categoryIds, primaryCategoryId = null) {
+    if (!productId) return;
+
+    const primary = primaryCategoryId === null || primaryCategoryId === undefined
+      ? null
+      : Number(primaryCategoryId);
+
+    const wanted = [...new Set(
+      (categoryIds || [])
+        .map((v) => parseInt(v, 10))
+        .filter((v) => Number.isInteger(v) && v > 0 && v !== primary)
+    )];
+
+    await this.db.prepare('DELETE FROM product_categories WHERE product_id = ?').run(productId);
+    if (wanted.length === 0) return;
+
+    /* Only categories that still exist.
+     *
+     * The table has a foreign key, so a stale id would be rejected by
+     * PostgreSQL -- and that would fail the whole product save over a category
+     * someone deleted while this form was open. Dropping the unknown id keeps
+     * the save, which is the behaviour an operator can actually recover from.
+     */
+    const rows = await this.db.prepare(
+      'SELECT id FROM categories WHERE id IN (' + wanted.map(() => '?').join(',') + ')'
+    ).all(...wanted);
+    const real = rows.map((r) => Number(r.id));
+
+    for (const categoryId of real) {
+      /* ON CONFLICT DO NOTHING is here for two reasons: the row may already
+         exist if two saves race, and the base translator appends `RETURNING
+         id` to a bare INSERT -- which this table, keyed on the pair, has no
+         column for. */
+      await this.db.prepare(
+        'INSERT INTO product_categories (product_id, category_id) VALUES (?, ?) ON CONFLICT DO NOTHING'
+      ).run(productId, categoryId);
+    }
+  }
+
+  /**
+   * Every extra placement in the catalogue, as product id -> [category id].
+   *
+   * One query for the whole sync rather than one per product: syncFrontend()
+   * walks the entire catalogue, and a query per product is how a rebuild that
+   * takes a second starts taking a minute.
+   *
+   * @returns {Map<number, Array<number>>}
+   */
+  async allExtraCategories() {
+    const rows = await this.db.prepare(
+      'SELECT product_id, category_id FROM product_categories'
+    ).all();
+    const map = new Map();
+    for (const row of rows) {
+      const key = Number(row.product_id);
+      if (!map.has(key)) map.set(key, []);
+      map.get(key).push(Number(row.category_id));
+    }
+    return map;
+  }
+
+  /**
    * How many products exist, regardless of any filter.
    *
    * countAdminList() answers "how many match what is on screen", which is the
