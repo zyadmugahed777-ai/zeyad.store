@@ -221,12 +221,59 @@ const read = (f) => fs.readFileSync(path.join(REPO, f), 'utf8');
   });
 
   // --- 5. The retired brand ------------------------------------------------
-  await test('no storefront page markets the retired brand name', () => {
-    // It survives deliberately as schema.org alternateName (config/constants.js)
-    // and inside product rows, which are the operator's data. Neither is a page
-    // telling a search engine the shop is called that.
-    const bad = pages().filter((f) => /زياد للتجارة/.test(read(f)));
-    assert.strictEqual(bad.length, 0, bad.join(', '));
+  await test('nothing a customer receives carries a retired brand name', () => {
+    /* The company is زياد ستور. It used to trade under two other names, and
+       those were still reaching customers in four places nobody had swept:
+       the site header and the drawer, Najm's opening greeting, the signature
+       on every WhatsApp message the shop sends, and the letterhead of the two
+       printed documents. They were also being republished to Google as
+       schema.org alternateName -- telling a crawler the business answers to
+       four names, which is the opposite of one strong identity.
+
+       This checks everything a customer can end up holding: the pages, the
+       client scripts, the WhatsApp formatter and the print templates.
+
+       Comments are stripped first. The history is worth recording in the
+       source, and a note explaining why a name was retired must not read as
+       the name still being used. */
+    const RETIRED = ['زياد للتجارة', 'زياد للتجاره', 'زياد للأعمال', 'Zeyad For Business'];
+    const strip = (s) => s
+      .replace(/\/\*[\s\S]*?\*\//g, ' ')
+      .replace(/^\s*\/\/.*$/gm, ' ')
+      .replace(/<!--[\s\S]*?-->/g, ' ');
+
+    const targets = [];
+    for (const f of pages()) targets.push([f, strip(read(f))]);
+    for (const rel of [
+      'assets/js/core/global-ux.js',
+      'assets/js/najm-chat.js',
+      'assets/js/core/translations.js',
+      'site.js'
+    ]) {
+      const abs = path.join(REPO, rel);
+      if (fs.existsSync(abs)) targets.push([rel, strip(fs.readFileSync(abs, 'utf8'))]);
+    }
+    for (const rel of [
+      'utils/whatsapp-prep.js',
+      'views/admin/requests/print.ejs',
+      'views/admin/customer-reports/print.ejs'
+    ]) {
+      const abs = path.join(ROOT, rel);
+      if (fs.existsSync(abs)) targets.push([rel, strip(fs.readFileSync(abs, 'utf8'))]);
+    }
+
+    const bad = [];
+    for (const [name, body] of targets) {
+      for (const n of RETIRED) if (body.includes(n)) bad.push(name + ' -> ' + n);
+    }
+    assert.strictEqual(bad.length, 0, bad.slice(0, 8).join('; '));
+  });
+
+  await test('the structured data claims one name, not four', () => {
+    const c = require('../config/constants');
+    assert.strictEqual(c.BRAND_AR, 'زياد ستور');
+    assert.deepStrictEqual(c.BRAND_ALTERNATES, ['Zeyad Store'],
+      'alternateName should carry only the English rendering of the current name');
   });
 
   // --- 6. Claims the data does not support --------------------------------

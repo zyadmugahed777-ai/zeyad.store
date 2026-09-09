@@ -63,7 +63,7 @@ function formatOrderForWhatsApp(order) {
 
   lines.push('');
   lines.push('---');
-  lines.push('زياد ستور | Zeyad For Business');
+  lines.push('زياد ستور | Zeyad Store');
 
   return lines.join('\n');
 }

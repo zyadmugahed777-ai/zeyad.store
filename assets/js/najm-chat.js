@@ -205,7 +205,7 @@ function escHtml(value) {
             <button class="najm-wish-btn" aria-label="المفضلة" onclick="NajmClient.toggleWishlist('${pid}', this)">❤</button>
           </div>
           <h4 class="najm-card-title" title="${escHtml(p.title)}">${escHtml(p.title)}</h4>
-          <p class="najm-card-subtitle">${escHtml(p.brand || p.category || p.category_name || 'زياد للتجارة')}</p>
+          <p class="najm-card-subtitle">${escHtml(p.brand || p.category || p.category_name || 'زياد ستور')}</p>
           <div class="najm-card-rating">
             <span>★</span> ${p.rating || 4.8} <small>(${p.reviews_count || 12})</small>
           </div>
@@ -590,7 +590,7 @@ function escHtml(value) {
   // Initial friendly welcome message inside chat modal on first launch
   setTimeout(() => {
     if (chatMessages && chatMessages.children.length === 0) {
-      appendMessage('assistant', 'مرحباً بك! أنا **نجم**، مستشارك الخاص في متجر زياد للتجارة 🌟\nكيف يمكنني مساعدتك اليوم؟ يمكنك سؤالي عن أي منتج، طلب مقارنة، معرفة الأسعار والخصومات، أو إرسال صورة وسأساعدك فوراً.', {
+      appendMessage('assistant', 'مرحباً بك! أنا **نجم**، مستشارك الخاص في متجر زياد ستور 🌟\nكيف يمكنني مساعدتك اليوم؟ يمكنك سؤالي عن أي منتج، طلب مقارنة، معرفة الأسعار والخصومات، أو إرسال صورة وسأساعدك فوراً.', {
         quickActions: [
           { label: '📦 حالة الطلب', prompt: 'أين طلبي؟ وكيف أعرف حالته؟' },
           { label: '🎁 أفضل العروض', prompt: 'ما هي أفضل العروض والخصومات المتاحة اليوم؟' },

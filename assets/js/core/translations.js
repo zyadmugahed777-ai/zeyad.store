@@ -57,7 +57,7 @@ window.ZFB_TRANSLATIONS = {
   // Kept so any page still carrying the former trading name -- the homepage
   // title states it deliberately -- still translates rather than falling
   // through untranslated.
-  "زياد للتجارة": "Zeyad For Business",
+  "زياد ستور": "Zeyad Store",
   "منصة المنزل والطاقة": "Home & Energy Platform",
   "تسوق حسب الغرفة": "Shop by Room",
   "باقات جاهزة": "Ready Packages",

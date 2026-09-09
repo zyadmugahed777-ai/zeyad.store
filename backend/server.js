@@ -566,7 +566,7 @@ if (require.main === module) {
     }
 
     console.log(`\n========================================`);
-    console.log(`  Zeyad For Business Backend`);
+    console.log(`  Zeyad Store Backend`);
     console.log(`  Port: ${PORT}`);
     console.log(`  Bound to: 0.0.0.0 (Network Accessible)`);
     console.log(`  Mode: ${process.env.NODE_ENV || 'development'}`);

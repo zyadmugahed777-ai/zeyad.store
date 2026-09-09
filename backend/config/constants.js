@@ -40,47 +40,36 @@ function versioned(relPath) {
 }
 
 /**
- * Brand identity.
+ * Brand identity. One name.
  *
- * The site was carrying three different names at once: 44 page titles ended in
- * "زياد للأعمال", 21 in "زياد للتجارة", two in "Zeyad Store", and this file
- * declared a fourth answer for anything that asked programmatically. To a
- * visitor -- and to a crawler trying to work out who owns zeyad.store -- that
- * reads as several unrelated businesses sharing a domain.
+ * The site used to carry three at once -- 44 page titles ended in
+ * "زياد للأعمال", 21 in "زياد للتجارة", two in "Zeyad Store" -- and the retired
+ * ones were then republished to Google as schema.org alternateName, on the
+ * reasoning that customers might still search for them.
  *
- * One primary name, stated the same way everywhere:
+ * The owner has ended that: the company is زياد ستور and nothing else is to be
+ * relied on anywhere. The reasoning behind the alternates does not survive the
+ * facts either. This domain is weeks old and has almost no search presence, so
+ * there is no established stream of "زياد للتجارة" traffic to preserve; the
+ * alternates were protecting a history the search index never recorded, at the
+ * cost of telling Google the business answers to four names.
  *
- *   BRAND_AR / BRAND_EN   the name the store goes by now.
- *   BRAND_LEGACY_AR       the name it traded under before, kept deliberately.
- *
- * The legacy name is not decoration and must not be deleted. Customers still
- * search for "زياد للتجارة", and it is published as schema.org `alternateName`
- * so a search engine can connect the two names to one organisation. That is a
- * truthful statement about a real former trading name -- not keyword stuffing,
- * which is why it belongs in structured data and in a plain sentence on the
- * page, and nowhere else.
+ * If a legacy name is ever needed again it belongs here, declared once, and
+ * nowhere else. It is not to be reintroduced into page copy.
  */
 const BRAND_AR = 'زياد ستور';
 const BRAND_EN = 'Zeyad Store';
-const BRAND_LEGACY_AR = 'زياد للتجارة';
-const BRAND_LEGACY_EN = 'Zeyad For Business';
-// The third name the site was using: it ended 44 of the 71 page titles, so it
-// is at least as established with returning visitors as the other legacy name
-// and is published as an alternate for the same reason.
-const BRAND_LEGACY_AR_2 = 'زياد للأعمال';
 
 module.exports = {
   SITE_URL,
 
   BRAND_AR,
   BRAND_EN,
-  BRAND_LEGACY_AR,
-  BRAND_LEGACY_EN,
-  BRAND_LEGACY_AR_2,
-  // Every name this business is legitimately known by, for schema.org
-  // alternateName. Order is deliberate: Arabic legacy name first, because it is
-  // the one customers actually type into a search box.
-  BRAND_ALTERNATES: [BRAND_LEGACY_AR, BRAND_LEGACY_AR_2, BRAND_EN, BRAND_LEGACY_EN],
+  /* The only alternate is the English rendering of the same name. The retired
+     trading names are gone: publishing them told Google this business answers
+     to four things, which is the opposite of what a single strong identity
+     looks like. */
+  BRAND_ALTERNATES: [BRAND_EN],
 
   // Retained under their original names: several modules already import these,
   // and they now resolve to the primary brand rather than a fourth variant.

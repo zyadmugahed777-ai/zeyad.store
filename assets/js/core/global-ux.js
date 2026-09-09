@@ -225,10 +225,10 @@
     header.innerHTML = `
       <div class="zfb-mobile-main-row">
         <div class="zfb-mobile-brand-group">
-          <a class="zfb-mobile-brand" href="index.html" aria-label="زياد للتجارة">
+          <a class="zfb-mobile-brand" href="index.html" aria-label="زياد ستور">
             <span class="zfb-mobile-brand-mark">Z</span>
             <span class="zfb-mobile-brand-text">
-              <strong>زياد للتجارة</strong>
+              <strong>زياد ستور</strong>
               <small>ZEYAD STORE</small>
             </span>
           </a>
@@ -488,7 +488,7 @@
           <a href="index.html" class="mobile-drawer-brand">
             <span class="brand-mark">Z</span>
             <div style="display:flex; flex-direction:column; line-height:1.2;">
-              <strong style="font-size:1.05rem;">زياد للتجارة</strong>
+              <strong style="font-size:1.05rem;">زياد ستور</strong>
               <small style="font-size:0.72rem; color:var(--gold, #c79a52); font-weight:600;">خريطة الموقع والأقسام</small>
             </div>
           </a>
