@@ -234,6 +234,8 @@ router.get('/', async (req, res, next) => {
     const filters = { search, category: catId, department: deptId };
     const totalItems = await productRepo.countAdminList(filters);
     const products = await productRepo.findAdminList(filters, limit, offset);
+    // The number that does not move when someone types in the search box.
+    const registered = await productRepo.countRegistered();
     const categories = await categoryRepo.findAll();
     const departments = await departmentRepo.listSimple();
     const totalPages = Math.ceil(totalItems / limit);
@@ -255,6 +257,7 @@ router.get('/', async (req, res, next) => {
       search,
       catId,
       deptId,
+      registered,
       csrfToken: (req.session && req.session.csrfToken) || res.locals.csrfToken || ''
     });
   } catch (error) {
@@ -265,14 +268,18 @@ router.get('/', async (req, res, next) => {
 // New Form
 router.get(['/new', '/create'], async (req, res, next) => {
   try {
-    const { categories: categoryRepo, departments: departmentRepo } = getRepositories();
+    const { categories: categoryRepo, departments: departmentRepo, products: productRepo } = getRepositories();
     const categories = await categoryRepo.findAll();
     const departments = await departmentRepo.listSimple();
-    res.render('admin/products/form', { 
-      title: 'إضافة منتج جديد', 
+    /* Asked for by name: standing on the add-product page there was no way to
+       see how many products the shop already has. */
+    const registered = await productRepo.countRegistered();
+    res.render('admin/products/form', {
+      title: 'إضافة منتج جديد',
       active: 'products',
       categories,
       departments,
+      registered,
       product: null,
       images: [],
       specs: [],
@@ -443,10 +450,12 @@ router.get('/:id/edit', async (req, res, next) => {
     const sizes = await variants.findSizes(productRepo.db, product.id);
     const categories = await categoryRepo.findAll();
     const departments = await departmentRepo.listSimple();
+    const registered = await productRepo.countRegistered();
 
-    res.render('admin/products/form', { 
-      title: 'تعديل المنتج', 
+    res.render('admin/products/form', {
+      title: 'تعديل المنتج',
       active: 'products',
+      registered,
       product,
       images,
       specs,

@@ -571,6 +571,51 @@ const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
       'it does not span the grid, so it is orphaned on its own row');
   });
 
+  // --- 5e. A catalogue total belongs in the panel and nowhere else --------
+
+  await test('no storefront page prints a count of the catalogue', () => {
+    /* "لا اريد ان ارى اجمالي للمنتجات في اي مكان اطلاقاء" -- said once about
+       the storefront, and meant. A shopper has no use for the number and it
+       tells a competitor arriving from an advertisement exactly how big the
+       shop is. The operator DOES need it, so it lives in the admin panel:
+       see the product list header and the add-product form.
+
+       Checked against the shipped pages rather than the source that builds
+       them, because that is what a visitor receives. */
+    const LABELS = [
+      'إجمالي المنتجات',
+      'اجمالي المنتجات',
+      'عدد المنتجات',
+      'إجمالي المنتجات المسجلة',
+      'نتائج الفلترة'
+    ];
+    const pages = fs.readdirSync(REPO).filter((f) => f.endsWith('.html'));
+    assert.ok(pages.length > 20, 'the storefront pages were not found');
+
+    const offenders = [];
+    for (const page of pages) {
+      const html = fs.readFileSync(path.join(REPO, page), 'utf8');
+      for (const label of LABELS) {
+        if (html.includes(label)) offenders.push(page + ' -> ' + label);
+      }
+    }
+    assert.deepStrictEqual(offenders, [],
+      'a catalogue total leaked onto the storefront: ' + offenders.join(' , '));
+  });
+
+  await test('the page builder does not inject a total either', () => {
+    /* The catalogue rails are written into these pages at request time, so a
+       clean .html file is only half the answer. A count variable here once
+       shipped a total onto every category page. */
+    const src = fs.readFileSync(
+      path.join(REPO, 'backend', 'services', 'catalog-render-service.js'), 'utf8'
+    );
+    for (const label of ['إجمالي المنتجات', 'اجمالي المنتجات', 'عدد المنتجات']) {
+      assert.ok(!src.includes(label),
+        'catalog-render-service.js emits a catalogue total: ' + label);
+    }
+  });
+
   // --- 6. Search and Najm honour their own flag ---------------------------
   await test('the search index excludes products hidden from search', () => {
     const repo = read('repositories/postgres/product-repo.js');

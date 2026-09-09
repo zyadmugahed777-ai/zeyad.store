@@ -8,6 +8,21 @@
       <div>
         <h1 class="page-title"><%= title %></h1>
         <p class="page-description">إدارة المنتجات في المتجر وإضافة منتجات جديدة.</p>
+        <%# The total that does not move when someone types in the search box.
+            The number beside the pagination counts what matches the current
+            filter; this one counts what exists. Admin only -- no page on the
+            storefront prints a catalogue total. %>
+        <% if (typeof registered !== 'undefined' && registered) { %>
+          <p class="page-description" style="margin-top: 6px;">
+            <strong>إجمالي المنتجات المسجلة: <%= registered.total %></strong>
+            <span class="text-muted" style="font-size: 13px;">
+              &nbsp;·&nbsp; المعروضة في المتجر: <%= registered.active %>
+              <% if (registered.archived > 0) { %>
+                &nbsp;·&nbsp; المؤرشفة: <%= registered.archived %>
+              <% } %>
+            </span>
+          </p>
+        <% } %>
       </div>
       <div class="admin-header-actions">
         <a href="/admin/products/create" class="btn btn-primary">
@@ -142,11 +157,22 @@
       </div>
 
       <!-- Pagination -->
-      <% if (totalPages > 1) { %>
-        <div class="d-flex justify-content-between align-items-center mt-4">
-          <div class="text-muted" style="font-size: 13px;">
-            إجمالي المنتجات: <%= totalItems %>
-          </div>
+      <%# The count line used to live INSIDE the totalPages > 1 branch, so
+          filtering down to a handful of products showed no count at all --
+          exactly when an operator most wants to know how many matched. It sits
+          outside now; only the page buttons need more than one page. %>
+      <div class="d-flex justify-content-between align-items-center mt-4">
+        <%# This counts what matches the filter, not what exists. It used to be
+            labelled "إجمالي المنتجات" too, so filtering to one department read
+            as the catalogue having shrunk. The header carries the real total. %>
+        <div class="text-muted" style="font-size: 13px;">
+          <% if (search || catId || deptId) { %>
+            نتائج الفلترة: <%= totalItems %><% if (typeof registered !== 'undefined' && registered) { %> من أصل <%= registered.total %> منتج مسجل<% } %>
+          <% } else { %>
+            إجمالي المنتجات المسجلة: <%= totalItems %>
+          <% } %>
+        </div>
+        <% if (totalPages > 1) { %>
           <div class="d-flex gap-2">
             <%# Every one of these used to carry q and category but not
                 department, so filtering to one department and then clicking
@@ -163,8 +189,8 @@
               <a href="?page=<%= page + 1 %>&<%= qs %>" class="btn btn-outline">التالي</a>
             <% } %>
           </div>
-        </div>
-      <% } %>
+        <% } %>
+      </div>
     </div>
   </div>
 </main>

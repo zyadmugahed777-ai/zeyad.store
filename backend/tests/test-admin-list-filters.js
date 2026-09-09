@@ -199,6 +199,50 @@ function buildApp() {
         'the unfiltered list is no longer showing every department');
     });
 
+    // --- the registered total: visible in the panel, nowhere else ----------
+
+    await test('the product list shows how many products are registered', async () => {
+      const { html } = await get('/admin/products');
+      assert.ok(/إجمالي المنتجات المسجلة/.test(html),
+        'the panel does not show a registered total anywhere');
+      const truth = await repos.products.countRegistered();
+      assert.ok(html.includes(String(truth.total)),
+        'the total shown is not the number of rows that exist (' + truth.total + ')');
+    });
+
+    await test('the add-product page shows it too', async () => {
+      /* This is where it was asked for: standing on the add form there was no
+         way to see how many products the shop already had. */
+      const { status, html } = await get('/admin/products/create');
+      assert.strictEqual(status, 200);
+      assert.ok(/إجمالي المنتجات المسجلة/.test(html),
+        'the add-product page does not show the registered total');
+    });
+
+    await test('the registered total does not move when a filter is applied', async () => {
+      /* The number beside the pagination counts what matches the filter. If
+         both were labelled "إجمالي المنتجات", filtering to one department
+         would read as the catalogue having shrunk. */
+      const truth = await repos.products.countRegistered();
+      const { html } = await get('/admin/products?department=' + DEPT_A);
+      const head = html.slice(0, html.indexOf('<form'));
+      assert.ok(head.includes(String(truth.total)),
+        'the header total changed when a filter was applied');
+      assert.ok(/نتائج الفلترة/.test(html),
+        'the filtered count is still labelled as a grand total');
+    });
+
+    await test('countRegistered counts rows, not the filtered page', async () => {
+      const truth = await repos.products.countRegistered();
+      const matching = await repos.products.countAdminList({ department: DEPT_A });
+      assert.ok(truth.total >= matching,
+        'the registered total is smaller than a filtered subset of it');
+      assert.strictEqual(typeof truth.active, 'number');
+      assert.ok(truth.active <= truth.total, 'more products are live than exist');
+      // The three products this test created are all in there.
+      assert.ok(truth.total >= 3, 'the total did not count the rows just inserted');
+    });
+
     // --- every link into this page must use a parameter the route reads -----
 
     await test('every link into the product list uses a parameter the route accepts', () => {

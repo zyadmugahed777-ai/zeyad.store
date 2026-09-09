@@ -262,6 +262,36 @@ class PostgresProductRepo extends PostgresBaseRepository {
     return (await this.db.prepare(countSql).get(...params)).c;
   }
 
+  /**
+   * How many products exist, regardless of any filter.
+   *
+   * countAdminList() answers "how many match what is on screen", which is the
+   * number beside the pagination and changes as soon as anyone types in the
+   * search box. The operator also needs the number that does not move: how
+   * many products are registered in total, and how many of those are actually
+   * live on the storefront. Those are different questions and showing one
+   * number for both is how "I filtered and my catalogue shrank" happens.
+   *
+   * Deliberately admin-only. Nothing on the storefront prints a catalogue
+   * total, and test-product-placement-and-flags.js keeps it that way.
+   *
+   * @returns {{total: number, active: number, archived: number}}
+   */
+  async countRegistered() {
+    const row = await this.db.prepare(`
+      SELECT
+        COUNT(*) AS total,
+        COUNT(*) FILTER (WHERE p.is_active = true AND (p.is_archived = false OR p.is_archived IS NULL)) AS active,
+        COUNT(*) FILTER (WHERE p.is_archived = true) AS archived
+      FROM products p
+    `).get();
+    return {
+      total: Number(row.total) || 0,
+      active: Number(row.active) || 0,
+      archived: Number(row.archived) || 0
+    };
+  }
+
   _buildAdminQuery(filters = {}) {
     const { search, category, department } = filters;
     let querySql = `

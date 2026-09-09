@@ -37,6 +37,17 @@ const placed = (v, fallback) => (v === undefined || v === null ? fallback : on(v
     <div class="d-flex justify-content-between align-items-center mb-4">
       <div>
         <h1 class="page-title"><%= title %></h1>
+        <%# Asked for by name: standing on this page there was no way to see how
+            many products the shop already has without going back to the list.
+            Admin only -- the storefront prints no catalogue total anywhere. %>
+        <% if (typeof registered !== 'undefined' && registered) { %>
+          <p class="page-description" style="margin-top: 6px;">
+            إجمالي المنتجات المسجلة: <strong><%= registered.total %></strong>
+            <span class="text-muted" style="font-size: 13px;">
+              &nbsp;·&nbsp; المعروضة في المتجر: <%= registered.active %>
+            </span>
+          </p>
+        <% } %>
       </div>
       <div class="admin-header-actions">
         <a href="/admin/products" class="btn btn-outline">
