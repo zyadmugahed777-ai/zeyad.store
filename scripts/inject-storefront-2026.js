@@ -37,6 +37,25 @@ const STAMPED = [
   'zfb-core.js',
   'site.js',
 
+  /* The product page's own stylesheet, which had no version query at all.
+   * nginx serves it with `max-age=604800` and Cloudflare honours that, so a
+   * layout change here reached nobody: measured cf-cache-status HIT with an
+   * Age of 8,417 seconds against a file the origin had already replaced, and
+   * the edge would have gone on serving the old copy for another six days.
+   * Every visitor to this shop arrives from an advertisement, so "returning
+   * visitors keep the old copy" understates it -- the edge was serving the
+   * stale sheet to first-time visitors too. */
+  'product-page.css',
+
+  /* The rest of what the product page loads, found by the same measurement:
+   * all served `max-age=604800` with a bare URL, so any change to them was
+   * invisible at the edge for a week. */
+  'assets/css/product-sticky.css',
+  'assets/js/core/theme-engine.js',
+  'assets/js/core/translations.js',
+  'assets/js/core/i18n.js',
+  'wishlist-manager.js',
+
   /* The brand assets.
    *
    * nginx serves these with `Cache-Control: public, max-age=31536000,

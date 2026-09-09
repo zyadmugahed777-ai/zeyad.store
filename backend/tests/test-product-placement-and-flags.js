@@ -523,6 +523,54 @@ const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
     assert.ok(/\bhidden\b/.test(m[1]), 'it does not start hidden');
   });
 
+  await test('every stylesheet and script the product page loads is cache-busted', () => {
+    /* nginx serves these with max-age=604800 and Cloudflare honours it. An
+       asset referenced WITHOUT a ?v= query therefore keeps being served from
+       the edge for a week after the origin has replaced it -- measured once as
+       cf-cache-status HIT, Age 8417, against a file that had already changed.
+       Everyone here arrives from an advertisement, so this is not only a
+       returning-visitor problem: the edge hands the stale copy to first-time
+       visitors too. A version query makes a changed file a new URL, which no
+       cache has seen. */
+    const html = fs.readFileSync(path.join(REPO, 'product.html'), 'utf8');
+    const refs = [];
+    const re = /(?:href|src)\s*=\s*"([^"]+\.(?:css|js))(\?[^"]*)?"/g;
+    let m;
+    while ((m = re.exec(html))) {
+      const url = m[1];
+      if (/^(https?:)?\/\//.test(url)) continue;   // third-party, not ours to stamp
+      refs.push({ url, query: m[2] || '' });
+    }
+    assert.ok(refs.length >= 4, 'no local assets found on product.html');
+
+    /* products_db.js and zfb-config.js are the two GENERATED files. A content
+       hash stamped at build time would be wrong for them: they are rewritten
+       by syncFrontend() whenever the admin saves a product, long after the
+       HTML was stamped, so the page would point at a version query describing
+       an older file. nginx already handles them separately and correctly --
+       measured `max-age=14400, must-revalidate`, so a price edit reaches a
+       cached visitor within four hours and revalidates after that, instead of
+       the week the static assets were getting. */
+    const generated = new Set(['products_db.js', 'zfb-config.js']);
+
+    const bare = refs
+      .filter((r) => !generated.has(r.url) && !/[?&]v=/.test(r.query))
+      .map((r) => r.url);
+    assert.deepStrictEqual(bare, [],
+      'served for a week from the edge with no way to invalidate: ' + bare.join(', '));
+  });
+
+  await test('the real-media item spans the row instead of sitting alone', () => {
+    /* .product-trust-row is a two-column grid at every width -- responsive-pro
+       forces repeat(2, 1fr) with !important -- so a fifth item lands alone on a
+       third row with an empty cell beside it. */
+    const css = fs.readFileSync(path.join(REPO, 'product-page.css'), 'utf8');
+    const rule = css.match(/#trust-real-media-item\s*\{[^}]*\}/);
+    assert.ok(rule, 'no rule targets the real-media trust item');
+    assert.ok(/grid-column:\s*1\s*\/\s*-1/.test(rule[0]),
+      'it does not span the grid, so it is orphaned on its own row');
+  });
+
   // --- 6. Search and Najm honour their own flag ---------------------------
   await test('the search index excludes products hidden from search', () => {
     const repo = read('repositories/postgres/product-repo.js');

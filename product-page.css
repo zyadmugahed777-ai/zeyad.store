@@ -656,6 +656,15 @@ body.dark-mode {
   margin-top: 2px;
 }
 
+/* The row is a two-column grid at every width, so the fifth item -- the
+   real-photographs claim -- would sit alone on a third row with an empty
+   cell beside it. It carries the longest line and it is the first thing
+   the row is trying to say, so it takes the full width and leaves the
+   other four as a tidy pair of pairs underneath. */
+.product-trust-row .product-trust-item#trust-real-media-item {
+  grid-column: 1 / -1;
+}
+
 .product-specs-card {
   padding: 20px 18px;
   position: sticky;
