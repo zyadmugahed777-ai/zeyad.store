@@ -6,6 +6,40 @@
 const SITE_URL = (process.env.SITE_URL || 'https://zeyad.store').trim().replace(/\/+$/, '');
 
 /**
+ * A short content hash for a file under the repo root, or '' if unreadable.
+ *
+ * The social card and the logo are served with
+ * `Cache-Control: public, max-age=31536000, immutable`, and Facebook, WhatsApp
+ * and TikTok each keep their own copy of an og:image keyed on its URL. When
+ * the mark changed from an olive ز to a gold Z the origin had the new card
+ * immediately and the edge went on serving the old one for hours -- measured
+ * cf-cache-status HIT with an Age of 10,572 against a file replaced seconds
+ * earlier. A share posted before the change would have kept showing the old
+ * card indefinitely.
+ *
+ * Appending the hash makes a changed file a changed URL, which no cache has
+ * seen. It is computed once at require time, not per request.
+ *
+ * Failure is silent and returns '': a missing file must not stop the server
+ * booting over a cache-busting nicety.
+ */
+function assetVersion(relPath) {
+  try {
+    const crypto = require('crypto');
+    const path = require('path');
+    const abs = path.join(__dirname, '..', '..', relPath);
+    return crypto.createHash('sha1').update(require('fs').readFileSync(abs)).digest('hex').slice(0, 8);
+  } catch (_) {
+    return '';
+  }
+}
+
+function versioned(relPath) {
+  const v = assetVersion(relPath);
+  return SITE_URL + '/' + relPath + (v ? '?v=' + v : '');
+}
+
+/**
  * Brand identity.
  *
  * The site was carrying three different names at once: 44 page titles ended in
@@ -61,12 +95,12 @@ module.exports = {
      always has. The Organization structured data declared it as the business's
      logo AND its image, so the one picture Google associates with this
      business was a missing file. og-default.png is 1200x630 and exists. */
-  DEFAULT_OG_IMAGE: SITE_URL + '/assets/brand/og-default.png',
+  DEFAULT_OG_IMAGE: versioned('assets/brand/og-default.png'),
 
   /* The square mark, for Organization.logo. Google wants a logo it can render
      beside the business name; a 1200x630 social card is the wrong shape for
      that, so the 512x512 icon is used instead. */
-  BRAND_LOGO: SITE_URL + '/assets/brand/icon-512.png',
+  BRAND_LOGO: versioned('assets/brand/icon-512.png'),
 
   /**
    * How to reach the shop. Read off the storefront rather than invented:

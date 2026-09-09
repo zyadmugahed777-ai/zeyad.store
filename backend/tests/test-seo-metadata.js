@@ -77,8 +77,58 @@ const read = (f) => fs.readFileSync(path.join(REPO, f), 'utf8');
     // the manifest instead, and are checked by the manifest assertion.
     assert.ok(referenced.size >= 5, 'expected the icon set to be referenced, found ' + referenced.size);
     for (const rel of referenced) {
-      assert.ok(fs.existsSync(path.join(REPO, rel.replace(/^\//, ''))), rel + ' is referenced but missing on disk');
+      /* Strip the cache-busting query before looking on disk. These carry a
+         content hash now -- see the next assertion for why. */
+      const onDisk = rel.replace(/^\//, '').replace(/\?.*$/, '');
+      assert.ok(fs.existsSync(path.join(REPO, onDisk)), rel + ' is referenced but missing on disk');
     }
+  });
+
+  await test('the brand assets are cache-busted, so a changed mark reaches visitors', () => {
+    /* nginx serves these with `max-age=31536000, immutable` and Cloudflare
+       honours it. When the mark changed from an olive ز to a gold Z the origin
+       had the new file within seconds and the edge kept serving the old one --
+       measured cf-cache-status HIT, Age 10,572, against a file replaced
+       moments earlier. A purge fixes that once; a content hash in the URL
+       fixes it for every future change, because a changed file becomes a URL
+       no cache has seen.
+
+       Asserted rather than trusted: dropping these from STAMPED in
+       scripts/inject-storefront-2026.js would silently bring the problem back,
+       and nobody would notice until a rebrand appeared not to deploy. */
+    /* The injector keeps a SKIP list, and a page on it is never stamped. Read
+       that list rather than keeping a second copy here: appliances_test.html
+       is on it, is in no sitemap, is linked from nowhere and answers 404 on
+       the live site, so holding it to a rule about what visitors receive would
+       be asserting something about a page no visitor can reach. */
+    const injector = fs.readFileSync(path.join(REPO, 'scripts', 'inject-storefront-2026.js'), 'utf8');
+    const skipBlock = injector.match(/const SKIP = new Set\(\[([^\]]*)\]\)/);
+    const skip = new Set(skipBlock ? [...skipBlock[1].matchAll(/'([^']+)'/g)].map((m) => m[1]) : []);
+
+    const unstamped = [];
+    for (const f of pages()) {
+      if (skip.has(f)) continue;
+      const s = read(f);
+      for (const asset of ['favicon.svg', 'favicon-32.png', 'apple-touch-icon.png']) {
+        const m = s.match(new RegExp('/assets/brand/' + asset.replace('.', '\\.') + '(\\?v=[a-f0-9]+)?'));
+        if (m && !m[1]) unstamped.push(f + ' -> ' + asset);
+      }
+      const man = s.match(/\/site\.webmanifest(\?v=[a-f0-9]+)?/);
+      if (man && !man[1]) unstamped.push(f + ' -> site.webmanifest');
+    }
+    assert.strictEqual(unstamped.length, 0,
+      'these are served immutable for a year with no version in the URL: ' + unstamped.slice(0, 5).join('; '));
+  });
+
+  await test('the social card and logo carry a content version too', () => {
+    /* Facebook, WhatsApp and TikTok each cache an og:image keyed on its URL,
+       and this shop's visitors all arrive from one of those. A share posted
+       before a rebrand would otherwise keep showing the old card forever. */
+    const c = require('../config/constants');
+    assert.ok(/\?v=[a-f0-9]{6,}$/.test(c.DEFAULT_OG_IMAGE),
+      'og:image has no content version: ' + c.DEFAULT_OG_IMAGE);
+    assert.ok(/\?v=[a-f0-9]{6,}$/.test(c.BRAND_LOGO),
+      'the logo has no content version: ' + c.BRAND_LOGO);
   });
 
   await test('the manifest is valid JSON and names the current brand', () => {

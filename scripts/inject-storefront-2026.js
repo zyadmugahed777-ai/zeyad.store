@@ -36,6 +36,26 @@ const STAMPED = [
   'product-engine.js',
   'zfb-core.js',
   'site.js',
+
+  /* The brand assets.
+   *
+   * nginx serves these with `Cache-Control: public, max-age=31536000,
+   * immutable` and Cloudflare honours it, so when the mark changed from an
+   * olive ز to a gold Z the origin had the new file within seconds and the
+   * edge went on serving the old one -- measured cf-cache-status: HIT with an
+   * Age of 10,572 seconds against a file that had just been replaced. A purge
+   * fixes that once; the next brand change would need another.
+   *
+   * Stamping them means a changed file is a changed URL, which no cache
+   * anywhere has ever seen. The same mechanism the stylesheets already use,
+   * and the reason they never needed a purge.
+   *
+   * The manifest is stamped too: it names icon-192 and icon-512 internally, so
+   * a stale manifest pins stale icons on a phone's home screen. */
+  'assets/brand/favicon.svg',
+  'assets/brand/favicon-32.png',
+  'assets/brand/apple-touch-icon.png',
+  'site.webmanifest',
 ];
 
 /*
