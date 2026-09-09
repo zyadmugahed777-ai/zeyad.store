@@ -484,6 +484,45 @@ const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
     assert.ok(all.length <= 3, 'more products were shown than exist beside the one being viewed');
   });
 
+  // --- 5d. "Real photographs of this piece" is counted, not asserted -------
+
+  await test('the real-media claim is built from what the product actually has', () => {
+    /* Most main images in this catalogue are studio renders, so telling a
+       customer that real photographs exist is the most useful sentence on the
+       page -- and the easiest to overclaim. Every product has at least two
+       images so the claim holds, but only ONE of the 57 has a video, and a
+       blanket "and video" would be a claim about the other 56. */
+    const engine = fs.readFileSync(path.join(REPO, 'product-engine.js'), 'utf8');
+    const block = engine.slice(engine.indexOf('trust-real-media-item'), engine.indexOf('const warrantyEl'));
+    assert.ok(block, 'the real-media block is missing from product-engine.js');
+
+    assert.ok(/product\.gallery\)\s*\?\s*product\.gallery\.length\s*:\s*0/.test(block),
+      'the photo count is not read from the product');
+    assert.ok(/hasVideo/.test(block) && /product\.video/.test(block),
+      'video is not checked per product');
+    assert.ok(/shots >= 2 \|\| hasVideo/.test(block),
+      'the claim is shown without first proving there is media to back it');
+    assert.ok(/realMediaItem\.hidden = true/.test(block),
+      'a product with no extra media has no way to hide the claim');
+
+    // And the wording must not promise video unconditionally.
+    const always = block.match(/'صور وفيديو حقيقي[^']*'/);
+    assert.ok(always, 'the video wording is missing');
+    const idx = block.indexOf(always[0]);
+    const guarded = block.slice(Math.max(0, idx - 120), idx);
+    assert.ok(/hasVideo\s*$|hasVideo[\s\S]*\?[\s\S]*$/.test(guarded),
+      'the "and video" wording is not guarded by hasVideo');
+  });
+
+  await test('the trust slot starts hidden, so a script failure claims nothing', () => {
+    /* If product-engine.js never runs -- a JS error, a blocked script -- the
+       slot must stay empty rather than showing an unfilled promise. */
+    const html = fs.readFileSync(path.join(REPO, 'product.html'), 'utf8');
+    const m = html.match(/<div class="product-trust-item" id="trust-real-media-item"([^>]*)>/);
+    assert.ok(m, 'the real-media trust item is missing from product.html');
+    assert.ok(/\bhidden\b/.test(m[1]), 'it does not start hidden');
+  });
+
   // --- 6. Search and Najm honour their own flag ---------------------------
   await test('the search index excludes products hidden from search', () => {
     const repo = read('repositories/postgres/product-repo.js');

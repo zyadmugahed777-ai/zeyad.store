@@ -376,6 +376,36 @@ function sanitizeRichText(value) {
     const originEl = qs("product-origin");
     if (originEl) originEl.textContent = product.origin || "مستورد أصلي";
 
+    /*
+     * "Real photographs of this piece, from the showroom."
+     *
+     * Most main images in this catalogue are studio renders. That is normal
+     * for furniture and it is not a problem in itself -- but a customer
+     * spending two thousand riyals from a phone, having arrived from a TikTok
+     * advertisement, wants to know the thing exists. Every product here has at
+     * least two photographs and some have seven, so saying so is both true and
+     * the most useful sentence on the page.
+     *
+     * Counted from what this product actually carries, never asserted: a
+     * product with one image says nothing, and video is mentioned only when
+     * there is a video. One of the 57 has one; a blanket "and video" would be
+     * a claim about 56 products that do not.
+     */
+    const realMediaItem = qs("trust-real-media-item");
+    const realMediaText = qs("trust-real-media");
+    if (realMediaItem && realMediaText) {
+      const shots = Array.isArray(product.gallery) ? product.gallery.length : 0;
+      const hasVideo = !!(product.video && String(product.video).trim());
+      if (shots >= 2 || hasVideo) {
+        realMediaText.innerHTML = hasVideo
+          ? 'صور وفيديو حقيقي<br><small>من داخل معرضنا</small>'
+          : 'صور حقيقية<br><small>' + shots + ' صور للمنتج من معرضنا</small>';
+        realMediaItem.hidden = false;
+      } else {
+        realMediaItem.hidden = true;
+      }
+    }
+
     const warrantyEl = qs("product-warranty");
     if (warrantyEl) warrantyEl.textContent = product.warranty || "ضمان الوكيل المعتمد";
 
