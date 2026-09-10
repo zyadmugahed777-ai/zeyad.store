@@ -136,10 +136,31 @@ const read = (f) => fs.readFileSync(path.join(REPO, f), 'utf8');
     assert.strictEqual(m.name, 'زياد ستور');
     assert.ok(Array.isArray(m.icons) && m.icons.length >= 2, 'manifest needs at least a 192 and a 512 icon');
     for (const i of m.icons) {
-      assert.ok(fs.existsSync(path.join(REPO, i.src.replace(/^\//, ''))), 'manifest icon missing: ' + i.src);
+      const onDisk = i.src.replace(/^\//, '').split('?')[0];
+      assert.ok(fs.existsSync(path.join(REPO, onDisk)), 'manifest icon missing: ' + i.src);
+
+      /* Stamped, and this is not decoration. nginx serves these with a long
+         max-age, so a phone that installed the shop while the mark was still
+         an olive Arabic "ز" kept that icon on its home screen however many
+         times the file was replaced. The manifest is cache-busted in the HTML;
+         the URLs INSIDE it were not, which is the gap this closes. */
+      assert.ok(/\?v=[0-9a-f]{8}$/.test(i.src),
+        'manifest icon is not cache-busted, so a home-screen icon can never change: ' + i.src);
     }
     assert.ok(m.icons.some((i) => String(i.purpose || '').includes('maskable')),
       'Android crops a non-maskable icon into a circle and clips the mark');
+
+    /* The retired brand's olive green. The header renders white in light mode
+       and #141d18 in dark, so this painted a green status bar above a white
+       header -- in the one colour the operator asked never to see again. */
+    assert.notStrictEqual(String(m.theme_color || '').toLowerCase(), '#23382e',
+      'the manifest still carries the retired olive theme colour');
+  });
+
+  await test('no page still declares the retired olive theme colour', () => {
+    const offenders = pages().filter((f) => read(f).includes('#23382e'));
+    assert.deepStrictEqual(offenders, [],
+      'the olive theme-color survives on: ' + offenders.slice(0, 5).join(', '));
   });
 
   // --- 2. Every page carries the icon set ---------------------------------
@@ -474,6 +495,71 @@ const read = (f) => fs.readFileSync(path.join(REPO, f), 'utf8');
       }
     });
   }
+
+  // --- The icon Google shows beside a result ------------------------------
+
+  await test('/favicon.ico exists at the site root', () => {
+    /* Every browser and crawler requests this path directly, whatever the
+       <link> tags say. Ours returned 404, which is one of the two reasons
+       search results showed the default globe instead of the gold Z. */
+    const ico = path.join(REPO, 'favicon.ico');
+    assert.ok(fs.existsSync(ico), 'there is no /favicon.ico');
+
+    const b = fs.readFileSync(ico);
+    assert.ok(b.length > 100, 'favicon.ico is empty');
+    assert.strictEqual(b.readUInt16LE(0), 0, 'not an ICO: reserved field');
+    assert.strictEqual(b.readUInt16LE(2), 1, 'not an ICO: type field');
+
+    const count = b.readUInt16LE(4);
+    assert.ok(count >= 1, 'the ICO contains no images');
+
+    const sizes = [];
+    for (let i = 0; i < count; i++) {
+      const at = 6 + i * 16;
+      sizes.push(b.readUInt8(at) || 256);
+    }
+    assert.ok(sizes.includes(48),
+      'the ICO has no 48x48 image, which is the size Google reads: ' + sizes.join(', '));
+  });
+
+  await test('a declared icon meets Google\'s multiple-of-48 rule', () => {
+    /* Google states the favicon must be square and a multiple of 48 pixels.
+       The set used to be 32, 180, 192 and 512 -- only the 192 qualified, and
+       the tag a crawler reads first pointed at the 32. */
+    const html = fs.readFileSync(path.join(REPO, 'index.html'), 'utf8');
+    const declared = [...html.matchAll(/<link[^>]*rel="icon"[^>]*>/g)].map((m) => m[0]);
+    assert.ok(declared.length, 'no icon is declared at all');
+
+    const multiples = declared.filter((tag) => {
+      const m = tag.match(/sizes="(\d+)x(\d+)"/);
+      if (!m) return false;
+      const w = Number(m[1]), h = Number(m[2]);
+      return w === h && w % 48 === 0;
+    });
+    assert.ok(multiples.length > 0,
+      'no declared PNG icon is a square multiple of 48: ' + declared.join(' '));
+  });
+
+  await test('every page declares the root icon, not just the home page', () => {
+    const pages = fs.readdirSync(REPO).filter((f) => f.endsWith('.html'));
+    const missing = pages.filter((f) => {
+      const html = fs.readFileSync(path.join(REPO, f), 'utf8');
+      return !html.includes('href="/favicon.ico"');
+    });
+    assert.deepStrictEqual(missing, [],
+      'these pages do not point at the root icon: ' + missing.join(', '));
+  });
+
+  await test('the 48 and 96 icons exist on disk and are the size they claim', () => {
+    for (const [name, expected] of [['favicon-48.png', 48], ['favicon-96.png', 96]]) {
+      const file = path.join(REPO, 'assets', 'brand', name);
+      assert.ok(fs.existsSync(file), name + ' is missing');
+      const b = fs.readFileSync(file);
+      // PNG IHDR: width at byte 16, height at byte 20.
+      assert.strictEqual(b.readUInt32BE(16), expected, name + ' is the wrong width');
+      assert.strictEqual(b.readUInt32BE(20), expected, name + ' is the wrong height');
+    }
+  });
 
   console.log(`\n${passed} passed, ${failed} failed\n`);
   process.exit(failed === 0 ? 0 : 1);

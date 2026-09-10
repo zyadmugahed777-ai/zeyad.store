@@ -73,6 +73,10 @@ const STAMPED = [
    * a stale manifest pins stale icons on a phone's home screen. */
   'assets/brand/favicon.svg',
   'assets/brand/favicon-32.png',
+  /* The sizes Google actually accepts -- it requires a multiple of 48, which
+     nothing in the old set except icon-192 satisfied. */
+  'assets/brand/favicon-48.png',
+  'assets/brand/favicon-96.png',
   'assets/brand/apple-touch-icon.png',
   'site.webmanifest',
 ];

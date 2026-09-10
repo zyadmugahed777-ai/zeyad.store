@@ -46,10 +46,59 @@ const CREAM = '#fff8ed';
 
 const ICONS = [
   ['favicon-32.png', 32],
+  /* Google's favicon requirement is explicit and we did not meet it: the icon
+     must be square and a MULTIPLE OF 48 pixels. The set was 32, 180, 192 and
+     512, of which only 192 qualifies, and the tag pointing at the 32 is the
+     one a crawler reads first. That is why search results showed the default
+     globe instead of the gold Z. */
+  ['favicon-48.png', 48],
+  ['favicon-96.png', 96],
   ['apple-touch-icon.png', 180],
   ['icon-192.png', 192],
   ['icon-512.png', 512]
 ];
+
+/* The sizes that go inside /favicon.ico. 48 is the one Google reads; 16 and 32
+   are what browsers pick for a tab and a bookmark. */
+const ICO_SIZES = [16, 32, 48];
+
+/**
+ * Write a .ico wrapping PNG images.
+ *
+ * There was no /favicon.ico at all -- the root returned 404 -- and that is the
+ * first place a crawler, and every browser, looks. A declared <link rel="icon">
+ * is not a substitute: the bare root request is made regardless.
+ *
+ * The format is a 6-byte ICONDIR, one 16-byte ICONDIRENTRY per image, then the
+ * image data. PNG payloads have been valid inside an ICO since Windows Vista
+ * and are what every modern favicon uses.
+ */
+function buildIco(pngBuffers) {
+  const count = pngBuffers.length;
+  const header = Buffer.alloc(6);
+  header.writeUInt16LE(0, 0);      // reserved
+  header.writeUInt16LE(1, 2);      // 1 = icon
+  header.writeUInt16LE(count, 4);
+
+  const entries = Buffer.alloc(16 * count);
+  let offset = 6 + 16 * count;
+
+  pngBuffers.forEach(({ size, data }, i) => {
+    const at = i * 16;
+    // 0 means 256 in this field; none of our sizes reach it, but be correct.
+    entries.writeUInt8(size >= 256 ? 0 : size, at);
+    entries.writeUInt8(size >= 256 ? 0 : size, at + 1);
+    entries.writeUInt8(0, at + 2);          // palette colours (0 = none)
+    entries.writeUInt8(0, at + 3);          // reserved
+    entries.writeUInt16LE(1, at + 4);       // colour planes
+    entries.writeUInt16LE(32, at + 6);      // bits per pixel
+    entries.writeUInt32LE(data.length, at + 8);
+    entries.writeUInt32LE(offset, at + 12);
+    offset += data.length;
+  });
+
+  return Buffer.concat([header, entries, ...pngBuffers.map((p) => p.data)]);
+}
 
 /** The social card, composed from the same palette as the mark. */
 function cardSvg() {
@@ -109,6 +158,22 @@ function cardSvg() {
       .toFile(path.join(BRAND, name));
     console.log('  ' + name.padEnd(24) + px + 'x' + px);
   }
+
+  /* /favicon.ico, at the ROOT of the site rather than under assets/.
+     That path is not a convention we may relocate: browsers and crawlers
+     request it directly, and ours answered 404. */
+  const icoParts = [];
+  for (const size of ICO_SIZES) {
+    icoParts.push({
+      size,
+      data: await sharp(markSvg, { density: 600 })
+        .resize(size, size)
+        .png({ compressionLevel: 9 })
+        .toBuffer()
+    });
+  }
+  fs.writeFileSync(path.join(ROOT, 'favicon.ico'), buildIco(icoParts));
+  console.log('  favicon.ico             ' + ICO_SIZES.join(', ') + ' (site root)');
 
   /* Rendered at density 300 so the text is crisp, then resized DOWN to the
      exact 1200x630 the platforms ask for. Without the resize the card came out
