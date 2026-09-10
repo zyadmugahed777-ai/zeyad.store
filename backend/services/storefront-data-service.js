@@ -153,6 +153,26 @@ function publicProduct(p) {
     departmentSlug: p.department_slug || null,
     departmentName: p.department_name || null,
     subcategory: p.category_name || null,
+
+    /* The words on the product page.
+     *
+     * This projection existed to build catalogue CARDS, which need a title, a
+     * price and a photograph -- so it dropped everything else, and the product
+     * page's server-side renderer then had nothing to write but a fallback
+     * paragraph. Measured on the live site: descriptions run to a median of
+     * 689 characters and 53 of 57 products carry specifications, and none of
+     * it was reaching the HTML a crawler reads.
+     *
+     * The rows are already fetched with all of this on them, so carrying it
+     * costs one cached object a few hundred kilobytes and saves a second query
+     * on the most-visited page on the site.
+     */
+    description: p.description || null,
+    origin: p.origin || null,
+    warranty: p.warranty || null,
+    specs: Array.isArray(p.specs) ? p.specs : [],
+    faq: Array.isArray(p.faq) ? p.faq : [],
+
     // Where the operator allowed this product to appear. Each page honours the
     // one flag that concerns it; nothing here decides for them.
     showInDepartment: placement(p.show_in_department, true),
