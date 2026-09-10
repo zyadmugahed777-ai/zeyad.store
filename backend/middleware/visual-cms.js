@@ -14,6 +14,7 @@ const { cmsService } = require('../services/cms-service');
 const { getStorefrontData, offersFor } = require('../services/storefront-data-service');
 const { renderOffersSection } = require('../services/offer-render-service');
 const { injectCatalog } = require('../services/catalog-render-service');
+const { injectProductBody } = require('../services/product-render-service');
 const { injectCategoryStrip } = require('../services/category-strip-service');
 const { buildProductSeo, buildCategorySeo, SITE } = require('../services/product-seo-service');
 const {
@@ -586,6 +587,26 @@ async function visualCmsMiddleware(req, res, next) {
                 }
               } catch (e) {
                 console.error('[reviews] structured data skipped:', e.message);
+              }
+
+              /* Fill the BODY, not only the head.
+               *
+               * Everything below this line was already correct -- unique
+               * title, unique canonical, full structured data -- and the
+               * catalogue still did not get indexed, because the page a
+               * crawler received was a loading skeleton wrapped around
+               * `<div id="product-page" hidden>`. Measured on 2026-09-10: two
+               * different products differed by four words of server-rendered
+               * text out of 1,256. Google reported 3 pages indexed and 65 not.
+               *
+               * See product-render-service.js for the rest of the reasoning.
+               */
+              try {
+                injectProductBody($, product, cheerio);
+              } catch (e) {
+                // A page with a good head and an unfilled body is what we had
+                // yesterday: worse, but not broken. Never lose the response.
+                console.error('[product-render] body not injected:', e.message);
               }
 
               const seo = buildProductSeo(product, 'SAR', reviews);
