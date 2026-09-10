@@ -137,9 +137,30 @@ function discountPercent(product) {
    these two must produce the same bytes. */
 const DEFAULT_FAQ = [
   { q: 'ما هي مدة الضمان على هذا المنتج؟', a: 'يخضع المنتج لضمان شامل وموثق من متجر زياد ستور لمدة عام على الأقل مع توفير قطع الغيار الأصلية.' },
-  { q: 'كيف يتم التوصيل والتركيب في صنعاء والمدن الأخرى؟', a: 'نوفر التوصيل بأسعار رمزية داخل المدن الرئيسية والمحافظات خلال 24 إلى 48 ساعة مع خدمة تركيب حسب المنتج من تأكيد الطلب.' },
+  { q: 'كيف يتم التوصيل والتركيب في صنعاء والمدن الأخرى؟', a: 'نوفر التوصيل بأسعار رمزية داخل المدن الرئيسية والمحافظات خلال 2-5 أيام عمل من تأكيد الطلب، مع خدمة تركيب حسب المنتج.' },
   { q: 'ما هي طرق الدفع المتاحة؟', a: 'يمكنك الدفع نقداً عند الاستلام، أو عبر بنك الكريمي، محفظة جوالي، كاش، أو التحويل البنكي المباشر.' }
 ];
+
+/**
+ * The delivery window shown beside the price.
+ *
+ * Identical rule to deliveryPromise() in product-engine.js, and it has to be:
+ * the static markup said "2-5 أيام عمل" while the engine overwrote it on load
+ * with a one-to-two-day claim, so Google was told two to five days and the shopper
+ * was promised one to two, on the same page at the same moment.
+ *
+ * A per-product value is used only when it is plausibly a delivery time -- long
+ * enough to be words, and carrying a digit. The column holds the single letter
+ * "T" on ten products, and that rendered to customers verbatim as their
+ * delivery estimate.
+ */
+const DELIVERY_PROMISE_AR = require('../config/constants').DELIVERY_FALLBACK_SAR.textAr;
+
+function deliveryPromise(product) {
+  const own = String(product.deliveryTime == null ? '' : product.deliveryTime).trim();
+  if (own.length >= 4 && /[0-9٠-٩]/.test(own)) return own;
+  return DELIVERY_PROMISE_AR;
+}
 
 const DEFAULT_DESCRIPTION =
   '<p>أثاث وأجهزة عالية الجودة من متجر زياد ستور، مصنعة وفق أرقى المعايير العالمية مع ضمان موثق.</p>';
@@ -202,6 +223,16 @@ function injectProductBody($, product, cheerio) {
   setText('#product-brand', product.brand, 'غير محدد');
   setText('#product-origin', product.origin, 'غير محدد');
   setText('#product-sku', product.sku || product.product_id || product.id, '—');
+
+  /* The delivery window, written server-side so the crawler and the shopper
+     are promised the same thing. The engine rewrites this on load with the
+     identical rule. */
+  const shipTrust = $('#trust-shipping');
+  if (shipTrust.length) {
+    const line = shipTrust.find('small').first();
+    if (line.length) line.text(deliveryPromise(product));
+    written.delivery = deliveryPromise(product);
+  }
 
   // --- the description, which is most of the words on the page ------------
   const descEl = $('#product-description');

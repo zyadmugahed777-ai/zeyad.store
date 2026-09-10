@@ -101,6 +101,44 @@ module.exports = {
    * same details that must match the Google Business Profile exactly, or the
    * two records compete instead of reinforcing each other.
    */
+  /*
+   * The shop's own profiles elsewhere, for schema.org `sameAs`.
+   *
+   * This is the mechanism that tells a search engine "the business behind
+   * zeyad.store and the business behind that Facebook page are one entity".
+   * Without it, Google has a website, a Facebook page, an Instagram account and
+   * a Business Profile and no stated reason to believe they are the same shop.
+   *
+   * TRACKING PARAMETERS STRIPPED, deliberately. The links as shared carried
+   * `stkn` (Instagram) and `sec_uid`, `user_id`, `share_iid`, `u_code`
+   * (TikTok). Those identify the account and device that generated the share,
+   * not the profile, and publishing them in every page's source would put a
+   * personal identifier permanently in public. Each stripped URL was fetched
+   * and confirmed to resolve on its own.
+   *
+   * The Facebook URL keeps its profile.php?id= form because that page has no
+   * username set; it is the canonical address Facebook itself redirects to.
+   */
+  SOCIAL_PROFILES: [
+    'https://www.facebook.com/profile.php?id=61559904716467',
+    'https://www.instagram.com/zeyad.store',
+    'https://www.tiktok.com/@zeyad..store',
+    'https://wa.me/967775010726'
+  ],
+
+  /*
+   * The shop's Knowledge Graph entity id, read out of the Google Business
+   * Profile share link (share.google/... redirects to a search URL carrying
+   * `kgmid=/g/11zyn7kz73`).
+   *
+   * This matters more than it looks: it is proof that Google ALREADY holds
+   * "زياد ستور" as a business entity. The problem was never that Google does
+   * not know the shop -- it is that nothing connected that entity to this
+   * website. Declaring the id is the most direct statement available that the
+   * two are the same thing.
+   */
+  KNOWLEDGE_GRAPH_MID: '/g/11zyn7kz73',
+
   BUSINESS: {
     phone: '+967775010726',
     whatsapp: '967775010726',
@@ -205,6 +243,27 @@ module.exports = {
      * total delivery as handling + transit, so with handling unstated the
      * published total is 2-5 business days -- the promise, unchanged.
      */
-    transitDays: { min: 2, max: 5 }
+    transitDays: { min: 2, max: 5 },
+
+    /* The same window in words, and the ONLY place it is written.
+     *
+     * It used to be written in four places that disagreed. product.html said
+     * "2-5 أيام عمل" in the markup, which is what a crawler read -- and
+     * product-engine.js then OVERWROTE that on load with the product's own
+     * delivery_time, falling back to "24 إلى 48 ساعة". So the shopper was
+     * promised one to two days while Google was told two to five, on the same
+     * page, at the same moment. That is the shape of a cloaking complaint even
+     * when nobody intended it.
+     *
+     * Worse, the column it preferred is unusable: 47 of 57 products have it
+     * empty and 10 hold the single letter "T", which rendered to customers,
+     * verbatim, as their delivery estimate on ten live product pages.
+     *
+     * One string now, matching transitDays above and the structured data built
+     * from it. product-engine.js repeats it because it runs in the browser and
+     * cannot require this file; test-delivery-promise.js fails if the two ever
+     * drift apart.
+     */
+    textAr: '2-5 أيام عمل'
   }
 };

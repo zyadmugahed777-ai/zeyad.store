@@ -19,7 +19,8 @@ const { buildFaqSchema } = require('../services/faq-schema-service');
 const { injectCategoryStrip } = require('../services/category-strip-service');
 const { buildProductSeo, buildCategorySeo, SITE } = require('../services/product-seo-service');
 const {
-  BRAND_AR, BRAND_ALTERNATES, DEFAULT_OG_IMAGE, BRAND_LOGO, BUSINESS
+  BRAND_AR, BRAND_ALTERNATES, DEFAULT_OG_IMAGE, BRAND_LOGO, BUSINESS,
+  SOCIAL_PROFILES, KNOWLEDGE_GRAPH_MID
 } = require('../config/constants');
 
 /**
@@ -86,6 +87,23 @@ function buildOrganizationJsonLd() {
     url: SITE + '/',
     logo: BRAND_LOGO,
     image: DEFAULT_OG_IMAGE,
+
+    /* The profiles that prove this is one business rather than four unrelated
+       accounts. Until now Google had a website, a Facebook page, an Instagram
+       account, a TikTok account and a Business Profile, and nothing stating
+       they belong together. */
+    sameAs: SOCIAL_PROFILES,
+
+    /* Google already holds "زياد ستور" as a Knowledge Graph entity -- the
+       Business Profile share link carries its id. Declaring it is the most
+       direct statement available that the entity Google knows and the site it
+       is reading are the same shop. */
+    identifier: {
+      '@type': 'PropertyValue',
+      propertyID: 'kgmid',
+      value: KNOWLEDGE_GRAPH_MID
+    },
+
     telephone: BUSINESS.phone,
     address: {
       '@type': 'PostalAddress',

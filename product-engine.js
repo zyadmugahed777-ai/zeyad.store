@@ -504,8 +504,40 @@ function sanitizeRichText(value) {
     return "توصيل حسب المنطقة والفئة";
   }
 
+  /*
+   * The shop's delivery window.
+   *
+   * MUST stay identical to DELIVERY_FALLBACK_SAR.textAr in
+   * backend/config/constants.js, which is where the same window is written for
+   * the structured data. This file runs in the browser and cannot require it;
+   * test-delivery-promise.js fails if the two drift.
+   *
+   * Why this function exists rather than a fallback inline:
+   *
+   * product.html ships "2-5 أيام عمل" in its markup, which is what a crawler
+   * reads -- and this line then overwrote it on load with the product's own
+   * delivery_time, falling back to a one-to-two-day claim. The shopper was promised
+   * one to two days while Google was told two to five, on the same page, at
+   * the same moment.
+   *
+   * And the column it preferred is unusable: 47 of 57 products have it empty
+   * and 10 hold the single letter "T" -- which rendered to customers, verbatim,
+   * as their delivery estimate on ten live product pages.
+   *
+   * So a per-product value is used only when it is plausibly a delivery time:
+   * long enough to be words, and carrying a digit. "T" is neither.
+   */
+  const DELIVERY_PROMISE_AR = "2-5 أيام عمل";
+
+  function deliveryPromise(product) {
+    const own = cleanText(product.deliveryTime);
+    const hasDigit = /[0-9٠-٩]/.test(own);
+    if (own.length >= 4 && hasDigit) return own;
+    return DELIVERY_PROMISE_AR;
+  }
+
     const shipTrust = qs("trust-shipping");
-    if (shipTrust) shipTrust.innerHTML = `${shippingLine(product)}<br><small>${cleanText(product.deliveryTime) || "24 إلى 48 ساعة"}</small>`;
+    if (shipTrust) shipTrust.innerHTML = `${shippingLine(product)}<br><small>${deliveryPromise(product)}</small>`;
 
     const warTrust = qs("trust-warranty");
     if (warTrust) warTrust.innerHTML = `${product.warranty || "ضمان موثق"}<br><small>استبدال وصيانة</small>`;
@@ -1037,7 +1069,7 @@ function sanitizeRichText(value) {
     if (faqList) {
       const faq = Array.isArray(product.faq) && product.faq.length ? product.faq : [
         { q: "ما هي مدة الضمان على هذا المنتج؟", a: "يخضع المنتج لضمان شامل وموثق من متجر زياد ستور لمدة عام على الأقل مع توفير قطع الغيار الأصلية." },
-        { q: "كيف يتم التوصيل والتركيب في صنعاء والمدن الأخرى؟", a: "نوفر التوصيل بأسعار رمزية داخل المدن الرئيسية والمحافظات خلال 24 إلى 48 ساعة مع خدمة تركيب حسب المنتج من تأكيد الطلب." },
+        { q: "كيف يتم التوصيل والتركيب في صنعاء والمدن الأخرى؟", a: "نوفر التوصيل بأسعار رمزية داخل المدن الرئيسية والمحافظات خلال 2-5 أيام عمل من تأكيد الطلب، مع خدمة تركيب حسب المنتج." },
         { q: "ما هي طرق الدفع المتاحة؟", a: "يمكنك الدفع نقداً عند الاستلام، أو عبر بنك الكريمي، محفظة جوالي، كاش، أو التحويل البنكي المباشر." }
       ];
 
