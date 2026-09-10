@@ -15,6 +15,7 @@ const { getStorefrontData, offersFor } = require('../services/storefront-data-se
 const { renderOffersSection } = require('../services/offer-render-service');
 const { injectCatalog } = require('../services/catalog-render-service');
 const { injectProductBody } = require('../services/product-render-service');
+const { buildFaqSchema } = require('../services/faq-schema-service');
 const { injectCategoryStrip } = require('../services/category-strip-service');
 const { buildProductSeo, buildCategorySeo, SITE } = require('../services/product-seo-service');
 const {
@@ -630,6 +631,32 @@ async function visualCmsMiddleware(req, res, next) {
                 $('meta[property^="product:"]').remove();
                 $('head').prepend(seo.tags.join(NEWLINE + '  ') + NEWLINE + '  ' + seo.jsonLd + NEWLINE);
               }
+            }
+          }
+
+          /* FAQPage, for the answer engines.
+           *
+           * The shop wants to be found in ChatGPT, Gemini and AI Overviews as
+           * well as in a list of links, and those systems lift facts most
+           * readily from an explicit question paired with an explicit answer.
+           * Audited on 2026-09-11: not one page carried FAQPage, including
+           * faq.html, which writes out seven real questions in <details>
+           * elements and had no machine-readable form of any of them.
+           *
+           * Deliberately NOT emitted on product pages. Their questions are the
+           * three shared defaults -- no product carries its own -- so marking
+           * them up would publish 57 identical FAQPage blocks, which says
+           * nothing and reads as boilerplate. When an operator writes real
+           * questions for a product, that changes; the condition below is
+           * about whether the questions belong to the page.
+           */
+          const FAQ_PAGES = new Set(['faq', 'delivery', 'returns', 'warranty', 'reservation-policy']);
+          if (FAQ_PAGES.has(baseSlug)) {
+            try {
+              const faqLd = buildFaqSchema($, String(SITE).replace(/\/$/, '') + '/' + baseSlug + '.html');
+              if (faqLd) $('head').append('  ' + faqLd + NEWLINE);
+            } catch (e) {
+              console.error('[faq-schema] skipped on ' + baseSlug + ':', e.message);
             }
           }
 
