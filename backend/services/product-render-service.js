@@ -165,6 +165,61 @@ function deliveryPromise(product) {
 const DEFAULT_DESCRIPTION =
   '<p>أثاث وأجهزة عالية الجودة من متجر زياد ستور، مصنعة وفق أرقى المعايير العالمية مع ضمان موثق.</p>';
 
+/* Finishes this catalogue actually records, in the title or in the colour
+   rows. Nothing is inferred beyond matching a word that is already there. */
+const FINISH_WORDS = [
+  ['ابيض', 'أبيض'], ['أبيض', 'أبيض'],
+  ['اسود', 'أسود'], ['أسود', 'أسود'],
+  ['ازرق', 'أزرق'], ['أزرق', 'أزرق'],
+  ['رمادي', 'رمادي'], ['بني', 'بني'], ['بيج', 'بيج'],
+  ['ذهبي', 'ذهبي'], ['فضي', 'فضي'], ['استيل', 'ستيل']
+];
+
+/**
+ * A short factual paragraph built ONLY from what this product records.
+ *
+ * Why it is appended rather than written into the description:
+ *
+ * 57 products share 16 descriptions, so Google sees clusters of pages saying
+ * the same thing and keeps one from each. The operator's copy is emoji-led
+ * marketing that converts advertisement traffic, and replacing it across 41
+ * live pages to fix a crawler problem would trade a real thing for a
+ * speculative one. So the copy stays exactly as written and this is added
+ * underneath it.
+ *
+ * Every clause comes from a filled-in field -- the finish named in the title
+ * or the colour rows, the measurements in the specs table, the number of
+ * photographs. No claim about material, workmanship or provenance, because
+ * nothing in the row records those and nobody here has seen the furniture.
+ *
+ * No shared service sentence. Delivery, warranty and payment already appear in
+ * the trust row and the questions below; repeating them here would be the same
+ * boilerplate on every page, and the duplicate problem back in a new costume.
+ */
+function factsParagraph(product) {
+  const bits = [];
+
+  const hay = String(product.title || '') + ' ' +
+    (Array.isArray(product.colors) ? product.colors.map((c) => c.name || c).join(' ') : '');
+  const finishes = [];
+  for (const [needle, label] of FINISH_WORDS) {
+    if (hay.includes(needle) && !finishes.includes(label)) finishes.push(label);
+  }
+  if (finishes.length) bits.push('اللون/التشطيب: ' + finishes.join('، ') + '.');
+
+  const specs = Array.isArray(product.specs) ? product.specs : [];
+  const dims = specs
+    .filter((s) => String(s.label || '').trim() && String(s.value || '').trim())
+    .map((s) => String(s.label).trim() + ' ' + String(s.value).trim());
+  if (dims.length) bits.push('المقاسات: ' + dims.join('، ') + '.');
+
+  const shots = Array.isArray(product.gallery) ? product.gallery.length : 0;
+  if (shots >= 2) bits.push(shots + ' صور حقيقية لهذه القطعة من داخل المعرض.');
+
+  if (!bits.length) return '';
+  return '<p class="product-facts">' + esc(bits.join(' ')) + '</p>';
+}
+
 /**
  * Fill the product page's body with this product, and reveal it.
  *
@@ -238,8 +293,11 @@ function injectProductBody($, product, cheerio) {
   const descEl = $('#product-description');
   if (descEl.length) {
     const clean = sanitizeRichText(cheerio, product.description);
-    descEl.html(clean || DEFAULT_DESCRIPTION);
+    // The operator's copy, untouched, followed by this product's own facts.
+    const facts = factsParagraph(product);
+    descEl.html((clean || DEFAULT_DESCRIPTION) + facts);
     written.descriptionChars = (clean || DEFAULT_DESCRIPTION).length;
+    written.facts = facts.length > 0;
   }
 
   // --- specifications, the other half ------------------------------------

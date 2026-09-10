@@ -529,6 +529,54 @@ function sanitizeRichText(value) {
    */
   const DELIVERY_PROMISE_AR = "2-5 أيام عمل";
 
+  /* Finishes this catalogue actually records, in the title or the colour rows.
+     Kept identical to FINISH_WORDS in product-render-service.js. */
+  const FINISH_WORDS = [
+    ["ابيض", "أبيض"], ["أبيض", "أبيض"],
+    ["اسود", "أسود"], ["أسود", "أسود"],
+    ["ازرق", "أزرق"], ["أزرق", "أزرق"],
+    ["رمادي", "رمادي"], ["بني", "بني"], ["بيج", "بيج"],
+    ["ذهبي", "ذهبي"], ["فضي", "فضي"], ["استيل", "ستيل"]
+  ];
+
+  /*
+   * A short factual paragraph built only from what this product records.
+   *
+   * 57 products share 16 descriptions, so a crawler sees clusters of pages
+   * saying the same thing and keeps one from each. The operator's copy is
+   * marketing that converts advertisement traffic and is left exactly as
+   * written; this is added underneath it.
+   *
+   * Every clause comes from a filled-in field. No claim about material or
+   * workmanship -- nothing records those. Must match factsParagraph() in
+   * backend/services/product-render-service.js, which writes the same block on
+   * the server.
+   */
+  function factsParagraph(product) {
+    const bits = [];
+    const colors = Array.isArray(product.colors)
+      ? product.colors.map(function (c) { return c.name || c; }).join(" ") : "";
+    const hay = String(product.title || "") + " " + colors;
+
+    const finishes = [];
+    FINISH_WORDS.forEach(function (pair) {
+      if (hay.indexOf(pair[0]) !== -1 && finishes.indexOf(pair[1]) === -1) finishes.push(pair[1]);
+    });
+    if (finishes.length) bits.push("اللون/التشطيب: " + finishes.join("، ") + ".");
+
+    const specs = Array.isArray(product.specs) ? product.specs : [];
+    const dims = specs
+      .filter(function (s) { return String(s.label || "").trim() && String(s.value || "").trim(); })
+      .map(function (s) { return String(s.label).trim() + " " + String(s.value).trim(); });
+    if (dims.length) bits.push("المقاسات: " + dims.join("، ") + ".");
+
+    const shots = Array.isArray(product.gallery) ? product.gallery.length : 0;
+    if (shots >= 2) bits.push(shots + " صور حقيقية لهذه القطعة من داخل المعرض.");
+
+    if (!bits.length) return "";
+    return '<p class="product-facts">' + escHtml(bits.join(" ")) + "</p>";
+  }
+
   function deliveryPromise(product) {
     const own = cleanText(product.deliveryTime);
     const hasDigit = /[0-9٠-٩]/.test(own);
@@ -1040,8 +1088,13 @@ function sanitizeRichText(value) {
          literal text -- "<h3>...<br>" in front of the customer. It is cleaned
          instead, so the formatting survives and script cannot. */
       const clean = sanitizeRichText(product.description);
-      descEl.innerHTML = clean ||
-        "<p>أثاث وأجهزة عالية الجودة من متجر زياد ستور، مصنعة وفق أرقى المعايير العالمية مع ضمان موثق.</p>";
+      /* The operator's copy, then this product's own facts. Identical to
+         factsParagraph() in backend/services/product-render-service.js, which
+         writes the same block server-side -- if the two differed the shopper
+         and the crawler would read different pages. */
+      descEl.innerHTML = (clean ||
+        "<p>أثاث وأجهزة عالية الجودة من متجر زياد ستور، مصنعة وفق أرقى المعايير العالمية مع ضمان موثق.</p>") +
+        factsParagraph(product);
     }
 
     const specsTable = qs("product-specs-table");

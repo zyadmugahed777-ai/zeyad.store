@@ -184,10 +184,17 @@ function shippingOffers(currency) {
  * @param {{aggregate:{count:number,average:number}|null, items:Array}} [reviews]
  *        Real, approved reviews. Omitted or empty means nothing is published.
  */
-function buildProductSeo(product, currency = 'SAR', reviews = null) {
+function buildProductSeo(product, currency = 'SAR', reviews = null, canonicalId = null) {
   if (!product || !product.id) return null;
 
   const url = `${SITE}/product.html?id=${encodeURIComponent(product.id)}`;
+
+  /* og:url stays this page -- a share of this URL must preview this product --
+     while the canonical may point at the page that represents its group. */
+  const canonicalUrl = canonicalId && String(canonicalId) !== String(product.id)
+    ? `${SITE}/product.html?id=${encodeURIComponent(canonicalId)}`
+    : url;
+
   const image = absoluteImage(product.image || product.main_image);
   const description = buildDescription(product);
 
@@ -202,7 +209,14 @@ function buildProductSeo(product, currency = 'SAR', reviews = null) {
   const tags = [
     `<title>${esc(title)}</title>`,
     `<meta name="description" content="${esc(description)}">`,
-    `<link rel="canonical" href="${esc(url)}">`,
+    /* Usually this page. When the catalogue holds several pages a shopper
+       could not tell apart -- same description, same price, titles differing
+       only by a bracketed letter -- one represents the group and the rest
+       point at it, so their signals accumulate on one page instead of being
+       split across a dozen that then compete. Nothing is hidden: every URL
+       still works, still converts, and still serves the advertisement that
+       points at it. See product-canonical-service.js. */
+    `<link rel="canonical" href="${esc(canonicalUrl)}">`,
     `<meta property="og:type" content="product">`,
     `<meta property="og:title" content="${esc(title)}">`,
     `<meta property="og:description" content="${esc(description)}">`,

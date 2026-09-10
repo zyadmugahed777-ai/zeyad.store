@@ -49,6 +49,7 @@ const SUITE = [
   { file: 'test-product-server-render.js', name: 'What a crawler receives from a product page', timeout: 60000 },
   { file: 'test-faq-schema.js', name: 'FAQPage structured data, read from the page', timeout: 60000 },
   { file: 'test-delivery-promise.js', name: 'One delivery promise, everywhere it is made', timeout: 60000 },
+  { file: 'test-product-canonical.js', name: 'Which page represents a group of near-identical ones', timeout: 60000 },
   { file: 'test-seo-metadata.js', name: 'SEO metadata, brand assets and indexability', timeout: 60000 },
   { file: 'test-product-reviews.js', name: 'Customer reviews: earned ratings, never invented ones', timeout: 120000 },
   { file: 'test-customer-auth-security.js', name: 'Customer auth, isolation & IDOR (AUTH-01..21)', timeout: 300000 },

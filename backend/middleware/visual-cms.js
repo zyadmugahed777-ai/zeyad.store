@@ -16,6 +16,7 @@ const { renderOffersSection } = require('../services/offer-render-service');
 const { injectCatalog } = require('../services/catalog-render-service');
 const { injectProductBody } = require('../services/product-render-service');
 const { buildFaqSchema } = require('../services/faq-schema-service');
+const { buildCanonicalMap } = require('../services/product-canonical-service');
 const { injectCategoryStrip } = require('../services/category-strip-service');
 const { buildProductSeo, buildCategorySeo, SITE } = require('../services/product-seo-service');
 const {
@@ -637,7 +638,17 @@ async function visualCmsMiddleware(req, res, next) {
                 console.error('[product-render] body not injected:', e.message);
               }
 
-              const seo = buildProductSeo(product, 'SAR', reviews);
+              /* Which page represents this one, if it is one of several a
+                 shopper could not tell apart. Computed from the catalogue
+                 already in hand, so it costs no query. */
+              let canonicalId = null;
+              try {
+                canonicalId = buildCanonicalMap(data.products || []).get(String(product.id)) || null;
+              } catch (e) {
+                console.error('[canonical] grouping skipped:', e.message);
+              }
+
+              const seo = buildProductSeo(product, 'SAR', reviews, canonicalId);
               if (seo) {
                 // Remove the placeholders first: two titles or two canonicals
                 // on a page leaves the crawler to pick one arbitrarily.
