@@ -111,10 +111,16 @@ function availabilityUrl(stockStatus) {
  * and schema.org models that as one OfferShippingDetails per destination. A
  * single blended figure would be wrong for both.
  *
- * No transit time is published. `deliveryTime` is a required-if-present field
- * that expects real day counts, and nothing in this system records how long a
- * delivery takes -- so claiming one would be a guess presented to shoppers as
- * a commitment.
+ * Transit time IS published, and Search Console asked for it by name on every
+ * product ("deliveryTime not included in offers.shippingDetails"). It does not
+ * come from the product rows -- those are unusable: 47 of 57 active products
+ * have an empty delivery_time and 10 hold the single letter "T". It comes from
+ * the promise the page already makes to the shopper in the trust row beside
+ * the price, "2-5 أيام عمل", so the structured data says what the page says.
+ *
+ * Handling time is omitted rather than invented. Google reads total delivery
+ * as handling + transit, so leaving it unstated publishes 2-5 business days,
+ * which is the promise unchanged.
  *
  * Only emitted when the currency is the one the fallback is denominated in.
  * Converting it here would restate a price the checkout never quotes.
@@ -146,6 +152,28 @@ function shippingOffers(currency) {
     shippingDestination: {
       '@type': 'DefinedRegion',
       addressCountry: DELIVERY_FALLBACK_SAR.country
+    },
+    deliveryTime: {
+      '@type': 'ShippingDeliveryTime',
+      transitTime: {
+        '@type': 'QuantitativeValue',
+        minValue: DELIVERY_FALLBACK_SAR.transitDays.min,
+        maxValue: DELIVERY_FALLBACK_SAR.transitDays.max,
+        unitCode: 'DAY'
+      },
+      /* "أيام عمل" -- the page says business days, so the schema says business
+         days. Friday is the weekend in Yemen; Saturday is a working day. */
+      businessDays: {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: [
+          'https://schema.org/Saturday',
+          'https://schema.org/Sunday',
+          'https://schema.org/Monday',
+          'https://schema.org/Tuesday',
+          'https://schema.org/Wednesday',
+          'https://schema.org/Thursday'
+        ]
+      }
     }
   };
 }

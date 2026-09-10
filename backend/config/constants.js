@@ -183,8 +183,28 @@ module.exports = {
     provinces: { min: 21.43, max: 42.86 },
     country: 'YE',
     // Measured from the shop's own copy: "توصيل بأسعار رمزية داخل المدن
-    // الرئيسية". No transit-time claim is published, because nothing in the
-    // system records one.
-    currency: 'SAR'
+    // الرئيسية".
+    currency: 'SAR',
+
+    /* How long delivery takes, in business days.
+     *
+     * This is NOT a guess and it is not read from the product rows -- those
+     * are unusable: of 57 active products, 47 have an empty delivery_time and
+     * 10 contain the single letter "T". It is the promise the shop already
+     * prints on every product page, in the trust row beside the price:
+     *
+     *     توصيل بأسعار رمزية
+     *     2-5 أيام عمل
+     *
+     * Publishing the same window as structured data states to Google exactly
+     * what the page states to the shopper, which is the only version of this
+     * field worth having. Search Console flags a missing deliveryTime on every
+     * product; a fabricated one would be worse than the warning.
+     *
+     * Handling time is deliberately absent rather than invented. Google reads
+     * total delivery as handling + transit, so with handling unstated the
+     * published total is 2-5 business days -- the promise, unchanged.
+     */
+    transitDays: { min: 2, max: 5 }
   }
 };

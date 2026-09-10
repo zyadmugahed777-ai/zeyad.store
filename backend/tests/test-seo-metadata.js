@@ -496,6 +496,64 @@ const read = (f) => fs.readFileSync(path.join(REPO, f), 'utf8');
     });
   }
 
+  // --- The delivery window Search Console asked for ----------------------
+
+  await test('shippingDetails publishes a delivery time', () => {
+    /* Search Console, on every product: "deliveryTime not included in
+       offers.shippingDetails". It was omitted on purpose -- the product rows
+       cannot support it, with 47 of 57 empty and 10 holding the letter "T" --
+       but the page itself promises "2-5 أيام عمل" in the trust row beside the
+       price, and structured data that says what the page says is exactly the
+       version worth publishing. */
+    const { buildProductSeo } = require('../services/product-seo-service');
+    const seo = buildProductSeo(
+      { id: 'P-T', title: 'منتج', price: 1000, image: '/a.png', stock_status: 'in-stock' },
+      'SAR', null
+    );
+    const block = seo.jsonLd.match(/<script[^>]*>([\s\S]*?)<\/script>/)[1];
+    const product = JSON.parse(block);
+    const ship = product.offers.shippingDetails;
+
+    assert.ok(ship, 'there is no shippingDetails at all');
+    assert.ok(ship.deliveryTime, 'deliveryTime is still missing');
+    assert.strictEqual(ship.deliveryTime['@type'], 'ShippingDeliveryTime');
+
+    const t = ship.deliveryTime.transitTime;
+    assert.ok(t, 'no transitTime');
+    assert.strictEqual(t['@type'], 'QuantitativeValue');
+    assert.strictEqual(t.unitCode, 'DAY', 'Google expects day counts');
+    assert.ok(Number.isFinite(t.minValue) && Number.isFinite(t.maxValue),
+      'the day counts are not numbers');
+    assert.ok(t.minValue <= t.maxValue, 'the window runs backwards');
+  });
+
+  await test('the published delivery window is the one the page promises', () => {
+    /* If these ever drift, the shop tells Google one thing and the shopper
+       another. The trust row on product.html is the source. */
+    const html = fs.readFileSync(path.join(REPO, 'product.html'), 'utf8');
+    const promise = html.match(/(\d+)\s*-\s*(\d+)\s*أيام عمل/);
+    assert.ok(promise, 'the page no longer promises a delivery window — update the constant');
+
+    const { DELIVERY_FALLBACK_SAR } = require('../config/constants');
+    assert.strictEqual(DELIVERY_FALLBACK_SAR.transitDays.min, Number(promise[1]),
+      'the schema and the page disagree about the fastest delivery');
+    assert.strictEqual(DELIVERY_FALLBACK_SAR.transitDays.max, Number(promise[2]),
+      'the schema and the page disagree about the slowest delivery');
+  });
+
+  await test('no handling time is invented alongside it', () => {
+    /* Google reads total delivery as handling + transit. Nothing records a
+       handling time, and adding one would silently widen the promise. */
+    const { buildProductSeo } = require('../services/product-seo-service');
+    const seo = buildProductSeo(
+      { id: 'P-T', title: 'منتج', price: 1000, image: '/a.png', stock_status: 'in-stock' },
+      'SAR', null
+    );
+    const product = JSON.parse(seo.jsonLd.match(/<script[^>]*>([\s\S]*?)<\/script>/)[1]);
+    assert.strictEqual(product.offers.shippingDetails.deliveryTime.handlingTime, undefined,
+      'a handling time was invented');
+  });
+
   // --- The icon Google shows beside a result ------------------------------
 
   await test('/favicon.ico exists at the site root', () => {
