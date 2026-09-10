@@ -545,7 +545,16 @@ async function visualCmsMiddleware(req, res, next) {
                a single link from anywhere is enough. */
             'appliances_test'
           ]);
-          if (NOINDEX_PAGES.has(baseSlug)) {
+          /* product.html and category.html with no id are TEMPLATES, not
+             pages. They render a loading skeleton and nothing else, they are
+             identical to each other on every visit, and Google was crawling
+             both -- spending a new domain's small crawl budget on two pages
+             that can never be useful and can only look like thin content
+             beside the 57 real product pages they are the mould for. */
+          const isBareTemplate =
+            (baseSlug === 'product' || baseSlug === 'category') && !req.query.id;
+
+          if (NOINDEX_PAGES.has(baseSlug) || isBareTemplate) {
             $('meta[name="robots"]').remove();
             $('head').prepend('<meta name="robots" content="noindex, nofollow">' + NEWLINE);
           }

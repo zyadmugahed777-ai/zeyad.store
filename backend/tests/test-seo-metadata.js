@@ -496,6 +496,50 @@ const read = (f) => fs.readFileSync(path.join(REPO, f), 'utf8');
     });
   }
 
+  // --- The sitemap is a set of claims about what is worth crawling --------
+
+  await test('the sitemap lists no page that does not exist', () => {
+    /* It listed /flash-deals.html and /return-policy.html, and neither file
+       has ever been in this repository -- so the sitemap submitted to Google
+       advertised two 404s. The returns page is returns.html, which
+       constants.js has always pointed the return policy at; the sitemap was
+       the only thing naming a page that was not there.
+
+       Being wrong here costs trust on a domain that has little to spare. */
+    const src = fs.readFileSync(path.join(ROOT, 'utils', 'sitemap-generator.js'), 'utf8');
+    const listed = [...src.matchAll(/path:\s*'(\/[^']*\.html)'/g)].map((m) => m[1]);
+    assert.ok(listed.length > 5, 'the static route list was not found');
+
+    const missing = listed.filter(
+      (p) => !fs.existsSync(path.join(REPO, p.replace(/^\//, '')))
+    );
+    assert.deepStrictEqual(missing, [],
+      'the sitemap advertises pages that do not exist: ' + missing.join(', '));
+  });
+
+  await test('the id-less templates are excluded from the sitemap', () => {
+    /* product.html and category.html only mean anything with an ?id=. Both of
+       those forms are listed in full -- every product, every category. The
+       bare files render a loading skeleton, so submitting them asks a new
+       domain to spend crawl budget on two pages that can never be useful and
+       can only look thin beside the real ones. */
+    const src = fs.readFileSync(path.join(ROOT, 'utils', 'sitemap-generator.js'), 'utf8');
+    for (const page of ['product', 'category']) {
+      const pattern = new RegExp('\\^\\\\/' + page + '\\\\.html\\$');
+      assert.ok(pattern.test(src),
+        'the bare ' + page + '.html template is not excluded from the sitemap');
+    }
+  });
+
+  await test('the id-less templates are served noindex', () => {
+    // Not submitting a page is not the same as not indexing it: one link from
+    // anywhere is enough.
+    const src = fs.readFileSync(path.join(ROOT, 'middleware', 'visual-cms.js'), 'utf8');
+    assert.ok(/isBareTemplate/.test(src), 'nothing marks the id-less templates');
+    assert.ok(/baseSlug === 'product' \|\| baseSlug === 'category'/.test(src),
+      'the bare-template rule does not cover both templates');
+  });
+
   // --- The delivery window Search Console asked for ----------------------
 
   await test('shippingDetails publishes a delivery time', () => {

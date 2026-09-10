@@ -31,10 +31,15 @@ const PUBLIC_STATIC_ROUTES = [
   { path: '/offers.html', priority: '0.9', changefreq: 'daily' },
   { path: '/best-sellers.html', priority: '0.9', changefreq: 'daily' },
   { path: '/new-arrivals.html', priority: '0.9', changefreq: 'daily' },
-  { path: '/flash-deals.html', priority: '0.9', changefreq: 'daily' },
+  /* /flash-deals.html was listed here and has never existed. Removed rather
+     than created: nothing links to it and no page was written for it. */
   { path: '/privacy.html', priority: '0.5', changefreq: 'yearly' },
   { path: '/terms.html', priority: '0.5', changefreq: 'yearly' },
-  { path: '/return-policy.html', priority: '0.5', changefreq: 'yearly' },
+  /* The returns page is returns.html. This said return-policy.html, which is
+     a 404 -- and constants.js has always pointed the MerchantReturnPolicy at
+     the real one, so the sitemap was the only thing naming a page that was
+     not there. */
+  { path: '/returns.html', priority: '0.5', changefreq: 'yearly' },
   { path: '/faq.html', priority: '0.6', changefreq: 'monthly' }
 ];
 
@@ -48,6 +53,13 @@ const DISALLOWED_PATTERNS = [
   /^\/confirmation/,
   /^\/login/,
   /^\/register/,
+  /* The id-less templates. product.html and category.html only mean something
+     with an ?id=, and both of those forms ARE listed -- 397 products and every
+     category. The bare files render a loading skeleton, so submitting them
+     asks Google to spend crawl budget on two pages that can never be useful.
+     They are served noindex too; see visual-cms.js. */
+  /^\/product\.html$/,
+  /^\/category\.html$/,
   /test/i,
   /backup/i,
   /scratch/i,
@@ -85,11 +97,32 @@ async function generateSitemapXml() {
   }
 
   // 1. Add static public routes
+  const missingPages = [];
   for (const r of PUBLIC_STATIC_ROUTES) {
-    if (isPathAllowed(r.path)) {
-      const fullUrl = r.path === '/' ? (SITE_URL + '/') : (SITE_URL + r.path);
-      addUrl(fullUrl, new Date(), r.changefreq, r.priority);
+    if (!isPathAllowed(r.path)) continue;
+
+    /* Only pages that exist.
+     *
+     * This list carried /flash-deals.html and /return-policy.html, and neither
+     * file has ever been in the repository -- so the sitemap submitted to
+     * Google advertised two 404s. A sitemap is a set of assertions about what
+     * is worth crawling; being wrong in it costs trust on a domain that has
+     * little to spare. The root path is the server's own route, not a file.
+     */
+    if (r.path !== '/') {
+      const onDisk = path.join(ROOT_DIR, r.path.replace(/^\//, ''));
+      if (!fs.existsSync(onDisk)) {
+        missingPages.push(r.path);
+        continue;
+      }
     }
+
+    const fullUrl = r.path === '/' ? (SITE_URL + '/') : (SITE_URL + r.path);
+    addUrl(fullUrl, new Date(), r.changefreq, r.priority);
+  }
+  if (missingPages.length) {
+    console.warn('  Sitemap: skipped ' + missingPages.length +
+      ' listed page(s) that do not exist: ' + missingPages.join(', '));
   }
 
   // 2. Discover HTML files in project root
