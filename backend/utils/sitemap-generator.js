@@ -172,11 +172,41 @@ async function generateSitemapXml() {
   let excludedTest = 0;
   try {
     const products = await repos.products.findForSitemap();
+
+    /* Only pages that are their own canonical.
+     *
+     * Twenty-two product pages point at a representative sibling, because they
+     * are the same item in a different finish and nothing in their title tells
+     * a shopper otherwise. Listing them here contradicts that: a sitemap is a
+     * request to index, and these pages say "index the other one".
+     *
+     * It is not a theoretical conflict. Asking Search Console to index one of
+     * them is refused outright -- "تم اكتشاف مشاكل فهرسة في عنوان URL" -- and
+     * on a new domain every refused crawl is budget spent on nothing.
+     *
+     * The representatives stay, so every product remains reachable and every
+     * group is still offered to the index exactly once.
+     */
+    let canonicalMap = new Map();
+    try {
+      const { buildCanonicalMap } = require('../services/product-canonical-service');
+      const { getStorefrontData } = require('../services/storefront-data-service');
+      canonicalMap = buildCanonicalMap((await getStorefrontData()).products || []);
+    } catch (err) {
+      // A sitemap missing this refinement is far better than no sitemap.
+      console.error('  Sitemap: canonical grouping unavailable:', err.message);
+    }
+    let excludedDuplicate = 0;
+
     if (Array.isArray(products)) {
       for (const p of products) {
         const prodId = String(p.product_id || p.id || '');
         if (looksLikeTestProduct(p)) {
           excludedTest++;
+          continue;
+        }
+        if (canonicalMap.has(prodId)) {
+          excludedDuplicate++;
           continue;
         }
         productCount++;
@@ -186,6 +216,10 @@ async function generateSitemapXml() {
     }
     if (excludedTest > 0) {
       console.log('  Sitemap: skipped ' + excludedTest + ' product(s) that look like test data.');
+    }
+    if (excludedDuplicate > 0) {
+      console.log('  Sitemap: skipped ' + excludedDuplicate +
+        ' product(s) that canonicalise to a representative page.');
     }
   } catch (err) {
     console.error('Error fetching products for sitemap:', err);
