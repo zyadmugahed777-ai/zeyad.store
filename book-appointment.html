@@ -143,54 +143,61 @@
       <main class="page-layout">
         <div class="page-header">
           <h1 data-vid="v-a90d6e76">احجز موعد زيارة</h1>
-          <p data-vid="v-3dfe0996">لضمان تقديم أفضل خدمة لك وتوفير استشاري مختص للإجابة على جميع استفساراتك، يرجى حجز موعد زيارتك لأحد فروعنا المخصصة.</p>
+          <p data-vid="v-3dfe0996">لدينا أكثر من مستودع وصالة عرض، ولكل واحدة تشكيلتها. أخبرنا بما تريد معاينته واترك اسمك ورقمك، ونتواصل معك لتأكيد الموعد ونخبرك بالصالة التي تحتوي طلبك بالضبط.</p>
         </div>
 
         <form class="appointment-form backend-form" action="/api/book-appointment" method="POST" id="appointmentForm" name="book-appointment">
           
           <div class="form-section">
-            <h2 class="form-section-title" data-vid="v-65c3316a"><span data-vid="v-edb638c3">1</span> اختر الفرع المطلوب</h2>
+            <h2 class="form-section-title" data-vid="v-65c3316a"><span data-vid="v-edb638c3">1</span> ما الذي تريد معاينته؟</h2>
             <div class="branch-grid">
               <label class="branch-option" data-vid="v-d881805a">
                 <input type="radio" name="branch" value="furniture" required="" id="branch-2" aria-label="branch">
                 <div class="branch-card">
                   <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="5" rx="2"></rect><path d="M4 12v6M20 12v6M6 7V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2"></path></svg>
-                  <strong data-vid="v-2ecba97d">محل الأثاث</strong>
+                  <strong data-vid="v-2ecba97d">أثاث</strong>
                 </div>
               </label>
               <label class="branch-option" data-vid="v-9d68bdff">
                 <input type="radio" name="branch" value="majalis" id="branch-3" aria-label="branch">
                 <div class="branch-card">
                   <svg viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                  <strong data-vid="v-073bb201">محل المجالس</strong>
+                  <strong data-vid="v-073bb201">مجالس</strong>
                 </div>
               </label>
               <label class="branch-option" data-vid="v-5f325c5f">
                 <input type="radio" name="branch" value="kitchens" id="branch-4" aria-label="branch">
                 <div class="branch-card">
                   <svg viewBox="0 0 24 24"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"></path></svg>
-                  <strong data-vid="v-36af7dda">محل المطابخ</strong>
+                  <strong data-vid="v-36af7dda">مطابخ</strong>
                 </div>
               </label>
               <label class="branch-option" data-vid="v-5d7ab24e">
                 <input type="radio" name="branch" value="bedrooms" id="branch-5" aria-label="branch">
                 <div class="branch-card">
                   <svg viewBox="0 0 24 24"><path d="M2 4v16"></path><path d="M2 8h18a2 2 0 0 1 2 2v10"></path><path d="M2 17h20"></path><path d="M6 8v9"></path></svg>
-                  <strong data-vid="v-94bfb402">محل غرف النوم</strong>
+                  <strong data-vid="v-94bfb402">غرف نوم</strong>
                 </div>
               </label>
               <label class="branch-option" data-vid="v-a429465c">
                 <input type="radio" name="branch" value="appliances" id="branch-6" aria-label="branch">
                 <div class="branch-card">
                   <svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"></rect><path d="M12 6h.01M12 18h.01"></path><path d="M8 10h8"></path></svg>
-                  <strong data-vid="v-aaf06477">محل الأجهزة</strong>
+                  <strong data-vid="v-aaf06477">أدوات وأجهزة منزلية</strong>
+                </div>
+              </label>
+              <label class="branch-option" data-vid="v-zs-branch-all">
+                <input type="radio" name="branch" value="all" id="branch-all" aria-label="branch">
+                <div class="branch-card">
+                  <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg>
+                  <strong data-vid="v-zs-branch-all-label">الكل — أؤثث منزلاً كاملاً</strong>
                 </div>
               </label>
               <label class="branch-option" data-vid="v-f4445a57">
                 <input type="radio" name="branch" value="solar" id="branch-7" aria-label="branch">
                 <div class="branch-card">
                   <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
-                  <strong data-vid="v-46a90a27">محل الطاقة</strong>
+                  <strong data-vid="v-46a90a27">أنظمة طاقة شمسية</strong>
                 </div>
               </label>
             </div>
@@ -313,7 +320,7 @@
                         </li>
                         <li data-vid="v-c0acf471">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                            <span data-vid="footer_address">صنعاء، شارع الزبيري</span>
+                            <a href="/book-appointment.html" data-vid="footer_address" style="text-decoration:none; color:inherit;">اليمن، صنعاء — احجز موعد زيارة</a>
                         </li>
                     </ul>
                 </div>

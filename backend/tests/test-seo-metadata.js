@@ -496,6 +496,71 @@ const read = (f) => fs.readFileSync(path.join(REPO, f), 'utf8');
     });
   }
 
+  // --- No page names a street ---------------------------------------------
+
+  await test('no page publishes a street address', () => {
+    /* This shop has several warehouses and showrooms, stock differs between
+       them, and a visit is arranged in advance so the customer is sent to the
+       branch that actually holds what they came for. A fixed street address
+       does the one thing that must never happen here: it sends somebody to a
+       door that may hold nothing they want.
+
+       It was in the footer of 59 pages ("صنعاء، شارع الزبيري"), on the
+       branches page as two invented showrooms with their own opening hours,
+       and on the reservation page as a made-up villa number shown to every
+       customer as though it were their own delivery address. */
+    const STREET_WORDS = ['الزبيري', 'حي حدة', 'شارع صفر', 'تقاطع عصر', 'فيلا رقم'];
+    const offenders = [];
+    for (const f of pages()) {
+      const html = read(f);
+      for (const w of STREET_WORDS) {
+        if (html.includes(w)) offenders.push(f + ' -> ' + w);
+      }
+    }
+    assert.deepStrictEqual(offenders, [],
+      'a street address is published again: ' + offenders.slice(0, 6).join(', '));
+  });
+
+  await test('the Organization publishes a city and a country, never a street', () => {
+    const { BUSINESS } = require('../config/constants');
+    assert.ok(BUSINESS.city, 'the city is missing');
+    assert.ok(BUSINESS.country, 'the country is missing');
+    assert.strictEqual(BUSINESS.streetAddress, undefined,
+      'a streetAddress was added to the business constants');
+
+    const src = fs.readFileSync(path.join(ROOT, 'middleware', 'visual-cms.js'), 'utf8');
+    const block = src.slice(src.indexOf("'@type': 'PostalAddress'"), src.indexOf('areaServed'));
+    assert.ok(!/streetAddress/.test(block),
+      'the PostalAddress node now carries a street');
+  });
+
+  await test('the footer offers a booking link where the address used to be', () => {
+    /* Removing the address is only half of it. The useful next step from
+       "where are you?" is arranging a visit, not navigating to a street. */
+    const missing = pages().filter((f) => {
+      const html = read(f);
+      if (!html.includes('footer_address')) return false;
+      const m = html.match(/<[^>]*data-vid="footer_address"[^>]*>/);
+      return !m || !/book-appointment\.html/.test(m[0]);
+    });
+    assert.deepStrictEqual(missing, [],
+      'these pages show an address that leads nowhere: ' + missing.slice(0, 5).join(', '));
+  });
+
+  await test('the appointment form asks what to view, not which shop to pick', () => {
+    /* "اختر الفرع المطلوب" with options "محل الأثاث", "محل المجالس" asked the
+       customer to know which of several warehouses holds the thing they want.
+       They do not know that, and the whole point of booking is that the
+       administration tells them. */
+    const html = read('book-appointment.html');
+    assert.ok(!/محل ال/.test(html),
+      'the form still asks the customer to choose a shop');
+    assert.ok(html.includes('value="all"'),
+      'somebody furnishing a whole house still cannot say so');
+    assert.ok(/name="fullName"/.test(html) && /name="phone"/.test(html),
+      'the form no longer collects the name and number the office calls back on');
+  });
+
   // --- The sitemap is a set of claims about what is worth crawling --------
 
   await test('the sitemap lists no page that does not exist', () => {
