@@ -262,14 +262,49 @@ function buildProductSeo(product, currency = 'SAR', reviews = null, canonicalId 
   if (brandName) ld.brand = { '@type': 'Brand', name: brandName };
   if (product.sku) ld.sku = product.sku;
 
-  /* A category PATH rather than a bare leaf name. "الأثاث > غرف النوم" tells a
-     shopping crawler where the product sits; the leaf alone does not, and a
-     leaf that happens to be punctuated oddly is all Google had to work with. */
-  const categoryPath = [tidy(product.departmentName), tidy(product.categoryName)]
-    .filter(Boolean)
-    .filter((v, i, a) => a.indexOf(v) === i)
-    .join(' > ');
-  if (categoryPath) ld.category = categoryPath;
+  /* The category, in the vocabulary Google validates against.
+   *
+   * This used to publish the shop's own Arabic path -- "غرف النوم > غرف نوم
+   * ملكي" -- and Search Console kept reporting "القيمة غير صالحة في الحقل
+   * category". An earlier pass assumed the cause was punctuation and trimmed
+   * the values; the live data is clean now (four well-formed paths, no empties,
+   * no stray marks) and the report did not change. The cause is simpler:
+   * `category` on a merchant listing is read against GOOGLE'S PRODUCT
+   * TAXONOMY, and free Arabic text is not in it.
+   *
+   * Every path below was read out of Google's published taxonomy file
+   * (taxonomy-with-ids.en-US.txt, version 2021-09-21), not recalled -- the
+   * first attempt at this from memory produced "Furniture > Bedroom Furniture",
+   * which does not exist. The numbers are the official ids, kept in the comment
+   * so the next person can verify a line rather than trust it.
+   *
+   * Keyed on the department SLUG, which is structural, rather than the Arabic
+   * name, which an operator can rename in the admin at any time.
+   *
+   * Nothing human is lost: the Arabic path a shopper reads is published on the
+   * same page as BreadcrumbList, a few lines below.
+   */
+  const GOOGLE_CATEGORY = {
+    // 6346
+    bedrooms: 'Furniture > Furniture Sets > Bedroom Furniture Sets',
+    // 6348 -- a majlis is Arabic living-room seating
+    'living-rooms': 'Furniture > Furniture Sets > Living Room Furniture Sets',
+    // 6934
+    kitchens: 'Furniture > Cabinets & Storage > Kitchen Cabinets',
+    // 436
+    furniture: 'Furniture',
+    // 604
+    'home-appliances': 'Home & Garden > Household Appliances',
+    // 4715
+    'solar-energy': 'Hardware > Power & Electrical Supplies > Solar Energy Kits'
+  };
+
+  const googleCategory = GOOGLE_CATEGORY[String(product.departmentSlug || '').trim()];
+  /* Absent rather than guessed. A department with no mapping -- a new one, or
+     the "العروض" grouping, which is a promotion and not a kind of thing --
+     publishes no category at all, which Google treats as a missing recommended
+     field. That is a milder notice than an invalid value, and it is honest. */
+  if (googleCategory) ld.category = googleCategory;
 
   if (Number(product.price) > 0) {
     ld.offers = {

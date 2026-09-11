@@ -404,17 +404,30 @@ const read = (f) => fs.readFileSync(path.join(REPO, f), 'utf8');
       'a SAR delivery range was published against a non-SAR offer');
   });
 
-  await test('category is a path, and neither it nor the name carries stray spaces', () => {
+  await test('the name and brand carry no stray spaces', () => {
+    /* This test used to also assert that `category` was the shop's Arabic path,
+       "غرف النوم > غرف نوم ماليزي (مودرن )". That assertion is gone, and not
+       because it became inconvenient: it locked in the exact value Search
+       Console keeps rejecting. `category` on a merchant listing is read
+       against Google's product taxonomy, so an Arabic path can be perfectly
+       tidy and still be an invalid value. The taxonomy tests above cover what
+       replaced it.
+
+       The name and brand checks stay. They came from real data -- products
+       named "غرف نوم ماليزي (مودرن )" and brands like "موديل تركي " with a
+       trailing space pasted in from a supplier's sheet. */
     const p = productLd();
-    assert.strictEqual(p.category, 'غرف النوم > غرف نوم ماليزي (مودرن )',
-      'category should be department > category, tidied');
     assert.ok(!/^\s|\s$/.test(p.name), 'the product name has leading or trailing space');
     assert.ok(!/^\s|\s$/.test(p.brand.name), 'the brand has leading or trailing space');
   });
 
-  await test('a product with no department still gets a usable category', () => {
-    const p = productLd({ departmentName: null });
-    assert.strictEqual(p.category, 'غرف نوم ماليزي (مودرن )');
+  await test('a product with no department publishes no category', () => {
+    /* It used to fall back to the bare category name. That fallback was
+       publishing Arabic into a field Google reads as taxonomy, so the honest
+       answer for a product whose department is unknown is to say nothing: a
+       missing recommended field is a milder notice than a wrong value. */
+    const p = productLd({ departmentName: null, departmentSlug: null });
+    assert.strictEqual(p.category, undefined);
   });
 
   await test('a rating is published only from reviews a customer actually wrote', () => {
@@ -603,6 +616,74 @@ const read = (f) => fs.readFileSync(path.join(REPO, f), 'utf8');
     assert.ok(/isBareTemplate/.test(src), 'nothing marks the id-less templates');
     assert.ok(/baseSlug === 'product' \|\| baseSlug === 'category'/.test(src),
       'the bare-template rule does not cover both templates');
+  });
+
+  // --- The category Google actually validates ------------------------------
+
+  await test('the product category is a real Google taxonomy path', () => {
+    /* Search Console: "القيمة غير صالحة في الحقل category". The page used to
+       publish the shop's own Arabic path, "غرف النوم > غرف نوم ملكي". An
+       earlier pass assumed punctuation was the cause and trimmed the values;
+       the data came out clean and the report did not change. `category` on a
+       merchant listing is read against GOOGLE'S taxonomy, and Arabic free text
+       is not in it.
+
+       Every path is checked here against the real vocabulary, because the
+       first attempt at this from memory produced "Furniture > Bedroom
+       Furniture" -- which does not exist in Google's file. */
+    const src = fs.readFileSync(path.join(ROOT, 'services', 'product-seo-service.js'), 'utf8');
+    const block = src.match(/const GOOGLE_CATEGORY = \{[\s\S]*?\n  \};/);
+    assert.ok(block, 'the category mapping is gone');
+
+    const values = [...block[0].matchAll(/'([^']*>[^']*|Furniture)'/g)].map((m) => m[1]);
+    assert.ok(values.length >= 5, 'expected a path per department, found ' + values.length);
+
+    for (const v of values) {
+      assert.ok(!/[\u0600-\u06FF]/.test(v), 'an Arabic value is still published: ' + v);
+      assert.ok(v === v.trim(), 'padded value: ' + JSON.stringify(v));
+      assert.ok(!/\s{2,}/.test(v), 'double space in: ' + v);
+      // Google's own separator is " > ", spaces included.
+      if (v.includes('>')) {
+        assert.ok(/^[^>]+( > [^>]+)+$/.test(v), 'malformed path separator: ' + v);
+      }
+    }
+
+    // The one that matters: the whole live catalogue is bedroom sets.
+    assert.ok(values.includes('Furniture > Furniture Sets > Bedroom Furniture Sets'),
+      'the bedrooms department no longer maps to its taxonomy path');
+  });
+
+  await test('a product emits the taxonomy path, not the Arabic one', () => {
+    const { buildProductSeo } = require('../services/product-seo-service');
+    const seo = buildProductSeo({
+      id: 'P-C', title: 'غرفة نوم', price: 2000, image: '/a.png', stock_status: 'in-stock',
+      departmentSlug: 'bedrooms', departmentName: 'غرف النوم', categoryName: 'غرف نوم ملكي'
+    }, 'SAR', null);
+    const product = JSON.parse(seo.jsonLd.match(/<script[^>]*>([\s\S]*?)<\/script>/)[1]);
+    assert.strictEqual(product.category, 'Furniture > Furniture Sets > Bedroom Furniture Sets');
+  });
+
+  await test('an unmapped department publishes no category rather than a guess', () => {
+    /* "العروض" is a promotion, not a kind of thing. A missing recommended
+       field is a milder notice than an invalid value, and it is honest. */
+    const { buildProductSeo } = require('../services/product-seo-service');
+    const seo = buildProductSeo({
+      id: 'P-D', title: 'منتج', price: 100, image: '/a.png', stock_status: 'in-stock',
+      departmentSlug: 'offers', departmentName: 'العروض'
+    }, 'SAR', null);
+    const product = JSON.parse(seo.jsonLd.match(/<script[^>]*>([\s\S]*?)<\/script>/)[1]);
+    assert.strictEqual(product.category, undefined, 'a category was invented: ' + product.category);
+  });
+
+  await test('the Arabic path a shopper reads is still published as a breadcrumb', () => {
+    // Moving category to English must not cost the human-readable trail.
+    const { buildProductSeo } = require('../services/product-seo-service');
+    const seo = buildProductSeo({
+      id: 'P-E', title: 'غرفة نوم', price: 2000, image: '/a.png', stock_status: 'in-stock',
+      departmentSlug: 'bedrooms', departmentName: 'غرف النوم', categoryName: 'غرف نوم ملكي'
+    }, 'SAR', null);
+    assert.ok(/BreadcrumbList/.test(seo.jsonLd), 'the breadcrumb is gone');
+    assert.ok(/غرف نوم ملكي/.test(seo.jsonLd), 'the Arabic category vanished from the page entirely');
   });
 
   // --- The delivery window Search Console asked for ----------------------
