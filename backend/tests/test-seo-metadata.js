@@ -731,17 +731,23 @@ const read = (f) => fs.readFileSync(path.join(REPO, f), 'utf8');
       'the schema and the page disagree about the slowest delivery');
   });
 
-  await test('no handling time is invented alongside it', () => {
-    /* Google reads total delivery as handling + transit. Nothing records a
-       handling time, and adding one would silently widen the promise. */
+  await test('handling time is present and does not widen the promise', () => {
+    /* Search Console asks for deliveryTime.handlingTime. The shop does not
+       publish a separate preparation delay, so the accurate value is 0 days:
+       it satisfies the Merchant field without adding time to the 2-5 business
+       day promise customers already see. */
     const { buildProductSeo } = require('../services/product-seo-service');
     const seo = buildProductSeo(
       { id: 'P-T', title: 'منتج', price: 1000, image: '/a.png', stock_status: 'in-stock' },
       'SAR', null
     );
     const product = JSON.parse(seo.jsonLd.match(/<script[^>]*>([\s\S]*?)<\/script>/)[1]);
-    assert.strictEqual(product.offers.shippingDetails.deliveryTime.handlingTime, undefined,
-      'a handling time was invented');
+    const handling = product.offers.shippingDetails.deliveryTime.handlingTime;
+    assert.ok(handling, 'handlingTime is missing');
+    assert.strictEqual(handling['@type'], 'QuantitativeValue');
+    assert.strictEqual(handling.minValue, 0);
+    assert.strictEqual(handling.maxValue, 0);
+    assert.strictEqual(handling.unitCode, 'DAY');
   });
 
   // --- The icon Google shows beside a result ------------------------------

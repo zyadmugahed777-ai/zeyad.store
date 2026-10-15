@@ -118,9 +118,10 @@ function availabilityUrl(stockStatus) {
  * the promise the page already makes to the shopper in the trust row beside
  * the price, "2-5 أيام عمل", so the structured data says what the page says.
  *
- * Handling time is omitted rather than invented. Google reads total delivery
- * as handling + transit, so leaving it unstated publishes 2-5 business days,
- * which is the promise unchanged.
+ * The shop does not publish a separate preparation delay before shipping; the
+ * public promise is the delivery window itself. handlingTime is therefore
+ * stated as 0 days rather than a guessed extra delay, and transitTime keeps the
+ * same 2-5 business-day commitment the page shows to shoppers.
  *
  * Only emitted when the currency is the one the fallback is denominated in.
  * Converting it here would restate a price the checkout never quotes.
@@ -155,6 +156,12 @@ function shippingOffers(currency) {
     },
     deliveryTime: {
       '@type': 'ShippingDeliveryTime',
+      handlingTime: {
+        '@type': 'QuantitativeValue',
+        minValue: 0,
+        maxValue: 0,
+        unitCode: 'DAY'
+      },
       transitTime: {
         '@type': 'QuantitativeValue',
         minValue: DELIVERY_FALLBACK_SAR.transitDays.min,
@@ -184,16 +191,18 @@ function shippingOffers(currency) {
  * @param {{aggregate:{count:number,average:number}|null, items:Array}} [reviews]
  *        Real, approved reviews. Omitted or empty means nothing is published.
  */
-function buildProductSeo(product, currency = 'SAR', reviews = null, canonicalId = null) {
+function buildProductSeo(product, currency = 'SAR', reviews = null) {
   if (!product || !product.id) return null;
 
   const url = `${SITE}/product.html?id=${encodeURIComponent(product.id)}`;
 
-  /* og:url stays this page -- a share of this URL must preview this product --
-     while the canonical may point at the page that represents its group. */
-  const canonicalUrl = canonicalId && String(canonicalId) !== String(product.id)
-    ? `${SITE}/product.html?id=${encodeURIComponent(canonicalId)}`
-    : url;
+  /* Every public product URL is a real landing page: it has its own title,
+     product body, offer data and ad/social share value. Search Console showed
+     the grouped canonicals were being treated as "index the other product",
+     which directly contradicted the requirement that legitimate product URLs
+     remain indexable. Keep each product self-canonical and let the sitemap
+     submit the same URL the page declares. */
+  const canonicalUrl = url;
 
   const image = absoluteImage(product.image || product.main_image);
   const description = buildDescription(product);
@@ -209,13 +218,6 @@ function buildProductSeo(product, currency = 'SAR', reviews = null, canonicalId 
   const tags = [
     `<title>${esc(title)}</title>`,
     `<meta name="description" content="${esc(description)}">`,
-    /* Usually this page. When the catalogue holds several pages a shopper
-       could not tell apart -- same description, same price, titles differing
-       only by a bracketed letter -- one represents the group and the rest
-       point at it, so their signals accumulate on one page instead of being
-       split across a dozen that then compete. Nothing is hidden: every URL
-       still works, still converts, and still serves the advertisement that
-       points at it. See product-canonical-service.js. */
     `<link rel="canonical" href="${esc(canonicalUrl)}">`,
     `<meta property="og:type" content="product">`,
     `<meta property="og:title" content="${esc(title)}">`,

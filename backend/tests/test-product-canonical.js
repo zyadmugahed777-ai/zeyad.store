@@ -146,13 +146,15 @@ test('the fullest page wins when no sibling is named', () => {
 
 // --- what actually reaches the page --------------------------------------
 
-test('the canonical tag points at the representative', () => {
+test('the canonical tag stays on this product page', () => {
   const seo = buildProductSeo(
     { id: 'A', title: 'غرفة نوم ملكية فاخرة (P)', price: 2100, image: '/a.png', stock_status: 'in-stock' },
     'SAR', null, 'B'
   );
-  assert.ok(seo.tags.some((t) => t.includes('rel="canonical"') && t.includes('id=B')),
-    'the canonical does not point at the representative');
+  assert.ok(seo.tags.some((t) => t.includes('rel="canonical"') && t.includes('id=A')),
+    'the canonical points away from the requested product');
+  assert.ok(!seo.tags.some((t) => t.includes('rel="canonical"') && t.includes('id=B')),
+    'the canonical still points at a representative product');
 });
 
 test('og:url still points at THIS page, not the representative', () => {
